@@ -24,9 +24,9 @@ public class SaisonDAO {
 				rs=stml.executeQuery(SQL);
 				while(rs.next()) {
 					int id=rs.getInt(1);
-					int mediaId=rs.getInt(2);
+					int idSerie=rs.getInt(2);
 					int numeroSaison=rs.getInt(3);
-					Saison saison=new Saison(id,mediaId,numeroSaison);
+					Saison saison=new Saison(id,idSerie,numeroSaison);
 					saisons.add(saison);
 				}
 				conn.close();
@@ -42,7 +42,7 @@ public class SaisonDAO {
 			try {
 				String sql="INSERT INTO saison(mediaId,numeroSaison) VALUES (?,?)";
 				pstml =conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pstml.setInt(1, saison.getMediaId());
+				pstml.setInt(1, saison.getIdSerie());
 				pstml.setInt(2, saison.getNumeroSaison());
 				pstml.executeUpdate();
 				rs=pstml.getGeneratedKeys();

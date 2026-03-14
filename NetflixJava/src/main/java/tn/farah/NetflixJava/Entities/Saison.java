@@ -3,11 +3,12 @@ package tn.farah.NetflixJava.Entities;
 import java.util.ArrayList;
 
 
+
 import java.util.List;
 
 public class Saison {
 	private int id;
-    private int mediaId;
+    private int idSerie;
     private int numeroSaison;
     
     // Liste optionnelle pour faciliter l'affichage JavaFX
@@ -17,23 +18,30 @@ public class Saison {
     }
     
     public Saison(int mediaId, int numeroSaison) {
-		this.mediaId = mediaId;
+		this.idSerie = mediaId;
 		this.numeroSaison = numeroSaison;
 		this.episodes = new ArrayList<>();
 	}
-    public Saison(int id, int mediaId, int numeroSaison) {
+    public Saison(int id, int idSerie, int numeroSaison) {
         this.id = id;
-        this.mediaId = mediaId;
+        this.idSerie = idSerie;
         this.numeroSaison = numeroSaison;
         this.episodes = new ArrayList<>();
     }
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getMediaId() { return mediaId; }
-    public void setMediaId(int mediaId) { this.mediaId = mediaId; }
+    
 
-    public int getNumeroSaison() { return numeroSaison; }
+    public int getIdSerie() {
+		return idSerie;
+	}
+
+	public void setIdSerie(int idSerie) {
+		this.idSerie = idSerie;
+	}
+
+	public int getNumeroSaison() { return numeroSaison; }
     public void setNumeroSaison(int numeroSaison) { this.numeroSaison = numeroSaison; }
 
     public List<Episode> getEpisodes() { return episodes; }

@@ -8,27 +8,17 @@ public class Episode {
     private int duree;
     private String resume;
     private String miniatureUrl; 
+    private int durreeIntro;
     
     public Episode() {
     	
     }
     
-    public Episode(int id, int saisonId, String titre,
-    		int numeroEpisode, String videoUrl,
-    		int duree, String resume, String miniatureUrl) {
-        this.id = id;
-        this.saisonId = saisonId;
-        this.titre = titre;
-        this.numeroEpisode = numeroEpisode;
-        this.videoUrl = videoUrl;
-        this.duree = duree;
-        this.resume = resume;
-        this.miniatureUrl = miniatureUrl;
-    }
+   
 
    
     public Episode(int saisonId, String titre, int numeroEpisode, String videoUrl, int duree, String resume,
-			String miniatureUrl) {
+			String miniatureUrl, int durreIntro) {
 		this.saisonId = saisonId;
 		this.titre = titre;
 		this.numeroEpisode = numeroEpisode;
@@ -36,7 +26,24 @@ public class Episode {
 		this.duree = duree;
 		this.resume = resume;
 		this.miniatureUrl = miniatureUrl;
+		this.durreeIntro = durreeIntro;
 	}
+	public Episode(int id, int saisonId, String titre, int numeroEpisode, String videoUrl, int duree, String resume,
+			String miniatureUrl, int durreeIntro) {
+
+		this.id = id;
+		this.saisonId = saisonId;
+		this.titre = titre;
+		this.numeroEpisode = numeroEpisode;
+		this.videoUrl = videoUrl;
+		this.duree = duree;
+		this.resume = resume;
+		this.miniatureUrl = miniatureUrl;
+		this.durreeIntro = durreeIntro;
+	}
+
+
+
 
 	public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -62,12 +69,27 @@ public class Episode {
     public String getMiniatureUrl() { return miniatureUrl; }
     public void setMiniatureUrl(String miniatureUrl) { this.miniatureUrl = miniatureUrl; }
 
+
+
+
+	public int getDurrentro() {
+		return durreeIntro;
+	}
+	public void setDurrentro(int durreeIntro) {
+		this.durreeIntro = durreeIntro;
+	}
+
+
+
+
 	@Override
 	public String toString() {
 		return "Episode [id=" + id + ", saisonId=" + saisonId + ", titre=" + titre + ", numeroEpisode=" + numeroEpisode
 				+ ", videoUrl=" + videoUrl + ", duree=" + duree + ", resume=" + resume + ", miniatureUrl="
-				+ miniatureUrl + "]";
+				+ miniatureUrl + ", durreeIntro=" + durreeIntro + "]";
 	}
+
+	
     
 }
 	
