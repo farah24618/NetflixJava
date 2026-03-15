@@ -8,6 +8,7 @@ import tn.farah.NetflixJava.Entities.Film;
 
 public class FilmDao {
     private Connection connection;
+    //he
 
     public FilmDao(Connection connection) {
         this.connection = connection;
@@ -124,7 +125,7 @@ public class FilmDao {
         }
         return null;
     }
-    public List<Film> findByCategory(int categoryId) throws SQLException {
+    /*public List<Film> findByCategory(int categoryId) throws SQLException {
         List<Film> films = new ArrayList<>();
         String query = "SELECT m.*, f.* FROM media m " +
                        "JOIN film f ON m.id = f.id_media " +
@@ -140,7 +141,7 @@ public class FilmDao {
             }
         }
         return films;
-    }
+    }*/
     public List<Film> findByYear(int year) throws SQLException {
         List<Film> films = new ArrayList<>();
         // Utilisation de la fonction YEAR() de SQL
@@ -163,7 +164,8 @@ public class FilmDao {
         List<Film> films = new ArrayList<>();
         String query = "SELECT m.*, f.* FROM media m " +
                        "JOIN film f ON m.id = f.id_media " +
-                       "WHERE m.titre LIKE ?";
+                       "WHERE m.titre LIKE ?"+
+                       "ORDER BY m.date_sortie DESC";
         
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, "%" + title + "%"); // Recherche partielle
@@ -187,7 +189,8 @@ public class FilmDao {
         String query = "SELECT DISTINCT m.*, f.* FROM media m " +
                        "JOIN film f ON m.id = f.id_media " +
                        "JOIN film_categories fc ON m.id = fc.film_id " +
-                       "WHERE fc.category_id IN (" + placeholders + ")";
+                       "WHERE fc.category_id IN (" + placeholders + ")"+
+                       "ORDER BY m.date_sortie DESC";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             for (int i = 0; i < categoryIds.size(); i++) {
