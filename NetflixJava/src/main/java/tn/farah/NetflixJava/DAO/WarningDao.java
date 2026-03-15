@@ -26,6 +26,7 @@ public class WarningDao {
 	            ps.executeBatch();
 	        }
 	    }
+	  //hedhi
 
 	    // Récupérer les enums depuis la base
 	    public List<ContientWarning> getWarningsByFilm(int filmId) throws SQLException {

@@ -198,7 +198,7 @@ public class FilmDao {
                 while (rs.next()) {
                     films.add(mapResultSetToFilm(rs));
                 }
-            }
+            }//hedhi
         }
         return films;
     }

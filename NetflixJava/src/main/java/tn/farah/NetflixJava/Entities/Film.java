@@ -8,6 +8,7 @@ public class Film extends Media{
 	private String urlVedio;
 	private int duree;
 	private int nbreVue;
+	//hedhi
 	
 
     // ─── Constructeur complet ─────────────────────────────────────────────────

@@ -9,6 +9,7 @@ public class Commentaire {
     private int idUser;    // ID de l'auteur
     private int idMedia;   // ID du Film ou de la Série
     private boolean estSignale;
+  //hedhi
     private boolean contientSpoils;
 
     public Commentaire(int id, String contenu, LocalDateTime datePublication, 

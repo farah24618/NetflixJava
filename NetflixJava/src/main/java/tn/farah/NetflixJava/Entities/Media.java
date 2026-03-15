@@ -19,6 +19,7 @@ public abstract class  Media {
     private TypeMedia type;
     public Set<ContientWarning> getWarnings() {
 		return warnings;
+		//hedhi
 	}
 
 	public void setWarnings(Set<ContientWarning> warnings) {
