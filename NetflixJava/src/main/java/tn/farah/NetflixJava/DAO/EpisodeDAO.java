@@ -29,7 +29,8 @@ public class EpisodeDAO {
 				int duree=rs.getInt(6);
 				String resume=rs.getString(7);
 				String miniatureUrl=rs.getString(8);
-				Episode episode=new Episode(id,saisonId,titre,numeroEpisode,videoUrl,duree,resume,miniatureUrl);
+				int durreeIntro=rs.getInt(9);
+				Episode episode=new Episode(id,saisonId,titre,numeroEpisode,videoUrl,duree,resume,miniatureUrl,durreeIntro);
 				episodes.add(episode);
 			}
 			conn.close();
@@ -43,7 +44,7 @@ public class EpisodeDAO {
 		PreparedStatement pstml=null;
 		ResultSet rs=null;
 		try {
-			String sql="INSERT INTO episode(saisonId,titre,numeroEpisode,videoUrl,duree,resume,miniatureUrl) VALUES (?,?,?,?,?,?,?)";
+			String sql="INSERT INTO episode(saisonId,titre,numeroEpisode,videoUrl,duree,resume,miniatureUrl,durreeIntro) VALUES (?,?,?,?,?,?,?,?)";
 			pstml =conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pstml.setInt(1, episode.getSaisonId());
 			pstml.setString(2, episode.getTitre());
@@ -52,6 +53,7 @@ public class EpisodeDAO {
 			pstml.setInt(5, episode.getDuree());
 			pstml.setString(6, episode.getResume());
 			pstml.setString(7, episode.getMiniatureUrl());
+			pstml.setInt(8, episode.getDurrentro());
 			pstml.executeUpdate();
 			rs=pstml.getGeneratedKeys();
 			if(rs.next()) 
