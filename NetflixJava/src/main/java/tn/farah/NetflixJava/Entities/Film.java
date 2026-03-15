@@ -8,15 +8,25 @@ public class Film extends Media{
 	private String urlVedio;
 	private int duree;
 	private int nbreVue;
-	public Film(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
-			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
-			LocalDateTime dateAjout, Set<Category> genres, String urlVedio, int duree, int nbreVue) {
-		super(id, titre, synopsis, casting, dateSortie, urlImageCover, urlImageBanner, urlTeaser, ratingMoyen,
-				ageRating, type, dateAjout, genres);
-		this.urlVedio = urlVedio;
-		this.duree = duree;
-		this.nbreVue = nbreVue;
-	}
+	
+
+    // ─── Constructeur complet ─────────────────────────────────────────────────
+    public Film(int id, String titre, String synopsis, String casting,
+                LocalDate dateSortie, String urlImageCover, String urlImageBanner,
+                String urlTeaser, Double ratingMoyen, AgeRating ageRating,
+                TypeMedia type, LocalDateTime dateAjout,
+                Set<Category> genres, Set<ContientWarning> warnings,
+                String urlVedio, int duree, int nbreVue) {
+
+        // appelle le constructeur complet de Media
+        super(id, titre, synopsis, casting, dateSortie, urlImageCover,
+              urlImageBanner, urlTeaser, ratingMoyen, ageRating,
+              type, dateAjout, genres, warnings);
+
+        this.urlVedio = urlVedio;
+        this.duree    = duree;
+        this.nbreVue  = nbreVue;
+    }
 	public Film () {
 		super();
 	}

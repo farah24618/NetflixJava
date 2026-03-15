@@ -17,29 +17,46 @@ public abstract class  Media {
     private Double ratingMoyen = 0.0;
     private AgeRating ageRating;
     private TypeMedia type;
+    public Set<ContientWarning> getWarnings() {
+		return warnings;
+	}
+
+	public void setWarnings(Set<ContientWarning> warnings) {
+		this.warnings = warnings;
+	}
+	private Set<ContientWarning> warnings;
     private LocalDateTime dateAjout = LocalDateTime.now();
     private Set<Category> genres = new HashSet<>();
 	
-    public Media() {}
-	public Media(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
-			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
-			LocalDateTime dateAjout, Set<Category> genres) {
-		super();
-		this.id = id;
-		this.titre = titre;
-		this.synopsis = synopsis;
-		this.casting = casting;
-		this.dateSortie = dateSortie;
-		this.urlImageCover = urlImageCover;
-		this.urlImageBanner = urlImageBanner;
-		this.urlTeaser = urlTeaser;
-		this.ratingMoyen = ratingMoyen;
-		this.ageRating = ageRating;
-		this.type = type;
-		this.dateAjout = dateAjout;
-		this.genres = genres;
-	}
-	
+    // ─── Constructeur vide ────────────────────────────────────────────────────
+    // obligatoire pour pouvoir faire new Film() et new Serie() dans les DAO
+    public Media() {
+        this.genres   = new HashSet<>();
+        this.warnings = new HashSet<>();
+    }
+
+    // ─── Constructeur complet ─────────────────────────────────────────────────
+    public Media(int id, String titre, String synopsis, String casting,
+                 LocalDate dateSortie, String urlImageCover, String urlImageBanner,
+                 String urlTeaser, Double ratingMoyen, AgeRating ageRating,
+                 TypeMedia type, LocalDateTime dateAjout,
+                 Set<Category> genres, Set<ContientWarning> warnings) {
+
+        this.id             = id;
+        this.titre          = titre;
+        this.synopsis       = synopsis;
+        this.casting        = casting;
+        this.dateSortie     = dateSortie;
+        this.urlImageCover  = urlImageCover;
+        this.urlImageBanner = urlImageBanner;
+        this.urlTeaser      = urlTeaser;
+        this.ratingMoyen    = ratingMoyen;
+        this.ageRating      = ageRating;
+        this.type           = type;
+        this.dateAjout      = dateAjout;
+        this.genres         = genres;
+        this.warnings       = warnings;
+    }
 	public TypeMedia getType() {
 		return type;
 	}
