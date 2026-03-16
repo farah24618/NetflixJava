@@ -72,7 +72,7 @@ public class Episode {
 
 
 
-	public int getDurrentro() {
+	public int getDurreeIntro() {
 		return durreeIntro;
 	}
 	public void setDurrentro(int durreeIntro) {

@@ -3,17 +3,12 @@ package tn.farah.NetflixJava.Entities;
 import java.time.LocalDateTime;
 
 public class History {
+	private int id;
 	private int idUser;
 	private int idMedia;
 	private LocalDateTime dateVisionnage;
 	private int tempsArret;
 	private boolean estTermine;
-	public History(int idMedia, LocalDateTime dateVisionnage, int tempsArret, boolean estTermine) {
-		this.idMedia = idMedia;
-		this.dateVisionnage = dateVisionnage;
-		this.tempsArret = tempsArret;
-		this.estTermine = estTermine;
-	}
 	public History(int idUser, int idMedia, LocalDateTime dateVisionnage, int tempsArret, boolean estTermine) {
 		this.idUser = idUser;
 		this.idMedia = idMedia;
@@ -21,6 +16,24 @@ public class History {
 		this.tempsArret = tempsArret;
 		this.estTermine = estTermine;
 	}
+	
+	public History(int id, int idUser, int idMedia, LocalDateTime dateVisionnage, int tempsArret, boolean estTermine) {
+		this.id = id;
+		this.idUser = idUser;
+		this.idMedia = idMedia;
+		this.dateVisionnage = dateVisionnage;
+		this.tempsArret = tempsArret;
+		this.estTermine = estTermine;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public int getIdUser() {
 		return idUser;
 	}
@@ -45,16 +58,17 @@ public class History {
 	public void setTempsArret(int tempsArret) {
 		this.tempsArret = tempsArret;
 	}
-	public boolean isEstTermine() {
+	public boolean getEstTermine() {
 		return estTermine;
 	}
 	public void setEstTermine(boolean estTermine) {
 		this.estTermine = estTermine;
 	}
+
 	@Override
 	public String toString() {
-		return "History [idUser=" + idUser + ", idMedia=" + idMedia + ", dateVisionnage=" + dateVisionnage
-				+ ", tempsArret=" + tempsArret + ", estTermine=" + estTermine + "]";
+		return "History [id=" + id + ", idUser=" + idUser + ", idMedia=" + idMedia + ", dateVisionnage="
+				+ dateVisionnage + ", tempsArret=" + tempsArret + ", estTermine=" + estTermine + "]";
 	}
 	
 }
