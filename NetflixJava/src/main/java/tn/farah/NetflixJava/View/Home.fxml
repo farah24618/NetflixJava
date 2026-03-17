@@ -1,48 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.shape.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.netflix.controller.HomeController"
-            prefWidth="1280" prefHeight="720"
-            style="-fx-background-color: #141414;">
+<BorderPane prefHeight="720" prefWidth="1280" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.netflix.controller.HomeController">
 
     <!-- ═══════════ NAVBAR ═══════════ -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="28" prefHeight="68"
-              style="-fx-background-color: #141414; -fx-border-color: transparent transparent #222 transparent; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 55;">
+        <HBox alignment="CENTER_LEFT" prefHeight="68" spacing="28" style="-fx-background-color: #141414; -fx-border-color: transparent transparent #222 transparent; -fx-border-width: 0 0 1 0; -fx-padding: 0 40 0 55;">
 
-            <Label text="STREAMVIBE"
-                   style="-fx-text-fill: #e50914; -fx-font-size: 24px; -fx-font-weight: bold; -fx-font-family: Georgia;"/>
+            <Label style="-fx-text-fill: #e50914; -fx-font-size: 24px; -fx-font-weight: bold; -fx-font-family: Georgia;" text="STREAMVIBE" />
 
-            <HBox spacing="4" alignment="CENTER">
-                <Button text="Accueil"
-                        style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;"/>
-                <Button text="Séries"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;"/>
-                <Button text="Films"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;"/>
-                <Button text="Nouveautés"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;"/>
-                <Button text="Ma liste"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;"/>
+            <HBox alignment="CENTER" spacing="4">
+                <Button style="-fx-background-color: transparent; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;" text="Accueil" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;" text="Séries" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;" text="Films" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;" text="Nouveautés" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 8 14;" text="Ma liste" />
             </HBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <HBox spacing="16" alignment="CENTER">
-                <TextField promptText="🔍 Rechercher..."
-                           prefWidth="200"
-                           style="-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: #fff; -fx-prompt-text-fill: #999; -fx-padding: 8 14; -fx-background-radius: 4; -fx-border-color: rgba(255,255,255,0.3); -fx-border-radius: 4;"/>
-                <Button text="🔔"
-                        style="-fx-background-color: transparent; -fx-text-fill: #fff; -fx-font-size: 18px; -fx-border-color: transparent; -fx-cursor: hand;"/>
+            <HBox alignment="CENTER" spacing="16">
+                <TextField prefWidth="200" promptText="🔍 Rechercher..." style="-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: #fff; -fx-prompt-text-fill: #999; -fx-padding: 8 14; -fx-background-radius: 4; -fx-border-color: rgba(255,255,255,0.3); -fx-border-radius: 4;" />
+                <Button style="-fx-background-color: transparent; -fx-text-fill: #fff; -fx-font-size: 18px; -fx-border-color: transparent; -fx-cursor: hand;" text="🔔" />
                 <StackPane style="-fx-background-color: #e50914; -fx-background-radius: 4; -fx-min-width: 34; -fx-max-width: 34; -fx-min-height: 34; -fx-max-height: 34; -fx-cursor: hand;">
-                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px;"/>
+                    <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px;" text="A" />
                 </StackPane>
             </HBox>
         </HBox>
@@ -50,166 +44,152 @@
 
     <!-- ═══════════ CONTENU PRINCIPAL ═══════════ -->
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="false"
-                    hbarPolicy="NEVER" vbarPolicy="ALWAYS"
-                    pannable="true"
-                    style="-fx-background-color: #141414; -fx-background: #141414; -fx-padding: 0;">
-            <VBox style="-fx-background-color: #141414;" prefWidth="1260" minHeight="2200">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #141414; -fx-background: #141414; -fx-padding: 0;" vbarPolicy="AS_NEEDED">
+            <VBox style="-fx-background-color: #141414;">
 
                 <!-- ═══════ HERO SECTION ═══════ -->
-                <StackPane prefHeight="550" minHeight="550"
-                           style="-fx-background-color: #1a1a2e;">
+                <StackPane minHeight="550" prefHeight="550" style="-fx-background-color: #1a1a2e;">
 
                     <!-- Image Hero principale -->
-                    <ImageView fitWidth="1280" fitHeight="550" preserveRatio="false">
+                    <ImageView fitHeight="550" fitWidth="1280" preserveRatio="false">
                         <image>
-                            <Image url="https://image.tmdb.org/t/p/w1280/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg"
-                                   backgroundLoading="true"/>
+                            <Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w1280/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg" />
                         </image>
                     </ImageView>
 
                     <!-- Gradient overlay -->
-                    <Pane prefWidth="1280" prefHeight="550"
-                          style="-fx-background-color: linear-gradient(to right, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.5) 55%, rgba(20,20,20,0.0) 100%);"/>
-                    <Pane prefWidth="1280" prefHeight="550"
-                          style="-fx-background-color: linear-gradient(to top, rgba(20,20,20,1.0) 0%, rgba(20,20,20,0.0) 35%);"/>
-
-                    <!-- Contenu texte hero -->
-                    <VBox alignment="BOTTOM_LEFT" prefWidth="1280" prefHeight="550">
-                        <padding><Insets bottom="70" left="55"/></padding>
-                        <VBox spacing="12" maxWidth="560">
-                            <Label text="● EN VEDETTE"
-                                   style="-fx-text-fill: #e50914; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                            <Label text="Dune: Part Two"
-                                   style="-fx-text-fill: #ffffff; -fx-font-size: 52px; -fx-font-weight: bold; -fx-font-family: Georgia; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0, 0, 3);"
-                                   wrapText="true"/>
-                            <Label text="2024  •  ⭐ 8.5  •  Sci-Fi  •  2h46min"
-                                   style="-fx-text-fill: #46d369; -fx-font-size: 14px; -fx-font-weight: bold;"/>
-                            <Label text="Paul Atreides s'unit aux Fremen et entame un voyage spirituel et guerrier pour venger sa famille tout en empêchant un avenir terrible qu'il est seul à voir."
-                                   style="-fx-text-fill: #d2d2d2; -fx-font-size: 14px; -fx-line-spacing: 4;"
-                                   wrapText="true" maxWidth="510"/>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <padding><Insets top="6"/></padding>
-                                <Button text="▶   Regarder"
-                                        style="-fx-background-color: #ffffff; -fx-text-fill: #000000; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 28; -fx-background-radius: 5; -fx-cursor: hand; -fx-border-color: transparent;"/>
-                                <Button text="ℹ  Plus d'infos"
-                                        style="-fx-background-color: rgba(109,109,110,0.7); -fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 12 24; -fx-background-radius: 5; -fx-cursor: hand; -fx-border-color: transparent;"/>
-                                <Button text="＋  Ma liste"
-                                        style="-fx-background-color: rgba(109,109,110,0.4); -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 12 20; -fx-background-radius: 5; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.5); -fx-border-radius: 5;"/>
-                            </HBox>
-                        </VBox>
-                    </VBox>
+                    <Pane prefHeight="550" prefWidth="1280" style="-fx-background-color: linear-gradient(to right, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.5) 55%, rgba(20,20,20,0.0) 100%);" />
+                    <Pane prefHeight="550" prefWidth="1280" style="-fx-background-color: linear-gradient(to top, rgba(20,20,20,1.0) 0%, rgba(20,20,20,0.0) 35%);">
+                  <children>
+      
+                          <!-- Contenu texte hero -->
+                          <VBox alignment="BOTTOM_LEFT" layoutX="626.0" layoutY="-36.0" prefHeight="550" prefWidth="1280">
+                              <padding>
+                           <Insets bottom="70" left="55" />
+                        </padding>
+                              <VBox maxWidth="560" spacing="12">
+                                  <Label style="-fx-text-fill: #e50914; -fx-font-size: 11px; -fx-font-weight: bold;" text="● EN VEDETTE" />
+                                  <Label style="-fx-text-fill: #ffffff; -fx-font-size: 52px; -fx-font-weight: bold; -fx-font-family: Georgia; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0, 0, 3);" text="Dune: Part Two" wrapText="true" />
+                                  <Label style="-fx-text-fill: #46d369; -fx-font-size: 14px; -fx-font-weight: bold;" text="2024  •  ⭐ 8.5  •  Sci-Fi  •  2h46min" />
+                                  <Label maxWidth="510" style="-fx-text-fill: #d2d2d2; -fx-font-size: 14px; -fx-line-spacing: 4;" text="Paul Atreides s'unit aux Fremen et entame un voyage spirituel et guerrier pour venger sa famille tout en empêchant un avenir terrible qu'il est seul à voir." wrapText="true" />
+                                  <HBox alignment="CENTER_LEFT" spacing="12">
+                                      <padding>
+                                 <Insets top="6" />
+                              </padding>
+                                      <Button style="-fx-background-color: #ffffff; -fx-text-fill: #000000; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 28; -fx-background-radius: 5; -fx-cursor: hand; -fx-border-color: transparent;" text="▶   Regarder" />
+                                      <Button style="-fx-background-color: rgba(109,109,110,0.7); -fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 12 24; -fx-background-radius: 5; -fx-cursor: hand; -fx-border-color: transparent;" text="ℹ  Plus d'infos" />
+                                      <Button style="-fx-background-color: rgba(109,109,110,0.4); -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 12 20; -fx-background-radius: 5; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.5); -fx-border-radius: 5;" text="＋  Ma liste" />
+                                  </HBox>
+                              </VBox>
+                          </VBox>
+                  </children></Pane>
                 </StackPane>
 
                 <!-- ═══════ RANGÉES DE FILMS ═══════ -->
-                <VBox style="-fx-background-color: #141414; -fx-padding: 10 55 60 55;" spacing="0">
+                <VBox spacing="0" style="-fx-background-color: #141414; -fx-padding: 10 55 60 55;">
 
                     <!-- ── ROW 1 : Tendances ── -->
                     <VBox spacing="8">
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label text="🔥  Tendances cette semaine"
-                                   style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                            <Label text="Voir tout →"
-                                   style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;"/>
+                            <Label style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;" text="🔥  Tendances cette semaine" />
+                            <Label style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;" text="Voir tout →" />
                         </HBox>
-                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" prefHeight="230"
-                                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;">
-                            <HBox spacing="10" alignment="CENTER_LEFT"
-                                  style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
+                        <ScrollPane hbarPolicy="AS_NEEDED" prefHeight="230" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;" vbarPolicy="NEVER">
+                            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
 
                                 <!-- CARTE 1 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Dune: Part Two" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Sci-Fi" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.5" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Dune: Part Two" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Sci-Fi" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.5" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 2 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Oppenheimer" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2023 • Drame" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.3" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Oppenheimer" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2023 • Drame" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.3" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 3 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Deadpool &amp; Wolverine" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.7" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Deadpool &amp; Wolverine" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.7" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 4 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="The Batman" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2022 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.8" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="The Batman" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2022 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.8" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 5 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Avatar 2" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2022 • Sci-Fi" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.6" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Avatar 2" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2022 • Sci-Fi" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.6" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 6 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Inception" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2010 • Sci-Fi" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.8" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Inception" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2010 • Sci-Fi" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.8" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 7 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Interstellar" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2014 • Sci-Fi" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.7" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Interstellar" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2014 • Sci-Fi" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.7" />
                                     </VBox>
                                 </VBox>
 
                                 <!-- CARTE 8 -->
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/62HCnUTHjWTObPnSRPNSRToxF4J.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/62HCnUTHjWTObPnSRPNSRToxF4J.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Top Gun: Maverick" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2022 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.3" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Top Gun: Maverick" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2022 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.3" />
                                     </VBox>
                                 </VBox>
 
@@ -219,81 +199,77 @@
 
                     <!-- ── ROW 2 : Nouveautés ── -->
                     <VBox spacing="8">
-                        <padding><Insets top="24"/></padding>
+                        <padding><Insets top="24" /></padding>
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label text="🆕  Nouveaux ajouts"
-                                   style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                            <Label text="Voir tout →"
-                                   style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;"/>
+                            <Label style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;" text="🆕  Nouveaux ajouts" />
+                            <Label style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;" text="Voir tout →" />
                         </HBox>
-                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" prefHeight="230"
-                                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;">
-                            <HBox spacing="10" alignment="CENTER_LEFT"
-                                  style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
+                        <ScrollPane hbarPolicy="AS_NEEDED" prefHeight="230" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;" vbarPolicy="NEVER">
+                            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/b33nnKl1GSFbao4l3fZDDqsMx0F.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/b33nnKl1GSFbao4l3fZDDqsMx0F.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Alien: Romulus" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Horreur" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.2" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Alien: Romulus" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Horreur" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.2" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Inside Out 2" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Animation" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.9" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Inside Out 2" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Animation" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.9" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Gladiator II" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 6.8" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Gladiator II" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 6.8" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/udA5xBFTBqSCZfZ5HGaQBBqMBXY.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/udA5xBFTBqSCZfZ5HGaQBBqMBXY.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Joker 2" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Drame" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 5.2" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Joker 2" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Drame" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 5.2" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/lqoMzCcZYEFK729d6qzt349fB4o.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/lqoMzCcZYEFK729d6qzt349fB4o.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="The Substance" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Horreur" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.3" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="The Substance" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Horreur" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.3" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/i47IUSsN126K11JUzqQIOi1Mg1M.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/i47IUSsN126K11JUzqQIOi1Mg1M.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Kraven" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2024 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 5.7" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Kraven" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2024 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 5.7" />
                                     </VBox>
                                 </VBox>
 
@@ -303,70 +279,66 @@
 
                     <!-- ── ROW 3 : Action ── -->
                     <VBox spacing="8">
-                        <padding><Insets top="24"/></padding>
+                        <padding><Insets top="24" /></padding>
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label text="💥  Action &amp; Aventure"
-                                   style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                            <Label text="Voir tout →"
-                                   style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;"/>
+                            <Label style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;" text="💥  Action &amp; Aventure" />
+                            <Label style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;" text="Voir tout →" />
                         </HBox>
-                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" prefHeight="230"
-                                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;">
-                            <HBox spacing="10" alignment="CENTER_LEFT"
-                                  style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
+                        <ScrollPane hbarPolicy="AS_NEEDED" prefHeight="230" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;" vbarPolicy="NEVER">
+                            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="John Wick 4" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2023 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.8" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="John Wick 4" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2023 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.8" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/qJ2tW6WMUDux911r6m7haRef0WH.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/qJ2tW6WMUDux911r6m7haRef0WH.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="The Dark Knight" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2008 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 9.0" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="The Dark Knight" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2008 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 9.0" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Mad Max: Fury Road" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2015 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.1" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Mad Max: Fury Road" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2015 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.1" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/NNxYkU70HPurnNCSiCjYAmacwm.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/NNxYkU70HPurnNCSiCjYAmacwm.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Mission Impossible 7" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2023 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.7" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Mission Impossible 7" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2023 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.7" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/uxzzxijgPIY7slzFvMotPv8wjKA.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/uxzzxijgPIY7slzFvMotPv8wjKA.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Black Panther" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2018 • Action" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 7.3" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Black Panther" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2018 • Action" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 7.3" />
                                     </VBox>
                                 </VBox>
 
@@ -376,81 +348,77 @@
 
                     <!-- ── ROW 4 : Séries ── -->
                     <VBox spacing="8">
-                        <padding><Insets top="24"/></padding>
+                        <padding><Insets top="24" /></padding>
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label text="📺  Séries populaires"
-                                   style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                            <Label text="Voir tout →"
-                                   style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;"/>
+                            <Label style="-fx-text-fill: #e5e5e5; -fx-font-size: 18px; -fx-font-weight: bold;" text="📺  Séries populaires" />
+                            <Label style="-fx-text-fill: #54b3d6; -fx-font-size: 13px; -fx-cursor: hand;" text="Voir tout →" />
                         </HBox>
-                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" prefHeight="230"
-                                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;">
-                            <HBox spacing="10" alignment="CENTER_LEFT"
-                                  style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
+                        <ScrollPane hbarPolicy="AS_NEEDED" prefHeight="230" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;" vbarPolicy="NEVER">
+                            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: transparent; -fx-padding: 4 0 10 0;">
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Breaking Bad" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2008 • Drame" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 9.5" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Breaking Bad" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2008 • Drame" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 9.5" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Game of Thrones" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2011 • Fantastique" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 9.3" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Game of Thrones" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2011 • Fantastique" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 9.3" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/x2LSRK2Cm7MZhjluni1msVJ3wDj.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/x2LSRK2Cm7MZhjluni1msVJ3wDj.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Stranger Things" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2016 • Sci-Fi" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.7" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Stranger Things" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2016 • Sci-Fi" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.7" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="The Last of Us" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2023 • Drame" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.8" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="The Last of Us" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2023 • Drame" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.8" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/9PFonBhy4cQy7Jz20NpMygczOkv.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/9PFonBhy4cQy7Jz20NpMygczOkv.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Wednesday" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2022 • Fantastique" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.1" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Wednesday" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2022 • Fantastique" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.1" />
                                     </VBox>
                                 </VBox>
 
-                                <VBox style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="140" maxWidth="140">
-                                    <ImageView fitWidth="140" fitHeight="190" preserveRatio="false">
-                                        <image><Image url="https://image.tmdb.org/t/p/w300/vUUqzWa2LnHIVqkaKVgCharJmKi.jpg" backgroundLoading="true"/></image>
+                                <VBox maxWidth="140" prefWidth="140" style="-fx-background-color: #2f2f2f; -fx-background-radius: 5; -fx-cursor: hand;">
+                                    <ImageView fitHeight="190" fitWidth="140" preserveRatio="false">
+                                        <image><Image backgroundLoading="true" url="https://image.tmdb.org/t/p/w300/vUUqzWa2LnHIVqkaKVgCharJmKi.jpg" /></image>
                                     </ImageView>
-                                    <VBox style="-fx-padding: 7 8 8 8;" spacing="3">
-                                        <Label text="Peaky Blinders" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" wrapText="true" maxWidth="124"/>
-                                        <Label text="2013 • Drame" style="-fx-text-fill: #999; -fx-font-size: 10px;"/>
-                                        <Label text="⭐ 8.8" style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <VBox spacing="3" style="-fx-padding: 7 8 8 8;">
+                                        <Label maxWidth="124" style="-fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold;" text="Peaky Blinders" wrapText="true" />
+                                        <Label style="-fx-text-fill: #999; -fx-font-size: 10px;" text="2013 • Drame" />
+                                        <Label style="-fx-text-fill: #46d369; -fx-font-size: 10px; -fx-font-weight: bold;" text="⭐ 8.8" />
                                     </VBox>
                                 </VBox>
 
@@ -461,10 +429,8 @@
                 </VBox>
 
                 <!-- FOOTER -->
-                <HBox alignment="CENTER" prefHeight="48"
-                      style="-fx-background-color: #0a0a0a;">
-                    <Label text="© 2025 StreamVibe — Tous droits réservés"
-                           style="-fx-text-fill: #444; -fx-font-size: 12px;"/>
+                <HBox alignment="CENTER" prefHeight="48" style="-fx-background-color: #0a0a0a;">
+                    <Label style="-fx-text-fill: #444; -fx-font-size: 12px;" text="© 2025 StreamVibe — Tous droits réservés" />
                 </HBox>
 
             </VBox>
