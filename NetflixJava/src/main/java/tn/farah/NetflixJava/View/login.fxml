@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.netflix.controller.HomeController"
+            prefWidth="1280" prefHeight="720"
+            stylesheets="@../css/style.css"
+            styleClass="main-bg">
+
+    <!-- ===== TOP NAVBAR ===== -->
+    <top>
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="30"
+              prefHeight="65">
+            <padding><Insets top="0" bottom="0" left="60" right="40"/></padding>
+
+            <!-- Logo -->
+            <Label text="STREAMVIBE" styleClass="logo-text"/>
+
+            <!-- Nav links -->
+            <HBox spacing="24" alignment="CENTER">
+                <Button text="Accueil"    styleClass="nav-link, nav-link-active"  onAction="#showHome"/>
+                <Button text="Séries"     styleClass="nav-link"  onAction="#showSeries"/>
+                <Button text="Films"      styleClass="nav-link"  onAction="#showMovies"/>
+                <Button text="Nouveautés" styleClass="nav-link"  onAction="#showNew"/>
+                <Button text="Ma liste"   styleClass="nav-link"  onAction="#showMyList"/>
+            </HBox>
+
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Search & Profile -->
+            <HBox spacing="20" alignment="CENTER">
+                <TextField fx:id="searchField"
+                           promptText="🔍  Rechercher..."
+                           styleClass="search-field"
+                           prefWidth="220"
+                           onAction="#handleSearch"/>
+                <Button styleClass="notif-btn" text="🔔"/>
+                <!-- Avatar -->
+                <StackPane styleClass="avatar-circle" onMouseClicked="#openProfile">
+                    <Label fx:id="avatarLabel" text="U" styleClass="avatar-letter"/>
+                </StackPane>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ===== CONTENT AREA (scrollable) ===== -->
+    <center>
+        <ScrollPane styleClass="scroll-pane" fitToWidth="true"
+                    hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <VBox spacing="0">
+
+                <!-- ===== HERO SECTION ===== -->
+                <StackPane prefHeight="480" styleClass="hero-container">
+                    <ImageView fx:id="heroImage" fitWidth="1280" fitHeight="480"
+                               preserveRatio="false" opacity="0.6">
+                        <image><Image url="@../images/hero.jpg"/></image>
+                    </ImageView>
+                    <!-- Gradient bas -->
+                    <Pane styleClass="hero-gradient"/>
+
+                    <!-- Hero content -->
+                    <VBox alignment="BOTTOM_LEFT" spacing="16">
+                        <padding><Insets bottom="60" left="60"/></padding>
+
+                        <Label fx:id="heroCategory" text="★ SÉRIE TENDANCE" styleClass="hero-category"/>
+                        <Label fx:id="heroTitle" text="Titre du Film" styleClass="hero-title"
+                               wrapText="true" maxWidth="550"/>
+                        <Label fx:id="heroDescription"
+                               text="Une description captivante du contenu mis en avant sur la page d'accueil. Brève et percutante."
+                               styleClass="hero-desc" wrapText="true" maxWidth="500"/>
+
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <Button text="▶   Regarder" styleClass="btn-primary"
+                                    onAction="#playHero"/>
+                            <Button text="＋  Ma liste" styleClass="btn-secondary"
+                                    onAction="#addHeroToList"/>
+                            <Button text="ℹ  Détails" styleClass="btn-ghost"
+                                    onAction="#showHeroDetails"/>
+                        </HBox>
+                    </VBox>
+                </StackPane>
+
+                <!-- ===== ROWS DE FILMS ===== -->
+                <VBox styleClass="rows-container" spacing="10">
+                    <padding><Insets top="20" bottom="40" left="60" right="60"/></padding>
+
+                    <!-- Row 1 : Tendances -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🔥  Tendances cette semaine" styleClass="row-title"/>
+                            <Hyperlink text="Voir tout →" styleClass="see-all" onAction="#seeAllTrending"/>
+                        </HBox>
+                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                    styleClass="row-scroll" prefHeight="200">
+                            <HBox fx:id="trendingRow" spacing="12" alignment="CENTER_LEFT">
+                                <padding><Insets top="4" bottom="8"/></padding>
+                                <!-- Les cartes sont ajoutées dynamiquement par le controller -->
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
+
+                    <!-- Row 2 : Nouveautés -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="🆕  Nouveaux ajouts" styleClass="row-title"/>
+                            <Hyperlink text="Voir tout →" styleClass="see-all" onAction="#seeAllNew"/>
+                        </HBox>
+                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                    styleClass="row-scroll" prefHeight="200">
+                            <HBox fx:id="newRow" spacing="12" alignment="CENTER_LEFT">
+                                <padding><Insets top="4" bottom="8"/></padding>
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
+
+                    <!-- Row 3 : Films d'action -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="💥  Action &amp; Aventure" styleClass="row-title"/>
+                            <Hyperlink text="Voir tout →" styleClass="see-all" onAction="#seeAllAction"/>
+                        </HBox>
+                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                    styleClass="row-scroll" prefHeight="200">
+                            <HBox fx:id="actionRow" spacing="12" alignment="CENTER_LEFT">
+                                <padding><Insets top="4" bottom="8"/></padding>
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
+
+                    <!-- Row 4 : Ma liste -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label text="📌  Ma liste" styleClass="row-title"/>
+                            <Hyperlink text="Voir tout →" styleClass="see-all" onAction="#seeAllMyList"/>
+                        </HBox>
+                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                    styleClass="row-scroll" prefHeight="200">
+                            <HBox fx:id="myListRow" spacing="12" alignment="CENTER_LEFT">
+                                <padding><Insets top="4" bottom="8"/></padding>
+                            </HBox>
+                        </ScrollPane>
+                    </VBox>
+
+                </VBox>
+
+                <!-- Footer -->
+                <VBox styleClass="footer" alignment="CENTER" spacing="8">
+                    <padding><Insets top="30" bottom="30"/></padding>
+                    <Label text="© 2025 StreamVibe — Tous droits réservés" styleClass="footer-text"/>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

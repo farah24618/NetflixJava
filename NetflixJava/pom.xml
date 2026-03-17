@@ -18,11 +18,11 @@
     <scope>compile</scope>
 </dependency>
         <dependency>
-            <groupId>org.openjfx</groupId>
+             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21</version>
         </dependency>
-        <dependency>
+        <dependency> 
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>11</version>
