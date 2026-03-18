@@ -17,15 +17,7 @@ public abstract class  Media {
     private Double ratingMoyen = 0.0;
     private AgeRating ageRating;
     private TypeMedia type;
-    public Set<ContientWarning> getWarnings() {
-		return warnings;
-		//hedhi
-	}
-
-	public void setWarnings(Set<ContientWarning> warnings) {
-		this.warnings = warnings;
-	}
-	private Set<ContientWarning> warnings;
+	private Set<Warning> warnings;
     private LocalDateTime dateAjout = LocalDateTime.now();
     private Set<Category> genres = new HashSet<>();
 	
@@ -41,7 +33,7 @@ public abstract class  Media {
                  LocalDate dateSortie, String urlImageCover, String urlImageBanner,
                  String urlTeaser, Double ratingMoyen, AgeRating ageRating,
                  TypeMedia type, LocalDateTime dateAjout,
-                 Set<Category> genres, Set<ContientWarning> warnings) {
+                 Set<Category> genres, Set<Warning> warnings) {
 
         this.id             = id;
         this.titre          = titre;
@@ -58,6 +50,14 @@ public abstract class  Media {
         this.genres         = genres;
         this.warnings       = warnings;
     }
+    public Set<Warning> getWarnings() {
+		return warnings;
+		//hedhi
+	}
+
+	public void setWarnings(Set<Warning> warnings) {
+		this.warnings = warnings;
+	}
 	public TypeMedia getType() {
 		return type;
 	}

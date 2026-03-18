@@ -1,3 +1,4 @@
+package tn.farah.NetflixJava.DAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class FilmDao {
     // --- READ ALL ---
     public List<Film> findAll() throws SQLException {
         List<Film> films = new ArrayList<>();
-        String query = "SELECT * FROM media m JOIN film f ON m.id = f.id_media";
+        String query = "SELECT * FROM media m JOIN film f ON m.id = f.id";
         try (Statement st = connection.createStatement();
              ResultSet rs = st.executeQuery(query)) {
             while (rs.next()) {
@@ -213,14 +214,14 @@ public class FilmDao {
         f.setSynopsis(rs.getString("synopsis"));
         f.setCasting(rs.getString("casting"));
         f.setDateSortie(rs.getDate("date_sortie").toLocalDate());
-        f.setUrlImageCover(rs.getString("url_cover"));
-        f.setUrlImageBanner(rs.getString("url_banner"));
+        f.setUrlImageCover(rs.getString("url_image_cover"));
+        f.setUrlImageBanner(rs.getString("url_image_banner"));
         f.setUrlTeaser(rs.getString("url_teaser"));
         f.setRatingMoyen(rs.getDouble("rating_moyen"));
         f.setAgeRating(AgeRating.valueOf(rs.getString("age_rating")));
         f.setUrlVedio(rs.getString("url_video"));
-        f.setDuree(rs.getInt("duree"));
-        f.setNbreVue(rs.getInt("nbre_vue"));
+        f.setDuree(rs.getInt("duree_minutes"));
+        f.setNbreVue(rs.getInt("nbre_vues"));
         return f;
     }
 }

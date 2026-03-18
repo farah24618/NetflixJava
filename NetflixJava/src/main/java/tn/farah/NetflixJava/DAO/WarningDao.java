@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.farah.NetflixJava.Entities.ContientWarning;
+import tn.farah.NetflixJava.Entities.Warning;
 public class WarningDao {
 
 
@@ -14,43 +15,79 @@ public class WarningDao {
 	        this.connection = connection;
 	    }
 
-	    // Sauvegarder la liste des enums pour un film
-	    public void saveWarnings(int filmId, List<ContientWarning> warnings) throws SQLException {
-	        String query = "INSERT INTO film_warnings (film_id, warning_name) VALUES (?, ?)";
-	        try (PreparedStatement ps = connection.prepareStatement(query)) {
-	            for (ContientWarning w : warnings) {
-	                ps.setInt(1, filmId);
-	                ps.setString(2, w.name()); // Convertit l'Enum en String
-	                ps.addBatch();
+	   
+	    public List<Warning> findAll() throws SQLException {
+	        List<Warning> list = new ArrayList<>();
+	        String sql = "SELECT * FROM warnings";
+	        try (Statement st = connection.createStatement();
+	             ResultSet rs = st.executeQuery(sql)) {
+	            while (rs.next()) {
+	                list.add(new Warning(rs.getInt("id"), rs.getString("nom")));
 	            }
-	            ps.executeBatch();
+	        }
+	        return list;
+	    }
+	    public void save(Warning warning) throws SQLException {
+	        String sql = "INSERT INTO warnings (nom) VALUES (?)";
+	        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+	            ps.setString(1, warning.getNom());
+	            ps.executeUpdate();
+	            
+	            // On récupère l'ID généré par la DB pour l'objet Java
+	            try (ResultSet rs = ps.getGeneratedKeys()) {
+	                if (rs.next()) warning.setId(rs.getInt(1));
+	            }
 	        }
 	    }
-	  //hedhi
 
-	    // Récupérer les enums depuis la base
-	    public List<ContientWarning> getWarningsByFilm(int filmId) throws SQLException {
-	        List<ContientWarning> warnings = new ArrayList<>();
-	        String query = "SELECT warning_name FROM film_warnings WHERE film_id = ?";
-	        try (PreparedStatement ps = connection.prepareStatement(query)) {
-	            ps.setInt(1, filmId);
+	    // --- FIND BY ID ---
+	    public Warning findById(int id) throws SQLException {
+	        String sql = "SELECT * FROM warnings WHERE id = ?";
+	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	            ps.setInt(1, id);
 	            try (ResultSet rs = ps.executeQuery()) {
-	                while (rs.next()) {
-	                    // Convertit le String de la DB en objet Enum Java
-	                    warnings.add(ContientWarning.valueOf(rs.getString("warning_name")));
+	                if (rs.next()) {
+	                    return new Warning(rs.getInt("id"), rs.getString("nom"));
 	                }
 	            }
 	        }
-	        return warnings;
+	        return null;
 	    }
 
-	    public void deleteAllForFilm(int filmId) throws SQLException {
-	        String query = "DELETE FROM film_warnings WHERE film_id = ?";
-	        try (PreparedStatement ps = connection.prepareStatement(query)) {
-	            ps.setInt(1, filmId);
+	    // --- UPDATE ---
+	    public void update(Warning warning) throws SQLException {
+	        String sql = "UPDATE warnings SET nom = ? WHERE id = ?";
+	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	            ps.setString(1, warning.getNom());
+	            ps.setInt(2, warning.getId());
+	            ps.executeUpdate();
+	        }
+	    }
+
+	    // --- DELETE ---
+	    public void delete(int id) throws SQLException {
+	        String sql = "DELETE FROM warnings WHERE id = ?";
+	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	            ps.setInt(1, id);
 	            ps.executeUpdate();
 	        }
 	    }
 	
 
-}
+	    // Récupérer les enums depuis la base
+	   
+	    /**
+	     * enregistrer dans tableau media_warning
+	     */
+
+		public void lierMedia(int mediaId, int  warnId) throws SQLException{
+			String sql = "INSERT INTO media_warning (media_id, warning_id) VALUES (?, ?)";
+	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	            ps.setInt(1, mediaId);
+	            ps.setInt(2, warnId);
+	            ps.executeUpdate();
+			
+		}
+	
+
+}}

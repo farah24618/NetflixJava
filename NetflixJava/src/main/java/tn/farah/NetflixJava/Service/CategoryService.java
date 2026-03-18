@@ -20,7 +20,7 @@ public class CategoryService {
 	        return categoryDao.findAll();
 	    }
 
-	    public void createCategory(String name) throws Exception {
+	    public void saveCategory(String name) throws Exception {
 	        // Validation métier
 	        if (name == null || name.trim().isEmpty()) {
 	            throw new Exception("Le nom de la catégorie ne peut pas être vide.");
