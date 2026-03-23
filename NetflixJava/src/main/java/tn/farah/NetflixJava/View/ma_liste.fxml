@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<StackPane style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.MaListeMobileController">
+   <children>
+      
+      <VBox spacing="15.0">
+         <padding>
+            <Insets bottom="10.0" left="15.0" right="15.0" top="20.0" />
+         </padding>
+         
+         <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <Label text="←" textFill="WHITE" style="-fx-font-size: 24px; -fx-font-weight: bold;">
+               <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Label>
+            <Label text="Ma liste" textFill="WHITE" style="-fx-font-size: 22px; -fx-font-weight: bold;" HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label text="🔍" textFill="WHITE" style="-fx-font-size: 20px;">
+               <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Label>
+         </HBox>
+
+         <VBox spacing="2.0">
+            <Label text="Trier par" textFill="#a6a6a6" style="-fx-font-size: 12px;" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <HBox fx:id="btnOpenSort" alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#openSortMenu">
+                  <cursor><Cursor fx:constant="HAND" /></cursor>
+                  <Label text="Titres suggérés" textFill="WHITE" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  <Label text="▾" textFill="WHITE" style="-fx-font-size: 16px;" />
+               </HBox>
+               <Region HBox.hgrow="ALWAYS" />
+               <Label text="✎" textFill="WHITE" style="-fx-font-size: 18px;">
+                  <cursor><Cursor fx:constant="HAND" /></cursor>
+               </Label>
+            </HBox>
+         </VBox>
+
+         <HBox spacing="10.0">
+            <Label text="Pas commencé" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+               <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Label>
+            <Label text="Commencé" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+               <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Label>
+            <Label text="Séries" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+               <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Label>
+            <Label text="Films" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+               <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Label>
+         </HBox>
+
+         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #000000; -fx-background-color: #000000; -fx-control-inner-background: #000000; -fx-padding: 0;" VBox.vgrow="ALWAYS">
+            <content>
+               <VBox fx:id="listContainer" spacing="15.0" style="-fx-background-color: #000000; -fx-padding: 10 0 10 0;" />
+            </content>
+         </ScrollPane>
+      </VBox>
+
+      <StackPane fx:id="sortMenuOverlay" visible="false" style="-fx-background-color: rgba(0,0,0,0.6);" alignment="BOTTOM_CENTER">
+         <children>
+            <Region onMouseClicked="#closeSortMenu" />
+            
+            <VBox maxHeight="-Infinity" style="-fx-background-color: #2b2b2b; -fx-background-radius: 15 15 0 0; -fx-padding: 20 20 40 20;" spacing="25.0">
+               
+               <HBox alignment="CENTER_LEFT">
+                  <Label text="Trier par" textFill="WHITE" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <StackPane onMouseClicked="#closeSortMenu">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                     <Circle radius="15.0" fill="#4d4d4d" />
+                     <Label text="✕" textFill="WHITE" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+                  </StackPane>
+               </HBox>
+
+               <VBox spacing="20.0">
+                  <HBox alignment="CENTER_LEFT" spacing="15.0">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                     <Label text="✓" textFill="WHITE" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                     <Label text="Titres suggérés" textFill="WHITE" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="15.0">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                     <Label text="   " style="-fx-font-size: 18px;" /> <Label text="Date d'ajout à la liste" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="15.0">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                     <Label text="   " style="-fx-font-size: 18px;" />
+                     <Label text="Ordre alphabétique" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="15.0">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                     <Label text="   " style="-fx-font-size: 18px;" />
+                     <Label text="Date de sortie" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  </HBox>
+               </VBox>
+               
+            </VBox>
+         </children>
+      </StackPane>
+      
+   </children>
+</StackPane>
