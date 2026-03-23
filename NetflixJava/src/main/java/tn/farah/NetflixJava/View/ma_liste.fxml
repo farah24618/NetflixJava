@@ -91,7 +91,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="15.0">
                      <cursor><Cursor fx:constant="HAND" /></cursor>
-                     <Label text="   " style="-fx-font-size: 18px;" /> <Label text="Date d'ajout à la liste" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                     <Label text="   " style="-fx-font-size: 1".settings/org.eclipse.m2e.core.prefs"8px;" /> <Label text="Date d'ajout à la liste" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="15.0">
                      <cursor><Cursor fx:constant="HAND" /></cursor>
