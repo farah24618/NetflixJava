@@ -1,31 +1,31 @@
 package tn.farah.NetflixJava;
 
 import javafx.application.Application;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class Main extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        // CORRECTION ICI : On met le bon chemin vers votre package View !
-        FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("/tn/farah/NetflixJava/View/home.fxml") 
-        );
-        
-        // Si votre fichier s'appelle encore login.fxml, mettez plutôt :
-        // getClass().getResource("/tn/farah/NetflixJava/View/login.fxml")
-        
-        Parent root = loader.load();
-
-        Scene scene = new Scene(root, 1280, 720);
-        primaryStage.setTitle("StreamVibe - Accueil");
-        primaryStage.setScene(scene);
-        primaryStage.setMinWidth(900);
-        primaryStage.setMinHeight(600);
-        primaryStage.show();
+	@Override
+    public void start(Stage primaryStage) {
+ 
+        ScreenManager nav = ScreenManager.getInstance();
+ 
+        // 1. Give the manager the stage (once only)
+        nav.init(primaryStage);
+ 
+        // 2. Register every screen
+        nav.register(Screen.login,          "/tn/farah/NetflixJava/login.fxml");
+        nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");
+        nav.register(Screen.logup,        "/tn/farah/NetflixJava/logup.fxml");
+        // 3. Show the first screen
+        primaryStage.setTitle("RekchaNet");
+        nav.navigateTo(Screen.login);
     }
 
     public static void main(String[] args) {

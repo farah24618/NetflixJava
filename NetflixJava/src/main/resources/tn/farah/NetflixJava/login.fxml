@@ -9,14 +9,17 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="676.0" prefWidth="743.0" style="-fx-background-position: center; -fx-background-size: cover;" styleClass="main-bg" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="676.0" prefWidth="743.0" style="-fx-background-position: center; -fx-background-size: cover;" styleClass="main-bg" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.LoginController">
    <top>
       <AnchorPane prefHeight="120.0" prefWidth="712.0" BorderPane.alignment="CENTER">
          <children>
@@ -42,7 +45,7 @@
                   <Insets right="220.0" />
                </padding>
             </Label>
-            <TextField prefHeight="38.0" prefWidth="290.0" promptText="Email or Phone Number" style="-fx-background-color: transparent; -fx-border-color: white;">
+            <TextField fx:id="emailField" prefHeight="38.0" prefWidth="290.0" promptText="Email or Phone Number" style="-fx-background-color: transparent; -fx-border-color: white;">
                <font>
                   <Font size="13.0" />
                </font>
@@ -50,7 +53,7 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
-            <PasswordField prefHeight="38.0" prefWidth="206.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: white;">
+            <PasswordField fx:id="passwordField" prefHeight="38.0" prefWidth="206.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: white;">
                <font>
                   <Font size="13.0" />
                </font>
@@ -58,7 +61,7 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </PasswordField>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="403.0" style="-fx-background-color: red;" text="Sign In" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="signInButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSignIn" prefHeight="38.0" prefWidth="403.0" style="-fx-background-color: red;" text="Sign In" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -66,20 +69,71 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <CheckBox alignment="TOP_LEFT" mnemonicParsing="false" text="Remenber me" textFill="WHITE">
-               <font>
-                  <Font size="10.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets right="250.0" />
-               </padding>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </CheckBox>
+            <HBox prefHeight="30.0" prefWidth="390.0">
+               <children>
+                  <CheckBox fx:id="remenberMeCheckBox" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#handleRememberMe" prefHeight="37.0" prefWidth="196.0" text="Remenber me" textFill="WHITE">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </CheckBox>
+                  <Button fx:id="forgotPasswordButton" mnemonicParsing="false" onAction="#handleForgotPassword" prefHeight="26.0" prefWidth="223.0" style="-fx-background-color: transparent;" text="Forget your Password ?" textFill="#f4efef">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="60.0" />
+                     </padding>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <effect>
+                        <DropShadow>
+                           <color>
+                              <Color red="1.0" green="0.08518518507480621" blue="0.08518518507480621" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="386.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="142.0" text="New to RekchaNet ?" textFill="#f7f7f7">
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Button fx:id="signUp" mnemonicParsing="false" onAction="#handleSignUp" style="-fx-background-color: transparent;" text="Sign up" textFill="#f4f2f2">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <padding>
+                        <Insets top="-1.0" />
+                     </padding>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Button>
+               </children>
+            </HBox>
             <Label text="this page is protected by Google reCAPTCHA to" textFill="WHITE">
                <font>
                   <Font size="10.0" />
@@ -96,7 +150,7 @@
                   <Insets right="220.0" top="-10.0" />
                </VBox.margin>
             </Label>
-            <Hyperlink text="Learn more">
+            <Hyperlink fx:id="LearnMoreLink" onAction="#handleLearnMore" text="Learn more">
                <padding>
                   <Insets right="45.0" top="-37.0" />
                </padding>
