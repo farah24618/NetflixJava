@@ -96,73 +96,88 @@
                 <!--   et les Labels fx:id pour les textes     -->
                 <!-- ────────────────────────────────────────── -->
                 
-                <StackPane fx:id="heroSection" styleClass="hero-section">
+                <StackPane fx:id="heroSection" alignment="CENTER_LEFT" styleClass="hero-section">
  					
-                    <Pane fx:id="heroBackdrop" styleClass="hero-backdrop" />
-
-                    <HBox alignment="BOTTOM_LEFT" style="-fx-padding: 0 0 60px 60px;" styleClass="hero-content-overlay">
-                        <VBox maxWidth="600" spacing="14" styleClass="hero-text-block">
-
-                            <HBox alignment="CENTER_LEFT" spacing="8">
-                                <Label fx:id="heroType" styleClass="hero-badge-featured" text="" />
-                                <Label fx:id="heroGenreBadge" styleClass="hero-badge-genre" text="" />
+                    <Pane fx:id="heroBackdrop" minHeight="700.0" style="-fx-max-height: 700px;" styleClass="hero-backdrop">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets></Pane>
+   
+                                         <HBox alignment="BOTTOM_LEFT" style="-fx-padding: 0 0 60px 60px;" styleClass="hero-content-overlay">
+                        <VBox alignment="CENTER_LEFT" maxWidth="600" prefHeight="554.0" prefWidth="265.0" spacing="20.0" style="-fx-translate-y: 80;" styleClass="hero-text-block">
+   
+                                                 <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="heroType" styleClass="hero-badge-featured" text="" textFill="WHITE" />
+                                <Label fx:id="heroGenreBadge" styleClass="hero-badge-genre" text="" textFill="WHITE" />
                             </HBox>
-
-                            <Label fx:id="heroTitle" styleClass="hero-title" text="" wrapText="true" />
-
-                            <HBox alignment="CENTER_LEFT" spacing="16">
-                                <Label fx:id="heroRating" styleClass="hero-stars" text="" />
-                                <Label fx:id="heroDuration" styleClass="hero-meta" text="" />
-                                <Label fx:id="heroYear" styleClass="hero-meta" text="" />
-                                <Label fx:id="heroCertif" styleClass="hero-meta-badge" text="" />
+   
+                                                 <Label fx:id="heroTitle" style="-fx-font-size: 50; -fx-font-weight: bold;" styleClass="hero-title" text="" textFill="WHITE" wrapText="true">
+                        <font>
+                           <Font size="48.0" />
+                        </font>
+                     </Label>
+   
+                                                 <HBox alignment="CENTER_LEFT" spacing="16">
+                                <Label fx:id="heroRating" styleClass="hero-stars" text="" textFill="WHITE" />
+                                <Label fx:id="heroDuration" styleClass="hero-meta" text="" textFill="WHITE" />
+                                <Label fx:id="heroYear" styleClass="hero-meta" text="" textFill="WHITE" />
+                                <Label fx:id="heroCertif" styleClass="hero-meta-badge" text="" textFill="WHITE" />
                             </HBox>
-
-                            <Label fx:id="heroSynopsis" styleClass="hero-synopsis" text="" wrapText="true" />
-
-                            <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 8 0 0 0;">
+   
+                                                 <Label fx:id="heroSynopsis" styleClass="hero-synopsis" text="" textFill="WHITE" wrapText="true" />
+   
+                                                 <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 8 0 0 0;">
                                 <Button onAction="#onPlayFeatured" style="-fx-background-color: WHITE;" styleClass="btn-play-hero" text="▶  Lire">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                                 <Button onAction="#onMoreInfoFeatured" styleClass="btn-info-hero" text="ℹ  Plus d'infos" textFill="WHITE">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                            <font>
                               <Font name="System Bold" size="12.0" />
-                           </font></Button>
+                           </font>
+                        </Button>
                                 <Button onAction="#onAddFeaturedToList" styleClass="btn-list-hero" text="+ Ma Liste" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                             </HBox>
-
-                        </VBox>
+                     <opaqueInsets>
+                        <Insets left="60.0" />
+                     </opaqueInsets>
+   
+                                             </VBox>
+                  <padding>
+                     <Insets top="140.0" />
+                  </padding>
                     </HBox>
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
 
                 </StackPane>
 
-                <!-- ────────────────────────────────────────── -->
+                                                 <!-- ────────────────────────────────────────── -->
                 <!--   CAROUSELS — entièrement générés par     -->
                 <!--   HomeController depuis la BDD.           -->
                 <!--   Un carousel par catégorie/genre,        -->
                 <!--   autant de cartes que de contenus.       -->
                 <!-- ────────────────────────────────────────── -->
-                <VBox fx:id="carouselContainer" spacing="36" style="-fx-padding: 0 40 60 40; -fx-background-color: transparent;" styleClass="carousels-section">
+                <VBox fx:id="carouselContainer" prefHeight="151.0" prefWidth="1044.0" spacing="36" style="-fx-padding: 0 40 60 40; -fx-translate-y: -150;" styleClass="carousels-section">
                <children>
-                  <Label text="Film à la une " textFill="WHITE">
-                     <font>
-                        <Font name="Arial Bold" size="17.0" />
-                     </font>
-                  </Label>
-                  <FlowPane fx:id="filmContainer" alignment="CENTER" prefHeight="204.0" prefWidth="962.0" style="-fx-background-color: transparent;" />
-               </children></VBox>
+                  <FlowPane fx:id="filmContainer" alignment="CENTER" prefHeight="96.0" prefWidth="964.0" style="-fx-background-color: transparent;" />
+               </children>
+            </VBox>
 
             </VBox>
         </ScrollPane>

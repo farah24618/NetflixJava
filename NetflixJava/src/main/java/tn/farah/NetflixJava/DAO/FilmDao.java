@@ -218,7 +218,7 @@ public class FilmDao {
         f.setUrlImageBanner(rs.getString("url_image_banner"));
         f.setUrlTeaser(rs.getString("url_teaser"));
         f.setRatingMoyen(rs.getDouble("rating_moyen"));
-        f.setAgeRating(AgeRating.valueOf(rs.getString("age_rating")));
+        //f.setAgeRating(AgeRating.valueOf("All"));
         f.setUrlVedio(rs.getString("url_video"));
         f.setDuree(rs.getInt("duree_minutes"));
         f.setNbreVue(rs.getInt("nbre_vues"));
