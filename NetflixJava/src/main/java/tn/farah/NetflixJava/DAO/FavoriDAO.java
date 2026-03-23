@@ -93,4 +93,72 @@ public class FavoriDAO {
 
         return rows;
     }
+    public static boolean existe(int userId, int mediaId) {
+        String sql = "SELECT * FROM favori WHERE userId = ? AND mediaId = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, mediaId);
+
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    public static Favori findByUserIdAndMediaId(int userId, int mediaId) {
+        String sql = "SELECT * FROM favori WHERE userId = ? AND mediaId = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, mediaId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Favori(
+                        rs.getInt("id"),
+                        rs.getInt("userId"),
+                        rs.getInt("mediaId")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    public static List<Favori> getFavorisByUser(int userId) {
+
+        List<Favori> favoris = new ArrayList<>();
+        String sql = "SELECT * FROM favori WHERE userId = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Favori f = new Favori(
+                        rs.getInt("id"),
+                        rs.getInt("userId"),
+                        rs.getInt("mediaId")
+                );
+                favoris.add(f);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return favoris;
+    }
+    
 }

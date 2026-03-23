@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.farah.NetflixJava.Controller.DetailMediaController"
+            prefWidth="1200.0" prefHeight="700.0">
+
+    <!-- ===== TOP BAR ===== -->
+    <top>
+        <HBox spacing="20.0" alignment="CENTER_LEFT" prefHeight="60.0">
+            <children>
+
+                <!-- LOGO -->
+                <ImageView fx:id="imgLogo"
+                           fitHeight="40.0"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@/tn/farah/NetflixJava/ImagesNet/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <!-- MENU -->
+                <Button text="Accueil"/>
+                <Button text="Films"/>
+                <Button text="Séries"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Mon compte"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <center>
+        <VBox spacing="20.0" prefWidth="1200.0" prefHeight="640.0">
+
+            <!-- ===== PARTIE PRINCIPALE ===== -->
+            <HBox spacing="30.0" alignment="CENTER_LEFT">
+
+                <!-- INFOS -->
+                <VBox spacing="15.0" prefWidth="550.0">
+
+                    <Label fx:id="lblTitre" text="Titre du média"/>
+
+                    <HBox spacing="10.0">
+                        <Label fx:id="lblType" text="Film"/>
+                        <Label text="|"/>
+                        <Label fx:id="lblNote" text="8.5/10"/>
+                        <Label text="|"/>
+                        <Label fx:id="lblAnnee" text="2025"/>
+                        <Label text="|"/>
+                        <Label fx:id="lblCategorie" text="Action"/>
+                    </HBox>
+
+                    <Label text="Description :" />
+                    <Label fx:id="lblDescription"
+                           wrapText="true"
+                           text="Description du média..."/>
+
+                    <Label text="Casting :" />
+                    <Label fx:id="lblCasting"
+                           wrapText="true"
+                           text="Acteur 1, Acteur 2, Acteur 3"/>
+
+                    <!-- BOUTONS -->
+                    <HBox spacing="10.0">
+                        <Button fx:id="btnWatch" text="Regarder"/>
+                        <Button fx:id="btnTrailer" text="Trailer"/>
+                        <Button fx:id="btnFavori" text="Ma liste"/>
+                    </HBox>
+
+                </VBox>
+
+                <!-- IMAGE -->
+                <ImageView fx:id="imgAffiche"
+                           fitWidth="400.0"
+                           fitHeight="500.0"
+                           preserveRatio="true"/>
+
+            </HBox>
+
+            <!-- ===== PARTIE SERIE (OPTIONNELLE) ===== -->
+            <VBox fx:id="serieBox"
+                  spacing="10.0"
+                  visible="false"
+                  managed="false">
+
+                <Label text="Saisons"/>
+                <ComboBox fx:id="cbSaisons" prefWidth="200.0"/>
+
+                <Label text="Episodes"/>
+                <ListView fx:id="listEpisodes" prefHeight="150.0"/>
+
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
