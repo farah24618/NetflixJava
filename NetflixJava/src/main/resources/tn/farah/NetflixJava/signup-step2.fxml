@@ -5,13 +5,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #000000; -fx-border-color: #222222; -fx-border-width: 0 0 1 0; -fx-padding: 20 32 20 32;">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.signup2Controller">
+   
+   <top>
+      <HBox prefHeight="90.0" style="-fx-background-color: #000000; -fx-border-color: #222222; -fx-border-width: 0 0 1 0; -fx-padding: 20 32 20 32;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -21,77 +23,92 @@
                   <Insets left="-30.0" top="-20.0" />
                </HBox.margin>
             </ImageView>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 4; -fx-padding: 6 14 6 14;" text="Se connecter" />
-         </children></HBox>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 4; -fx-padding: 6 14 6 14;" text="retour" />
+         </children>
+      </HBox>
+   </top>
+
+   <center>
+      <VBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
          <children>
-            <VBox prefHeight="200.0" prefWidth="440.0" spacing="16.0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 32 36 32 36;">
+            <VBox maxWidth="440.0" spacing="16.0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 32 36 32 36;">
                <children>
                   <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Étape 2 sur 3" />
                   <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Choisissez votre forfait" />
                   <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Changez ou annulez à tout moment." />
-               </children></VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="12.0">
-               <children>
-                  <HBox fx:id="premiumBox" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #E50914; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
-                     <children>
-                        <VBox maxWidth="1.7976931348623157E308" minWidth="0.0" prefHeight="200.0" prefWidth="100.0" spacing="4.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Premium" />
-                              <Label maxWidth="1.7976931348623157E308" minWidth="0.0" prefHeight="18.0" prefWidth="206.0" style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="4K + HDR · 4 écrans · Téléchargements" wrapText="true" />
-                           </children>
-                        </VBox>
-                        <Region prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER" />
-                        <VBox alignment="CENTER_RIGHT" minWidth="80.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER">
-                           <children>
-                              <Label minWidth="80.0" style="-fx-text-fill: white;-fx-font-size: 18px; -fx-font-weight: bold;" text="61,16 DT" VBox.vgrow="NEVER" />
-                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" /mois" />
-                           </children>
-                        </VBox>
-                     </children></HBox>
-                  <HBox fx:id="standardBox" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
-               		<children>
-                        <VBox maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="4.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Standard" />
-                              <Label maxWidth="1.7976931348623157E308" minWidth="0.0" style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text=" Full HD · 2 écrans · Téléchargements" wrapText="true" />
-                           </children>
-                        </VBox>
-                        <Region prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER" />
-                        <VBox alignment="CENTER_RIGHT" minWidth="0.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER">
-                           <children>
-                              <Label style="-fx-text-fill: white;-fx-font-size: 18px; -fx-font-weight: bold;" text="45,86 DT" />
-                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" /mois" />
-                           </children>
-                        </VBox>
-                     </children></HBox>
-                      <HBox fx:id="pubBox" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
-               		<children>
-                        <VBox maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="4.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text=" Standard avec pub" />
-                              <Label maxWidth="1.7976931348623157E308" minWidth="0.0" style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="Full HD · 2 écrans · Publicités" wrapText="true" />
-                           </children>
-                        </VBox>
-                        <Region prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER" />
-                        <VBox alignment="CENTER_RIGHT" minWidth="0.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER">
-                           <children>
-                              <Label style="-fx-text-fill: white;-fx-font-size: 18px; -fx-font-weight: bold;" text="20,36 DT" />
-                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" /mois" />
-                           </children>
-                        </VBox>
-                     </children></HBox>
                </children>
             </VBox>
-            <Button fx:id="continuerBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 46; -fx-background-radius: 4;" text=" CONTINUER" />
+
+            <VBox maxWidth="440.0" spacing="12.0">
+               <children>
+                  <HBox fx:id="premiumBox" alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #E50914; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                     <children>
+                        <VBox onMouseClicked="#selectPremium" spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Premium" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="4K + HDR · 4 écrans · Téléchargements" wrapText="true" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER_RIGHT" minWidth="80.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="61,16 DT" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" /mois" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="standardBox" alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                     <children>
+                        <VBox onMouseClicked="#selectStandard" spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Standard" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="Full HD · 2 écrans · Téléchargements" wrapText="true" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER_RIGHT" minWidth="80.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="45,86 DT" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" /mois" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="pubBox" alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                     <children>
+                        <VBox onMouseClicked="#selectStandardPub" spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Standard avec pub" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="Full HD · 2 écrans · Publicités" wrapText="true" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER_RIGHT" minWidth="80.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="20,36 DT" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" /mois" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <Button maxWidth="440.0" mnemonicParsing="false" onAction="#handleContinuer" prefHeight="46.0" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 4;" text="CONTINUER" />
          </children>
       </VBox>
-      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="200.0" spacing="8.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0; -fx-padding: 16 32 16 32;">
+   </center>
+
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="60.0" spacing="8.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0; -fx-padding: 16 32 16 32;" BorderPane.alignment="CENTER">
          <children>
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #E50914; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-         </children></HBox>
-   </children>
-</VBox>
+            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-background-radius: 2;" />
+            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #E50914; -fx-background-radius: 2;" />
+            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-background-radius: 2;" />
+         </children>
+      </HBox>
+   </bottom>
+
+</BorderPane>
