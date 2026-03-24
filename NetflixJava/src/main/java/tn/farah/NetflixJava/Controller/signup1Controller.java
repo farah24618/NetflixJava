@@ -19,6 +19,7 @@ public class signup1Controller {
 	        changerScene(event, "signup-step2.fxml", "Étape 2 - Création de compte");
 	    }
 //....
+	    //..
 	    // Méthode pour le bouton SE CONNECTER (en haut à droite ou en bas)
 	    @FXML
 	    private void handleSeConnecter(ActionEvent event) {

@@ -12,7 +12,7 @@ import java.io.IOException;
 public class signup2Controller {
 	
 //..
-	
+	//...
 	
 
 	    private String selectedForfait = "Premium"; // Valeur par défaut
