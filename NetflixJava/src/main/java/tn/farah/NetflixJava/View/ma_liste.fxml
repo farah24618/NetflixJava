@@ -23,7 +23,7 @@
             <Label text="←" textFill="WHITE" style="-fx-font-size: 24px; -fx-font-weight: bold;">
                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Label>
-            <Label text="Ma liste" textFill="WHITE" style="-fx-font-size: 22px; -fx-font-weight: bold;" HBox.hgrow="ALWAYS" />
+            <Label text="My List" textFill="WHITE" style="-fx-font-size: 22px; -fx-font-weight: bold;" HBox.hgrow="ALWAYS" />
             <Region HBox.hgrow="ALWAYS" />
             <Label text="🔍" textFill="WHITE" style="-fx-font-size: 20px;">
                <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -31,11 +31,11 @@
          </HBox>
 
          <VBox spacing="2.0">
-            <Label text="Trier par" textFill="#a6a6a6" style="-fx-font-size: 12px;" />
+            <Label text="Sort by" textFill="#a6a6a6" style="-fx-font-size: 12px;" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <HBox fx:id="btnOpenSort" alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#openSortMenu">
                   <cursor><Cursor fx:constant="HAND" /></cursor>
-                  <Label text="Titres suggérés" textFill="WHITE" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  <Label text="Suggested" textFill="WHITE" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                   <Label text="▾" textFill="WHITE" style="-fx-font-size: 16px;" />
                </HBox>
                <Region HBox.hgrow="ALWAYS" />
@@ -46,16 +46,16 @@
          </VBox>
 
          <HBox spacing="10.0">
-            <Label text="Pas commencé" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+            <Label text="Not started" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Label>
-            <Label text="Commencé" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+            <Label text="Started" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Label>
-            <Label text="Séries" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+            <Label text="TV Shows" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Label>
-            <Label text="Films" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
+            <Label text="Movies" textFill="WHITE" style="-fx-border-color: #808080; -fx-border-radius: 20; -fx-padding: 5 12 5 12; -fx-font-size: 13px;">
                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Label>
          </HBox>
@@ -74,7 +74,7 @@
             <VBox maxHeight="-Infinity" style="-fx-background-color: #2b2b2b; -fx-background-radius: 15 15 0 0; -fx-padding: 20 20 40 20;" spacing="25.0">
                
                <HBox alignment="CENTER_LEFT">
-                  <Label text="Trier par" textFill="WHITE" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+                  <Label text="Sort by" textFill="WHITE" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
                   <Region HBox.hgrow="ALWAYS" />
                   <StackPane onMouseClicked="#closeSortMenu">
                      <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -87,21 +87,22 @@
                   <HBox alignment="CENTER_LEFT" spacing="15.0">
                      <cursor><Cursor fx:constant="HAND" /></cursor>
                      <Label text="✓" textFill="WHITE" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-                     <Label text="Titres suggérés" textFill="WHITE" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                     <Label text="Suggested" textFill="WHITE" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="15.0">
                      <cursor><Cursor fx:constant="HAND" /></cursor>
-                     <Label text="   " style="-fx-font-size: 1".settings/org.eclipse.m2e.core.prefs"8px;" /> <Label text="Date d'ajout à la liste" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="15.0">
-                     <cursor><Cursor fx:constant="HAND" /></cursor>
-                     <Label text="   " style="-fx-font-size: 18px;" />
-                     <Label text="Ordre alphabétique" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                     <Label text="   " style="-fx-font-size: 18px;" /> 
+                     <Label text="Date added to list" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="15.0">
                      <cursor><Cursor fx:constant="HAND" /></cursor>
                      <Label text="   " style="-fx-font-size: 18px;" />
-                     <Label text="Date de sortie" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                     <Label text="Alphabetical" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="15.0">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                     <Label text="   " style="-fx-font-size: 18px;" />
+                     <Label text="Release date" textFill="#cccccc" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                   </HBox>
                </VBox>
                

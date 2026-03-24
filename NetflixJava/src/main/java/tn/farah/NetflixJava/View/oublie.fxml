@@ -29,22 +29,22 @@
                </children>
             </HBox>
 
-            <Label text="Mot de passe oublié ?" textFill="WHITE" style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+            <Label text="Forgot Password?" textFill="WHITE" style="-fx-font-size: 28px; -fx-font-weight: bold;" />
 
-            <Label text="Un email de réinitialisation sera envoyé à votre adresse" textFill="#cccccc" style="-fx-font-size: 15px;" />
+            <Label text="A reset email will be sent to your address" textFill="#cccccc" style="-fx-font-size: 15px;" />
 
             <Region prefHeight="10.0" prefWidth="200.0" />
 
             <VBox spacing="8.0" maxWidth="400.0">
                <children>
-                  <Label text="Adresse Email" textFill="#b3b3b3" style="-fx-font-size: 14px;" />
+                  <Label text="Email Address" textFill="#b3b3b3" style="-fx-font-size: 14px;" />
                   <TextField style="-fx-background-color: #333333; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 12; -fx-background-radius: 5;" />
                </children>
             </VBox>
 
             <HBox alignment="CENTER" maxWidth="350.0" spacing="15.0" style="-fx-background-color: #f9f9f9; -fx-padding: 15 20 15 20; -fx-background-radius: 3; -fx-border-color: #d3d3d3; -fx-border-radius: 3;">
                <children>
-                  <CheckBox mnemonicParsing="false" style="-fx-font-size: 14px; -fx-text-fill: #555555;" text="Je ne suis pas un robot">
+                  <CheckBox mnemonicParsing="false" style="-fx-font-size: 14px; -fx-text-fill: #555555;" text="I'm not a robot">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -66,13 +66,13 @@
 
             <VBox alignment="CENTER" spacing="15.0">
                <children>
-                  <Button maxWidth="350.0" mnemonicParsing="false" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-padding: 12; -fx-background-radius: 4;" text="Confirmer">
+                  <Button maxWidth="350.0" mnemonicParsing="false" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-padding: 12; -fx-background-radius: 4;" text="Confirm">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
 
-                  <Button maxWidth="350.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #555555; -fx-text-fill: #b3b3b3; -fx-font-size: 14px; -fx-padding: 8; -fx-border-radius: 4;" text="FERMER">
+                  <Button maxWidth="350.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #555555; -fx-text-fill: #b3b3b3; -fx-font-size: 14px; -fx-padding: 8; -fx-border-radius: 4;" text="CLOSE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
