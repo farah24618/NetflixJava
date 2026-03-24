@@ -23,9 +23,10 @@ public class Main extends Application {
         nav.register(Screen.login,          "/tn/farah/NetflixJava/login.fxml");
         nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");
         nav.register(Screen.logup,        "/tn/farah/NetflixJava/logup.fxml");
+        nav.register(Screen.firstPage,        "/tn/farah/NetflixJava/firtsPage.fxml");
         // 3. Show the first screen
         primaryStage.setTitle("RekchaNet");
-        nav.navigateTo(Screen.login);
+        nav.navigateTo(Screen.firstPage);
     }
 
     public static void main(String[] args) {

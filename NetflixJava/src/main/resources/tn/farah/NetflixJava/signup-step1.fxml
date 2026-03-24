@@ -8,69 +8,76 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #000000; -fx-border-color: #222; -fx-border-width: 0 0 1 0;">
-         <padding>
-            <Insets bottom="32.0" left="32.0" right="20.0" top="20.0" />
-         </padding>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;">
          <children>
-            <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@ImagesNet/netflixLogo.jpg" />
-               </image>
-               <HBox.margin>
-                  <Insets left="-30.0" top="-20.0" />
-               </HBox.margin>
-            </ImageView>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; fx-background-radius: 4;" text="Se connecter" textAlignment="CENTER" />
-         </children>
-      </HBox>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox maxWidth="420.0" prefHeight="200.0" prefWidth="100.0" spacing="14.0" style="-fx-background-color: #111111; -fx-border-color: #333; -fx-border-radius: 8; -fx-background-radius: 8;">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #000000; -fx-border-color: #222; -fx-border-width: 0 0 1 0;">
                <padding>
-                  <Insets bottom="40.0" left="40.0" right="36.0" top="36.0" />
+                  <Insets bottom="32.0" left="32.0" right="20.0" top="20.0" />
                </padding>
                <children>
-                  <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Créer votre compte" />
-                  <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text=" Étape 1 sur 3 — Informations personnelles" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                  <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@ImagesNet/netflixLogo.jpg" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="-30.0" top="-20.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; fx-background-radius: 4;" text="Se connecter" textAlignment="CENTER" />
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox maxWidth="420.0" prefHeight="200.0" prefWidth="100.0" spacing="14.0" style="-fx-background-color: #111111; -fx-border-color: #333; -fx-border-radius: 8; -fx-background-radius: 8;">
+                     <padding>
+                        <Insets bottom="40.0" left="40.0" right="36.0" top="36.0" />
+                     </padding>
                      <children>
-                        <TextField promptText="Prénom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                        <TextField promptText="Nom de famille" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Créer votre compte" />
+                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text=" Étape 1 sur 3 — Informations personnelles" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <TextField promptText="Prénom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <TextField promptText="Nom de famille" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <TextField promptText=" Adresse e-mail" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                        <PasswordField promptText="Mot de passe" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                        <TextField promptText="+216 Numéro de téléphone" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0">
+                           <children>
+                              <ComboBox maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Jour" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Mois" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Année" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
-                  <TextField promptText=" Adresse e-mail" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                  <PasswordField promptText="Mot de passe" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                  <TextField promptText="+216 Numéro de téléphone" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0">
-                     <children>
-                        <ComboBox maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Jour" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                        <ComboBox maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Mois" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                        <ComboBox maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Année" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
+                  </VBox>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="475.0" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 46; -fx-background-radius: 4;" text="CONTINUER" />
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-text-fill:: #888888; -fx-font-size:: 12px;" text="Déjà membre ? Se connecter">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
             </VBox>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 46; -fx-background-radius: 4;" text="CONTINUER" />
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-text-fill:: #888888; -fx-font-size:: 12px;" text="Déjà membre ? Se connecter">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Label>
+            <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="200.0" spacing="8.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0; -fx-padding: 16 32 16 32;">
+               <children>
+                  <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #E50914; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
+                  <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
+                  <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
+               </children>
+            </HBox>
          </children>
       </VBox>
-      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="200.0" spacing="8.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0; -fx-padding: 16 32 16 32;">
-         <children>
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #E50914; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-         </children></HBox>
-   </children>
-</VBox>
+   </center>
+</BorderPane>

@@ -1,3 +1,91 @@
 .main-bg {
 -fx-background-image: url("ImagesNet/loginWallpaper.jpg"); -fx-background-size: cover;
 }
+/* The main container for each FAQ item */
+.titled-pane {
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 25px;
+    -fx-animated: true;
+}
+
+/* Styling the header (the clickable bar) */
+.titled-pane > .title {
+    -fx-background-color: #2d2d2d; /* Dark grey background */
+    -fx-background-insets: 0, 0 0 1 0; /* Creates a small bottom border/gap */
+    -fx-padding: 20px;
+    
+    /* MOVES THE ICON TO THE RIGHT */
+    -fx-content-display: RIGHT; 
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Hover effect for the header */
+.titled-pane > .title:hover {
+    -fx-background-color: #404040; /* Slightly lighter on hover */
+}
+
+/* Remove the default triangle shape */
+.titled-pane > .title > .arrow-button > .arrow {
+    -fx-shape: none;
+    -fx-background-color: transparent;
+}
+
+/* ADD THE "^" ICON ON THE RIGHT */
+.titled-pane > .title > .arrow-button::after {
+    -fx-content: "^"; /* You can also use "+" here if you prefer */
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-translate-x: -10; /* Adjust horizontal position */
+}
+
+/* ROTATE THE ICON WHEN EXPANDED */
+.titled-pane:expanded > .title > .arrow-button {
+    -fx-rotate: 180; /* Flips the ^ to point down when open */
+}
+
+/* The content area that appears when you click */
+.titled-pane > .content {
+    -fx-background-color: #2d2d2d;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 20px;
+}
+
+/* Removing the default borders and focus rings */
+.titled-pane, .titled-pane > .title, .titled-pane > .content {
+    -fx-background-insets: 0;
+    -fx-box-border: transparent;
+}
+.titled-pane > .title {
+    -fx-background-color: #303030;
+    -fx-text-fill: white;
+    -fx-padding: 20px;
+    
+    /* This pushes the text left and the icon right */
+    -fx-content-display: RIGHT; 
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* 1. Target the container of the arrow */
+.titled-pane > .title > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 10 0 10;
+    -fx-min-width: 30px;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+/* 2. Force the arrow to be visible and use a "+" character */
+.titled-pane > .title > .arrow-button > .arrow {
+    -fx-shape: "M 0 5 L 10 5 M 5 0 L 5 10"; /* This creates a '+' shape using SVG */
+    -fx-background-color: white; /* Color of the plus */
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+    -fx-padding: 5px;
+}
+
+/* 3. Change the shape when expanded (Optional: changes + to -) */
+.titled-pane:expanded > .title > .arrow-button > .arrow {
+    -fx-shape: "M 0 5 L 10 5"; /* Horizontal line for minus */
+    -fx-rotate: 180;
+}
