@@ -3,16 +3,18 @@ package tn.farah.NetflixJava.Service;
 import tn.farah.NetflixJava.DAO.UserDao;
 import tn.farah.NetflixJava.Entities.User;
 
+import java.sql.Connection;
 import java.util.List;
 
 public class UserService {
 
     // Le Service a besoin du DAO pour parler à la base de données
     private UserDao userDao;
+    private Connection connexion;
 
     // Constructeur
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
+    public UserService(Connection connexion) {
+        this.userDao = new UserDao(connexion);
     }
 
     // 1. INSCRIPTION (Logique métier pour ajouter un utilisateur)

@@ -18,7 +18,7 @@ public class signup1Controller {
 	        // Remplace par le chemin exact vers ton fichier
 	        changerScene(event, "signup-step2.fxml", "Étape 2 - Création de compte");
 	    }
-
+//....
 	    // Méthode pour le bouton SE CONNECTER (en haut à droite ou en bas)
 	    @FXML
 	    private void handleSeConnecter(ActionEvent event) {

@@ -31,7 +31,7 @@ public class signup3Controller {
 	            prixLabel.setText(prix);
 	        }
 	    }
-
+//...
 	    /**
 	     * Action du bouton "retour" (Rouge en haut à droite)
 	     * Retourne à l'étape de sélection du forfait (Step 2)
