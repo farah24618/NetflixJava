@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,120 +12,86 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane minHeight="500.0" minWidth="320.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.signup1Controller">
 
-    <!-- ════════════ TOP : Header ════════════ -->
-     <!-- ════════════ TOP : Header ════════════ -->
-    <top>
-        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #000000;                    -fx-border-color: #222222;                    -fx-border-width: 0 0 1 0;">
-            <padding>
-                <Insets bottom="16.0" left="32.0" right="32.0" top="16.0" />
-            </padding>
-            <children>
-
-                <ImageView fitHeight="50.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
+<BorderPane prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.signup1Controller">
+   <center>
+      <VBox alignment="TOP_CENTER" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" style="-fx-background-color: #000000; -fx-border-color: #222222; -fx-border-width: 0 0 1 0;">
+               <padding>
+                  <Insets bottom="20.0" left="32.0" right="20.0" top="20.0" />
+               </padding>
+               <children>
+                  <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
                         <Image url="@ImagesNet/netflixLogo.jpg" />
-                    </image>
-                </ImageView>
+                     </image>
+                     <HBox.margin>
+                        <Insets left="-30.0" top="-20.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#handleSeConnecter" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-weight: bold;" text="Se connecter" textAlignment="CENTER" />
+               </children>
+            </HBox>
 
-                <Region HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER" spacing="16.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+               <children>
+                  <VBox maxWidth="420.0" spacing="14.0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-radius: 8; -fx-background-radius: 8;">
+                     <padding>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="36.0" />
+                     </padding>
+                     <children>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Créer votre compte" />
+                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Étape 1 sur 3 — Informations personnelles" />
+                        
+                        <HBox spacing="10.0">
+                           <children>
+                              <TextField promptText="Prénom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <TextField promptText="Nom de famille" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
 
-                <Button mnemonicParsing="false" onAction="#handleSeConnecter" style="-fx-background-color: #E50914;                            -fx-text-fill: white;                            -fx-font-size: 14px;                            -fx-font-weight: bold;                            -fx-background-radius: 4;                            -fx-padding: 8 16 8 16;" text="Se connecter" />
+                        <TextField promptText="Adresse e-mail" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        
+                        <PasswordField promptText="Mot de passe" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        
+                        <TextField promptText="+216 Numéro de téléphone" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        
+                        <HBox spacing="8.0">
+                           <children>
+                              <ComboBox maxWidth="1.7976931348623157E308" promptText="Jour" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxWidth="1.7976931348623157E308" promptText="Mois" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxWidth="1.7976931348623157E308" promptText="Année" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
 
-            </children>
-        </HBox>
-    </top>
+                  <Button maxWidth="420.0" mnemonicParsing="false" onAction="#handleContinuer" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 46; -fx-background-radius: 4;" text="CONTINUER" />
+                  
+                  <Label alignment="CENTER" style="-fx-text-fill: #888888; -fx-font-size: 12px;" text="Déjà membre ? Se connecter">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
 
-    <!-- ════════════ CENTER : Formulaire ════════════ -->
-    <center>
-        <ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #000000;                    -fx-background-color: #000000;                    -fx-border-color: transparent;" vbarPolicy="AS_NEEDED">
-            <content>
-                <VBox alignment="CENTER" style="-fx-background-color: #000000;">
-                    <padding>
-                        <Insets bottom="40.0" left="16.0" right="16.0" top="40.0" />
-                    </padding>
-                    <children>
-
-                        <!-- Carte formulaire -->
-                        <VBox maxWidth="520.0" minWidth="280.0" spacing="14.0" style="-fx-background-color: #111111;                                    -fx-border-color: #333333;                                    -fx-border-radius: 8;                                    -fx-background-radius: 8;">
-                            <padding>
-                                <Insets bottom="40.0" left="40.0" right="40.0" top="36.0" />
-                            </padding>
-                            <children>
-
-                                <Label style="-fx-text-fill: white;                                            -fx-font-size: 22px;                                            -fx-font-weight: bold;" text="Créer votre compte" />
-
-                                <Label style="-fx-text-fill: #aaaaaa;                                            -fx-font-size: 13px;" text="Étape 1 sur 3 — Informations personnelles" />
-
-                                <!-- Prénom + Nom -->
-                                <HBox spacing="10.0">
-                                    <children>
-                                        <TextField promptText="Prénom" style="-fx-background-color: #1a1a1a;                                                    -fx-border-color: #444444;                                                    -fx-border-radius: 4;                                                    -fx-background-radius: 4;                                                    -fx-text-fill: white;                                                    -fx-prompt-text-fill: #666666;                                                    -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                                        <TextField promptText="Nom de famille" style="-fx-background-color: #1a1a1a;                                                    -fx-border-color: #444444;                                                    -fx-border-radius: 4;                                                    -fx-background-radius: 4;                                                    -fx-text-fill: white;                                                    -fx-prompt-text-fill: #666666;                                                    -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                                    </children>
-                                </HBox>
-
-                                <!-- Email -->
-                                <TextField maxWidth="Infinity" promptText="Adresse e-mail" style="-fx-background-color: #1a1a1a;                                            -fx-border-color: #444444;                                            -fx-border-radius: 4;                                            -fx-background-radius: 4;                                            -fx-text-fill: white;                                            -fx-prompt-text-fill: #666666;                                            -fx-pref-height: 42;" />
-
-                                <!-- Mot de passe -->
-                                <PasswordField maxWidth="Infinity" promptText="Mot de passe" style="-fx-background-color: #1a1a1a;                                            -fx-border-color: #444444;                                            -fx-border-radius: 4;                                            -fx-background-radius: 4;                                            -fx-text-fill: white;                                            -fx-prompt-text-fill: #666666;                                            -fx-pref-height: 42;" />
-
-                                <!-- Téléphone -->
-                                <TextField maxWidth="Infinity" promptText="+216 Numéro de téléphone" style="-fx-background-color: #1a1a1a;                                            -fx-border-color: #444444;                                            -fx-border-radius: 4;                                            -fx-background-radius: 4;                                            -fx-text-fill: white;                                            -fx-prompt-text-fill: #666666;                                            -fx-pref-height: 42;" />
-
-                                <!-- Date de naissance -->
-                                <HBox spacing="8.0">
-                                    <children>
-                                        <ComboBox maxWidth="Infinity" promptText="Jour" style="-fx-background-color: #1a1a1a;                                                    -fx-border-color: #444444;                                                    -fx-border-radius: 4;                                                    -fx-background-radius: 4;                                                    -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                                        <ComboBox maxWidth="Infinity" promptText="Mois" style="-fx-background-color: #1a1a1a;                                                    -fx-border-color: #444444;                                                    -fx-border-radius: 4;                                                    -fx-background-radius: 4;                                                    -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                                        <ComboBox maxWidth="Infinity" promptText="Année" style="-fx-background-color: #1a1a1a;                                                    -fx-border-color: #444444;                                                    -fx-border-radius: 4;                                                    -fx-background-radius: 4;                                                    -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
-                                    </children>
-                                </HBox>
-
-                            </children>
-                        </VBox>
-
-                        <!-- Bouton CONTINUER -->
-                        <Button maxWidth="520.0" minWidth="280.0" mnemonicParsing="false" onAction="#handleContinuer" style="-fx-background-color: #E50914;                                    -fx-text-fill: white;                                    -fx-font-size: 15px;                                    -fx-font-weight: bold;                                    -fx-pref-height: 46;                                    -fx-background-radius: 4;" text="CONTINUER">
-                            <VBox.margin>
-                                <Insets top="16.0" />
-                            </VBox.margin>
-                        </Button>
-
-                        <!-- Déjà membre -->
-                        <Label alignment="CENTER" maxWidth="520.0" style="-fx-text-fill: #888888;                                    -fx-font-size: 12px;" text="Déjà membre ? Se connecter">
-                            <VBox.margin>
-                                <Insets top="10.0" />
-                            </VBox.margin>
-                        </Label>
-
-                    </children>
-                </VBox>
-            </content>
-        </ScrollPane>
-    </center>
-
-    <!-- ════════════ BOTTOM : Footer ════════════ -->
-    <bottom>
-        <HBox alignment="CENTER" spacing="12.0" style="-fx-background-color: #000000;                    -fx-border-color: #222222;                    -fx-border-width: 1 0 0 0;">
-            <padding>
-                <Insets bottom="16.0" left="32.0" right="32.0" top="16.0" />
-            </padding>
-            <children>
-
-                <!-- Étape 1 — active -->
-                <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" style="-fx-background-color: #E50914;                            -fx-background-radius: 2;" />
-
-                <!-- Étape 2 — inactive -->
-                <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" style="-fx-background-color: #333333;                            -fx-background-radius: 2;" />
-
-                <!-- Étape 3 — inactive -->
-                <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" style="-fx-background-color: #333333;                            -fx-background-radius: 2;" />
-
-            </children>
-        </HBox>
-    </bottom>
-
+            <HBox alignment="CENTER" prefHeight="60.0" spacing="8.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0;">
+               <padding>
+                  <Insets bottom="16.0" left="32.0" right="32.0" top="16.0" />
+               </padding>
+               <children>
+                  <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" style="-fx-background-color: #E50914; -fx-background-radius: 2;" />
+                  <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" style="-fx-background-color: #333333; -fx-background-radius: 2;" />
+                  <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" style="-fx-background-color: #333333; -fx-background-radius: 2;" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
 </BorderPane>
