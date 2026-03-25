@@ -28,6 +28,7 @@ public class Film extends Media{
         this.duree    = duree;
         this.nbreVue  = nbreVue;
     }
+    
 	public Film () {
 		super();
 	}

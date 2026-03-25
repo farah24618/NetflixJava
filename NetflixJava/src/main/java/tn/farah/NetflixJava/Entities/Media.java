@@ -26,6 +26,7 @@ public abstract class  Media {
     public Media() {
         this.genres   = new HashSet<>();
         this.warnings = new HashSet<>();
+        this.ageRating=AgeRating.ALL;
     }
 
     // ─── Constructeur complet ─────────────────────────────────────────────────

@@ -6,88 +6,110 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #000000; -fx-border-color: #222; -fx-border-width: 0 0 1 0;">
+ <!-- ════════════ TOP : Header ════════════ -->
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.signup3Controller">
+   
+   <top>
+      <HBox alignment="CENTER_LEFT" prefHeight="90.0" style="-fx-background-color: #000000; -fx-border-color: #222222; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
          <padding>
-            <Insets bottom="32.0" left="32.0" right="20.0" top="20.0" />
+            <Insets bottom="20.0" left="32.0" right="32.0" top="20.0" />
          </padding>
          <children>
-            <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="45.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@ImagesNet/netflixLogo.jpg" />
                </image>
-               <HBox.margin>
-                  <Insets left="-30.0" top="-20.0" />
-               </HBox.margin>
             </ImageView>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; fx-background-radius: 4;" text="Se connecter" textAlignment="CENTER" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-padding: 7 15;" text="retour" />
          </children>
       </HBox>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+   </top>
+
+   <center>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="440.0" spacing="16.0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 32 36 32 36;">
+            <VBox maxWidth="440.0" spacing="18.0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 35;">
                <children>
-                  <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Étape 3 sur 3" />
-                   <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Moyen de paiement" />
-                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text=" Sécurisé et chiffré." />
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0">
+                  <VBox spacing="4.0">
                      <children>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-height: 40;" text="Carte bancaire" HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Étape 3 sur 3" />
+                        <Label style="-fx-text-fill: #ffffff; -fx-font-size: 22px; -fx-font-weight: bold;" text="Moyen de paiement" />
+                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Sécurisé et chiffré." />
+                     </children>
+                  </VBox>
+                  
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-pref-height: 44;" text="Carte bancaire" />
+
+                  <VBox spacing="12.0">
+                     <children>
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="NUMÉRO DE CARTE" />
+                              <TextField promptText="1234  5678  9012  3456" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                           </children>
+                        </VBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="DATE D'EXPIRATION" />
+                                    <TextField promptText="MM / AA" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                                 </children>
+                              </VBox>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="CODE CVV" />
+                                    <TextField promptText="..." style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="5.0">
+                           <children>
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="NOM SUR LA CARTE" />
+                              <TextField promptText="Prénom Nom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+
+                  <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #333333; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 15;">
+                     <children>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="forfaitLabel" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" text="forfait" />
+                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="Facturation mensuelle" />
+                           </children>
+                        </VBox>
+                        <Label fx:id="prixLabel" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="prix" />
                      </children>
                   </HBox>
-                  <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" NUMÉRO DE CARTE" />
-                  <TextField maxWidth="1.7976931348623157E308" promptText="1234  5678  9012  3456" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" DATE D'EXPIRATION" />
-                              <TextField maxWidth="1.7976931348623157E308" promptText="MM / AA" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                        	 <children>
-                              <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text=" CODE CVV" />
-                              <TextField maxWidth="1.7976931348623157E308" promptText="..." style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text="NOM SUR LA CARTE" />
-                   <TextField maxWidth="1.7976931348623157E308" promptText="Prénom Nom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
-                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #333333; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 12 16 12 16;">
-                     <children>
-                        <VBox maxWidth="1.7976931348623157E308" minWidth="0.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label fx:id="forfaitLabel" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="forfait" />
-                              <Label maxWidth="1.7976931348623157E308" prefHeight="18.0" style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="Facturation mensuelle" wrapText="true" />
-                           </children>
-                        </VBox>
-                        <Region prefHeight="200.0" prefWidth="50.0" HBox.hgrow="ALWAYS" />
-                        <VBox minWidth="60.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="NEVER">
-                           <children>
-                              <Label fx:id="prixLabel" style=" -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="prix" />
-                           </children></VBox>
-                     </children></HBox>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 46; -fx-background-radius: 4;" text="COMMENCER MON ABONNEMENT" />
-                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-text-fill: #666666; -fx-font-size: 11px;" text=" Paiement sécurisé · Annulation à tout moment" />
+
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCommencerAbonnement" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 50; -fx-background-radius: 4;" text="COMMENCER MON ABONNEMENT" />
+                  
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-text-fill: #666666; -fx-font-size: 11px;" text="Paiement sécurisé · Annulation à tout moment" />
                </children>
             </VBox>
-         </children></VBox>
-          <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="200.0" spacing="8.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0; -fx-padding: 16 32 16 32;">
-         <children>
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
-            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #E50914; -fx-pref-width: 60; -fx-pref-height: 4; -fx-background-radius: 2;" />
          </children>
-         <VBox.margin>
-            <Insets top="-5.0" />
-         </VBox.margin></HBox>
-    </children>
-    </VBox>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+   </center>
+
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="70.0" spacing="10.0" style="-fx-border-color: #222222; -fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
+         <children>
+            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-background-radius: 2;" />
+            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #333333; -fx-background-radius: 2;" />
+            <Region maxHeight="4.0" maxWidth="60.0" minHeight="4.0" minWidth="60.0" prefHeight="4.0" prefWidth="60.0" style="-fx-background-color: #E50914; -fx-background-radius: 2;" />
+         </children>
+      </HBox>
+   </bottom>
+
+</BorderPane>
