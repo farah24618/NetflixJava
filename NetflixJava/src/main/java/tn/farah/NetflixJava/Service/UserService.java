@@ -4,75 +4,123 @@ import tn.farah.NetflixJava.DAO.UserDao;
 import tn.farah.NetflixJava.Entities.User;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.List;
 
 public class UserService {
 
-    // Le Service a besoin du DAO pour parler à la base de données
     private UserDao userDao;
-    private Connection connexion;
 
-    // Constructeur
+    // 🔹 Constructeur
     public UserService(Connection connexion) {
         this.userDao = new UserDao(connexion);
     }
 
-    // 1. INSCRIPTION (Logique métier pour ajouter un utilisateur)
+    // 🔹 1. INSCRIPTION
     public boolean registerUser(User user) {
-        // VÉRIFICATION 1 : L'email ou le mot de passe sont-ils vides ?
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+
+        // ✅ Email obligatoire
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             System.out.println("Erreur : L'email est obligatoire.");
             return false;
         }
-        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 4) {
-            System.out.println("Erreur : Le mot de passe doit faire au moins 4 caractères.");
-            return false;
-        }
-        
-        // VÉRIFICATION 2 : L'email a-t-il un bon format ? (contient un @)
-        if (!user.getEmail().contains("@")) {
+
+        // ✅ Format email
+        if (!user.getEmail().matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")) {
             System.out.println("Erreur : Format d'email invalide.");
             return false;
         }
 
-        // Si toutes les règles sont respectées, on autorise le DAO à l'ajouter en base !
+        // ✅ Mot de passe
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            System.out.println("Erreur : Mot de passe trop court (min 6 caractères).");
+            return false;
+        }
+
+        // ✅ Téléphone (optionnel mais recommandé)
+        if (user.getPhone() != null && !user.getPhone().matches("^\\+?[0-9]{8,15}$")) {
+            System.out.println("Erreur : Numéro de téléphone invalide.");
+            return false;
+        }
+
+        // ✅ Date de naissance obligatoire
+        if (user.getBirthDate() == null) {
+            System.out.println("Erreur : Date de naissance obligatoire.");
+            return false;
+        }
+
+        // ✅ Vérifier date future
+        if (user.getBirthDate().after(new Date())) {
+            System.out.println("Erreur : Date de naissance invalide.");
+            return false;
+        }
+
+        // ✅ Vérifier âge minimum (13 ans)
+        long age = (System.currentTimeMillis() - user.getBirthDate().getTime()) 
+                    / (1000L * 60 * 60 * 24 * 365);
+
+        if (age < 13) {
+            System.out.println("Erreur : âge minimum requis = 13 ans.");
+            return false;
+        }
+
+        // ✅ Vérifier si email existe déjà (optionnel si DAO le gère)
+        if (userDao.findByEmail(user.getEmail()) != null) {
+            System.out.println("Erreur : Email déjà utilisé.");
+            return false;
+        }
+
+        // ✅ Insertion en base
         return userDao.addUser(user);
     }
 
-    // 2. CONNEXION (Logique métier pour le Login)
+    // 🔹 2. LOGIN
     public User loginUser(String email, String password) {
-        if (email == null || password == null) {
+
+        // ✅ Champs vides
+        if (email == null || password == null
+                || email.trim().isEmpty() || password.isEmpty()) {
+
             System.out.println("Erreur : Veuillez remplir tous les champs.");
             return null;
         }
 
-        // On demande au DAO de vérifier dans la base de données
+        // ✅ Format email
+        if (!email.matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")) {
+            System.out.println("Erreur : Email invalide.");
+            return null;
+        }
+
+        // 🔹 Vérification BD
         User user = userDao.login(email, password);
 
         if (user == null) {
             System.out.println("Erreur : Email ou mot de passe incorrect.");
-        } else if (!user.isActive()) {
-            System.out.println("Erreur : Ce compte a été désactivé !");
-            return null; // On bloque la connexion si le compte n'est pas actif
-        } else {
-            System.out.println("Connexion réussie ! Bienvenue " + user.getFirstName());
+            return null;
         }
 
+        if (!user.isActive()) {
+            System.out.println("Erreur : Compte désactivé.");
+            return null;
+        }
+
+        System.out.println("Connexion réussie ! Bienvenue " + user.getFirstName());
         return user;
     }
 
-    // 3. RÉCUPÉRER TOUS LES UTILISATEURS
+    // 🔹 3. GET ALL USERS
     public List<User> getAllUsers() {
-        // Ici, pas de règle stricte, on demande juste au DAO de faire son travail
         return userDao.getAllUsers();
     }
 
-    // 4. SUPPRIMER UN UTILISATEUR
+    // 🔹 4. DELETE USER
     public boolean deleteUser(int id) {
+
         if (id <= 0) {
             System.out.println("Erreur : ID utilisateur invalide.");
             return false;
         }
+
         return userDao.deleteUser(id);
     }
 }
