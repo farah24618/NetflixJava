@@ -97,7 +97,7 @@ public class signup1Controller implements Initializable {
 
         if (created) {
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Compte créé avec succès !");
-            ScreenManager.getInstance().navigateTo(Screen.logIn);
+            ScreenManager.getInstance().navigateTo(Screen.signup2);
         } else {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de créer le compte. Vérifiez vos informations.");
         }
@@ -105,7 +105,7 @@ public class signup1Controller implements Initializable {
 
     @FXML
     private void handleSeConnecter(ActionEvent event) {
-        ScreenManager.getInstance().navigateTo(Screen.logIn);
+        ScreenManager.getInstance().navigateTo(Screen.firstPage);
     }
 
     private boolean isValidEmail(String input) {

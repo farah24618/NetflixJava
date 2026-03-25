@@ -26,7 +26,7 @@
                </HBox.margin>
             </ImageView>
             <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 4; -fx-padding: 6 14 6 14;" text="retour" />
+            <Button fx:id="handleRetour" mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 4; -fx-padding: 6 14 6 14;" text="retour" />
          </children>
       </HBox>
    </top>
@@ -47,7 +47,7 @@
 
             <VBox maxWidth="440.0" spacing="12.0">
                <children>
-                  <HBox fx:id="premiumBox" alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #E50914; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                  <HBox fx:id="premiumBox" alignment="CENTER_LEFT" onMouseClicked="#selectPremium" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #E50914; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
                      <children>
                         <VBox onMouseClicked="#selectPremium" spacing="4.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -63,7 +63,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox fx:id="standardBox" alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                  <HBox fx:id="standardBox" alignment="CENTER_LEFT" onMouseClicked="#selectStandard" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
                      <children>
                         <VBox onMouseClicked="#selectStandard" spacing="4.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -79,7 +79,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox fx:id="pubBox" alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                  <HBox fx:id="pubBox" alignment="CENTER_LEFT" onMouseClicked="#selectStandardPub" spacing="16.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
                      <children>
                         <VBox onMouseClicked="#selectStandardPub" spacing="4.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -98,7 +98,7 @@
                </children>
             </VBox>
 
-            <Button maxWidth="440.0" mnemonicParsing="false" onAction="#handleContinuer" prefHeight="46.0" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 4;" text="CONTINUER" />
+            <Button fx:id="continueButton" maxWidth="440.0" mnemonicParsing="false" onAction="#handleContinuer" prefHeight="46.0" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 4;" text="CONTINUER" />
          </children>
       </VBox>
    </center>
