@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User {
-    
+
     private int id;
     private String email;
     private String passwordHash;
@@ -13,9 +13,9 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
     private boolean isActive;
-
-    // 🔴 NOUVEAU
+    
     private LocalDate birthDate;
+    private String phone; 
 
     // 🔹 Constructeur par défaut
     public User() {
@@ -25,18 +25,19 @@ public class User {
     }
 
     // 🔹 Constructeur simple
-    public User(String email, String passwordHash, String fullName, LocalDate birthDate) {
+    public User(String email, String passwordHash, String fullName, LocalDate birthDate, String phone) {
         this();
         this.email = email;
         this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.birthDate = birthDate;
+        this.phone = phone;
     }
 
     // 🔹 Constructeur complet
     public User(int id, String email, String passwordHash, String fullName,
                 UserRole role, LocalDateTime createdAt, LocalDateTime lastLogin,
-                boolean isActive, LocalDate birthDate) {
+                boolean isActive, LocalDate birthDate, String phone) {
 
         this.id = id;
         this.email = email;
@@ -47,52 +48,34 @@ public class User {
         this.lastLogin = lastLogin;
         this.isActive = isActive;
         this.birthDate = birthDate;
+        this.phone = phone;
     }
 
     // ==================== GETTERS ====================
-
     public int getId() { return id; }
-
     public String getEmail() { return email; }
-
     public String getPasswordHash() { return passwordHash; }
-
     public String getFullName() { return fullName; }
-
     public UserRole getRole() { return role; }
-
     public LocalDateTime getCreatedAt() { return createdAt; }
-
     public LocalDateTime getLastLogin() { return lastLogin; }
-
     public boolean isActive() { return isActive; }
-
-   
     public LocalDate getBirthDate() { return birthDate; }
+    public String getPhone() { return phone; }
 
     // ==================== SETTERS ====================
-
     public void setId(int id) { this.id = id; }
-
     public void setEmail(String email) { this.email = email; }
-
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
-
     public void setFullName(String fullName) { this.fullName = fullName; }
-
-    public void setActive(boolean active) { this.isActive = active; }
-
     public void setRole(UserRole role) { this.role = role; }
-
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
     public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
-
- 
+    public void setActive(boolean active) { this.isActive = active; }
     public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
+    public void setPhone(String phone) { this.phone = phone; }
 
     // ==================== MÉTHODES ====================
-
     public boolean isAdmin() {
         return this.role == UserRole.ADMIN;
     }
@@ -108,7 +91,6 @@ public class User {
         return fullName;
     }
 
-    // 🔥 BONUS : calcul âge
     public int getAge() {
         if (birthDate == null) return 0;
         return LocalDate.now().getYear() - birthDate.getYear();
@@ -123,6 +105,7 @@ public class User {
                 ", role=" + role +
                 ", isActive=" + isActive +
                 ", birthDate=" + birthDate +
+                ", phone=" + phone +
                 ", createdAt=" + createdAt +
                 '}';
     }

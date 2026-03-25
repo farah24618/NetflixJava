@@ -1,9 +1,8 @@
 package tn.farah.NetflixJava.DAO;
 import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import tn.farah.NetflixJava.Entities.ContientWarning;
 import tn.farah.NetflixJava.Entities.Warning;
 public class WarningDao {
 
