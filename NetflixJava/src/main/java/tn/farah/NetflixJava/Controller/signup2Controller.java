@@ -14,7 +14,7 @@ import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+//..
 public class signup2Controller implements Initializable {
 
     @FXML private HBox premiumBox;

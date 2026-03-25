@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import javafx.event.ActionEvent;
-
+//...
 public class signup3Controller implements Initializable {
 
     // ── Header / Navigation ──────────────────────────────────────────────
