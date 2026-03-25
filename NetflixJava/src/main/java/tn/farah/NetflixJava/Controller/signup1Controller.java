@@ -21,7 +21,8 @@ import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class signup1Controller implements Initializable {
-//..
+//...
+	//....
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;

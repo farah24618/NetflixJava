@@ -16,7 +16,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 //..
 public class signup2Controller implements Initializable {
-	
+	//...
+		//....
     @FXML private HBox premiumBox;
     @FXML private HBox standardBox;
     @FXML private HBox pubBox;
