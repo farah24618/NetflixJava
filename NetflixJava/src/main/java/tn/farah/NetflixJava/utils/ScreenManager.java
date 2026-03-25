@@ -3,6 +3,7 @@ package tn.farah.NetflixJava.utils;
 
 
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -15,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * ScreenManager — Singleton navigator for large JavaFX apps.

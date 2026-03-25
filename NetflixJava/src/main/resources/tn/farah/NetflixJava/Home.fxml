@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -12,142 +10,86 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.farah.NetflixJava.Controller.HomeController">
+<BorderPane style="-fx-background-color: #141414;" stylesheets="@home.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.HomeController">
 
-    <!-- ══════════════════════════════════════════════════════ -->
-    <!--                   BARRE DE NAVIGATION                 -->
-    <!-- ══════════════════════════════════════════════════════ -->
+    <BorderPane.styleClass>
+        <!-- Les styles lourds sont dans home.css désormais -->
+    </BorderPane.styleClass>
+
+    <!-- ═══ NAVBAR ═══ -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="0" styleClass="navbar"
-              style="-fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.0) 100%);
-                     -fx-padding: 0 40 0 40; -fx-min-height: 68; -fx-pref-height: 68;">
+        <HBox alignment="CENTER_LEFT" spacing="0" styleClass="navbar">
 
-            <!-- Logo -->
-            <Label text="NETFLIX" style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;
-                   -fx-font-family: 'Arial Black';" />
+            <Label styleClass="logo" text="NETFLIX" />
 
-            <!-- Nav Links -->
-            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 0 0 0 40;">
-                <Button text="My List"   onAction="#onMyList"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
-                               -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0;" />
-                <Button text="Movies"   onAction="#onMovies"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
-                               -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0;" />
-                <Button text="TV Shows" onAction="#onSeries"
-                        style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
-                               -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0;" />
+            <HBox alignment="CENTER_LEFT" spacing="20" styleClass="nav-links">
+                <Button onAction="#onMyList" styleClass="nav-btn" text="My List" />
+                <Button onAction="#onMovies" styleClass="nav-btn" text="Movies" />
+                <Button onAction="#onSeries" styleClass="nav-btn" text="TV Shows" />
             </HBox>
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <!-- Right Controls -->
             <HBox alignment="CENTER" spacing="18">
-                <!-- Search -->
-                <HBox alignment="CENTER" spacing="6" styleClass="search-container">
-                    <TextField fx:id="searchField" onKeyReleased="#onSearch" prefWidth="200"
-                               promptText="Titles, genres, years..."
-                               style="-fx-background-color: rgba(0,0,0,0.7); -fx-text-fill: white;
-                                      -fx-border-color: white; -fx-border-width: 1;
-                                      -fx-font-size: 14px; -fx-padding: 4 8;" />
-                    <Button onAction="#onSearchBtn" text="🔍"
-                            style="-fx-background-color: transparent; -fx-text-fill: white;
-                                   -fx-font-size: 18px; -fx-cursor: hand;" />
+                <HBox alignment="CENTER" spacing="6">
+                    <TextField fx:id="searchField" onKeyReleased="#onSearch" prefWidth="200" promptText="Titles, genres, years..." styleClass="search-field" />
+                    <Button onAction="#onSearchBtn" styleClass="icon-btn" text="🔍" />
                 </HBox>
-
-                <!-- Bell -->
-                <Label text="🔔" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-cursor: hand;" />
-
-                <!-- Avatar -->
-                <StackPane style="-fx-background-color: #2070c6; -fx-background-radius: 4;
-                                  -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36;">
-                    <Label fx:id="avatarLabel" text="U"
-                           style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" />
+                <Label styleClass="icon-btn" text="🔔" />
+                <StackPane styleClass="avatar-box">
+                    <Label fx:id="avatarLabel" styleClass="avatar-label" text="U" />
                 </StackPane>
             </HBox>
 
         </HBox>
     </top>
 
-    <!-- ══════════════════════════════════════════════════════ -->
-    <!--                     CONTENU PRINCIPAL                 -->
-    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- ═══ CONTENU ═══ -->
     <center>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-                    style="-fx-background-color: #141414; -fx-background: #141414; -fx-border-color: transparent;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="main-scroll" vbarPolicy="AS_NEEDED">
             <VBox spacing="0">
 
-                <!-- ── HERO SECTION ── -->
-                <StackPane fx:id="heroSection" alignment="BOTTOM_LEFT"
-                           style="-fx-min-height: 560; -fx-pref-height: 560; -fx-max-height: 560;">
+                <!-- ── HERO ── -->
+                <StackPane fx:id="heroSection" alignment="BOTTOM_LEFT" styleClass="hero-section">
 
-                    <!-- Backdrop image -->
-                    <Pane fx:id="heroBackdrop"
-                          style="-fx-min-height: 560; -fx-pref-height: 560;" />
+                    <Pane fx:id="heroBackdrop" styleClass="hero-backdrop" />
 
-                    <!-- Dark gradient overlay (bottom fade) -->
-                    <Pane mouseTransparent="true"
-                          style="-fx-background-color: linear-gradient(to bottom,
-                                   rgba(20,20,20,0.1) 0%,
-                                   rgba(20,20,20,0.3) 50%,
-                                   rgba(20,20,20,0.95) 90%,
-                                   rgba(20,20,20,1.0) 100%);" />
+                    <!-- Dégradé statique : purement visuel, il reste dans le FXML -->
+                    <Pane mouseTransparent="true" styleClass="hero-gradient" />
 
-                    <!-- Hero Text Content -->
-                    <VBox alignment="BOTTOM_LEFT" maxWidth="550" spacing="12"
-                          style="-fx-padding: 0 0 80 60;">
-                        <Label fx:id="heroTitle" wrapText="true"
-                               style="-fx-text-fill: white; -fx-font-size: 52px; -fx-font-weight: bold;
-                                      -fx-font-family: 'Arial Black'; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 2);" />
+                    <!-- Contenu texte -->
+                    <VBox fx:id="heroContent" alignment="BOTTOM_LEFT" maxWidth="550" spacing="12" styleClass="hero-content">
 
-                        <Label fx:id="heroSynopsis" wrapText="true"
-                               style="-fx-text-fill: #d2d2d2; -fx-font-size: 16px;
-                                      -fx-max-width: 500; -fx-line-spacing: 2;" />
+                        <Label fx:id="heroTitle" styleClass="hero-title" wrapText="true" />
+                        <Label fx:id="heroSynopsis" styleClass="hero-synopsis" wrapText="true" />
 
-                        <!-- Action Buttons -->
-                        <HBox spacing="12" style="-fx-padding: 8 0 0 0;">
-                            <Button onAction="#onPlayFeatured" text="▶  Play"
-                                    style="-fx-background-color: white; -fx-text-fill: black;
-                                           -fx-font-size: 16px; -fx-font-weight: bold;
-                                           -fx-padding: 10 28; -fx-background-radius: 4;
-                                           -fx-cursor: hand;" />
-                            <Button onAction="#onMoreInfoFeatured" text="ℹ  More Info"
-                                    style="-fx-background-color: rgba(109,109,110,0.7);
-                                           -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;
-                                           -fx-padding: 10 24; -fx-background-radius: 4;
-                                           -fx-cursor: hand;" />
+                        <!-- Boutons d'action -->
+                        <HBox spacing="12" styleClass="hero-actions">
+                            <Button onAction="#onPlayFeatured" styleClass="btn-play" text="▶  Play" />
+                            <Button onAction="#onMoreInfoFeatured" styleClass="btn-info" text="ℹ  More Info" />
                         </HBox>
 
-                        <!-- Meta row (hidden labels, filled by controller) -->
-                        <HBox spacing="14" alignment="CENTER_LEFT">
-                            <Label fx:id="heroRating"  style="-fx-text-fill: #46d369; -fx-font-size: 15px; -fx-font-weight: bold;" />
-                            <Label fx:id="heroDuration" style="-fx-text-fill: #bcbcbc; -fx-font-size: 14px;" />
-                            <Label fx:id="heroYear"     style="-fx-text-fill: #bcbcbc; -fx-font-size: 14px;" />
-                            <Label fx:id="heroCertif"   style="-fx-text-fill: #bcbcbc; -fx-font-size: 13px;
-                                                                -fx-border-color: #bcbcbc; -fx-border-width: 1;
-                                                                -fx-padding: 1 4;" />
-                            <Label fx:id="heroType"       style="-fx-text-fill: #bcbcbc; -fx-font-size: 13px;" />
-                            <Label fx:id="heroGenreBadge" style="-fx-text-fill: #bcbcbc; -fx-font-size: 13px;" />
+                        <!-- Méta-données -->
+                        <HBox fx:id="heroMeta" alignment="CENTER_LEFT" spacing="14">
+                            <Label fx:id="heroRating" styleClass="hero-rating" />
+                            <Label fx:id="heroDuration" styleClass="hero-meta-lbl" />
+                            <Label fx:id="heroYear" styleClass="hero-meta-lbl" />
+                            <Label fx:id="heroCertif" styleClass="hero-certif" />
+                            <Label fx:id="heroType" styleClass="hero-meta-lbl" />
+                            <Label fx:id="heroGenreBadge" styleClass="hero-meta-lbl" />
                         </HBox>
                     </VBox>
 
-                    <!-- Age rating badge top-right -->
-                    <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 120 0;" StackPane.alignment="CENTER_RIGHT">
-                        <Label text="19+" style="-fx-background-color: rgba(51,51,51,0.8);
-                                                  -fx-text-fill: white; -fx-font-size: 14px;
-                                                  -fx-padding: 4 10; -fx-border-color: #bcbcbc;
-                                                  -fx-border-width: 0 0 0 3;" />
+                    <!-- Badge âge (top-right) -->
+                    <HBox alignment="CENTER_RIGHT" styleClass="age-badge-box" StackPane.alignment="CENTER_RIGHT">
+                        <Label styleClass="age-badge" text="19+" />
                     </HBox>
 
                 </StackPane>
 
-                <!-- ── CAROUSELS ── -->
-                <VBox fx:id="carouselContainer" spacing="32"
-                      style="-fx-padding: 0 40 60 40; -fx-background-color: #141414; -fx-translate-y: -40;" />
+                <!-- ── CAROUSELS (injectés par le contrôleur) ── -->
+                <VBox fx:id="carouselContainer" spacing="32" styleClass="carousel-container" />
 
             </VBox>
         </ScrollPane>

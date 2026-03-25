@@ -22,7 +22,7 @@ public class Main extends Application {
         nav.register(Screen.mainView,        "/tn/farah/NetflixJava/MainView.fxml");
         // 3. Show the first screen
         primaryStage.setTitle("RekchaNet");
-        nav.navigateTo(Screen.mainView);
+        nav.navigateTo(Screen.login);
     }
 
     public static void main(String[] args) {
