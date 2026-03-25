@@ -32,7 +32,7 @@
             <children>
                 <ImageView fx:id="imgLogo" fitHeight="38.0" preserveRatio="true">
                     <image>
-                        <Image url="@/tn/farah/NetflixJava/ImagesNet/logo.png"/>
+                        <Image url="@ImagesNet/ChatGPT%20Image%20Feb%209,%202026,%2005_10_50%20PM.png"/>
                     </image>
                 </ImageView>
 
