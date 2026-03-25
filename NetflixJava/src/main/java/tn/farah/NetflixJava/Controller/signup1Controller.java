@@ -1,4 +1,5 @@
 package tn.farah.NetflixJava.Controller;
+<<<<<<< HEAD
 
 import java.net.URL;
 import java.sql.Connection;
@@ -8,7 +9,15 @@ import java.util.stream.IntStream;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+=======
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+
+import org.w3c.dom.Node;
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 import javafx.fxml.FXML;
+<<<<<<< HEAD
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -19,7 +28,15 @@ import tn.farah.NetflixJava.Service.UserService;
 import tn.farah.NetflixJava.utils.PreferencesStore;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+=======
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+public class signup1Controller {
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
+<<<<<<< HEAD
 public class signup1Controller implements Initializable {
 //...
 	//....
@@ -33,6 +50,10 @@ public class signup1Controller implements Initializable {
     @FXML private ComboBox<Integer> yearComboBox;
     @FXML private Button continueButton;
     @FXML private Button seConnecterButton;
+=======
+
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
     private Connection connection;
     private UserService userService = new UserService(connection);
@@ -46,8 +67,24 @@ public class signup1Controller implements Initializable {
                 "Janvier","Février","Mars","Avril","Mai","Juin",
                 "Juillet","Août","Septembre","Octobre","Novembre","Décembre"));
 
+<<<<<<< HEAD
         int currentYear = LocalDate.now().getYear();
         yearComboBox.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(currentYear-100, currentYear).boxed().sorted((a,b)->b-a).toList()));
+=======
+	            // Création de la nouvelle scène
+	            Scene scene = new Scene(root);
+
+	            stage.setTitle(titre);
+	            stage.setScene(scene);
+	            stage.show();
+
+	        } catch (IOException e) {
+	            System.err.println("Erreur lors du chargement de la vue : " + fxmlFile);
+	            e.printStackTrace();
+	        }
+	    }
+	}
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
         // Gérer touche ENTER pour valider
         firstNameField.setOnKeyPressed(this::handleEnterKey);

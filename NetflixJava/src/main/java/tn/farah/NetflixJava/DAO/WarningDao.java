@@ -1,20 +1,32 @@
 package tn.farah.NetflixJava.DAO;
+<<<<<<< HEAD
 import java.sql.*;
 
+=======
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 import java.util.ArrayList;
 import java.util.List;
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 import tn.farah.NetflixJava.Entities.Warning;
 public class WarningDao {
 
 
-	
+
 	    private Connection connection;
 
 	    public WarningDao(Connection connection) {
 	        this.connection = connection;
 	    }
 
-	   
+
 	    public List<Warning> findAll() throws SQLException {
 	        List<Warning> list = new ArrayList<>();
 	        String sql = "SELECT * FROM warnings";
@@ -31,10 +43,12 @@ public class WarningDao {
 	        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 	            ps.setString(1, warning.getNom());
 	            ps.executeUpdate();
-	            
+
 	            // On récupère l'ID généré par la DB pour l'objet Java
 	            try (ResultSet rs = ps.getGeneratedKeys()) {
-	                if (rs.next()) warning.setId(rs.getInt(1));
+	                if (rs.next()) {
+						warning.setId(rs.getInt(1));
+					}
 	            }
 	        }
 	    }
@@ -71,10 +85,10 @@ public class WarningDao {
 	            ps.executeUpdate();
 	        }
 	    }
-	
+
 
 	    // Récupérer les enums depuis la base
-	   
+
 	    /**
 	     * enregistrer dans tableau media_warning
 	     */
@@ -85,8 +99,8 @@ public class WarningDao {
 	            ps.setInt(1, mediaId);
 	            ps.setInt(2, warnId);
 	            ps.executeUpdate();
-			
+
 		}
-	
+
 
 }}

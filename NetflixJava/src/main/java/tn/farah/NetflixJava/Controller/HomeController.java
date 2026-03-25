@@ -1,27 +1,31 @@
 package tn.farah.NetflixJava.Controller;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.animation.*;
-import javafx.util.Duration;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
-import tn.farah.NetflixJava.Service.FilmService;
-import tn.farah.NetflixJava.Entities.Film;
-import tn.farah.NetflixJava.utils.ConxDB;
-
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Label;
+import java.awt.Rectangle;
+import java.awt.ScrollPane;
+import java.awt.TextField;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.plaf.synth.Region;
+
+import javafx.animation.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.*;
+import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Service.FilmService;
+import tn.farah.NetflixJava.utils.ConxDB;
 
 public class HomeController implements Initializable {
 
@@ -51,19 +55,27 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         connection = ConxDB.getInstance();
-        if (connection == null) return;
+        if (connection == null) {
+			return;
+		}
         filmService = new FilmService(connection);
 
         configurerHero();
         chargerCarousels();
-        if (avatarLabel != null) avatarLabel.setText("U");
+        if (avatarLabel != null) {
+			avatarLabel.setText("U");
+		}
 
         // FIX 2: Guard against scene root not being a Pane
         carouselContainer.sceneProperty().addListener((obs, old, scene) -> {
-            if (scene == null) return;
+            if (scene == null) {
+				return;
+			}
             // Use Platform.runLater to ensure scene is fully laid out
             javafx.application.Platform.runLater(() -> {
-                if (overlayPane != null) return;
+                if (overlayPane != null) {
+					return;
+				}
                 javafx.scene.Parent root = scene.getRoot();
                 if (root instanceof Pane) {
                     overlayPane = new Pane();
@@ -85,8 +97,12 @@ public class HomeController implements Initializable {
     private void configurerHero() {
         try {
             List<Film> films = filmService.getAllFilmsSorted();
-            if (films.isEmpty()) return;
-            for (int i = 0; i < Math.min(5, films.size()); i++) listeFilmsHero.add(films.get(i));
+            if (films.isEmpty()) {
+				return;
+			}
+            for (int i = 0; i < Math.min(5, films.size()); i++) {
+				listeFilmsHero.add(films.get(i));
+			}
             chargerElementHero(0);
             heroTimer = new Timeline(new KeyFrame(Duration.seconds(8), e -> {
                 indexCourant = (indexCourant + 1) % listeFilmsHero.size();
@@ -107,7 +123,9 @@ public class HomeController implements Initializable {
             );
         }
 
-        if (zoomActuel != null) zoomActuel.stop();
+        if (zoomActuel != null) {
+			zoomActuel.stop();
+		}
         zoomActuel = new ScaleTransition(Duration.seconds(10), heroBackdrop);
         zoomActuel.setFromX(1.0); zoomActuel.setToX(1.08);
         zoomActuel.setFromY(1.0); zoomActuel.setToY(1.08);
@@ -121,9 +139,15 @@ public class HomeController implements Initializable {
         heroRating.setText(String.format("%.0f%% Match", film.getRatingMoyen() * 10));
         heroDuration.setText(film.getDuree() + "m");
         heroType.setText("FILM");
-        if (heroGenreBadge != null) heroGenreBadge.setText("");
-        if (film.getDateSortie() != null) heroYear.setText(String.valueOf(film.getDateSortie().getYear()));
-        if (film.getAgeRating() != null)  heroCertif.setText(film.getAgeRating().name());
+        if (heroGenreBadge != null) {
+			heroGenreBadge.setText("");
+		}
+        if (film.getDateSortie() != null) {
+			heroYear.setText(String.valueOf(film.getDateSortie().getYear()));
+		}
+        if (film.getAgeRating() != null) {
+			heroCertif.setText(film.getAgeRating().name());
+		}
 
         FadeTransition ft = new FadeTransition(Duration.millis(600), heroSection);
         ft.setFromValue(0.5);
@@ -172,7 +196,9 @@ public class HomeController implements Initializable {
         );
 
         scroll.widthProperty().addListener((obs, oldW, newW) -> {
-            if (rangee.getUserData() != null) return;
+            if (rangee.getUserData() != null) {
+				return;
+			}
             // Full available width minus left+right padding (40+40=80)
             double w     = newW.doubleValue() - 80;
             double cardW = (w - GAP * (CARDS_VISIBLE - 1)) / CARDS_VISIBLE;
@@ -184,8 +210,9 @@ public class HomeController implements Initializable {
 
             rangee.setUserData("built");
             rangee.getChildren().clear();
-            for (Film f : films)
-                rangee.getChildren().add(creerCarteFilm(f, cardW, cardH));
+            for (Film f : films) {
+				rangee.getChildren().add(creerCarteFilm(f, cardW, cardH));
+			}
         });
 
         bloc.getChildren().addAll(labelTitre, scroll);
@@ -225,15 +252,18 @@ public class HomeController implements Initializable {
 
         // Delay timers to avoid flicker when mouse moves card→popup or popup→card
         Timeline showTimer = new Timeline(new KeyFrame(Duration.millis(300), e -> {
-            if (overlayPane == null) return;
+            if (overlayPane == null) {
+				return;
+			}
             Bounds b = wrapper.localToScene(wrapper.getBoundsInLocal());
             double popupX = b.getMinX() - (popupW - cardW) / 2.0;
             double popupY = b.getMinY() - 20;
             double maxX = overlayPane.getScene().getWidth() - popupW - 10;
             popup.setLayoutX(Math.max(10, Math.min(popupX, maxX)));
             popup.setLayoutY(Math.max(10, popupY));
-            if (!overlayPane.getChildren().contains(popup))
-                overlayPane.getChildren().add(popup);
+            if (!overlayPane.getChildren().contains(popup)) {
+				overlayPane.getChildren().add(popup);
+			}
             popup.setVisible(true);
             FadeTransition ft = new FadeTransition(Duration.millis(180), popup);
             ft.setToValue(1); ft.play();
@@ -244,7 +274,9 @@ public class HomeController implements Initializable {
             ft.setToValue(0);
             ft.setOnFinished(ev -> {
                 popup.setVisible(false);
-                if (overlayPane != null) overlayPane.getChildren().remove(popup);
+                if (overlayPane != null) {
+					overlayPane.getChildren().remove(popup);
+				}
             });
             ft.play();
         }));
@@ -418,7 +450,7 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("--- Démarrage du HomeController ---");
-        
+
         // 1. Connexion
         connection = ConxDB.getInstance();
         if (connection == null) {
@@ -432,7 +464,7 @@ public class HomeController implements Initializable {
         // 3. Lancement des composants
         configurerHero();
         chargerCarousels();
-        
+
         if(avatarLabel != null) avatarLabel.setText("U");
     }
 
@@ -495,11 +527,11 @@ public class HomeController implements Initializable {
         heroRating.setText(String.format("%.1f ★", film.getRatingMoyen()));
         heroDuration.setText(film.getDuree() + " min");
         heroType.setText("FILM");
-        
+
         if (film.getDateSortie() != null) {
             heroYear.setText(String.valueOf(film.getDateSortie().getYear()));
         }
-        
+
         if (film.getAgeRating() != null) {
             heroCertif.setText(film.getAgeRating().name());
         }
@@ -570,7 +602,7 @@ public class HomeController implements Initializable {
         // Events
         carte.setOnMouseEntered(e -> { overlay.setOpacity(1); carte.setScaleX(1.05); carte.setScaleY(1.05); });
         carte.setOnMouseExited(e -> { overlay.setOpacity(0); carte.setScaleX(1.0); carte.setScaleY(1.0); });
-        
+
         return carte;
     }
 

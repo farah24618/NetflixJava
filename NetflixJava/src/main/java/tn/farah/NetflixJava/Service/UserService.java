@@ -1,11 +1,11 @@
 package tn.farah.NetflixJava.Service;
 
-import tn.farah.NetflixJava.DAO.UserDao;
-import tn.farah.NetflixJava.Entities.User;
-
 import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+
+import tn.farah.NetflixJava.DAO.UserDao;
+import tn.farah.NetflixJava.Entities.User;
 
 public class UserService {
 
@@ -17,6 +17,24 @@ public class UserService {
 
     // 1️⃣ INSCRIPTION
     public boolean registerUser(User user) {
+<<<<<<< HEAD
+=======
+        // VÉRIFICATION 1 : L'email ou le mot de passe sont-ils vides ?
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            System.out.println("Erreur : L'email est obligatoire.");
+            return false;
+        }
+        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 4) {
+            System.out.println("Erreur : Le mot de passe doit faire au moins 4 caractères.");
+            return false;
+        }
+
+        // VÉRIFICATION 2 : L'email a-t-il un bon format ? (contient un @)
+        if (!user.getEmail().contains("@")) {
+            System.out.println("Erreur : Format d'email invalide.");
+            return false;
+        }
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) return false;
         if (!user.getEmail().matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")) return false;

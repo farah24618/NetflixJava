@@ -1,8 +1,5 @@
 package tn.farah.NetflixJava.DAO;
 import java.sql.Connection;
-
-
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,8 +44,9 @@ public class SaisonDAO {
 				pstml.setInt(2, saison.getNumeroSaison());
 				pstml.executeUpdate();
 				rs=pstml.getGeneratedKeys();
-				if(rs.next()) 
+				if(rs.next()) {
 					saisonId=rs.getInt(1);
+				}
 			}catch(SQLException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -144,13 +142,14 @@ public class SaisonDAO {
 	            pstml = conn.prepareStatement(sql);
 	            pstml.setInt(1, idSerie);
 	            rs = pstml.executeQuery();
-	            if (rs.next())
-	                return rs.getInt(1);
+	            if (rs.next()) {
+					return rs.getInt(1);
+				}
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
 	        return 0;
 	    }
-	
+
 
 }

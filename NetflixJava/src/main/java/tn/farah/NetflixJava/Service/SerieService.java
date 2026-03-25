@@ -1,18 +1,14 @@
 package tn.farah.NetflixJava.Service;
 
+import java.util.List;
+
 import tn.farah.NetflixJava.DAO.SerieDAO;
 import tn.farah.NetflixJava.Entities.Serie;
-
-import java.util.List;
 
 public class SerieService {
 
     public boolean ajouterSerie(Serie serie) {
-        if (serie == null) {
-            return false;
-        }
-
-        if (serie.getTitre() == null || serie.getTitre().trim().isEmpty()) {
+        if ((serie == null) || serie.getTitre() == null || serie.getTitre().trim().isEmpty()) {
             return false;
         }
 
@@ -29,15 +25,7 @@ public class SerieService {
     }
 
     public boolean modifierSerie(Serie serie) {
-        if (serie == null) {
-            return false;
-        }
-
-        if (serie.getId() <= 0) {
-            return false;
-        }
-
-        if (serie.getTitre() == null || serie.getTitre().trim().isEmpty()) {
+        if ((serie == null) || (serie.getId() <= 0) || serie.getTitre() == null || serie.getTitre().trim().isEmpty()) {
             return false;
         }
 

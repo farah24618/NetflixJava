@@ -1,6 +1,5 @@
 package tn.farah.NetflixJava.DAO;
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +14,7 @@ public class EpisodeDAO {
 	public static List<Episode> findAll(){
 		Statement stml=null;
 		ResultSet rs=null;
-		List<Episode> episodes=new ArrayList<Episode>();
+		List<Episode> episodes=new ArrayList<>();
 		String SQL="SELECT * FROM episode";
 		try {
 			stml=conn.createStatement();
@@ -55,15 +54,16 @@ public class EpisodeDAO {
 			pstml.setInt(8, episode.getDurreeIntro());
 			pstml.executeUpdate();
 			rs=pstml.getGeneratedKeys();
-			if(rs.next()) 
+			if(rs.next()) {
 				episodeId=rs.getInt(1);
+			}
 		}catch(SQLException ex) {
 			System.out.println(ex.getMessage());
 		}
 		return episodeId;
 	}
-	
-	
+
+
 	 // ─────────────────────────────────
     //  FIND BY ID
     // ─────────────────────────────────
@@ -100,7 +100,7 @@ public class EpisodeDAO {
     public static List<Episode> findBySaison(int saisonId) {
         PreparedStatement pstml = null;
         ResultSet rs = null;
-        List<Episode> episodes = new ArrayList<Episode>();
+        List<Episode> episodes = new ArrayList<>();
         String sql = "SELECT * FROM episode WHERE saisonId = ? ORDER BY numeroEpisode ASC";
         try {
             pstml = conn.prepareStatement(sql);
@@ -207,8 +207,9 @@ public class EpisodeDAO {
             pstml = conn.prepareStatement(sql);
             pstml.setInt(1, saisonId);
             rs = pstml.executeQuery();
-            if (rs.next())
-                return rs.getInt(1);
+            if (rs.next()) {
+				return rs.getInt(1);
+			}
         } catch (SQLException e) {
             e.printStackTrace();
         }

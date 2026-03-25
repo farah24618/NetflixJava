@@ -1,4 +1,5 @@
 package tn.farah.NetflixJava.Controller;
+<<<<<<< HEAD
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,17 +12,38 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+=======
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
+<<<<<<< HEAD
 import java.net.URL;
 import java.util.ResourceBundle;
+=======
+import org.w3c.dom.Node;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class signup2Controller {
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 //..
 public class signup2Controller implements Initializable {
 	//...
+<<<<<<< HEAD
 		//....
     @FXML private HBox premiumBox;
     @FXML private HBox standardBox;
     @FXML private HBox pubBox;
     @FXML private Button continueButton;
+=======
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
     private HBox selectedBox; // Pour savoir quel forfait est choisi
 
@@ -47,16 +69,36 @@ public class signup2Controller implements Initializable {
         highlightSelection(pubBox);
     }
 
+<<<<<<< HEAD
     private void highlightSelection(HBox box) {
         // Réinitialise les bordures
         premiumBox.setStyle(premiumBox.getStyle().replace("-fx-border-color: #E50914;", "-fx-border-color: #444444;"));
         standardBox.setStyle(standardBox.getStyle().replace("-fx-border-color: #E50914;", "-fx-border-color: #444444;"));
         pubBox.setStyle(pubBox.getStyle().replace("-fx-border-color: #E50914;", "-fx-border-color: #444444;"));
+=======
+	            // 2. Récupérer le contrôleur de la page 3
+	            signup3Controller nextController = loader.getController();
 
+	            // 3. Lui envoyer les données sélectionnées
+	            nextController.setForfaitDetails(selectedForfait, selectedPrix);
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
+
+<<<<<<< HEAD
         // Mettre la bordure rouge pour la sélection
         box.setStyle(box.getStyle().replace("-fx-border-color: #444444;", "-fx-border-color: #E50914;"));
         selectedBox = box;
     }
+=======
+	            // 4. Changer de scène
+	            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	            stage.setScene(new Scene(root));
+	            stage.show();
+
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
     // ── Bouton CONTINUER ───────────────────────────────
     @FXML

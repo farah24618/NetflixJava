@@ -20,7 +20,7 @@ public class SubtitleDAO {
 	    public static List<Subtitle> findAll() {
 	        Statement stml = null;
 	        ResultSet rs = null;
-	        List<Subtitle> subtitles = new ArrayList<Subtitle>();
+	        List<Subtitle> subtitles = new ArrayList<>();
 	        String SQL = "SELECT * FROM subtitle";
 	        try {
 	            stml = conn.createStatement();
@@ -54,8 +54,9 @@ public class SubtitleDAO {
 	            pstml.setString(3, subtitle.getUrl());
 	            pstml.executeUpdate();
 	            rs = pstml.getGeneratedKeys();
-	            if (rs.next())
-	                subtitleId = rs.getInt(1);
+	            if (rs.next()) {
+					subtitleId = rs.getInt(1);
+				}
 	        } catch (SQLException ex) {
 	            System.out.println(ex.getMessage());
 	        }
@@ -92,7 +93,7 @@ public class SubtitleDAO {
 	    public static List<Subtitle> findByMedia(int idMedia) {
 	        PreparedStatement pstml = null;
 	        ResultSet rs = null;
-	        List<Subtitle> subtitles = new ArrayList<Subtitle>();
+	        List<Subtitle> subtitles = new ArrayList<>();
 	        String sql = "SELECT * FROM subtitle WHERE idMedia = ?";
 	        try {
 	            pstml = conn.prepareStatement(sql);

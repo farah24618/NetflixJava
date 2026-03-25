@@ -25,7 +25,7 @@ public class CategoryService {
 	        if (name == null || name.trim().isEmpty()) {
 	            throw new Exception("Le nom de la catégorie ne peut pas être vide.");
 	        }
-	        
+
 	        // Vérification de doublon (logique qu'on ne met pas dans le DAO)
 	        if (exists(name)) {
 	            throw new Exception("Cette catégorie existe déjà.");

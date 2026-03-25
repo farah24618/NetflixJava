@@ -1,19 +1,28 @@
 package tn.farah.NetflixJava.Service;
 
 
+<<<<<<< HEAD
 import java.sql.*;
 
 
+=======
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 import java.util.List;
 import java.util.stream.Collectors;
-import tn.farah.NetflixJava.Entities.*;
+
 import tn.farah.NetflixJava.DAO.CategoryDAO;
 import tn.farah.NetflixJava.DAO.FilmDao;
 import tn.farah.NetflixJava.DAO.WarningDao;
+import tn.farah.NetflixJava.Entities.Category;
+import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Entities.Warning;
 public class FilmService {
-	   
 
-	
+
+
 	    private FilmDao filmDao;
 	    private Connection connection;
 	    private CategoryDAO categoryDao;
@@ -24,8 +33,8 @@ public class FilmService {
 	        this.filmDao = new FilmDao(connection);
 	        this.categoryDao = new CategoryDAO(connection);
 	        this.warningDao=new WarningDao(connection);
-	        
-	        
+
+
 	    }
 
 	    /**
@@ -37,9 +46,9 @@ public class FilmService {
 	            connection.setAutoCommit(false);
 
 	            // 1. Sauvegarder le Film (et le Media via l'ID généré)
-	            filmDao.create(film); 
-	            
-	            int idGenere = film.getId(); 
+	            filmDao.create(film);
+
+	            int idGenere = film.getId();
 
 	            // 2. On utilise la liste INTERNE du film !
 	            if (film.getGenres() != null) {
@@ -48,13 +57,13 @@ public class FilmService {
 	                    categoryDao.save(cat);
 	                }
 	            }
-	            
+
 	            // On fait pareil pour les warnings s'ils sont aussi dans l'objet Film
 	            if (film.getWarnings() != null) {
 	                for (Warning warn : film.getWarnings()) {
 	                    warningDao.lierMedia(idGenere, warn.getId());
 	                    warningDao.save(warn);
-	                    
+
 	                }
 	            }
 
@@ -102,7 +111,7 @@ public class FilmService {
 	        }
 	    }
 
-	    private void lierFilmAWarning(int filmId, ContientWarning warning) throws SQLException {
+	    private void lierFilmAWarning(int filmId, Warning warning) throws SQLException {
 	        String sql = "INSERT INTO film_warnings (film_id, warning_name) VALUES (?, ?)";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 	            ps.setInt(1, filmId);
@@ -110,5 +119,5 @@ public class FilmService {
 	            ps.executeUpdate();
 	        }
 	    }
-	
+
 }

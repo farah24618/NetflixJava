@@ -110,7 +110,9 @@ public class SaisonService {
     public static Saison getLastSaison(int idSerie) {
         List<Saison> saisons = SaisonDAO.findBySerie(idSerie);
 
-        if (saisons.isEmpty()) return null;
+        if (saisons.isEmpty()) {
+			return null;
+		}
 
         // La liste est déjà triée par numeroSaison ASC dans le DAO
         // donc la dernière saison est le dernier élément

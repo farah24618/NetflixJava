@@ -1,7 +1,7 @@
 package tn.farah.NetflixJava.Entities;
 
 public class Warning {
-	
+
 	    private int id;
 	    private String nom;
 
@@ -25,8 +25,8 @@ public class Warning {
 		public void setNom(String nom) {
 			this.nom = nom;
 		}
-	    
-	    
-	
+
+
+
 
 }

@@ -1,25 +1,17 @@
 package tn.farah.NetflixJava.Service;
 
+import java.util.List;
+
 import tn.farah.NetflixJava.DAO.FavoriDAO;
 import tn.farah.NetflixJava.Entities.Favori;
-
-import java.util.List;
 
 public class FavoriService {
 
     // Ajouter un favori
     public boolean ajouterFavori(Favori favori) {
 
-        if (favori == null) {
-            return false;
-        }
-
-        if (favori.getUserId() <= 0 || favori.getMediaId() <= 0) {
-            return false;
-        }
-
         // vérifier s'il existe déjà
-        if (FavoriDAO.existe(favori.getUserId(), favori.getMediaId())) {
+        if ((favori == null) || favori.getUserId() <= 0 || favori.getMediaId() <= 0 || FavoriDAO.existe(favori.getUserId(), favori.getMediaId())) {
             return false;
         }
 

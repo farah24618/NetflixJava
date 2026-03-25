@@ -1,15 +1,5 @@
 package tn.farah.NetflixJava.DAO;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import tn.farah.NetflixJava.Entities.Media;
-import tn.farah.NetflixJava.Entities.Film;
-import tn.farah.NetflixJava.Entities.Serie;
-// import tn.farah.NetflixJava.Entities.Category; // Si besoin
-import tn.farah.NetflixJava.utils.ConxDB;
-
 public class MediaDAO {
 
    /* // ============================================================
@@ -169,7 +159,7 @@ public class MediaDAO {
             // Si le type est NULL ou inconnu, on ne peut pas instancier Media (car abstract)
             // On retourne null, et la boucle while ignorera cette ligne.
             System.err.println("Type inconnu pour ID " + rs.getInt("id"));
-            return null; 
+            return null;
         }
 
         // 2. Remplissage des données communes
@@ -180,7 +170,7 @@ public class MediaDAO {
         m.setDateSortie(rs.getDate("date_sortie"));
         m.setUrlImageCover(rs.getString("url_image_cover"));
         m.setRatingMoyen(rs.getDouble("rating_moyen"));
-        
+
         // Optionnel : Gestion de la date d'ajout
         Timestamp ts = rs.getTimestamp("date_ajout");
         if(ts != null) m.setDateAjout(ts.toLocalDateTime());
