@@ -12,7 +12,7 @@ public class Commentaire {
   //hedhi
     private boolean contientSpoils;
 
-    public Commentaire(int id, String contenu, LocalDateTime datePublication, 
+    public Commentaire(int id, String contenu, LocalDateTime datePublication,
                        int idUser, int idMedia, boolean estSignale, boolean contientSpoils) {
         this.id = id;
         this.contenu = contenu;
@@ -79,8 +79,8 @@ public class Commentaire {
 		this.contientSpoils = contientSpoils;
 	}
 
-   
+
 }
-	
+
 
 

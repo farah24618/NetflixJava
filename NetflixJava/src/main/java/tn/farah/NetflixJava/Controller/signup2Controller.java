@@ -1,19 +1,20 @@
 package tn.farah.NetflixJava.Controller;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import org.w3c.dom.Node;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 public class signup2Controller {
-	
+
 //..
 	//...
-	
+
 
 	    private String selectedForfait = "Premium"; // Valeur par défaut
 	    private String selectedPrix = "61,16 DT";
@@ -49,7 +50,7 @@ public class signup2Controller {
 
 	            // 2. Récupérer le contrôleur de la page 3
 	            signup3Controller nextController = loader.getController();
-	            
+
 	            // 3. Lui envoyer les données sélectionnées
 	            nextController.setForfaitDetails(selectedForfait, selectedPrix);
 
@@ -57,7 +58,7 @@ public class signup2Controller {
 	            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	            stage.setScene(new Scene(root));
 	            stage.show();
-	            
+
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }

@@ -1,20 +1,21 @@
 package tn.farah.NetflixJava.Controller;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Label;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javax.swing.plaf.synth.Region;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class MaListeMobileController implements Initializable {
 
@@ -23,8 +24,8 @@ public class MaListeMobileController implements Initializable {
     @FXML
     private StackPane sortMenuOverlay;
 
-    
-    
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,11 +72,11 @@ public class MaListeMobileController implements Initializable {
         VBox textContainer = new VBox();
         textContainer.setAlignment(Pos.CENTER_LEFT);
         textContainer.setSpacing(5);
-        
+
         Label titleLabel = new Label(title);
         titleLabel.setTextFill(Color.WHITE);
         titleLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
-        
+
         Label subtitleLabel = new Label(subtitle);
         subtitleLabel.setTextFill(Color.web("#808080"));
         subtitleLabel.setStyle("-fx-font-size: 12px;");
@@ -92,11 +93,11 @@ public class MaListeMobileController implements Initializable {
         circle.setFill(Color.TRANSPARENT);
         circle.setStroke(Color.WHITE);
         circle.setStrokeWidth(1.5);
-        
+
         Label playIcon = new Label("▷");
         playIcon.setTextFill(Color.WHITE);
         playIcon.setStyle("-fx-font-size: 14px; -fx-translate-x: 1;"); // translate-x pour centrer visuellement le triangle
-        
+
         playBtn.getChildren().addAll(circle, playIcon);
 
         // Ajout de tous les éléments à la ligne

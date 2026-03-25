@@ -1,10 +1,10 @@
 package tn.farah.NetflixJava.Service;
 
-import tn.farah.NetflixJava.DAO.UserDao;
-import tn.farah.NetflixJava.Entities.User;
-
 import java.sql.Connection;
 import java.util.List;
+
+import tn.farah.NetflixJava.DAO.UserDao;
+import tn.farah.NetflixJava.Entities.User;
 
 public class UserService {
 
@@ -28,7 +28,7 @@ public class UserService {
             System.out.println("Erreur : Le mot de passe doit faire au moins 4 caractères.");
             return false;
         }
-        
+
         // VÉRIFICATION 2 : L'email a-t-il un bon format ? (contient un @)
         if (!user.getEmail().contains("@")) {
             System.out.println("Erreur : Format d'email invalide.");

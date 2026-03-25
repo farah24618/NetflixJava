@@ -10,17 +10,17 @@ import tn.farah.NetflixJava.utils.ConxDB;
 
 public class HistoryService {
 	    private static HistoryDAO historyDAO = new HistoryDAO(ConxDB.getInstance());
-	    
+
 	    //  SAUVEGARDER / METTRE À JOUR
 	    public static int save(History history) {
 	        return HistoryDAO.save(history);
 	    }
-	    
+
 	    //  RÉCUPÉRER TOUT L'HISTORIQUE
 	    public static List<History> findAll() {
 	        return HistoryDAO.findAll();
 	    }
-	    
+
 	    //  HISTORIQUE D'UN UTILISATEUR
 	    public static List<History> findByUser(int userId) {
 	        return HistoryDAO.findByUser(userId);
@@ -30,8 +30,8 @@ public class HistoryService {
 	    public static History findById(int id) {
 	        return HistoryDAO.findById(id);
 	    }
-	    
-	    //  SUPPRIMER   
+
+	    //  SUPPRIMER
 	    public static void delete(int id) {
 	        HistoryDAO.delete(id);
 	    }
@@ -40,7 +40,7 @@ public class HistoryService {
 	    public static List<Object[]> getTop5MostWatched() {
 	        return HistoryDAO.findTop5MostWatched();
 	    }
-	    
+
 	    //  ENREGISTRER LA PROGRESSION PENDANT LA LECTURE
 	    //  Appelé toutes les X secondes depuis le player
 	    // ──────────────────────────────────────────────────
@@ -69,7 +69,9 @@ public class HistoryService {
 	            existing.setTempsArret(tempsArret);
 	            existing.setDateVisionnage(LocalDateTime.now());
 	            // Ne jamais repasser estTermine à false si déjà terminé
-	            if (estTermine) existing.setEstTermine(true);
+	            if (estTermine) {
+					existing.setEstTermine(true);
+				}
 	            HistoryDAO.save(existing);
 	        }
 	    }
@@ -83,7 +85,9 @@ public class HistoryService {
 	        History h = HistoryDAO.findByUserAndMedia(idUser, idMedia);
 
 	        // Jamais regardé ou déjà terminé → reprendre au début
-	        if (h == null || h.getEstTermine()) return 0;
+	        if (h == null || h.getEstTermine()) {
+				return 0;
+			}
 
 	        // Sinon → reprendre à la position sauvegardée
 	        return h.getTempsArret();
@@ -97,9 +101,15 @@ public class HistoryService {
 	    public static String getMediaStatus(int idUser, int idMedia) {
 	        History h = HistoryDAO.findByUserAndMedia(idUser, idMedia);
 
-	        if (h == null)             return "NON_VU";
-	        if (h.getEstTermine())     return "TERMINE";
-	        if (h.getTempsArret() > 0) return "EN_COURS";
+	        if (h == null) {
+				return "NON_VU";
+			}
+	        if (h.getEstTermine()) {
+				return "TERMINE";
+			}
+	        if (h.getTempsArret() > 0) {
+				return "EN_COURS";
+			}
 
 	        return "NON_VU";
 	    }}

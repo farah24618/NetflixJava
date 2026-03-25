@@ -16,7 +16,7 @@ public class History {
 		this.tempsArret = tempsArret;
 		this.estTermine = estTermine;
 	}
-	
+
 	public History(int id, int idUser, int idMedia, LocalDateTime dateVisionnage, int tempsArret, boolean estTermine) {
 		this.id = id;
 		this.idUser = idUser;
@@ -70,5 +70,5 @@ public class History {
 		return "History [id=" + id + ", idUser=" + idUser + ", idMedia=" + idMedia + ", dateVisionnage="
 				+ dateVisionnage + ", tempsArret=" + tempsArret + ", estTermine=" + estTermine + "]";
 	}
-	
+
 }

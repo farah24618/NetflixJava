@@ -9,7 +9,7 @@ public class Film extends Media{
 	private int duree;
 	private int nbreVue;
 	//hedhi
-	
+
 
     // ─── Constructeur complet ─────────────────────────────────────────────────
     public Film(int id, String titre, String synopsis, String casting,
@@ -28,11 +28,11 @@ public class Film extends Media{
         this.duree    = duree;
         this.nbreVue  = nbreVue;
     }
-    
+
 	public Film () {
 		super();
 	}
-	
+
 	public String getUrlVedio() {
 		return urlVedio;
 	}
@@ -51,7 +51,7 @@ public class Film extends Media{
 	public void setNbreVue(int nbreVue) {
 		this.nbreVue = nbreVue;
 	}
-	
-	
+
+
 
 }

@@ -58,5 +58,5 @@ public class Subtitle {
 		return "Subtitle [id=" + id + ", langage=" + langage + ", idMedia=" + idMedia + ", url=" + url + "]";
 	}
 
-	
+
 }

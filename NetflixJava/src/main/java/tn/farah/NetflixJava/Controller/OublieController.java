@@ -2,21 +2,21 @@ package tn.farah.NetflixJava.Controller;
 
 
 
+import java.awt.Button;
+import java.awt.Label;
+import java.awt.Rectangle;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+
+import org.w3c.dom.Node;
+
 import javafx.animation.PauseTransition;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class OublieController {
 
@@ -49,7 +49,9 @@ public class OublieController {
     @FXML
     public void handleCaptchaClick(MouseEvent event) {
         // Si déjà validé, on ne fait rien
-        if (isCaptchaValidated) return;
+        if (isCaptchaValidated) {
+			return;
+		}
 
         // 1. Démarrer l'animation de chargement
         // On désactive la zone de clic pour éviter les doubles clics
@@ -63,18 +65,18 @@ public class OublieController {
             // 3. Animation terminée -> Afficher la coche verte
             captchaProgress.setVisible(false); // Cacher le chargement
             captchaCheck.setVisible(true);      // Afficher la coche verte
-            
+
             // On peut ajouter un petit fondu (FadeTransition) ici pour l'élégance
 
             // 4. Mettre à jour l'état de l'application
             isCaptchaValidated = true;
-            
+
             // 5. Activer le bouton de confirmation rouge
             btnConfirmer.setDisable(false);
             btnConfirmer.setOpacity(1.0); // Rendre le bouton totalement opaque
             btnConfirmer.setCursor(javafx.scene.Cursor.HAND);
         });
-        
+
         delay.play();
     }
 
@@ -90,16 +92,16 @@ public class OublieController {
         }
 
         String email = emailField.getText();
-        
+
         // ... votre logique de validation d'e-mail précédente ...
-        
+
         System.out.println("reCAPTCHA validé. Demande envoyée pour : " + email);
         afficherMessage(AlertType.INFORMATION, "Succès", "Un e-mail de réinitialisation a été envoyé.");
         fermerFenetre(event);
     }
 
     // ... méthodes handleFermer, fermerFenetre, afficherMessage précédentes ...
-    
+
     /**
      * Petite méthode utilitaire pour fermer la fenêtre à partir d'un ActionEvent
      */

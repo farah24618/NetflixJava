@@ -1,18 +1,20 @@
 package tn.farah.NetflixJava.Controller;
-import javafx.event.ActionEvent;
+import java.awt.Label;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+
+import org.w3c.dom.Node;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import java.io.IOException;
 
 public class signup3Controller {
 	    // Identifiants FXML pour les Labels (Prix et Nom du forfait)
-	    @FXML private Label forfaitLabel; 
+	    @FXML private Label forfaitLabel;
 	    @FXML private Label prixLabel;
 
 	    // Identifiants pour les champs de saisie (si tu veux sauvegarder les données plus tard)
@@ -22,7 +24,7 @@ public class signup3Controller {
 	    @FXML private TextField nomCarteField;
 
 	    /**
-	     * Cette méthode est appelée depuis le signup2Controller 
+	     * Cette méthode est appelée depuis le signup2Controller
 	     * pour transmettre les données du forfait sélectionné.
 	     */
 	    public void setForfaitDetails(String nom, String prix) {
@@ -50,7 +52,7 @@ public class signup3Controller {
 	    void handleCommencerAbonnement(ActionEvent event) {
 	        // Logique de validation ou de sauvegarde SQL ici si nécessaire
 	        System.out.println("Abonnement validé pour le forfait : " + forfaitLabel.getText());
-	        
+
 	        changerScene(event, "/tn/farah/NetflixJava/profiles.fxml", "Qui regarde Netflix ?");
 	    }
 
@@ -61,19 +63,19 @@ public class signup3Controller {
 	        try {
 	            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 	            Parent root = loader.load();
-	            
+
 	            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	            stage.setTitle(titre);
 	            stage.setScene(new Scene(root));
 	            stage.show();
-	            
+
 	        } catch (IOException e) {
 	            System.err.println("Impossible de charger la vue : " + fxmlPath);
 	            e.printStackTrace();
 	        }
 	    }
 	}
-	
-	
-	
-	
+
+
+
+

@@ -1,11 +1,10 @@
 package tn.farah.NetflixJava.DAO;
-import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +14,12 @@ import tn.farah.NetflixJava.utils.ConxDB;
 public class HistoryDAO {
 		private static Connection conn=ConxDB.getInstance();
 		public HistoryDAO(Connection connection) {
-	        this.conn= connection;
+	        HistoryDAO.conn= connection;
 	    }
 		public static List<History> findAll(){
 			Statement stml=null;
 			ResultSet rs=null;
-			List<History> history=new ArrayList<History>();
+			List<History> history=new ArrayList<>();
 			String SQL="SELECT * FROM history";
 			try {
 				stml=conn.createStatement();
@@ -53,8 +52,9 @@ public class HistoryDAO {
 				pstml.setBoolean(5, history.getEstTermine());
 				pstml.executeUpdate();
 				rs=pstml.getGeneratedKeys();
-				if(rs.next()) 
+				if(rs.next()) {
 					historyId=rs.getInt(1);
+				}
 			}catch(SQLException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -64,7 +64,7 @@ public class HistoryDAO {
 		public static List<History> findByUser(int userId) {
 	        PreparedStatement pstml = null;
 	        ResultSet rs = null;
-	        List<History> list = new ArrayList<History>();
+	        List<History> list = new ArrayList<>();
 	        String sql = "SELECT * FROM history WHERE idUser = ? ORDER BY dateVisionnage DESC";
 	        try {
 	            pstml = conn.prepareStatement(sql);
@@ -165,7 +165,7 @@ public class HistoryDAO {
 	            e.printStackTrace();
 	        }
 	    }
-	
+
 
 
 }

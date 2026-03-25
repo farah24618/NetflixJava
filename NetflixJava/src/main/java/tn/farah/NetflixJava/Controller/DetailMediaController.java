@@ -1,12 +1,14 @@
 package tn.farah.NetflixJava.Controller;
 
+import java.awt.Button;
+import java.awt.Image;
+import java.awt.Label;
+
+import javax.swing.text.html.ImageView;
+import javax.swing.text.html.ListView;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Entities.Saison;

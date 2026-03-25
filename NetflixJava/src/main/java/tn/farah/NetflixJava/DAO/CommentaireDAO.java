@@ -1,5 +1,9 @@
 package tn.farah.NetflixJava.DAO;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +12,7 @@ import tn.farah.NetflixJava.Entities.Commentaire;
 public class CommentaireDAO {
 	//hedhi
 
-	
+
 	    private Connection connection;
 
 	    public CommentaireDAO(Connection connection) {
@@ -60,6 +64,6 @@ public class CommentaireDAO {
 	            ps.executeUpdate();
 	        }
 	    }
-	
+
 
 }

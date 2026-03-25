@@ -1,10 +1,10 @@
 package tn.farah.NetflixJava.Service;
 
 
+import java.util.List;
+
 import tn.farah.NetflixJava.DAO.RatingDao;
 import tn.farah.NetflixJava.Entities.Rating;
-
-import java.util.List;
 
 public class RatingService {
 
@@ -40,8 +40,8 @@ public class RatingService {
         if (filmId <= 0) {
             return 0.0;
         }
-        
+
         double average = ratingDao.getAverageScoreForFilm(filmId);
-        return Math.round(average * 10.0) / 10.0; 
+        return Math.round(average * 10.0) / 10.0;
     }
 }

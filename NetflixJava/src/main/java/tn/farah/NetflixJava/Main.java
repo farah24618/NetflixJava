@@ -1,10 +1,6 @@
 package tn.farah.NetflixJava;
 
 import javafx.application.Application;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -13,12 +9,12 @@ public class Main extends Application {
 
 	@Override
     public void start(Stage primaryStage) {
- 
+
         ScreenManager nav = ScreenManager.getInstance();
- 
+
         // 1. Give the manager the stage (once only)
         nav.init(primaryStage);
- 
+
         // 2. Register every screen
         nav.register(Screen.login,          "/tn/farah/NetflixJava/login.fxml");
         nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");

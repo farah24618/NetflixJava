@@ -1,13 +1,13 @@
 
-	
+
 	package tn.farah.NetflixJava.Entities;
 
 	import java.time.LocalDateTime;
 
-	
-	
+
+
 	public class User {
-	    
+
 	    private int id;
 	    private String email;
 	    private String passwordHash;
@@ -30,8 +30,8 @@
 	        this.fullName = fullName;
 	    }
 
-	    public User(int id, String email, String passwordHash, String fullName, 
-	                UserRole role, LocalDateTime createdAt, LocalDateTime lastLogin, 
+	    public User(int id, String email, String passwordHash, String fullName,
+	                UserRole role, LocalDateTime createdAt, LocalDateTime lastLogin,
 	                boolean isActive) {
 	        this.id = id;
 	        this.email = email;
@@ -63,7 +63,7 @@
 	    public UserRole getRole() {
 	        return role;
 	    }
-	    
+
 	    public LocalDateTime getCreatedAt() {
 	        return createdAt;
 	    }
@@ -111,10 +111,10 @@
 	    public void setLastLogin(LocalDateTime lastLogin) {
 	        this.lastLogin = lastLogin;
 	    }
-	    
-	    
+
+
 	    // ==================== MÉTHODES UTILITAIRES ====================
-	    
+
 	    /**
 	     * Vérifie si l'utilisateur a le rôle administrateur
 	     * * @return true si l'utilisateur est admin, false sinon
@@ -122,7 +122,7 @@
 	    public boolean isAdmin() {
 	        return this.role == UserRole.ADMIN;
 	    }
-	    
+
 	    /**
 	     * Met à jour la date de dernière connexion à maintenant
 	     */
@@ -151,8 +151,12 @@
 
 	    @Override
 	    public boolean equals(Object obj) {
-	        if (this == obj) return true;
-	        if (obj == null || getClass() != obj.getClass()) return false;
+	        if (this == obj) {
+				return true;
+			}
+	        if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
 	        User user = (User) obj;
 	        return id == user.id;
 	    }

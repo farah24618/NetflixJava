@@ -1,16 +1,18 @@
 package tn.farah.NetflixJava.Controller;
-import javafx.event.ActionEvent;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+
+import org.w3c.dom.Node;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.io.IOException;
 public class signup1Controller {
-	
 
-	
+
+
 
 	    // Méthode pour le bouton CONTINUER
 	    @FXML
@@ -41,11 +43,11 @@ public class signup1Controller {
 
 	            // Création de la nouvelle scène
 	            Scene scene = new Scene(root);
-	            
+
 	            stage.setTitle(titre);
 	            stage.setScene(scene);
 	            stage.show();
-	            
+
 	        } catch (IOException e) {
 	            System.err.println("Erreur lors du chargement de la vue : " + fxmlFile);
 	            e.printStackTrace();

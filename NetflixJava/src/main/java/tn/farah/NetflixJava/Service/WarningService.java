@@ -5,6 +5,7 @@ import java.util.List;
 
 import tn.farah.NetflixJava.DAO.WarningDao;
 import tn.farah.NetflixJava.Entities.ContientWarning;
+import tn.farah.NetflixJava.Entities.Warning;
 
 public class WarningService {
     private WarningDao warningDao;
@@ -17,19 +18,21 @@ public class WarningService {
     /**
      * Met à jour les warnings d'un film (remplace les anciens par les nouveaux)
      */
-    public void updateFilmWarnings(int filmId, List<ContientWarning> warnings) throws SQLException {
-        if (warnings == null) return;
-        
+    public void updateFilmWarnings(int filmId, List<Warning> warnings) throws SQLException {
+        if (warnings == null) {
+			return;
+		}
+
         // On nettoie d'abord les anciens pour éviter les doublons
-        warningDao.deleteAllForFilm(filmId);
-        
+        warningDao.delete(filmId);
+
         // On insère les nouveaux
         if (!warnings.isEmpty()) {
             warningDao.saveWarnings(filmId, warnings);
         }
     }
 
-    public List<ContientWarning> getWarningsForFilm(int filmId) throws SQLException {
+    public List<Warning> getWarningsForFilm(int filmId) throws SQLException {
         return warningDao.getWarningsByFilm(filmId);
     }
 }

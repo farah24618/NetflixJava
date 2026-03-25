@@ -26,12 +26,13 @@ public class ConxDB {
 	    }
 
 	    public static Connection getInstance(){
-	        if (connexion == null)
-	            try {
+	        if (connexion == null) {
+				try {
 	                new ConxDB();
 	            }catch(Exception e){
 	                System.out.println("--"+e.getMessage());
 	            }
+			}
 	        return connexion;
 	    }
 }

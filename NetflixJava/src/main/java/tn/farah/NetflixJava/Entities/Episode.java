@@ -4,19 +4,19 @@ public class Episode {
     private int saisonId;
     private String titre;
     private int numeroEpisode;
-    private String videoUrl; 
+    private String videoUrl;
     private int duree;
     private String resume;
-    private String miniatureUrl; 
+    private String miniatureUrl;
     private int durreeIntro;
-    
-    public Episode() {
-    	
-    }
-    
-   
 
-   
+    public Episode() {
+
+    }
+
+
+
+
     public Episode(int saisonId, String titre, int numeroEpisode, String videoUrl, int duree, String resume,
 			String miniatureUrl, int durreIntro) {
 		this.saisonId = saisonId;
@@ -89,12 +89,12 @@ public class Episode {
 				+ miniatureUrl + ", durreeIntro=" + durreeIntro + "]";
 	}
 
-	
-    
+
+
 }
-	
-	
-	
-	
+
+
+
+
 
 

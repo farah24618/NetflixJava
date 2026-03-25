@@ -2,6 +2,11 @@ package tn.farah.NetflixJava.utils;
 
 
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -10,12 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
 
 /**
  * ScreenManager — Singleton navigator for large JavaFX apps.
@@ -36,8 +35,10 @@ public class ScreenManager {
     private static ScreenManager instance;
 
     public static ScreenManager getInstance() {
-        if (instance == null) instance = new ScreenManager();
-        
+        if (instance == null) {
+			instance = new ScreenManager();
+		}
+
         return instance;
     }
 
@@ -65,7 +66,9 @@ public class ScreenManager {
 
     /** Navigate to a screen (adds current to back-stack). */
     public void navigateTo(Screen screen) {
-        if (current != null) history.push(current);
+        if (current != null) {
+			history.push(current);
+		}
         load(screen);
     }
 
@@ -77,7 +80,9 @@ public class ScreenManager {
 
     /** Go back to the previous screen. */
     public void goBack() {
-        if (history.isEmpty()) return;
+        if (history.isEmpty()) {
+			return;
+		}
         load(history.pop());
     }
 
@@ -102,7 +107,9 @@ public class ScreenManager {
      *   ctrl.setUser(loggedInUser);
      */
     public <T> T navigateAndGetController(Screen screen) {
-        if (current != null) history.push(current);
+        if (current != null) {
+			history.push(current);
+		}
         return loadAndGetController(screen);
     }
 
@@ -110,7 +117,9 @@ public class ScreenManager {
 
     private void load(Screen screen) {
         String path = routes.get(screen);
-        if (path == null) throw new IllegalArgumentException("Screen not registered: " + screen);
+        if (path == null) {
+			throw new IllegalArgumentException("Screen not registered: " + screen);
+		}
 
         try {
             Parent root = FXMLLoader.load(getClass().getResource(path));
@@ -123,7 +132,9 @@ public class ScreenManager {
 
     private <T> T loadAndGetController(Screen screen) {
         String path = routes.get(screen);
-        if (path == null) throw new IllegalArgumentException("Screen not registered: " + screen);
+        if (path == null) {
+			throw new IllegalArgumentException("Screen not registered: " + screen);
+		}
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));

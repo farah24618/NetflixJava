@@ -2,7 +2,7 @@ package tn.farah.NetflixJava.Entities;
 
 
 	public class Rating {
-	    
+
 	    private int id;
 	    private int userId;
 	    private int filmId;

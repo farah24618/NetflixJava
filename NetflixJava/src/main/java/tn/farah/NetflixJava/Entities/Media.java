@@ -20,7 +20,7 @@ public abstract class  Media {
 	private Set<Warning> warnings;
     private LocalDateTime dateAjout = LocalDateTime.now();
     private Set<Category> genres = new HashSet<>();
-	
+
     // ─── Constructeur vide ────────────────────────────────────────────────────
     // obligatoire pour pouvoir faire new Film() et new Serie() dans les DAO
     public Media() {
@@ -74,7 +74,7 @@ public abstract class  Media {
 	public int getId() {
 		return id;
 	}
-	
+
 	public String getTitre() {
 		return titre;
 	}
@@ -141,6 +141,6 @@ public abstract class  Media {
 	public void setGenres(Set<Category> genres) {
 		this.genres = genres;
 	}
-    
+
 
 }

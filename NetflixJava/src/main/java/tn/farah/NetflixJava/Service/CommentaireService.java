@@ -9,9 +9,9 @@ import tn.farah.NetflixJava.DAO.CommentaireDAO;
 import tn.farah.NetflixJava.Entities.Commentaire;
 
 public class CommentaireService {
-	
+
 	//hedhi
-	
+
 	    private CommentaireDAO commentaireDao;
 
 	    public CommentaireService(Connection connection) {
@@ -33,11 +33,11 @@ public class CommentaireService {
 	        }
 
 	        Commentaire nouveau = new Commentaire(
-	            0, 
-	            contenu, 
-	            LocalDateTime.now(), 
-	            idUser, 
-	            idMedia, 
+	            0,
+	            contenu,
+	            LocalDateTime.now(),
+	            idUser,
+	            idMedia,
 	            false, // Non signalé par défaut
 	            containsSpoilers
 	        );
@@ -67,5 +67,5 @@ public class CommentaireService {
 	    public void signalerCommentaire(int idCommentaire) throws SQLException {
 	        commentaireDao.signaler(idCommentaire);
 	    }
-	
+
 }
