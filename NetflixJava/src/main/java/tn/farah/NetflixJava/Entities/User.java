@@ -1,16 +1,10 @@
 package tn.farah.NetflixJava.Entities;
 
-<<<<<<< HEAD
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-=======
-
-	package tn.farah.NetflixJava.Entities;
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
 public class User {
 
-<<<<<<< HEAD
     private int id;
     private String email;
     private String passwordHash;
@@ -21,21 +15,7 @@ public class User {
     private boolean isActive;
     
     private LocalDate birthDate;
-    private String phone; 
-=======
-
-
-	public class User {
-
-	    private int id;
-	    private String email;
-	    private String passwordHash;
-	    private String fullName;
-	    private UserRole role;
-	    private LocalDateTime createdAt;
-	    private LocalDateTime lastLogin;
-	    private boolean isActive;
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
+    private String phone; // 🔹 NOUVEAU
 
     // 🔹 Constructeur par défaut
     public User() {
@@ -54,25 +34,10 @@ public class User {
         this.phone = phone;
     }
 
-<<<<<<< HEAD
     // 🔹 Constructeur complet
     public User(int id, String email, String passwordHash, String fullName,
                 UserRole role, LocalDateTime createdAt, LocalDateTime lastLogin,
                 boolean isActive, LocalDate birthDate, String phone) {
-=======
-	    public User(int id, String email, String passwordHash, String fullName,
-	                UserRole role, LocalDateTime createdAt, LocalDateTime lastLogin,
-	                boolean isActive) {
-	        this.id = id;
-	        this.email = email;
-	        this.passwordHash = passwordHash;
-	        this.fullName = fullName;
-	        this.role = role;
-	        this.createdAt = createdAt;
-	        this.lastLogin = lastLogin;
-	        this.isActive = isActive;
-	    }
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
         this.id = id;
         this.email = email;
@@ -115,19 +80,9 @@ public class User {
         return this.role == UserRole.ADMIN;
     }
 
-<<<<<<< HEAD
     public void updateLastLogin() {
         this.lastLogin = LocalDateTime.now();
     }
-=======
-	    public UserRole getRole() {
-	        return role;
-	    }
-
-	    public LocalDateTime getCreatedAt() {
-	        return createdAt;
-	    }
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
     public String getFirstName() {
         if (fullName != null && fullName.contains(" ")) {
@@ -163,95 +118,8 @@ public class User {
         return id == user.id;
     }
 
-<<<<<<< HEAD
     @Override
     public int hashCode() {
         return Integer.hashCode(id);
     }
 }
-=======
-	    public void setEmail(String email) {
-	        this.email = email;
-	    }
-
-	    public void setPasswordHash(String passwordHash) {
-	        this.passwordHash = passwordHash;
-	    }
-
-	    public void setFullName(String fullName) {
-	        this.fullName = fullName;
-	    }
-
-	    public void setActive(boolean active) {
-	        this.isActive = active;
-	    }
-
-	    public void setRole(UserRole role) {
-	        this.role = role;
-	    }
-
-	    // CORRIGÉ : Cette méthode était vide
-	    public void setCreatedAt(LocalDateTime createdAt) {
-	        this.createdAt = createdAt;
-	    }
-
-	    // AJOUTÉ : Il manquait le setter pour lastLogin
-	    public void setLastLogin(LocalDateTime lastLogin) {
-	        this.lastLogin = lastLogin;
-	    }
-
-
-	    // ==================== MÉTHODES UTILITAIRES ====================
-
-	    /**
-	     * Vérifie si l'utilisateur a le rôle administrateur
-	     * * @return true si l'utilisateur est admin, false sinon
-	     */
-	    public boolean isAdmin() {
-	        return this.role == UserRole.ADMIN;
-	    }
-
-	    /**
-	     * Met à jour la date de dernière connexion à maintenant
-	     */
-	    public void updateLastLogin() {
-	        this.lastLogin = LocalDateTime.now();
-	    }
-
-	    public String getFirstName() {
-	        if (fullName != null && fullName.contains(" ")) {
-	            return fullName.substring(0, fullName.indexOf(" "));
-	        }
-	        return fullName;
-	    }
-
-	    @Override
-	    public String toString() {
-	        return "User{" +
-	                "id=" + id +
-	                ", email='" + email + '\'' +
-	                ", fullName='" + fullName + '\'' +
-	                ", role=" + role +
-	                ", isActive=" + isActive +
-	                ", createdAt=" + createdAt +
-	                '}';
-	    }
-
-	    @Override
-	    public boolean equals(Object obj) {
-	        if (this == obj) {
-				return true;
-			}
-	        if (obj == null || getClass() != obj.getClass()) {
-				return false;
-			}
-	        User user = (User) obj;
-	        return id == user.id;
-	    }
-
-	    @Override
-	    public int hashCode() {
-	        return Integer.hashCode(id);
-	    }
-	}
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
