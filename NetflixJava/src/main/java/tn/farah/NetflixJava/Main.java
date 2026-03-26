@@ -1,6 +1,12 @@
 package tn.farah.NetflixJava;
 
 import javafx.application.Application;
+
+
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;

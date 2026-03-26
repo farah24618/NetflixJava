@@ -3,7 +3,15 @@ package tn.farah.NetflixJava.Controller;
 
 
 import javafx.fxml.FXML;
+<<<<<<< HEAD
 import javafx.scene.control.Button;
+=======
+<<<<<<< HEAD
+
+import javafx.scene.control.Button;
+=======
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;

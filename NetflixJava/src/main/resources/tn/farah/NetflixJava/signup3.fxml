@@ -10,7 +10,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
- <!-- ════════════ TOP : Header ════════════ -->
+
+<!-- ════════════ TOP : Header ════════════ -->
+
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.signup3Controller">
    
    <top>
@@ -25,7 +27,7 @@
                </image>
             </ImageView>
             <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-padding: 7 15;" text="retour" />
+            <Button fx:id="handleRetour" mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-padding: 7 15;" text="retour" />
          </children>
       </HBox>
    </top>
@@ -50,7 +52,7 @@
                         <VBox spacing="5.0">
                            <children>
                               <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="NUMÉRO DE CARTE" />
-                              <TextField promptText="1234  5678  9012  3456" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                              <TextField fx:id="numeroCarteField" promptText="1234  5678  9012  3456" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
                            </children>
                         </VBox>
                         <HBox spacing="10.0">
@@ -58,13 +60,13 @@
                               <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="DATE D'EXPIRATION" />
-                                    <TextField promptText="MM / AA" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                                    <TextField fx:id="dateExpirationField" promptText="MM / AA" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
                                  </children>
                               </VBox>
                               <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="CODE CVV" />
-                                    <TextField promptText="..." style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                                    <TextField fx:id="cvvField" promptText="..." style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
                                  </children>
                               </VBox>
                            </children>
@@ -72,7 +74,7 @@
                         <VBox spacing="5.0">
                            <children>
                               <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px; -fx-font-weight: bold;" text="NOM SUR LA CARTE" />
-                              <TextField promptText="Prénom Nom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
+                              <TextField fx:id="nomCarteField" promptText="Prénom Nom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-pref-height: 45; -fx-background-radius: 4; -fx-border-radius: 4;" />
                            </children>
                         </VBox>
                      </children>
@@ -90,7 +92,7 @@
                      </children>
                   </HBox>
 
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCommencerAbonnement" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 50; -fx-background-radius: 4;" text="COMMENCER MON ABONNEMENT" />
+                  <Button fx:id="commencerAbonnementButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCommencerAbonnement" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 50; -fx-background-radius: 4;" text="COMMENCER MON ABONNEMENT" />
                   
                   <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-text-fill: #666666; -fx-font-size: 11px;" text="Paiement sécurisé · Annulation à tout moment" />
                </children>

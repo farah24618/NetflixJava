@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Service;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.List;
 
 import tn.farah.NetflixJava.DAO.UserDao;
@@ -8,17 +9,16 @@ import tn.farah.NetflixJava.Entities.User;
 
 public class UserService {
 
-    // Le Service a besoin du DAO pour parler à la base de données
     private UserDao userDao;
-    private Connection connexion;
 
-    // Constructeur
     public UserService(Connection connexion) {
         this.userDao = new UserDao(connexion);
     }
 
-    // 1. INSCRIPTION (Logique métier pour ajouter un utilisateur)
+    // 1️⃣ INSCRIPTION
     public boolean registerUser(User user) {
+<<<<<<< HEAD
+=======
         // VÉRIFICATION 1 : L'email ou le mot de passe sont-ils vides ?
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             System.out.println("Erreur : L'email est obligatoire.");
@@ -34,45 +34,34 @@ public class UserService {
             System.out.println("Erreur : Format d'email invalide.");
             return false;
         }
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
-        // Si toutes les règles sont respectées, on autorise le DAO à l'ajouter en base !
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) return false;
+        if (!user.getEmail().matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")) return false;
+        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 6) return false;
+        if (user.getBirthDate() == null || user.getBirthDate().isAfter(java.time.LocalDate.now())) return false;
+        if (user.getPhone() != null && !user.getPhone().matches("^\\+?[0-9]{8,15}$")) return false;
+        if (userDao.findByEmail(user.getEmail()) != null) return false;
+
         return userDao.addUser(user);
     }
 
-    // 2. CONNEXION (Logique métier pour le Login)
+    // 2️⃣ LOGIN
     public User loginUser(String email, String password) {
-        if (email == null || password == null) {
-            System.out.println("Erreur : Veuillez remplir tous les champs.");
-            return null;
-        }
+        if (email == null || password == null || email.trim().isEmpty() || password.isEmpty()) return null;
+        if (!email.matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")) return null;
 
-        // On demande au DAO de vérifier dans la base de données
-        User user = userDao.login(email, password);
-
-        if (user == null) {
-            System.out.println("Erreur : Email ou mot de passe incorrect.");
-        } else if (!user.isActive()) {
-            System.out.println("Erreur : Ce compte a été désactivé !");
-            return null; // On bloque la connexion si le compte n'est pas actif
-        } else {
-            System.out.println("Connexion réussie ! Bienvenue " + user.getFirstName());
-        }
-
-        return user;
+        return userDao.login(email, password);
     }
 
-    // 3. RÉCUPÉRER TOUS LES UTILISATEURS
+    // 3️⃣ GET ALL USERS
     public List<User> getAllUsers() {
-        // Ici, pas de règle stricte, on demande juste au DAO de faire son travail
         return userDao.getAllUsers();
     }
 
-    // 4. SUPPRIMER UN UTILISATEUR
+    // 4️⃣ DELETE USER
     public boolean deleteUser(int id) {
-        if (id <= 0) {
-            System.out.println("Erreur : ID utilisateur invalide.");
-            return false;
-        }
+        if (id <= 0) return false;
         return userDao.deleteUser(id);
     }
 }

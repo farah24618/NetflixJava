@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tn.farah.NetflixJava.DAO.SerieDAO;
 import tn.farah.NetflixJava.Entities.Serie;
@@ -61,4 +62,14 @@ public class SerieService {
     public List<Serie> getAllSeries() {
         return SerieDAO.findAll();
     }
+ // Ajouter dans SerieService.java
+
+    /** Retourne toutes les séries groupées par genre */
+    public Map<String, List<Serie>> getAllSeriesByGenre() {
+        return SerieDAO.findAll().stream()
+            .filter(s -> s.getGenre() != null && !s.getGenre().isBlank())
+            .collect(Collectors.groupingBy(Serie::getGenre));
+    }
+
+   
 }

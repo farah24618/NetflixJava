@@ -16,7 +16,7 @@ public class Film extends Media{
                 LocalDate dateSortie, String urlImageCover, String urlImageBanner,
                 String urlTeaser, Double ratingMoyen, AgeRating ageRating,
                 TypeMedia type, LocalDateTime dateAjout,
-                Set<Category> genres, Set<ContientWarning> warnings,
+                Set<Category> genres, Set<Warning> warnings,
                 String urlVedio, int duree, int nbreVue) {
 
         // appelle le constructeur complet de Media

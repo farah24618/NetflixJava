@@ -1,10 +1,14 @@
 package tn.farah.NetflixJava.Service;
 
+import java.sql.*;
+
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import tn.farah.NetflixJava.DAO.CategoryDAO;
@@ -109,9 +113,16 @@ public class FilmService {
 	        String sql = "INSERT INTO film_warnings (film_id, warning_name) VALUES (?, ?)";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 	            ps.setInt(1, filmId);
-	            ps.setString(2, warning.name());
+	            ps.setString(2, warning.getNom());
 	            ps.executeUpdate();
 	        }
+	    }
+	    public Map<String, List<Film>> getAllFilmsByCategory() throws SQLException {
+	        return filmDao.findAll().stream()
+	            .filter(f -> f.getGenres() != null && !f.getGenres().isEmpty())
+	            .collect(Collectors.groupingBy(
+	                f -> f.getGenres().iterator().next().getName() // première catégorie
+	            ));
 	    }
 
 }
