@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Entities;
 
 import java.time.LocalDate;
+import tn.farah.NetflixJava.Entities.Warning;
 import java.time.LocalDateTime;
 import java.util.Set;
 

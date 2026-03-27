@@ -117,12 +117,9 @@ public class FilmService {
 	            ps.executeUpdate();
 	        }
 	    }
+	   
 	    public Map<String, List<Film>> getAllFilmsByCategory() throws SQLException {
-	        return filmDao.findAll().stream()
-	            .filter(f -> f.getGenres() != null && !f.getGenres().isEmpty())
-	            .collect(Collectors.groupingBy(
-	                f -> f.getGenres().iterator().next().getName() // première catégorie
-	            ));
+	        return filmDao.findAllGroupedByCategory();
 	    }
 
 }

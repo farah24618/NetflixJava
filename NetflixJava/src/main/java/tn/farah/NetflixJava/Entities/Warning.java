@@ -10,6 +10,10 @@ public class Warning {
 	        this.nom = nom;
 	    }
 
+		public Warning() {
+			// TODO Auto-generated constructor stub
+		}
+
 		public int getId() {
 			return id;
 		}

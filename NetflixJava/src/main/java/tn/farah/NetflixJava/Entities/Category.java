@@ -10,7 +10,12 @@ public class Category {
 	    }
 
 
-	    public int getId() { return id; }
+	    public Category() {
+			// TODO Auto-generated constructor stub
+		}
+
+
+		public int getId() { return id; }
 	    public String getName() { return name; }
 
 
@@ -19,6 +24,17 @@ public class Category {
 	        return this.name;
 	    }
 	  //hedhi
+
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	    
 	}
 
 
