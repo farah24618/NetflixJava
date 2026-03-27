@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Controller;
 
 
 import java.net.URL;
+
 import java.sql.Connection;
 import java.util.ResourceBundle;
 
@@ -105,7 +106,7 @@ public class LoginController implements Initializable{
 	    }
 	    @FXML
 	    private void handleSignUp(ActionEvent event) {
-	    	ScreenManager.getInstance().navigateTo(Screen.logup);
+	    	ScreenManager.getInstance().navigateTo(Screen.signup1);
 	    }
 	    @FXML
 	    private void handleLearnMore(ActionEvent event) {

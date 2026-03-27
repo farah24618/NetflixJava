@@ -1,5 +1,6 @@
 package tn.farah.NetflixJava;
 import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,7 +15,7 @@ public class App extends Application {
 	@Override
     public void start(Stage stage) throws IOException {
 
-		 scene = new Scene(loadFXML("Home"), 480, 500);
+		 scene = new Scene(loadFXML("Home"), 1200, 500);
 	        stage.setScene(scene);
 	        stage.show();
 	    }
