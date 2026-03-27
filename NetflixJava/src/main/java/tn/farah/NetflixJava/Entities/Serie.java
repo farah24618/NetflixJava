@@ -1,30 +1,32 @@
 package tn.farah.NetflixJava.Entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
+
 public class Serie extends Media {
 
     private String genre;
     private boolean terminee;
-    private int dureeIntro;
+   
 
     public Serie() {
     }
 
-    public Serie(String genre, boolean terminee, int dureeIntro) {
-        this.genre = genre;
-        this.terminee = terminee;
-        this.dureeIntro = dureeIntro;
-    }
+   
+    
+	public Serie(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
+			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
+			LocalDateTime dateAjout, Set<Category> genres, Set<Warning> warnings, String genre, boolean terminee) {
+		super(id, titre, synopsis, casting, dateSortie, urlImageCover, urlImageBanner, urlTeaser, ratingMoyen,
+				ageRating, type, dateAjout, genres, warnings);
+		this.genre = genre;
+		this.terminee = terminee;
+	}
 
-    public Serie(int id, String titre, String synopsis, String genre, boolean terminee, int dureeIntro) {
-        this.setId(id);
-        this.setTitre(titre);
-        this.setSynopsis(synopsis);
-        this.genre = genre;
-        this.terminee = terminee;
-        this.dureeIntro = dureeIntro;
-    }
 
-    public String getGenre() {
+
+	public String getGenre() {
         return genre;
     }
 
@@ -40,13 +42,7 @@ public class Serie extends Media {
         this.terminee = terminee;
     }
 
-    public int getDureeIntro() {
-        return dureeIntro;
-    }
-
-    public void setDureeIntro(int dureeIntro) {
-        this.dureeIntro = dureeIntro;
-    }
+   
 
     @Override
     public String toString() {
@@ -56,7 +52,7 @@ public class Serie extends Media {
                 ", synopsis='" + getSynopsis() + '\'' +
                 ", genre='" + genre + '\'' +
                 ", terminee=" + terminee +
-                ", dureeIntro=" + dureeIntro +
+               
                 '}';
     }
 }
