@@ -367,10 +367,10 @@ public class SeriesController implements Initializable {
     //  HANDLERS FXML
     // ═══════════════════════════════════════════════════════════════
 
-    @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.mainView); }
-    @FXML private void onMovies()    { ScreenManager.getInstance().navigateTo(Screen.mainView); }
+    @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.home); }
+    @FXML private void onMovies()    { ScreenManager.getInstance().navigateTo(Screen.films); }
     @FXML private void onSeries()    { /* déjà ici */ }
-    @FXML private void onMyList()    { ScreenManager.getInstance().navigateTo(Screen.mainView); }
+    @FXML private void onMyList()    { /*ScreenManager.getInstance().navigateTo(Screen.mainView);*/ }
     @FXML private void onSearchBtn() { onSearch(); }
 
     @FXML

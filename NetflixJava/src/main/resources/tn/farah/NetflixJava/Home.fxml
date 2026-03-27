@@ -63,6 +63,7 @@
 
                         <Label fx:id="heroTitle" styleClass="hero-title" wrapText="true" />
                         <Label fx:id="heroSynopsis" styleClass="hero-synopsis" wrapText="true" />
+                  <Label fx:id="heroCategories" />
 
                         <!-- Boutons d'action -->
                         <HBox spacing="12" styleClass="hero-actions">
@@ -83,7 +84,7 @@
 
                     <!-- Badge âge (top-right) -->
                     <HBox alignment="CENTER_RIGHT" styleClass="age-badge-box" StackPane.alignment="CENTER_RIGHT">
-                        <Label styleClass="age-badge" text="19+" />
+                        <Label fx:id="heroWarning" styleClass="age-badge" text="19+" />
                     </HBox>
 
                 </StackPane>

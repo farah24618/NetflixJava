@@ -160,8 +160,9 @@ public class ScreenManager {
         } else {
             primaryStage.getScene().setRoot(root);
         }
-
+         // ← centrer l'app sur l'écran
         primaryStage.show();
+        
 
         FadeTransition fade = new FadeTransition(Duration.millis(200), root);
         fade.setFromValue(0);

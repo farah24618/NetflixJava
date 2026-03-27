@@ -24,6 +24,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
 
@@ -31,7 +32,7 @@ public class HomeController implements Initializable {
     @FXML private StackPane heroSection;
     @FXML private Pane      heroBackdrop;
     @FXML private Label     heroTitle, heroGenreBadge, heroType,
-                             heroRating, heroDuration, heroYear, heroCertif, heroSynopsis;
+                             heroRating, heroDuration, heroYear, heroCertif, heroSynopsis,heroWarning,heroCategories;
     @FXML private TextField searchField;
     @FXML private Label     avatarLabel;
     @FXML private VBox      carouselContainer;
@@ -142,6 +143,16 @@ public class HomeController implements Initializable {
         heroRating  .setText(String.format("%.0f%% Match", film.getRatingMoyen() * 10));
         heroDuration.setText(film.getDuree() + "m");
         heroType    .setText("FILM");
+        if (film.getGenres() != null) {heroCategories.setText(
+        	    film.getGenres().stream()
+        	        .map(cat -> cat.getName().toUpperCase())
+        	        .collect(Collectors.joining("   "))      
+        	); }
+        if (film.getWarnings() != null) {heroWarning.setText(
+        	    film.getWarnings().stream()
+    	        .map(cat -> cat.getNom().toUpperCase())
+    	        .collect(Collectors.joining(" "))) ;}
+    	  
         if (heroGenreBadge != null) heroGenreBadge.setText("");
         if (film.getDateSortie() != null) heroYear  .setText(String.valueOf(film.getDateSortie().getYear()));
         if (film.getAgeRating()  != null) heroCertif.setText(film.getAgeRating().name());
@@ -547,12 +558,12 @@ public class HomeController implements Initializable {
 
     @FXML
     private void onMovies() {
-       // ScreenManager.getInstance().navigateTo(Screen.FILMS);
+       ScreenManager.getInstance().navigateTo(Screen.films);
     }
 
     @FXML
     private void onSeries() {
-       // ScreenManager.getInstance().navigateTo(Screen.SERIES);
+       ScreenManager.getInstance().navigateTo(Screen.series);
     }
 
     @FXML
@@ -560,15 +571,15 @@ public class HomeController implements Initializable {
         String query = searchField != null ? searchField.getText().trim() : "";
         if (query.isEmpty()) return;
 
-        // Option A : naviguer vers un écran de recherche dédié
-        // SearchController ctrl = ScreenManager.getInstance()
-        //     .navigateAndGetController(Screen.SEARCH);
-        // ctrl.setQuery(query);
+       
+          ScreenManager.getInstance()
+            .navigateAndGetController(Screen.search);
+        
 
-        // Option B : filtrer les carousels en place (décommenter si pas d'écran dédié)
+        
         System.out.println("Recherche : " + query);
     }
-
+   
     @FXML private void onSearchBtn()         { onSearch(); }
     @FXML private void onPlayFeatured()      { System.out.println("Lecture hero"); }
     @FXML private void onMoreInfoFeatured()  { System.out.println("Plus d'infos hero"); }

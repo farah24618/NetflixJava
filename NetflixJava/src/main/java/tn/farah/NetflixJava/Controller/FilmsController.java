@@ -398,10 +398,10 @@ public class FilmsController implements Initializable {
     //  HANDLERS FXML
     // ═══════════════════════════════════════════════════════════════
 
-    @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.mainView); }
+    @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.home); }
     @FXML private void onMovies()    { /* déjà sur cette page */ }
-    @FXML private void onSeries()    { ScreenManager.getInstance().navigateTo(Screen.mainView); }
-    @FXML private void onMyList()    { ScreenManager.getInstance().navigateTo(Screen.mainView); }
+    @FXML private void onSeries()    { ScreenManager.getInstance().navigateTo(Screen.series); }
+    @FXML private void onMyList()    { /*ScreenManager.getInstance().navigateTo(Screen.);*/ }
     @FXML private void onSearchBtn() { onSearch(); }
 
     @FXML

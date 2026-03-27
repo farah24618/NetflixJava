@@ -26,9 +26,18 @@ public class Main extends Application {
         nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");
         nav.register(Screen.logup,        "/tn/farah/NetflixJava/logup.fxml");
         nav.register(Screen.mainView,        "/tn/farah/NetflixJava/MainView.fxml");
+        nav.register(Screen.home,        "/tn/farah/NetflixJava/Home.fxml");
+        nav.register(Screen.films,        "/tn/farah/NetflixJava/Films.fxml");
+        nav.register(Screen.series,        "/tn/farah/NetflixJava/Series.fxml");
+        nav.register(Screen.search,        "/tn/farah/NetflixJava/SearchResults.fxml");
+
+        
         // 3. Show the first screen
         primaryStage.setTitle("RekchaNet");
-        nav.navigateTo(Screen.login);
+        nav.navigateTo(Screen.home);
+        primaryStage.setWidth(1280);   // ← largeur que tu veux
+        primaryStage.setHeight(720);   // ← hauteur que tu veux
+        primaryStage.centerOnScreen();
     }
 
     public static void main(String[] args) {
