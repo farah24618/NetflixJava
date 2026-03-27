@@ -16,7 +16,7 @@ import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionData;
 import javafx.event.ActionEvent;
-
+//...
 public class signup3Controller implements Initializable {
 
     @FXML private Button retourButton;
