@@ -572,8 +572,6 @@ public class HomeController implements Initializable {
         if (query.isEmpty()) return;
 
        
-          ScreenManager.getInstance()
-            .navigateAndGetController(Screen.search);
         
 
         

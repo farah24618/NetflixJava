@@ -140,6 +140,10 @@ public class LoginController implements Initializable{
 	        alert.setContentText(message);
 	        alert.showAndWait();
 	    }
+		public void prefillEmail(String email) {
+			emailField.setText(email);
+			
+		}
 
 
 }

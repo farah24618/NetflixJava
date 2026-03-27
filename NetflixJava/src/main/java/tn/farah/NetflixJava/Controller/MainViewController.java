@@ -76,12 +76,11 @@ public class MainViewController implements Initializable {
             return;
         }
 
-        // Pass the email to the Register screen so it's pre-filled
-        /*RegisterController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.logup);
+        LoginController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.login);
         if (ctrl != null) {
             ctrl.prefillEmail(email);
-        }*/
+        }
     }
 
     // ── Nav link handlers (optional — wire via fx:onMouseClicked in FXML) ─────

@@ -1,13 +1,8 @@
 package tn.farah.NetflixJava.utils;
-
-
-
 import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
