@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1400.0"
+            prefHeight="900.0"
+            style="-fx-background-color: black;">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox spacing="20.0" alignment="CENTER_LEFT"
+              prefHeight="70.0"
+              style="-fx-background-color: rgba(0,0,0,0.85);">
+            <padding>
+                <Insets top="10" right="25" bottom="10" left="25"/>
+            </padding>
+
+            <children>
+                <ImageView fitHeight="40.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/tn/farah/NetflixJava/ImagesNet/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <Button text="Accueil"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px;"/>
+                <Button text="Séries"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px;"/>
+                <Button text="Films"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px;"/>
+                <Button text="Ma liste"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <TextArea prefHeight="35.0"
+                          prefWidth="350.0"
+                          promptText="Rechercher un film, une série..."
+                          wrapText="false"
+                          style="-fx-background-color: #1f1f1f; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-control-inner-background: #1f1f1f;"/>
+
+                <Button text="🔔"
+                        style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+                <Button text="☺"
+                        style="-fx-background-color: #15aabf; -fx-text-fill: white; -fx-font-size: 16px;"/>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background: black; -fx-background-color: black;">
+            <content>
+                <VBox spacing="20.0"
+                      style="-fx-background-color: black;">
+                    <children>
+
+                        <!-- BANNER -->
+                        <AnchorPane prefHeight="420.0"
+                                    style="-fx-background-color: #111111;">
+                            <children>
+
+                                <ImageView fitWidth="1400.0"
+                                           fitHeight="420.0"
+                                           preserveRatio="false"
+                                           opacity="0.55">
+                                    <image>
+                                        <Image url="@/tn/farah/NetflixJava/ImagesNet/loginWallpaper.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <VBox spacing="14.0"
+                                      layoutX="40.0"
+                                      layoutY="70.0"
+                                      prefWidth="700.0">
+                                    <children>
+                                        <Label text="STRANGER THINGS"
+                                               style="-fx-text-fill: white; -fx-font-size: 58px; -fx-font-weight: bold;"/>
+
+                                        <Label text="2022 • Science-fiction • 4 Saisons • 16+"
+                                               style="-fx-text-fill: #d0d0d0; -fx-font-size: 22px;"/>
+
+                                        <HBox spacing="12.0">
+                                            <children>
+                                                <Button text="▶ Lecture"
+                                                        style="-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 12;"/>
+                                                <Button text="+ Ma liste"
+                                                        style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 12;"/>
+                                                <Button text="↗ Partager"
+                                                        style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 12;"/>
+                                                <Button text="👍 J'aime"
+                                                        style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 12;"/>
+                                            </children>
+                                        </HBox>
+
+                                        <Label text="Un groupe d'enfants à Hawkins découvre des forces surnaturelles et une mystérieuse dimension parallèle."
+                                               wrapText="true"
+                                               style="-fx-text-fill: white; -fx-font-size: 24px;"/>
+
+                                        <Label text="Casting : Millie Bobby Brown, Finn Wolfhard, Winona Ryder"
+                                               wrapText="true"
+                                               style="-fx-text-fill: #cccccc; -fx-font-size: 18px;"/>
+
+                                        <Label text="Note : ★ 4,8/5 (250 k votes) • 140 M de vues • N°1 des séries aujourd'hui"
+                                               wrapText="true"
+                                               style="-fx-text-fill: #cccccc; -fx-font-size: 18px;"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </AnchorPane>
+
+                        <!-- MENU TABS -->
+                        <HBox spacing="40.0" alignment="CENTER_LEFT">
+                            <padding>
+                                <Insets top="0" right="40" bottom="0" left="40"/>
+                            </padding>
+                            <children>
+                                <Label text="À propos" style="-fx-text-fill: #c0c0c0; -fx-font-size: 24px;"/>
+                                <Label text="Épisodes" style="-fx-text-fill: #c0c0c0; -fx-font-size: 24px;"/>
+                                <Label text="Bandes-annonces" style="-fx-text-fill: #c0c0c0; -fx-font-size: 24px;"/>
+                                <Label text="Commentaires" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                                <Label text="Similaires" style="-fx-text-fill: #c0c0c0; -fx-font-size: 24px;"/>
+                            </children>
+                        </HBox>
+
+                        <Separator style="-fx-background-color: #333333;"/>
+                        
+                        <!-- COMMENT AREA -->
+                        <VBox spacing="20.0">
+                            <padding>
+                                <Insets top="0" right="40" bottom="0" left="40"/>
+                            </padding>
+                            <children>
+
+                                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                    <children>
+                                        <Label text="Commentaires 2438"
+                                               style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label text="Trier par :"
+                                               style="-fx-text-fill: white; -fx-font-size: 18px;"/>
+                                        <Button text="Top commentaires"
+                                                style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16px;"/>
+                                    </children>
+                                </HBox>
+
+                                <HBox spacing="15.0" alignment="TOP_LEFT"
+                                      style="-fx-background-color: #111111; -fx-background-radius: 18;">
+                                    <padding>
+                                        <Insets top="18" right="18" bottom="18" left="18"/>
+                                    </padding>
+                                    <children>
+                                        <ImageView fitWidth="55.0" fitHeight="55.0" preserveRatio="false">
+                                            <image>
+                                                <Image url="@/tn/farah/NetflixJava/ImagesNet/log1.png"/>
+                                            </image>
+                                        </ImageView>
+
+                                        <VBox spacing="12.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <TextArea promptText="Ajouter un commentaire..."
+                                                          prefHeight="100.0"
+                                                          wrapText="true"
+                                                          style="-fx-control-inner-background: #1f1f1f; -fx-text-fill: white; -fx-prompt-text-fill: #999999;"/>
+
+                                                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <Label text="☺" style="-fx-text-fill: #bdbdbd; -fx-font-size: 18px;"/>
+                                                        <Label text="⚠ Spoiler" style="-fx-text-fill: #bdbdbd; -fx-font-size: 18px;"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                        <Label text="0/500" style="-fx-text-fill: #999999; -fx-font-size: 16px;"/>
+                                                        <Button text="Annuler"
+                                                                style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px;"/>
+                                                        <Button text="Publier"
+                                                                style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 12;"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- COMMENT 1 -->
+                                <VBox spacing="10.0" style="-fx-background-color: black;">
+                                    <children>
+                                        <HBox spacing="15.0" alignment="TOP_LEFT">
+                                            <children>
+                                                <ImageView fitWidth="55.0" fitHeight="55.0" preserveRatio="false">
+                                                    <image>
+                                                        <Image url="@/tn/farah/NetflixJava/ImagesNet/log2.png"/>
+                                                    </image>
+                                                </ImageView>
+
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <Label text="@Sarra_21 • il y a 2 heures"
+                                                               style="-fx-text-fill: #d0d0d0; -fx-font-size: 18px;"/>
+                                                        <Label text="Cette fin d'épisode était INCROYABLE ! 😱 J'ai eu des frissons tout du long..."
+                                                               wrapText="true"
+                                                               style="-fx-text-fill: white; -fx-font-size: 24px;"/>
+                                                        <HBox spacing="15.0">
+                                                            <children>
+                                                                <Label text="❤ J'adore 245" style="-fx-text-fill: #ff5c5c; -fx-font-size: 18px;"/>
+                                                                <Label text="😮 Surprenant" style="-fx-text-fill: #f5d76e; -fx-font-size: 18px;"/>
+                                                                <Label text="Répondre" style="-fx-text-fill: white; -fx-font-size: 18px;"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <Separator style="-fx-background-color: #222222;"/>
+                                    </children>
+                                </VBox>
+
+                                <!-- COMMENT 2 -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <HBox spacing="15.0" alignment="TOP_LEFT">
+                                            <children>
+                                                <ImageView fitWidth="55.0" fitHeight="55.0" preserveRatio="false">
+                                                    <image>
+                                                        <Image url="@/tn/farah/NetflixJava/ImagesNet/log3.jpg"/>
+                                                    </image>
+                                                </ImageView>
+
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <Label text="@NaderFilm • il y a 5 heures"
+                                                               style="-fx-text-fill: #d0d0d0; -fx-font-size: 18px;"/>
+                                                        <Label text="Le jeu d'acteur de Millie Bobby Brown est juste exceptionnel. Cette scène est incroyable 🔥"
+                                                               wrapText="true"
+                                                               style="-fx-text-fill: white; -fx-font-size: 24px;"/>
+                                                        <HBox spacing="15.0">
+                                                            <children>
+                                                                <Label text="❤ J'adore 120" style="-fx-text-fill: #ff5c5c; -fx-font-size: 18px;"/>
+                                                                <Label text="😂 Drôle 8" style="-fx-text-fill: #f5d76e; -fx-font-size: 18px;"/>
+                                                                <Label text="Répondre" style="-fx-text-fill: white; -fx-font-size: 18px;"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <Separator style="-fx-background-color: #222222;"/>
+                                    </children>
+                                </VBox>
+
+                                <!-- COMMENT 3 -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <HBox spacing="15.0" alignment="TOP_LEFT">
+                                            <children>
+                                                <ImageView fitWidth="55.0" fitHeight="55.0" preserveRatio="false">
+                                                    <image>
+                                                        <Image url="@/tn/farah/NetflixJava/ImagesNet/log4.png"/>
+                                                    </image>
+                                                </ImageView>
+
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <Label text="@Emma_W • il y a 1 jour"
+                                                               style="-fx-text-fill: #d0d0d0; -fx-font-size: 18px;"/>
+                                                        <Label text="Vecna n'est pas mort ! Il revient à la fin de la saison..."
+                                                               wrapText="true"
+                                                               style="-fx-text-fill: white; -fx-font-size: 24px;"/>
+                                                        <HBox spacing="15.0">
+                                                            <children>
+                                                                <Label text="⚠ SPOILER" style="-fx-text-fill: orange; -fx-font-size: 18px;"/>
+                                                                <Label text="Répondre" style="-fx-text-fill: white; -fx-font-size: 18px;"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <Separator style="-fx-background-color: #222222;"/>
+                                    </children>
+                                </VBox>
+
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>
