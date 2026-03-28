@@ -77,11 +77,11 @@ public class LoginController implements Initializable{
 	        }
 
 	        // Persist email when "Remember me" is checked
-	        if (rememberMeCheckBox.isSelected()) {
+	        /*if (rememberMeCheckBox.isSelected()) {
 	            PreferencesStore.saveEmail(email);
 	        } else {
 	            PreferencesStore.clearEmail();
-	        }
+	        }*/
 
 	        // TODO: Replace this block with your real authentication logic
 	       User authenticated = userservice.loginUser(email, password);
