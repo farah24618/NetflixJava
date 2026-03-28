@@ -12,7 +12,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="700.0"
+            prefWidth="1200.0"
+            style="-fx-background-color: #141414;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.farah.NetflixJava.Controller.AddProfileController">
 
     <top>
         <HBox alignment="TOP_LEFT" prefHeight="90.0">
@@ -22,7 +27,6 @@
             <children>
                 <ImageView fitHeight="40.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        
                         <Image url="@ImagesNet/ChatGPT%20Image%20Feb%209,%202026,%2005_10_50%20PM.png" />
                     </image>
                 </ImageView>
@@ -30,7 +34,6 @@
         </HBox>
     </top>
 
-    <!-- CENTER -->
     <center>
         <VBox alignment="TOP_CENTER" spacing="22.0">
             <padding>
@@ -38,52 +41,72 @@
             </padding>
 
             <children>
-                <!-- Title -->
                 <Label style="-fx-text-fill: white; -fx-font-size: 56; -fx-font-weight: 300;" text="Add Profile" />
 
-                <!-- Subtitle -->
                 <Label style="-fx-text-fill: #b3b3b3; -fx-font-size: 16;" text="Add a profile for another person watching Netflix" />
 
-                <!-- Long separator line like Netflix -->
                 <Separator prefWidth="980.0" style="-fx-background-color: #2a2a2a;" />
 
-                <!-- Profile row -->
                 <HBox alignment="CENTER" prefWidth="980.0" spacing="22.0">
-
                     <children>
-                        <!-- Avatar -->
                         <ImageView fitHeight="120.0" fitWidth="120.0" preserveRatio="false" style="-fx-background-radius: 6; -fx-border-radius: 6;">
                             <image>
                                 <Image url="@ImagesNet/log5.jpg" />
                             </image>
                         </ImageView>
 
-                        <!-- Form -->
                         <VBox alignment="CENTER_LEFT" spacing="12.0">
                             <children>
-                                <TextField fx:id="nameField" prefHeight="42.0" prefWidth="520.0" promptText="Name" style="                                                 -fx-background-color: #3a3a3a;                                                 -fx-text-fill: #e6e6e6;                                                 -fx-prompt-text-fill: #a0a0a0;                                                 -fx-font-size: 16;                                                 -fx-background-radius: 4;                                                 -fx-border-color: transparent;                                            " />
+                                <TextField fx:id="nameField"
+                                           prefHeight="42.0"
+                                           prefWidth="520.0"
+                                           promptText="Name"
+                                           style="-fx-background-color: #3a3a3a;
+                                                  -fx-text-fill: #e6e6e6;
+                                                  -fx-prompt-text-fill: #a0a0a0;
+                                                  -fx-font-size: 16;
+                                                  -fx-background-radius: 4;
+                                                  -fx-border-color: transparent;" />
 
-                                <CheckBox fx:id="kidCheckBox" style="-fx-text-fill: white; -fx-font-size: 14;" text="Kid?" />
+                                <CheckBox fx:id="kidCheckBox"
+                                          style="-fx-text-fill: white; -fx-font-size: 14;"
+                                          text="Kid?" />
                             </children>
                         </VBox>
-
                     </children>
                 </HBox>
-
             </children>
         </VBox>
     </center>
 
-    <!-- BOTTOM: buttons centered -->
     <bottom>
         <HBox alignment="CENTER" spacing="18.0">
             <padding>
                 <Insets bottom="45.0" top="35.0" />
             </padding>
             <children>
-                <Button onAction="#handleContinue" prefHeight="42.0" prefWidth="140.0" style="                             -fx-background-color: #e6e6e6;                             -fx-text-fill: black;                             -fx-font-weight: bold;                             -fx-font-size: 14;                             -fx-background-radius: 2;                         " text="Continue" />
+                <Button onAction="#handleContinue"
+                        prefHeight="42.0"
+                        prefWidth="140.0"
+                        style="-fx-background-color: #e6e6e6;
+                               -fx-text-fill: black;
+                               -fx-font-weight: bold;
+                               -fx-font-size: 14;
+                               -fx-background-radius: 2;"
+                        text="Continue" />
 
-                <Button onAction="#handleCancel" prefHeight="42.0" prefWidth="140.0" style="                             -fx-background-color: transparent;                             -fx-border-color: #5a5a5a;                             -fx-text-fill: #9a9a9a;                             -fx-font-weight: bold;                             -fx-font-size: 14;                             -fx-border-width: 1;                             -fx-background-radius: 2;                             -fx-border-radius: 2;                         " text="Cancel" />
+                <Button onAction="#handleCancel"
+                        prefHeight="42.0"
+                        prefWidth="140.0"
+                        style="-fx-background-color: transparent;
+                               -fx-border-color: #5a5a5a;
+                               -fx-text-fill: #9a9a9a;
+                               -fx-font-weight: bold;
+                               -fx-font-size: 14;
+                               -fx-border-width: 1;
+                               -fx-background-radius: 2;
+                               -fx-border-radius: 2;"
+                        text="Cancel" />
             </children>
         </HBox>
     </bottom>
