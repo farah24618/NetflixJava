@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.farah.NetflixJava.Controller.DetailMediaController"
+            style="-fx-background-color: #141414;"
+            stylesheets="@home.css">
+
+    <!-- ═══ HERO BANNER (plein écran, image en fond) ═══ -->
+    <top>
+        <StackPane fx:id="heroStack" prefHeight="540" minHeight="540" maxHeight="540">
+
+            <!-- Image de fond -->
+            <Pane fx:id="heroBanner" styleClass="detail-banner" />
+
+            <!-- Dégradé bas → haut pour lisibilité -->
+            <Pane mouseTransparent="true" styleClass="detail-gradient"
+                  style="-fx-background-color: linear-gradient(to top, #141414 0%, rgba(20,20,20,0.7) 50%, rgba(20,20,20,0.1) 100%);" />
+
+            <!-- Navbar flottante par-dessus le hero -->
+            <HBox alignment="CENTER_LEFT" spacing="0"
+                  style="-fx-padding: 18 48 18 48; -fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);"
+                  StackPane.alignment="TOP_LEFT">
+
+                <!-- Netflix Logo -->
+                <Label text="NETFLIX"
+                       style="-fx-font-family: 'Arial Black'; -fx-font-size: 28px; -fx-font-weight: 900;
+                              -fx-text-fill: #E50914; -fx-letter-spacing: 2px;" />
+
+                <!-- Nav links -->
+                <HBox alignment="CENTER_LEFT" spacing="24" style="-fx-padding: 0 0 0 36;">
+                    <Button onAction="#onHome"   styleClass="nav-btn" text="Home"
+                            style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
+                                   -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent;
+                                   -fx-font-family: 'Arial';" />
+                    <Button onAction="#onMovies" styleClass="nav-btn" text="Movies"
+                            style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
+                                   -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent;
+                                   -fx-font-family: 'Arial';" />
+                    <Button onAction="#onSeries" styleClass="nav-btn" text="TV Shows"
+                            style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
+                                   -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent;
+                                   -fx-font-family: 'Arial';" />
+                    <Button onAction="#onMyList" styleClass="nav-btn" text="My List"
+                            style="-fx-background-color: transparent; -fx-text-fill: #e5e5e5;
+                                   -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent;
+                                   -fx-font-family: 'Arial';" />
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- Back button -->
+                <Button onAction="#onBack" text="← Retour"
+                        style="-fx-background-color: rgba(255,255,255,0.15); -fx-text-fill: #ffffff;
+                               -fx-font-size: 13px; -fx-cursor: hand; -fx-font-family: 'Arial';
+                               -fx-padding: 8 18 8 18; -fx-background-radius: 4px;
+                               -fx-border-color: rgba(255,255,255,0.3); -fx-border-radius: 4px;
+                               -fx-border-width: 1px;" />
+            </HBox>
+
+            <!-- Contenu hero (titre + actions) -->
+            <VBox alignment="BOTTOM_LEFT" spacing="14"
+                  style="-fx-padding: 0 60 52 60;"
+                  StackPane.alignment="BOTTOM_LEFT"
+                  maxWidth="720">
+
+                <!-- Type badge -->
+                <Label fx:id="lblType" styleClass="detail-type-badge"
+                       style="-fx-background-color: #E50914; -fx-text-fill: #ffffff;
+                              -fx-font-family: 'Arial'; -fx-font-size: 11px; -fx-font-weight: bold;
+                              -fx-padding: 3 10 3 10; -fx-background-radius: 3px;
+                              -fx-letter-spacing: 1.5px;" />
+
+                <!-- Titre -->
+                <Label fx:id="lblTitre" styleClass="detail-title" wrapText="true"
+                       style="-fx-font-family: 'Arial Black'; -fx-font-size: 48px; -fx-font-weight: 900;
+                              -fx-text-fill: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 12, 0, 0, 4);" />
+
+                <!-- Meta ligne : rating · année · durée · age -->
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Label fx:id="lblRating"
+                           style="-fx-text-fill: #46d369; -fx-font-family: 'Arial'; -fx-font-size: 15px; -fx-font-weight: bold;" />
+                    <Label text="•" style="-fx-text-fill: #808080; -fx-font-size: 13px;" />
+                    <Label fx:id="lblAnnee"
+                           style="-fx-text-fill: #bcbcbc; -fx-font-family: 'Arial'; -fx-font-size: 14px;" />
+                    <Label text="•" style="-fx-text-fill: #808080; -fx-font-size: 13px;" />
+                    <Label fx:id="lblDuree"
+                           style="-fx-text-fill: #bcbcbc; -fx-font-family: 'Arial'; -fx-font-size: 14px;" />
+                    <Label fx:id="lblAgeRating"
+                           style="-fx-text-fill: #bcbcbc; -fx-font-family: 'Arial'; -fx-font-size: 12px;
+                                  -fx-border-color: #808080; -fx-border-width: 1px; -fx-border-radius: 2px;
+                                  -fx-padding: 1 6 1 6;" />
+                </HBox>
+
+                <!-- Boutons action -->
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Button fx:id="btnPlay" onAction="#onPlay" text="▶  Lecture"
+                            style="-fx-background-color: #ffffff; -fx-text-fill: #000000;
+                                   -fx-font-family: 'Arial'; -fx-font-size: 16px; -fx-font-weight: bold;
+                                   -fx-padding: 12 28 12 28; -fx-background-radius: 5px;
+                                   -fx-cursor: hand;" />
+                    <Button fx:id="btnTrailer" onAction="#onTrailer" text="🎬  Bande-annonce"
+                            style="-fx-background-color: rgba(109,109,110,0.7); -fx-text-fill: #ffffff;
+                                   -fx-font-family: 'Arial'; -fx-font-size: 16px; -fx-font-weight: bold;
+                                   -fx-padding: 12 28 12 28; -fx-background-radius: 5px;
+                                   -fx-cursor: hand;" />
+                    <Button fx:id="btnFavori" onAction="#onFavori" text="♥  Ma liste"
+                            style="-fx-background-color: rgba(42,42,42,0.8); -fx-text-fill: #ffffff;
+                                   -fx-font-family: 'Arial'; -fx-font-size: 16px;
+                                   -fx-padding: 12 24 12 24; -fx-background-radius: 50px;
+                                   -fx-border-color: rgba(255,255,255,0.5); -fx-border-radius: 50px;
+                                   -fx-border-width: 2px; -fx-cursor: hand;" />
+                </HBox>
+
+            </VBox>
+        </StackPane>
+    </top>
+
+    <!-- ═══ CONTENU BAS ═══ -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    styleClass="main-scroll" vbarPolicy="AS_NEEDED"
+                    style="-fx-background: #141414; -fx-background-color: #141414;
+                           -fx-border-color: transparent;">
+            <VBox spacing="36" style="-fx-padding: 40 60 60 60; -fx-background-color: #141414;">
+
+                <!-- ── Ligne principale : synopsis + infos ── -->
+                <HBox spacing="52" alignment="TOP_LEFT">
+
+                    <!-- Synopsis (gauche, 60%) -->
+                    <VBox spacing="12" HBox.hgrow="ALWAYS">
+                        <Label text="Synopsis"
+                               style="-fx-font-family: 'Arial Black'; -fx-font-size: 18px;
+                                      -fx-text-fill: #ffffff; -fx-font-weight: bold;" />
+                        <Label fx:id="lblSynopsis" wrapText="true" maxWidth="680"
+                               style="-fx-font-family: 'Arial'; -fx-font-size: 15px;
+                                      -fx-text-fill: #d2d2d2; -fx-line-spacing: 4px;" />
+                    </VBox>
+
+                    <!-- Infos (droite, 40%) -->
+                    <VBox spacing="12" minWidth="280" maxWidth="320">
+
+                        <HBox spacing="6">
+                            <Label text="Genres :"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #777777; -fx-font-weight: bold;" />
+                            <Label fx:id="lblCategories" wrapText="true"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #d2d2d2;" />
+                        </HBox>
+
+                        <HBox spacing="6">
+                            <Label text="Casting :"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #777777; -fx-font-weight: bold;" />
+                            <Label fx:id="lblCasting" wrapText="true"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #d2d2d2;" />
+                        </HBox>
+
+                        <HBox spacing="6">
+                            <Label text="Avertissements :"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #777777; -fx-font-weight: bold;" />
+                            <Label fx:id="lblWarnings" wrapText="true"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #d2d2d2;" />
+                        </HBox>
+
+                        <HBox spacing="6">
+                            <Label text="Note :"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #777777; -fx-font-weight: bold;" />
+                            <Label fx:id="lblNote"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 13px;
+                                          -fx-text-fill: #46d369; -fx-font-weight: bold;" />
+                        </HBox>
+
+                    </VBox>
+                </HBox>
+
+                <!-- Separator -->
+                <Separator styleClass="detail-separator"
+                           style="-fx-background-color: #2a2a2a; -fx-border-color: #2a2a2a;" />
+
+                <!-- ── Carousels similaires (injectés par le controller) ── -->
+                <VBox fx:id="similarContainer" spacing="32" styleClass="carousel-container" />
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

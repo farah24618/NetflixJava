@@ -4,13 +4,8 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Entities.Serie;
@@ -19,47 +14,39 @@ import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.CardFactory;
 
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
 
-    // ── Injections FXML ──────────────────────────────────────────
     @FXML private StackPane heroSection;
     @FXML private Pane      heroBackdrop;
     @FXML private Label     heroTitle, heroGenreBadge, heroType,
-                             heroRating, heroDuration, heroYear, heroCertif, heroSynopsis,heroWarning,heroCategories;
+                             heroRating, heroDuration, heroYear, heroCertif,
+                             heroSynopsis, heroWarning, heroCategories;
     @FXML private TextField searchField;
     @FXML private Label     avatarLabel;
     @FXML private VBox      carouselContainer;
 
-    // ── Services ─────────────────────────────────────────────────
     private FilmService  filmService;
     private SerieService serieService;
 
-    // ── Overlay (popup container) ─────────────────────────────────
-    // NOTE: overlayPane ne doit PAS être mouseTransparent pour que
-    //       les événements souris atteignent les popups qu'il contient.
-    private Pane overlayPane;
+    // ✅ FIX : tableau à 1 élément pour capturer l'overlay par référence dans les lambdas
+    private final Pane[] overlayRef = new Pane[1];
 
-    // ── État Hero ─────────────────────────────────────────────────
-    private final List<Film> heroFilms  = new ArrayList<>();
+    private final List<Film> heroFilms = new ArrayList<>();
     private int               heroIndex = 0;
     private ScaleTransition   heroZoom;
     private Timeline          heroTimer;
 
-    // ── Constantes cartes ─────────────────────────────────────────
-    private static final double CARDS_VISIBLE = 3.0;
-    private static final double GAP           = 12.0;
-    private static final double ASPECT        = 9.0 / 16.0;
-    private static final double HOVER_SCALE   = 2.0;
-
     // ═══════════════════════════════════════════════════════════════
-    //  INITIALISATION
+    //  INIT
     // ═══════════════════════════════════════════════════════════════
 
     @Override
@@ -75,38 +62,41 @@ public class HomeController implements Initializable {
 
         if (avatarLabel != null) avatarLabel.setText("U");
 
+        // ✅ FIX : createOverlay remplit overlayRef[0] après que la scène soit prête
         carouselContainer.sceneProperty().addListener((obs, old, scene) -> {
             if (scene == null) return;
-            Platform.runLater(() -> initOverlay(scene));
+            Platform.runLater(() -> CardFactory.createOverlay(scene, overlayRef));
         });
     }
 
-    private void initOverlay(javafx.scene.Scene scene) {
-        if (overlayPane != null) return;
-        if (!(scene.getRoot() instanceof Pane root)) return;
+    // ═══════════════════════════════════════════════════════════════
+    //  NAVIGATION HELPERS
+    // ═══════════════════════════════════════════════════════════════
 
-        overlayPane = new Pane();
-        // ✅ FIX POPUP : mouseTransparent = false sur le Pane lui-même,
-        //    mais on le rend transparent aux clics uniquement quand il est vide.
-        //    Les popups qu'il contient gèrent leurs propres événements.
-        overlayPane.setMouseTransparent(false);
-        overlayPane.setPickOnBounds(false); // ← clé : le Pane ne capte les clics
-                                            //   que là où il a des enfants visibles
-        overlayPane.setPrefSize(scene.getWidth(), scene.getHeight());
-        scene.widthProperty() .addListener((o, ow, nw) -> overlayPane.setPrefWidth(nw.doubleValue()));
-        scene.heightProperty().addListener((o, oh, nh) -> overlayPane.setPrefHeight(nh.doubleValue()));
-        root.getChildren().add(overlayPane);
+    private Consumer<Film> goToFilmDetail() {
+        return film -> {
+            DetailMediaController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.detail);
+            if (ctrl != null) ctrl.setFilm(film);
+        };
+    }
+
+    private Consumer<Serie> goToSerieDetail() {
+        return serie -> {
+            DetailMediaController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.detail);
+            if (ctrl != null) ctrl.setSerie(serie);
+        };
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  HERO (Films uniquement)
+    //  HERO
     // ═══════════════════════════════════════════════════════════════
 
     private void initHero() {
         try {
             List<Film> films = filmService.getAllFilmsSorted();
             if (films.isEmpty()) return;
-
             films.stream().limit(5).forEach(heroFilms::add);
             showHeroFilm(0);
 
@@ -116,7 +106,6 @@ public class HomeController implements Initializable {
             }));
             heroTimer.setCycleCount(Timeline.INDEFINITE);
             heroTimer.play();
-
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
@@ -143,16 +132,17 @@ public class HomeController implements Initializable {
         heroRating  .setText(String.format("%.0f%% Match", film.getRatingMoyen() * 10));
         heroDuration.setText(film.getDuree() + "m");
         heroType    .setText("FILM");
-        if (film.getGenres() != null) {heroCategories.setText(
-        	    film.getGenres().stream()
-        	        .map(cat -> cat.getName().toUpperCase())
-        	        .collect(Collectors.joining("   "))      
-        	); }
-        if (film.getWarnings() != null) {heroWarning.setText(
-        	    film.getWarnings().stream()
-    	        .map(cat -> cat.getNom().toUpperCase())
-    	        .collect(Collectors.joining(" "))) ;}
-    	  
+
+        if (film.getGenres() != null)
+            heroCategories.setText(film.getGenres().stream()
+                .map(c -> c.getName().toUpperCase())
+                .collect(Collectors.joining("   ")));
+
+        if (film.getWarnings() != null)
+            heroWarning.setText(film.getWarnings().stream()
+                .map(w -> w.getNom().toUpperCase())
+                .collect(Collectors.joining(" ")));
+
         if (heroGenreBadge != null) heroGenreBadge.setText("");
         if (film.getDateSortie() != null) heroYear  .setText(String.valueOf(film.getDateSortie().getYear()));
         if (film.getAgeRating()  != null) heroCertif.setText(film.getAgeRating().name());
@@ -164,7 +154,7 @@ public class HomeController implements Initializable {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  CHARGEMENT DE TOUS LES CAROUSELS
+    //  CAROUSELS — passent overlayRef (pas overlayRef[0])
     // ═══════════════════════════════════════════════════════════════
 
     private void loadAllCarousels() {
@@ -173,28 +163,36 @@ public class HomeController implements Initializable {
             List<Serie> allSeries = serieService.getAllFilmsSorted();
 
             if (!allFilms.isEmpty()) {
-                carouselContainer.getChildren().add(buildSectionHeader("🎬  Films"));
-                carouselContainer.getChildren().add(buildFilmCarousel("Top Films", allFilms));
+                carouselContainer.getChildren().add(CardFactory.buildSectionHeader("🎬  Films"));
+                carouselContainer.getChildren().add(
+                    CardFactory.buildResponsiveFilmCarousel("Top Films", allFilms,
+                        overlayRef, goToFilmDetail()));
             }
 
             if (!allSeries.isEmpty()) {
-                carouselContainer.getChildren().add(buildSectionHeader("📺  Séries"));
-                carouselContainer.getChildren().add(buildSerieCarousel("Top Séries", allSeries));
+                carouselContainer.getChildren().add(CardFactory.buildSectionHeader("📺  Séries"));
+                carouselContainer.getChildren().add(
+                    CardFactory.buildResponsiveSerieCarousel("Top Séries", allSeries,
+                        overlayRef, goToSerieDetail()));
             }
 
             if (!allFilms.isEmpty()) {
-                Map<String, List<Film>> filmsByCategory = filmService.getAllFilmsByCategory();
-                new TreeMap<>(filmsByCategory).forEach((category, films) -> {
-                    if (films.size() >= 1)
-                        carouselContainer.getChildren().add(buildFilmCarousel("🎬 " + category, films));
+                Map<String, List<Film>> byCategory = filmService.getAllFilmsByCategory();
+                new TreeMap<>(byCategory).forEach((cat, films) -> {
+                    if (!films.isEmpty())
+                        carouselContainer.getChildren().add(
+                            CardFactory.buildResponsiveFilmCarousel("🎬 " + cat, films,
+                                overlayRef, goToFilmDetail()));
                 });
             }
 
             if (!allSeries.isEmpty()) {
-                Map<String, List<Serie>> seriesByGenre = serieService.getAllFilmsByCategory();
-                new TreeMap<>(seriesByGenre).forEach((genre, series) -> {
-                    if (series.size() >= 1)
-                        carouselContainer.getChildren().add(buildSerieCarousel("📺 " + genre, series));
+                Map<String, List<Serie>> byGenre = serieService.getAllFilmsByCategory();
+                new TreeMap<>(byGenre).forEach((genre, series) -> {
+                    if (!series.isEmpty())
+                        carouselContainer.getChildren().add(
+                            CardFactory.buildResponsiveSerieCarousel("📺 " + genre, series,
+                                overlayRef, goToSerieDetail()));
                 });
             }
 
@@ -202,384 +200,23 @@ public class HomeController implements Initializable {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  SECTION HEADER
-    // ═══════════════════════════════════════════════════════════════
-
-    private HBox buildSectionHeader(String text) {
-        Label label = new Label(text);
-        label.getStyleClass().add("section-header");
-
-        Separator sep = new Separator();
-        sep.getStyleClass().add("section-separator");
-        HBox.setHgrow(sep, Priority.ALWAYS);
-
-        HBox header = new HBox(16, label, sep);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getStyleClass().add("section-header-box");
-        return header;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  CAROUSEL FILMS
-    // ═══════════════════════════════════════════════════════════════
-
-    private VBox buildFilmCarousel(String title, List<Film> films) {
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("carousel-title");
-
-        HBox row = new HBox(GAP);
-        row.setAlignment(Pos.TOP_LEFT);
-        row.getStyleClass().add("carousel-row");
-
-        ScrollPane scroll = buildScrollPane(row);
-
-        scroll.widthProperty().addListener((obs, oldW, newW) -> {
-            if (row.getUserData() != null) return;
-            double cardW = computeCardWidth(newW.doubleValue());
-            double cardH = cardW * ASPECT;
-
-            scroll.setPrefHeight(cardH + 40);
-            scroll.setMinHeight(cardH + 40);
-            scroll.setMaxHeight(Double.MAX_VALUE);
-
-            row.setUserData("built");
-            row.getChildren().clear();
-            films.forEach(f -> row.getChildren().add(buildFilmCard(f, cardW, cardH)));
-        });
-
-        VBox bloc = new VBox(10, titleLabel, scroll);
-        bloc.getStyleClass().add("carousel-block");
-        return bloc;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  CAROUSEL SÉRIES
-    // ═══════════════════════════════════════════════════════════════
-
-    private VBox buildSerieCarousel(String title, List<Serie> series) {
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("carousel-title");
-
-        HBox row = new HBox(GAP);
-        row.setAlignment(Pos.TOP_LEFT);
-        row.getStyleClass().add("carousel-row");
-
-        ScrollPane scroll = buildScrollPane(row);
-
-        scroll.widthProperty().addListener((obs, oldW, newW) -> {
-            if (row.getUserData() != null) return;
-            double cardW = computeCardWidth(newW.doubleValue());
-            double cardH = cardW * ASPECT;
-
-            scroll.setPrefHeight(cardH + 40);
-            scroll.setMinHeight(cardH + 40);
-            scroll.setMaxHeight(Double.MAX_VALUE);
-
-            row.setUserData("built");
-            row.getChildren().clear();
-            series.forEach(s -> row.getChildren().add(buildSerieCard(s, cardW, cardH)));
-        });
-
-        VBox bloc = new VBox(10, titleLabel, scroll);
-        bloc.getStyleClass().add("carousel-block");
-        return bloc;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  CARTE FILM
-    // ═══════════════════════════════════════════════════════════════
-
-    private StackPane buildFilmCard(Film film, double cardW, double cardH) {
-        Pane thumbnail = createThumbnail(film.getUrlImageCover(), cardW, cardH);
-
-        StackPane card = new StackPane(thumbnail);
-        card.setPrefSize(cardW, cardH);
-        card.setMinSize(cardW, cardH);
-        card.setMaxSize(cardW, cardH);
-        card.setStyle("-fx-cursor: hand;");
-
-        // Clic → page détail film
-        card.setOnMouseClicked(e -> {
-            // Passe le film sélectionné si ton FilmDetailController le supporte
-            // FilmDetailController ctrl = ScreenManager.getInstance()
-            //     .navigateAndGetController(Screen.FILM_DETAIL);
-            // ctrl.setFilm(film);
-            //ScreenManager.getInstance().navigateTo(Screen.FILM_DETAIL);
-        });
-
-        VBox popup = buildFilmPopup(film, cardW * HOVER_SCALE);
-        popup.setVisible(false);
-        popup.setOpacity(0);
-        popup.setEffect(new DropShadow(24, 0, 8, Color.rgb(0, 0, 0, 0.9)));
-
-        attachHoverBehavior(card, popup, cardW);
-        return card;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  CARTE SÉRIE
-    // ═══════════════════════════════════════════════════════════════
-
-    private StackPane buildSerieCard(Serie serie, double cardW, double cardH) {
-        Pane thumbnail = createThumbnail(serie.getUrlImageCover(), cardW, cardH);
-
-        Label badge = new Label("SÉRIE");
-        badge.getStyleClass().add("serie-badge");
-        StackPane.setAlignment(badge, Pos.BOTTOM_LEFT);
-
-        StackPane card = new StackPane(thumbnail, badge);
-        card.setPrefSize(cardW, cardH);
-        card.setMinSize(cardW, cardH);
-        card.setMaxSize(cardW, cardH);
-        card.setStyle("-fx-cursor: hand;");
-
-        // Clic → page détail série
-        card.setOnMouseClicked(e -> {
-            // SerieDetailController ctrl = ScreenManager.getInstance()
-            //     .navigateAndGetController(Screen.SERIE_DETAIL);
-            // ctrl.setSerie(serie);
-           // ScreenManager.getInstance().navigateTo(Screen.SERIE_DETAIL);
-        });
-
-        VBox popup = buildSeriePopup(serie, cardW * HOVER_SCALE);
-        popup.setVisible(false);
-        popup.setOpacity(0);
-        popup.setEffect(new DropShadow(24, 0, 8, Color.rgb(0, 0, 0, 0.9)));
-
-        attachHoverBehavior(card, popup, cardW);
-        return card;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  POPUP FILM
-    // ═══════════════════════════════════════════════════════════════
-
-    private VBox buildFilmPopup(Film film, double popupW) {
-        double thumbH = popupW * ASPECT;
-        Pane bigThumb = createThumbnail(film.getUrlImageCover(), popupW, thumbH);
-
-        int matchPct = computeMatch(film.getTitre());
-        String age   = film.getAgeRating() != null ? film.getAgeRating().name() : "PG";
-
-        Label titleLbl = new Label(film.getTitre() != null ? film.getTitre() : "");
-        titleLbl.getStyleClass().add("popup-title");
-        titleLbl.setMaxWidth(popupW - 28);
-
-        Label matchLbl = new Label(matchPct + "% Match"); matchLbl.getStyleClass().add("popup-match");
-        Label durLbl   = new Label(film.getDuree() + "m"); durLbl.getStyleClass().add("popup-meta");
-        Label ageLbl   = new Label(age);  ageLbl.getStyleClass().addAll("popup-meta", "popup-badge");
-        Label hdLbl    = new Label("HD"); hdLbl .getStyleClass().addAll("popup-meta", "popup-badge");
-        Label typeLbl  = new Label("🎬 FILM"); typeLbl.getStyleClass().add("popup-type-film");
-
-        HBox meta = new HBox(8, matchLbl, durLbl, ageLbl, hdLbl, typeLbl);
-        meta.setAlignment(Pos.CENTER_LEFT);
-
-        String genreText = "—";
-        if (film.getGenres() != null && !film.getGenres().isEmpty()) {
-            genreText = film.getGenres().stream()
-                .map(c -> c.getName())
-                .limit(2)
-                .reduce((a, b) -> a + " · " + b)
-                .orElse("—");
-        }
-        Label genreLbl = new Label(genreText);
-        genreLbl.getStyleClass().add("popup-genre");
-
-        VBox info = buildPopupInfo(popupW, titleLbl, meta, genreLbl);
-        return assemblePopup(popupW, thumbH, bigThumb, info);
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  POPUP SÉRIE
-    // ═══════════════════════════════════════════════════════════════
-
-    private VBox buildSeriePopup(Serie serie, double popupW) {
-        double thumbH = popupW * ASPECT;
-        Pane bigThumb = createThumbnail(serie.getUrlImageCover(), popupW, thumbH);
-
-        int matchPct = computeMatch(serie.getTitre());
-
-        Label titleLbl = new Label(serie.getTitre() != null ? serie.getTitre() : "");
-        titleLbl.getStyleClass().add("popup-title");
-        titleLbl.setMaxWidth(popupW - 28);
-
-        Label matchLbl  = new Label(matchPct + "% Match");    matchLbl.getStyleClass().add("popup-match");
-        Label statusLbl = new Label(serie.isTerminee() ? "Terminée" : "En cours");
-        statusLbl.getStyleClass().add(serie.isTerminee() ? "popup-badge-ended" : "popup-badge-ongoing");
-        Label typeLbl   = new Label("📺 SÉRIE"); typeLbl.getStyleClass().add("popup-type-serie");
-
-        HBox meta = new HBox(8, matchLbl, statusLbl, typeLbl);
-        meta.setAlignment(Pos.CENTER_LEFT);
-
-        Label genreLbl = new Label(serie.getGenre() != null ? serie.getGenre() : "—");
-        genreLbl.getStyleClass().add("popup-genre");
-
-        VBox info = buildPopupInfo(popupW, titleLbl, meta, genreLbl);
-        return assemblePopup(popupW, thumbH, bigThumb, info);
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  HELPERS PARTAGÉS
-    // ═══════════════════════════════════════════════════════════════
-
-    private ScrollPane buildScrollPane(HBox row) {
-        ScrollPane scroll = new ScrollPane(row);
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setPannable(true);
-        scroll.setFitToWidth(true);
-        scroll.setFitToHeight(true);
-        scroll.getStyleClass().add("carousel-scroll");
-        return scroll;
-    }
-
-    private double computeCardWidth(double scrollWidth) {
-        double available = scrollWidth - 80;
-        return (available - GAP * (CARDS_VISIBLE - 1)) / CARDS_VISIBLE;
-    }
-
-    private Pane createThumbnail(String imageUrl, double w, double h) {
-        Pane pane = new Pane();
-        pane.setPrefSize(w, h);
-        pane.setMinSize(w, h);
-        pane.setMaxSize(w, h);
-        pane.setStyle(
-            (imageUrl != null && !imageUrl.isEmpty())
-                ? "-fx-background-image: url('" + imageUrl + "');" +
-                  "-fx-background-size: cover; -fx-background-position: center;"
-                : "-fx-background-color: #1a1a1a;"
-        );
-        Rectangle clip = new Rectangle(w, h);
-        clip.setArcWidth(6); clip.setArcHeight(6);
-        pane.setClip(clip);
-        return pane;
-    }
-
-    private VBox buildPopupInfo(double popupW, Label titleLbl, HBox meta, Label genreLbl) {
-        Button playBtn = new Button("▶"); playBtn.getStyleClass().add("btn-round-white");
-        Button addBtn  = new Button("+"); addBtn .getStyleClass().add("btn-round-outline");
-        Button likeBtn = new Button("♥"); likeBtn.getStyleClass().add("btn-round-outline");
-        Button moreBtn = new Button("▾"); moreBtn.getStyleClass().add("btn-round-outline");
-        Region spacer  = new Region();    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        HBox actions = new HBox(8, playBtn, addBtn, likeBtn, spacer, moreBtn);
-        actions.setAlignment(Pos.CENTER_LEFT);
-
-        VBox info = new VBox(10, actions, titleLbl, meta, genreLbl);
-        info.getStyleClass().add("popup-info");
-        info.setPrefWidth(popupW);
-        return info;
-    }
-
-    private VBox assemblePopup(double popupW, double thumbH, Pane bigThumb, VBox info) {
-        VBox container = new VBox(0, bigThumb, info);
-        container.setPrefWidth(popupW);
-        container.setMinWidth(popupW);
-        container.setMaxWidth(popupW);
-
-        Rectangle clip = new Rectangle(popupW, thumbH + 130);
-        clip.setArcWidth(10); clip.setArcHeight(10);
-        container.setClip(clip);
-        return container;
-    }
-
-    /**
-     * FIX POPUP : la logique clé est dans le showTimer.
-     *
-     * Problème original : overlayPane.setMouseTransparent(true) → les événements
-     * souris ne passaient jamais au popup → onMouseEntered du popup ne se déclenchait
-     * jamais → hideTimer se lançait toujours et faisait disparaître le popup.
-     *
-     * Solution :
-     *  - overlayPane.setMouseTransparent(false) + setPickOnBounds(false)
-     *  - popup.setPickOnBounds(false) pour ne pas bloquer les clics derrière
-     *  - Un seul hideTimer partagé entre card et popup
-     */
-    private void attachHoverBehavior(StackPane card, VBox popup, double cardW) {
-        double popupW = cardW * HOVER_SCALE;
-
-        // ── Timer d'affichage (délai 300ms avant d'afficher) ──────
-        Timeline showTimer = new Timeline(new KeyFrame(Duration.millis(300), e -> {
-            if (overlayPane == null) return;
-
-            Bounds b    = card.localToScene(card.getBoundsInLocal());
-            double x    = b.getMinX() - (popupW - cardW) / 2.0;
-            double y    = b.getMinY() - 20;
-            double maxX = overlayPane.getScene().getWidth() - popupW - 10;
-
-            popup.setLayoutX(Math.max(10, Math.min(x, maxX)));
-            popup.setLayoutY(Math.max(10, y));
-
-            if (!overlayPane.getChildren().contains(popup))
-                overlayPane.getChildren().add(popup);
-
-            popup.setVisible(true);
-            FadeTransition showFade = new FadeTransition(Duration.millis(180), popup);
-            showFade.setToValue(1.0);
-            showFade.play();
-        }));
-
-        // ── Timer de masquage (délai 200ms avant de masquer) ──────
-        Timeline hideTimer = new Timeline(new KeyFrame(Duration.millis(200), e -> {
-            FadeTransition ft = new FadeTransition(Duration.millis(150), popup);
-            ft.setToValue(0);
-            ft.setOnFinished(ev -> {
-                popup.setVisible(false);
-                if (overlayPane != null) overlayPane.getChildren().remove(popup);
-            });
-            ft.play();
-        }));
-
-        // ── Handlers carte ────────────────────────────────────────
-        card.setOnMouseEntered(e -> { hideTimer.stop(); showTimer.playFromStart(); });
-        card.setOnMouseExited (e -> { showTimer.stop(); hideTimer.playFromStart(); });
-
-        // ── Handlers popup ────────────────────────────────────────
-        // ✅ Ces handlers fonctionnent maintenant car overlayPane
-        //    n'est plus mouseTransparent.
-        popup.setPickOnBounds(false); // ne bloque pas les clics sur ce qui est derrière
-        popup.setOnMouseEntered(e -> hideTimer.stop());
-        popup.setOnMouseExited (e -> hideTimer.playFromStart());
-        popup.setMouseTransparent(false);
-    }
-
-    private int computeMatch(String titre) {
-        return 60 + (Math.abs(titre != null ? titre.hashCode() : 0) % 35);
-    }
-
-    // ═══════════════════════════════════════════════════════════════
     //  HANDLERS FXML
     // ═══════════════════════════════════════════════════════════════
 
-    @FXML
-    private void onMyList() {
-       // ScreenManager.getInstance().navigateTo(Screen.MY_LIST);
+    @FXML private void onMyList()            { /* ScreenManager.getInstance().navigateTo(Screen.MY_LIST); */ }
+    @FXML private void onMovies()            { ScreenManager.getInstance().navigateTo(Screen.films); }
+    @FXML private void onSeries()            { ScreenManager.getInstance().navigateTo(Screen.series); }
+    @FXML private void onPlayFeatured()      { System.out.println("Lecture hero"); }
+    @FXML private void onMoreInfoFeatured()  {
+        if (!heroFilms.isEmpty()) goToFilmDetail().accept(heroFilms.get(heroIndex));
     }
-
-    @FXML
-    private void onMovies() {
-       ScreenManager.getInstance().navigateTo(Screen.films);
-    }
-
-    @FXML
-    private void onSeries() {
-       ScreenManager.getInstance().navigateTo(Screen.series);
-    }
+    @FXML private void onAddFeaturedToList() { System.out.println("Ajout à la liste hero"); }
+    @FXML private void onSearchBtn()         { onSearch(); }
 
     @FXML
     private void onSearch() {
         String query = searchField != null ? searchField.getText().trim() : "";
         if (query.isEmpty()) return;
-
-       
-        
-
-        
         System.out.println("Recherche : " + query);
     }
-   
-    @FXML private void onSearchBtn()         { onSearch(); }
-    @FXML private void onPlayFeatured()      { System.out.println("Lecture hero"); }
-    @FXML private void onMoreInfoFeatured()  { System.out.println("Plus d'infos hero"); }
-    @FXML private void onAddFeaturedToList() { System.out.println("Ajout à la liste hero"); }
 }
