@@ -20,7 +20,6 @@ public abstract class  Media {
     private AgeRating ageRating;
     private TypeMedia type;
     private String producteur;
-    private List<Acteur> acteurs;
 	private Set<Warning> warnings;
     private LocalDateTime dateAjout = LocalDateTime.now();
     private Set<Category> genres = new HashSet<>();
@@ -30,7 +29,7 @@ public abstract class  Media {
     public Media() {
         this.genres   = new HashSet<>();
         this.warnings = new HashSet<>();
-        this.acteurs=new ArrayList<Acteur>();
+       
     }
 
     // ─── Constructeur sans detail de acteurs et prod ─────────────────────────────────────────────────
@@ -58,7 +57,7 @@ public abstract class  Media {
     
     public Media(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
 			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
-			String producteur, List<Acteur> acteurs, Set<Warning> warnings, LocalDateTime dateAjout,
+			String producteur, Set<Warning> warnings, LocalDateTime dateAjout,
 			Set<Category> genres) {
 		super();
 		this.id = id;
@@ -73,10 +72,17 @@ public abstract class  Media {
 		this.ageRating = ageRating;
 		this.type = type;
 		this.producteur = producteur;
-		this.acteurs = acteurs;
 		this.warnings = warnings;
 		this.dateAjout = dateAjout;
 		this.genres = genres;
+	}
+
+	public String getProducteur() {
+		return producteur;
+	}
+
+	public void setProducteur(String producteur) {
+		this.producteur = producteur;
 	}
 
 	public Media(int id2, String titre2, String synopsis2) {

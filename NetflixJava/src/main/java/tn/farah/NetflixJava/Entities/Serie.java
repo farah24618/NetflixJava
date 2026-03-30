@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 public class Serie extends Media {
@@ -10,11 +11,21 @@ public class Serie extends Media {
     private boolean terminee;
    
 
-    public Serie() {
-    }
-
+   
    
     
+	public Serie(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
+			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
+			String producteur,  Set<Warning> warnings, LocalDateTime dateAjout,
+			Set<Category> genres, String genre, boolean terminee) {
+		super(id, titre, synopsis, casting, dateSortie, urlImageCover, urlImageBanner, urlTeaser, ratingMoyen,
+				ageRating, type, producteur, warnings, dateAjout, genres);
+		this.genre = genre;
+		this.terminee = terminee;
+	}
+
+
+
 	public Serie(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
 			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
 			LocalDateTime dateAjout, Set<Category> genres, Set<Warning> warnings, String genre, boolean terminee) {
@@ -30,6 +41,12 @@ public class Serie extends Media {
 		super(id,titre,synopsis);
 		this.genre=genre;
 		this.terminee=termine;
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public Serie() {
 		// TODO Auto-generated constructor stub
 	}
 
