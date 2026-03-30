@@ -73,7 +73,16 @@ public class SaisonDAO {
 	        }
 	        return null;
 	    }
-
+	 // Retourne le serie_id d'une saison
+	    public static int getSerieIdBySaison(int saisonId) {
+	        String sql = "SELECT serie_id FROM season WHERE id = ?";
+	        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+	            ps.setInt(1, saisonId);
+	            ResultSet rs = ps.executeQuery();
+	            if (rs.next()) return rs.getInt(1);
+	        } catch (SQLException e) { e.printStackTrace(); }
+	        return -1;
+	    }
 	    // ─────────────────────────────────
 	    //  FIND BY SERIE
 	    //  toutes les saisons d'une série
