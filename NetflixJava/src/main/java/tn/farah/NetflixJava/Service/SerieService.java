@@ -118,4 +118,20 @@ public class SerieService {
 	        return serieDao.findAllGroupedByCategory();
 	    }
 
+	    public Serie findById(int mediaId) {
+	        try {
+	            return serieDao.findById(mediaId);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
+	    public Serie findByEpisodeId(int episodeId) {
+	        try {
+	            return serieDao.findByEpisodeId(episodeId);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
 }

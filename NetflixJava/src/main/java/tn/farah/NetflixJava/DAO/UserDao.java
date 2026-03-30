@@ -107,7 +107,7 @@ public class UserDao {
 
     // 6️⃣ LOGIN
     public User login(String email, String passwordHash) {
-        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE email = ? AND password_hash = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, email);
             pstmt.setString(2, passwordHash);

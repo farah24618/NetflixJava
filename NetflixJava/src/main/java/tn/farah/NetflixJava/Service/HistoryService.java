@@ -1,115 +1,87 @@
 package tn.farah.NetflixJava.Service;
 
-
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import tn.farah.NetflixJava.DAO.HistoryDAO;
 import tn.farah.NetflixJava.Entities.History;
-import tn.farah.NetflixJava.utils.ConxDB;
 
 public class HistoryService {
-	    private static HistoryDAO historyDAO = new HistoryDAO(ConxDB.getInstance());
 
-	    //  SAUVEGARDER / METTRE À JOUR
-	    public static int save(History history) {
-	        return HistoryDAO.save(history);
-	    }
+    private HistoryDAO historyDAO;
 
-	    //  RÉCUPÉRER TOUT L'HISTORIQUE
-	    public static List<History> findAll() {
-	        return HistoryDAO.findAll();
-	    }
+    public HistoryService(Connection conn) {
+        this.historyDAO = new HistoryDAO(conn);
+    }
 
-	    //  HISTORIQUE D'UN UTILISATEUR
-	    public static List<History> findByUser(int userId) {
-	        return HistoryDAO.findByUser(userId);
-	    }
+    public List<History> findByUser(int userId) {
+        return historyDAO.findByUser(userId);
+    }
 
-	    //  TROUVER PAR ID
-	    public static History findById(int id) {
-	        return HistoryDAO.findById(id);
-	    }
+    // ── Film ────────────────────────────────────────────────────────────────
 
-	    //  SUPPRIMER
-	    public static void delete(int id) {
-	        HistoryDAO.delete(id);
-	    }
+    public History findByUserAndFilm(int userId, int filmId) {
+        return historyDAO.findByUserAndFilm(userId, filmId);
+    }
 
-	    //  TOP 5 LES PLUS VUS
-	    public static List<Object[]> getTop5MostWatched() {
-	        return HistoryDAO.findTop5MostWatched();
-	    }
+    public void saveProgressionFilm(int userId, int filmId, int tempsArret, boolean estTermine) {
+        History existing = historyDAO.findByUserAndFilm(userId, filmId);
+        if (existing != null) {
+            existing.setTempsArret(tempsArret);
+            existing.setEstTermine(estTermine);
+            existing.setDateVisionnage(LocalDateTime.now());
+            historyDAO.update(existing);
+        } else {
+            historyDAO.save(new History(userId, filmId, null, LocalDateTime.now(), tempsArret, estTermine));
+        }
+    }
 
-	    //  ENREGISTRER LA PROGRESSION PENDANT LA LECTURE
-	    //  Appelé toutes les X secondes depuis le player
-	    // ──────────────────────────────────────────────────
-	    public static void saveProgression(int idUser, int idMedia,
-	                                       int tempsArret, int dureeTotale) {
+    public int getResumePositionFilm(int userId, int filmId) {
+        History h = historyDAO.findByUserAndFilm(userId, filmId);
+        return h != null ? h.getTempsArret() : 0;
+    }
 
-	        // Règle métier : si > 90% regardé → marquer comme terminé
-	        boolean estTermine = dureeTotale > 0
-	                && tempsArret >= dureeTotale * 0.90;
+    public boolean isFilmTermine(int userId, int filmId) {
+        History h = historyDAO.findByUserAndFilm(userId, filmId);
+        return h != null && h.getEstTermine();
+    }
 
-	        // Cherche si une entrée existe déjà pour ce user + ce media
-	        History existing = HistoryDAO.findByUserAndMedia(idUser, idMedia);
+    // ── Episode ─────────────────────────────────────────────────────────────
 
-	        if (existing == null) {
-	            // Première fois → on crée une nouvelle entrée
-	            History newHistory = new History(
-	                    idUser,
-	                    idMedia,
-	                    LocalDateTime.now(),
-	                    tempsArret,
-	                    estTermine
-	            );
-	            HistoryDAO.save(newHistory);
-	        } else {
-	            // Déjà vu → on met à jour la position
-	            existing.setTempsArret(tempsArret);
-	            existing.setDateVisionnage(LocalDateTime.now());
-	            // Ne jamais repasser estTermine à false si déjà terminé
-	            if (estTermine) {
-					existing.setEstTermine(true);
-				}
-	            HistoryDAO.save(existing);
-	        }
-	    }
+    public History findByUserAndEpisode(int userId, int episodeId) {
+        return historyDAO.findByUserAndEpisode(userId, episodeId);
+    }
 
-	    // ──────────────────────────────────────────────────
-	    //  REPRISE INTELLIGENTE
-	    //  Retourne la position en secondes pour reprendre
-	    //  là où l'utilisateur s'est arrêté
-	    // ──────────────────────────────────────────────────
-	    public static int getResumePosition(int idUser, int idMedia) {
-	        History h = HistoryDAO.findByUserAndMedia(idUser, idMedia);
+    public void saveProgressionEpisode(int userId, int episodeId, int tempsArret, boolean estTermine) {
+        History existing = historyDAO.findByUserAndEpisode(userId, episodeId);
+        if (existing != null) {
+            existing.setTempsArret(tempsArret);
+            existing.setEstTermine(estTermine);
+            existing.setDateVisionnage(LocalDateTime.now());
+            historyDAO.update(existing);
+        } else {
+            historyDAO.save(new History(userId, null, episodeId, LocalDateTime.now(), tempsArret, estTermine));
+        }
+    }
 
-	        // Jamais regardé ou déjà terminé → reprendre au début
-	        if (h == null || h.getEstTermine()) {
-				return 0;
-			}
+    public int getResumePositionEpisode(int userId, int episodeId) {
+        History h = historyDAO.findByUserAndEpisode(userId, episodeId);
+        return h != null ? h.getTempsArret() : 0;
+    }
 
-	        // Sinon → reprendre à la position sauvegardée
-	        return h.getTempsArret();
-	    }
+    public boolean isEpisodeTermine(int userId, int episodeId) {
+        History h = historyDAO.findByUserAndEpisode(userId, episodeId);
+        return h != null && h.getEstTermine();
+    }
 
-	    // ──────────────────────────────────────────────────
-	    //  STATUT D'UN MEDIA pour un utilisateur
-	    //  Retourne "NON_VU", "EN_COURS" ou "TERMINE"
-	    //  Utilisé pour les badges sur la page d'accueil
-	    // ──────────────────────────────────────────────────
-	    public static String getMediaStatus(int idUser, int idMedia) {
-	        History h = HistoryDAO.findByUserAndMedia(idUser, idMedia);
+    // ── Commun ──────────────────────────────────────────────────────────────
 
-	        if (h == null) {
-				return "NON_VU";
-			}
-	        if (h.getEstTermine()) {
-				return "TERMINE";
-			}
-	        if (h.getTempsArret() > 0) {
-				return "EN_COURS";
-			}
+    public List<History> getTop5MostWatched(int userId) {
+        return historyDAO.findTop5MostWatched(userId);
+    }
 
-	        return "NON_VU";
-	    }}
+    public void delete(int historyId) {
+        historyDAO.delete(historyId);
+    }
+}

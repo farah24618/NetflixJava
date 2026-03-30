@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.farah.NetflixJava.Controller.MyListController"
+            stylesheets="@../css/style.css"
+            style="-fx-background-color: #141414;">
+
+    <!-- ===== TOP BAR ===== -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="24"
+              style="-fx-background-color: linear-gradient(to bottom, #000000cc, transparent);
+                     -fx-padding: 18 40 18 40;">
+            <Label text="NETFLIX"
+                   style="-fx-text-fill: #e50914; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+            <HBox spacing="18" alignment="CENTER_LEFT">
+                <Label text="Accueil" style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;" onMouseClicked="#goHome"/>
+                <Label text="Séries"  style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                <Label text="Films"   style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                <Label text="Ma Liste" style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="Rechercher..."
+                       onAction="#handleSearch"
+                       style="-fx-background-color: #333; -fx-text-fill: white;
+                              -fx-prompt-text-fill: #888; -fx-border-color: #555;
+                              -fx-border-radius: 4; -fx-background-radius: 4;
+                              -fx-padding: 6 12; -fx-font-size: 13px; -fx-pref-width: 200;"/>
+        </HBox>
+    </top>
+
+    <!-- ===== CENTRE ===== -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- En-tête de page -->
+            <VBox style="-fx-padding: 60 40 24 40;">
+                <Label text="Ma Liste"
+                       style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;"/>
+                <HBox spacing="16" alignment="CENTER_LEFT" style="-fx-padding: 12 0 0 0;">
+                    <Label fx:id="totalLabel" text="0 titre(s)"
+                           style="-fx-text-fill: #aaa; -fx-font-size: 14px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Filtrer :" style="-fx-text-fill: #aaa; -fx-font-size: 13px;"/>
+                    <ComboBox fx:id="filterType" promptText="Type"
+                              style="-fx-background-color: #333; -fx-text-fill: white;
+                                     -fx-border-color: #555; -fx-border-radius: 4; -fx-pref-width: 110;"
+                              onAction="#applyFilters"/>
+                    <ComboBox fx:id="filterGenre" promptText="Genre"
+                              style="-fx-background-color: #333; -fx-text-fill: white;
+                                     -fx-border-color: #555; -fx-border-radius: 4; -fx-pref-width: 140;"
+                              onAction="#applyFilters"/>
+                    <ComboBox fx:id="sortCombo" promptText="Trier par"
+                              style="-fx-background-color: #333; -fx-text-fill: white;
+                                     -fx-border-color: #555; -fx-border-radius: 4; -fx-pref-width: 150;"
+                              onAction="#applyFilters"/>
+                    <Button text="Réinitialiser" onAction="#resetFilters"
+                            style="-fx-background-color: transparent; -fx-text-fill: #aaa;
+                                   -fx-border-color: #555; -fx-border-radius: 4;
+                                   -fx-padding: 5 12; -fx-cursor: hand; -fx-font-size: 12px;"/>
+                </HBox>
+            </VBox>
+
+            <!-- État vide -->
+            <VBox fx:id="emptyState" alignment="CENTER" spacing="16"
+                  style="-fx-padding: 80 40; -fx-min-height: 340;"
+                  visible="false" managed="false">
+                <Label text="☰" style="-fx-font-size: 64px; -fx-text-fill: #555;"/>
+                <Label text="Votre liste est vide"
+                       style="-fx-text-fill: #aaa; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <Label text="Ajoutez des films et séries en cliquant sur + depuis leur page."
+                       style="-fx-text-fill: #666; -fx-font-size: 14px;"/>
+                <Button text="Parcourir le catalogue" onAction="#goHome"
+                        style="-fx-background-color: white; -fx-text-fill: black;
+                               -fx-font-size: 14px; -fx-font-weight: bold;
+                               -fx-padding: 10 24; -fx-background-radius: 4;
+                               -fx-cursor: hand; -fx-pref-width: 220;"/>
+            </VBox>
+
+            <!-- ✅ pageContainer — les carousels sont injectés ici -->
+            <ScrollPane fitToWidth="true"
+                        style="-fx-background: #141414; -fx-background-color: #141414;
+                               -fx-border-color: transparent;"
+                        hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                <VBox fx:id="pageContainer" spacing="0"
+                      style="-fx-background-color: #141414; -fx-padding: 0 0 40 0;"/>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

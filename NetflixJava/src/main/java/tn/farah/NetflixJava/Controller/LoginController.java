@@ -1,6 +1,4 @@
 package tn.farah.NetflixJava.Controller;
-
-
 import java.net.URL;
 
 import java.sql.Connection;
@@ -19,9 +17,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import tn.farah.NetflixJava.Entities.User;
 import tn.farah.NetflixJava.Service.UserService;
+import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.PreferencesStore;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 public class LoginController implements Initializable{
 	@FXML private TextField     emailField;
@@ -32,11 +32,14 @@ public class LoginController implements Initializable{
     @FXML private Button        signUpButton;
     @FXML private Hyperlink     learnMoreLink;
     private Connection  connection;
-    private UserService userservice = new UserService(connection);
+    private UserService userservice ;
 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		Connection connection = ConxDB.getInstance();
+        if (connection == null) return;
+        userservice=new UserService(connection);
 		// TODO Auto-generated method stub
 		emailField.setOnKeyPressed(this::handleEnterKey);
         passwordField.setOnKeyPressed(this::handleEnterKey);
@@ -50,11 +53,11 @@ public class LoginController implements Initializable{
 	}
 	@FXML
 	private void handleRememberMe(ActionEvent event) {
-	    if (rememberMeCheckBox.isSelected()) {
+	    /*if (rememberMeCheckBox.isSelected()) {
 	        PreferencesStore.saveEmail(emailField.getText().trim());
 	    } else {
 	        PreferencesStore.clearEmail();
-	    }
+	    }*/
 	}
 	 @FXML
 	    private void handleSignIn(ActionEvent event) {
@@ -86,9 +89,21 @@ public class LoginController implements Initializable{
 	        // TODO: Replace this block with your real authentication logic
 	       User authenticated = userservice.loginUser(email, password);
 
-	        if (authenticated !=null) {
-	            navigateToDashboard();
-	            ScreenManager.getInstance().navigateTo(Screen.pofiles);
+	      
+	        if (authenticated != null) {
+	            // 1. Enregistrer la session EN PREMIER
+	            SessionManager.getInstance().login(authenticated);
+
+	            // 2. Persister l'email si "Remember me" coché
+	            /*if (rememberMeCheckBox.isSelected()) {
+	                PreferencesStore.saveEmail(email);
+	            } else {
+	                PreferencesStore.clearEmail();
+	            }*/
+
+	            // 3. Naviguer vers les profils
+	            ScreenManager.getInstance().navigateTo(Screen.home);
+
 	        } else {
 	            showAlert(Alert.AlertType.ERROR,
 	                      "Sign In Failed",
@@ -127,12 +142,7 @@ public class LoginController implements Initializable{
 	            || input.matches("^\\+?[0-9]{7,15}$");
 	    }
 
-	    private void navigateToDashboard() {
-	        // TODO: Load Dashboard.fxml and switch scenes
-	        showAlert(Alert.AlertType.INFORMATION,
-	                  "Welcome!",
-	                  "Login successful. Loading dashboard…");
-	    }
+	    
 
 	    private void showAlert(Alert.AlertType type, String title, String message) {
 	        Alert alert = new Alert(type);

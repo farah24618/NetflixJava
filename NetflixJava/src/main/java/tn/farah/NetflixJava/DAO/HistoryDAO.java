@@ -1,171 +1,159 @@
 package tn.farah.NetflixJava.DAO;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import tn.farah.NetflixJava.Entities.History;
-import tn.farah.NetflixJava.utils.ConxDB;
+
 public class HistoryDAO {
-		private static Connection conn=ConxDB.getInstance();
-		public HistoryDAO(Connection connection) {
-	        HistoryDAO.conn= connection;
-	    }
-		public static List<History> findAll(){
-			Statement stml=null;
-			ResultSet rs=null;
-			List<History> history=new ArrayList<>();
-			String SQL="SELECT * FROM history";
-			try {
-				stml=conn.createStatement();
-				rs=stml.executeQuery(SQL);
-				while(rs.next()) {
-					int idUser=rs.getInt(1);
-					int idMedia=rs.getInt(2);
-					LocalDateTime dateVisionnage = rs.getTimestamp(3).toLocalDateTime();
-					int tempsArret=rs.getInt(4);
-					boolean estTermine=rs.getBoolean(5);
-					History historyy=new History(idUser,idMedia,dateVisionnage,tempsArret,estTermine);
-					history.add(historyy);
-				}
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
-			return history;
-		}
-		public static int save(History history) {
-			int historyId =0;
-			PreparedStatement pstml=null;
-			ResultSet rs=null;
-			try {
-				String sql="INSERT INTO history(idMedia,dateVisionnage,tempsArret,estTermine) VALUES (?,?,?,?)";
-				pstml =conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pstml.setInt(1,history.getIdUser());
-				pstml.setInt(2, history.getIdMedia());
-				pstml.setTimestamp(3, Timestamp.valueOf(history.getDateVisionnage()));
-				pstml.setInt(4, history.getTempsArret());
-				pstml.setBoolean(5, history.getEstTermine());
-				pstml.executeUpdate();
-				rs=pstml.getGeneratedKeys();
-				if(rs.next()) {
-					historyId=rs.getInt(1);
-				}
-			}catch(SQLException ex) {
-				System.out.println(ex.getMessage());
-			}
-			return historyId;
-		}
 
-		public static List<History> findByUser(int userId) {
-	        PreparedStatement pstml = null;
-	        ResultSet rs = null;
-	        List<History> list = new ArrayList<>();
-	        String sql = "SELECT * FROM history WHERE idUser = ? ORDER BY dateVisionnage DESC";
-	        try {
-	            pstml = conn.prepareStatement(sql);
-	            pstml.setInt(1, userId);
-	            rs = pstml.executeQuery();
-	            while (rs.next()) {
-	                int idUser = rs.getInt(1);
-	                int idMedia = rs.getInt(2);
-	                LocalDateTime dateVisionnage = rs.getTimestamp(3).toLocalDateTime();
-	                int tempsArret = rs.getInt(4);
-	                boolean estTermine = rs.getBoolean(5);
-	                History historyy = new History(idUser, idMedia, dateVisionnage, tempsArret, estTermine);
-	                list.add(historyy);
-	            }
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return list;
-	    }
+    private Connection conn;
 
-	    public static History findById(int id) {
-	        PreparedStatement pstml = null;
-	        ResultSet rs = null;
-	        String sql = "SELECT * FROM history WHERE id = ?";
-	        try {
-	            pstml = conn.prepareStatement(sql);
-	            pstml.setInt(1, id);
-	            rs = pstml.executeQuery();
-	            if (rs.next()) {
-	                int idUser = rs.getInt(1);
-	                int idMedia = rs.getInt(2);
-	                LocalDateTime dateVisionnage = rs.getTimestamp(3).toLocalDateTime();
-	                int tempsArret = rs.getInt(4);
-	                boolean estTermine = rs.getBoolean(5);
-	                return new History(idUser, idMedia, dateVisionnage, tempsArret, estTermine);
-	            }
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return null;
-	    }
+    public HistoryDAO(Connection conn) {
+        this.conn = conn;
+    }
 
-	    public static History findByUserAndMedia(int userId, int mediaId) {
-	        PreparedStatement pstml = null;
-	        ResultSet rs = null;
-	        String sql = "SELECT * FROM history WHERE idUser = ? AND idMedia = ? LIMIT 1";
-	        try {
-	            pstml = conn.prepareStatement(sql);
-	            pstml.setInt(1, userId);
-	            pstml.setInt(2, mediaId);
-	            rs = pstml.executeQuery();
-	            if (rs.next()) {
-	                int idUser = rs.getInt(1);
-	                int idMedia = rs.getInt(2);
-	                LocalDateTime dateVisionnage = rs.getTimestamp(3).toLocalDateTime();
-	                int tempsArret = rs.getInt(4);
-	                boolean estTermine = rs.getBoolean(5);
-	                return new History(idUser, idMedia, dateVisionnage, tempsArret, estTermine);
-	            }
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return null;
-	    }
+    public List<History> findAll() {
+        List<History> list = new ArrayList<>();
+        String sql = "SELECT * FROM visionnage";
+        try {
+            ResultSet rs = conn.createStatement().executeQuery(sql);
+            while (rs.next()) list.add(map(rs));
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
 
-	    public static List<Object[]> findTop5MostWatched() {
-	        Statement stml = null;
-	        ResultSet rs = null;
-	        List<Object[]> result = new ArrayList<>();
-	        String sql = "SELECT idMedia, COUNT(id) AS nb_vues FROM history " +
-	                     "WHERE estTermine = TRUE GROUP BY idMedia " +
-	                     "ORDER BY nb_vues DESC LIMIT 5";
-	        try {
-	            stml = conn.createStatement();
-	            rs = stml.executeQuery(sql);
-	            while (rs.next()) {
-	                result.add(new Object[]{rs.getInt("idMedia"), rs.getInt("nb_vues")});
-	            }
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return result;
-	    }
+    public int save(History h) {
+        String sql = "INSERT INTO visionnage(user_id, film_id, episode_id, date_visionnage, temps_arret_sec, est_termine) VALUES(?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, h.getIdUser());
+            // film_id nullable
+            if (h.getFilmId() != null) ps.setInt(2, h.getFilmId());
+            else ps.setNull(2, Types.INTEGER);
+            // episode_id nullable
+            if (h.getEpisodeId() != null) ps.setInt(3, h.getEpisodeId());
+            else ps.setNull(3, Types.INTEGER);
+            ps.setTimestamp(4, Timestamp.valueOf(h.getDateVisionnage()));
+            ps.setInt(5, h.getTempsArret());
+            ps.setBoolean(6, h.getEstTermine());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) { h.setId(rs.getInt(1)); return h.getId(); }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
 
-	    public static void delete(int id) {
-	        PreparedStatement pstml = null;
-	        String sql = "DELETE FROM history WHERE id = ?";
-	        try {
-	            pstml = conn.prepareStatement(sql);
-	            pstml.setInt(1, id);
-	            pstml.executeUpdate();
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+    public int update(History h) {
+        String sql = "UPDATE visionnage SET date_visionnage=?, temps_arret_sec=?, est_termine=? WHERE id=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setTimestamp(1, Timestamp.valueOf(h.getDateVisionnage()));
+            ps.setInt(2, h.getTempsArret());
+            ps.setBoolean(3, h.getEstTermine());
+            ps.setInt(4, h.getId());
+            return ps.executeUpdate();
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
 
+    public List<History> findByUser(int userId) {
+        List<History> list = new ArrayList<>();
+        String sql = "SELECT * FROM history WHERE user_id = ? ORDER BY date_visionnage DESC";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(map(rs));
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
 
+    public History findById(int id) {
+        String sql = "SELECT * FROM history WHERE id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return map(rs);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
 
+    // Recherche par film
+    public History findByUserAndFilm(int userId, int filmId) {
+        String sql = "SELECT * FROM history WHERE user_id = ? AND film_id = ? ORDER BY date_visionnage DESC LIMIT 1";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, filmId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return map(rs);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
+
+    // Recherche par épisode
+    public History findByUserAndEpisode(int userId, int episodeId) {
+        String sql = "SELECT * FROM history WHERE user_id = ? AND episode_id = ? ORDER BY date_visionnage DESC LIMIT 1";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, episodeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return map(rs);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
+
+    public List<History> findTop5MostWatched(int userId) {
+        List<History> list = new ArrayList<>();
+        String sql = """
+            SELECT id, user_id, film_id, episode_id,
+                   MAX(date_visionnage) as date_visionnage,
+                   temps_arret_sec, est_termine
+            FROM history
+            WHERE user_id = ?
+            GROUP BY COALESCE(film_id, episode_id)
+            ORDER BY COUNT(*) DESC
+            LIMIT 5
+            """;
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(map(rs));
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public void delete(int id) {
+        String sql = "DELETE FROM history WHERE id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    // ── Mapper ──────────────────────────────────────────────────────────────
+    private History map(ResultSet rs) throws SQLException {
+        // film_id et episode_id peuvent être NULL
+        int filmId = rs.getInt("film_id");
+        Integer filmIdVal = rs.wasNull() ? null : filmId;
+
+        int episodeId = rs.getInt("episode_id");
+        Integer episodeIdVal = rs.wasNull() ? null : episodeId;
+
+        return new History(
+            rs.getInt("id"),
+            rs.getInt("user_id"),
+            filmIdVal,
+            episodeIdVal,
+            rs.getTimestamp("date_visionnage").toLocalDateTime(),
+            rs.getInt("temps_arret_sec"),
+            rs.getBoolean("est_termine")
+        );
+    }
 }

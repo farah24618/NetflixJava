@@ -26,6 +26,15 @@ public class Serie extends Media {
 
 
 
+	public Serie(int id, String titre, String synopsis, String genre, boolean termine) {
+		super(id,titre,synopsis);
+		this.genre=genre;
+		this.terminee=termine;
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public String getGenre() {
         return genre;
     }

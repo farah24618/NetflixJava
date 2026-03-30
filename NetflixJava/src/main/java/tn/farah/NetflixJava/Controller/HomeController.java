@@ -14,6 +14,7 @@ import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 import tn.farah.NetflixJava.utils.CardFactory;
 
 import java.net.URL;
@@ -59,7 +60,7 @@ public class HomeController implements Initializable {
 
         initHero();
         loadAllCarousels();
-
+        SessionManager.getInstance().getCurrentUserId();
         if (avatarLabel != null) avatarLabel.setText("U");
 
         // ✅ FIX : createOverlay remplit overlayRef[0] après que la scène soit prête
@@ -203,7 +204,7 @@ public class HomeController implements Initializable {
     //  HANDLERS FXML
     // ═══════════════════════════════════════════════════════════════
 
-    @FXML private void onMyList()            { /* ScreenManager.getInstance().navigateTo(Screen.MY_LIST); */ }
+    @FXML private void onMyList()            {  ScreenManager.getInstance().navigateTo(Screen.myList); }
     @FXML private void onMovies()            { ScreenManager.getInstance().navigateTo(Screen.films); }
     @FXML private void onSeries()            { ScreenManager.getInstance().navigateTo(Screen.series); }
     @FXML private void onPlayFeatured()      { System.out.println("Lecture hero"); }

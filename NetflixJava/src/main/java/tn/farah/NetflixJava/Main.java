@@ -34,11 +34,12 @@ public class Main extends Application {
         nav.register(Screen.signup2,        "/tn/farah/NetflixJava/signup2.fxml");
         nav.register(Screen.signup3,        "/tn/farah/NetflixJava/signup3.fxml");
         nav.register(Screen.detail,        "/tn/farah/NetflixJava/DetailMovie2.fxml");
+        nav.register(Screen.myList,"/tn/farah/NetflixJava/MyListView.fxml");
 
 
         primaryStage.setTitle("RekchaNet");
 
-        nav.navigateTo(Screen.home);
+        nav.navigateTo(Screen.login);
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux
         primaryStage.centerOnScreen();

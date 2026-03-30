@@ -122,4 +122,13 @@ public class FilmService {
 	        return filmDao.findAllGroupedByCategory();
 	    }
 
+	    public Film findById(int mediaId) {
+	        try {
+	            return filmDao.findById(mediaId);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
+
 }

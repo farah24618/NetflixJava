@@ -276,4 +276,9 @@ public class SerieDAO {
         }
         return new ArrayList<>(filmMap.values());
     }
-}
+
+    public Serie findByEpisodeId(int episodeId) throws SQLException {
+        String query = BASE_SELECT + "JOIN episode e ON e.serie_id = m.id WHERE e.id = ? LIMIT 1";
+        List<Serie> series = executeAndGroup(query, ps -> ps.setInt(1, episodeId));
+        return series.isEmpty() ? null : series.get(0);
+    }}

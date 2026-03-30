@@ -9,160 +9,128 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.farah.NetflixJava.Entities.Favori;
-import tn.farah.NetflixJava.utils.ConxDB;
 
 public class FavoriDAO {
 
-    private static Connection conn = ConxDB.getInstance();
+    private Connection conn;
 
-    public static List<Favori> findAll() {
+    public FavoriDAO(Connection conn) {
+        this.conn = conn;
+    }
 
-        Statement stm = null;
-        ResultSet rs = null;
-
+    public List<Favori> findAll() {
         List<Favori> favoris = new ArrayList<>();
-
-        String SQL = "SELECT * FROM favori";
-
+        String sql = "SELECT * FROM favorite";
         try {
-
-            stm = conn.createStatement();
-            rs = stm.executeQuery(SQL);
-
+            Statement stm = conn.createStatement();
+            ResultSet rs  = stm.executeQuery(sql);
             while (rs.next()) {
-
-                int id = rs.getInt(1);
-                int userId = rs.getInt(2);
-                int mediaId = rs.getInt(3);
-
-                Favori favori = new Favori(id, userId, mediaId);
-
-                favoris.add(favori);
+                favoris.add(new Favori(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getInt("media_id")
+                ));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return favoris;
     }
 
-    public static int save(Favori favori) {
-
+    public int save(Favori favori) {
         int favoriId = 0;
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
-
+        String sql = "INSERT INTO favorite (user_id, media_id) VALUES(?, ?)";
         try {
-
-            String sql = "INSERT INTO favori(userId,mediaId) VALUES(?,?)";
-
-            pstml = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            pstml.setInt(1, favori.getUserId());
-            pstml.setInt(2, favori.getMediaId());
-
-            pstml.executeUpdate();
-
-            rs = pstml.getGeneratedKeys();
-
-            if (rs.next()) {
-                favoriId = rs.getInt(1);
-            }
-
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, favori.getUserId());
+            ps.setInt(2, favori.getMediaId());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) favoriId = rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return favoriId;
     }
 
-    public static int delete(int id) {
-
+    public int delete(int id) {
         int rows = 0;
-
+        String sql = "DELETE FROM favori WHERE id = ?";
         try {
-
-            String sql = "DELETE FROM favori WHERE id=?";
-
-            PreparedStatement pstml = conn.prepareStatement(sql);
-
-            pstml.setInt(1, id);
-
-            rows = pstml.executeUpdate();
-
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rows = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return rows;
     }
-    public static boolean existe(int userId, int mediaId) {
-        String sql = "SELECT * FROM favori WHERE userId = ? AND mediaId = ?";
 
+    public boolean existe(int userId, int mediaId) {
+        String sql = "SELECT id FROM favorite WHERE user_id = ? AND media_id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             ps.setInt(2, mediaId);
-
             ResultSet rs = ps.executeQuery();
             return rs.next();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return false;
     }
-    public static Favori findByUserIdAndMediaId(int userId, int mediaId) {
-        String sql = "SELECT * FROM favori WHERE userId = ? AND mediaId = ?";
 
+    public Favori findByUserIdAndMediaId(int userId, int mediaId) {
+        String sql = "SELECT * FROM favorite WHERE user_id = ? AND media_id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             ps.setInt(2, mediaId);
-
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 return new Favori(
-                        rs.getInt("id"),
-                        rs.getInt("userId"),
-                        rs.getInt("mediaId")
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getInt("media_id")
                 );
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
-    public static List<Favori> getFavorisByUser(int userId) {
 
+    public List<Favori> getFavorisByUser(int userId) {
         List<Favori> favoris = new ArrayList<>();
-        String sql = "SELECT * FROM favori WHERE userId = ?";
-
+        String sql = "SELECT * FROM favorite WHERE user_id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
-
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
-                Favori f = new Favori(
-                        rs.getInt("id"),
-                        rs.getInt("userId"),
-                        rs.getInt("mediaId")
-                );
-                favoris.add(f);
+                favoris.add(new Favori(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getInt("media_id")
+                ));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return favoris;
     }
 
+    public int supprimerFavori(int userId, int mediaId) {
+        int rows = 0;
+        String sql = "DELETE FROM favorite WHERE user_id = ? AND media_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, mediaId);
+            rows = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
 }
