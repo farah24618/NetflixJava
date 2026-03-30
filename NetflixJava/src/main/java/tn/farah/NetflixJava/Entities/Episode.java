@@ -9,8 +9,23 @@ public class Episode {
     private String resume;
     private String miniatureUrl;
     private int durreeIntro;
+    private Serie serie;
 
-    public Episode() {
+    public Serie getSerie() {
+		return serie;
+	}
+
+
+
+
+	public void setSerie(Serie serie) {
+		this.serie = serie;
+	}
+
+
+
+
+	public Episode() {
 
     }
 

@@ -1,8 +1,10 @@
 package tn.farah.NetflixJava.utils;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -14,112 +16,106 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * ScreenManager — Singleton navigator for large JavaFX apps.
- *
- * Setup (call once in Main.java):
- *   ScreenManager.getInstance().init(primaryStage);
- *   ScreenManager.getInstance().register(Screen.LOGIN,    "/view/Login.fxml");
- *   ScreenManager.getInstance().register(Screen.DASHBOARD,"/view/Dashboard.fxml");
- *   ScreenManager.getInstance().navigateTo(Screen.LOGIN);
- *
- * From any controller — no Stage or event needed:
- *   ScreenManager.getInstance().navigateTo(Screen.DASHBOARD);
- *   ScreenManager.getInstance().goBack();
+ * ScreenManager : gestionnaire de navigation entre les interfaces JavaFX.
  */
 public class ScreenManager {
 
-    // ── Singleton ────────────────────────────────────────────────────────────
     private static ScreenManager instance;
+
+    private Stage primaryStage;
+    private final Map<Screen, String> routes = new HashMap<>();
+    private final Stack<Screen> history = new Stack<>();
+    private Screen current;
+
+    private ScreenManager() {
+    }
 
     public static ScreenManager getInstance() {
         if (instance == null) {
-			instance = new ScreenManager();
-		}
-
+            instance = new ScreenManager();
+        }
         return instance;
     }
 
-    private ScreenManager() {}
-
-    // ── State ────────────────────────────────────────────────────────────────
-    private Stage              primaryStage;
-    private final Map<Screen, String> routes     = new HashMap<>();
-    private final Stack<Screen>       history    = new Stack<>();
-    private Screen                    current;
-
-    // ── Init ─────────────────────────────────────────────────────────────────
-
-    /** Call once in Main.start() with the primary stage. */
+    /**
+     * À appeler une seule fois dans Main.java
+     */
     public void init(Stage stage) {
         this.primaryStage = stage;
     }
 
-    /** Register a screen name → FXML path mapping. */
+    /**
+     * Enregistrer une page avec son chemin FXML
+     */
     public void register(Screen screen, String fxmlPath) {
         routes.put(screen, fxmlPath);
     }
 
-    // ── Navigation ───────────────────────────────────────────────────────────
-
-    /** Navigate to a screen (adds current to back-stack). */
+    /**
+     * Aller vers une page et garder l’ancienne dans l’historique
+     */
     public void navigateTo(Screen screen) {
         if (current != null) {
-			history.push(current);
-		}
+            history.push(current);
+        }
         load(screen);
     }
 
-    /** Navigate and replace current (no back entry — useful for Login → Dashboard). */
+    /**
+     * Aller vers une page sans garder l’historique
+     */
     public void navigateAndReplace(Screen screen) {
         history.clear();
         load(screen);
     }
 
-    /** Go back to the previous screen. */
+    /**
+     * Retour arrière
+     */
     public void goBack() {
         if (history.isEmpty()) {
-			return;
-		}
+            return;
+        }
         load(history.pop());
     }
 
-    /** Check if a back destination exists. */
+    /**
+     * Vérifier s’il y a une page précédente
+     */
     public boolean canGoBack() {
         return !history.isEmpty();
     }
 
-    /** Get the currently active screen. */
+    /**
+     * Retourne la page actuelle
+     */
     public Screen getCurrent() {
         return current;
     }
 
-    // ── Load with controller access ───────────────────────────────────────────
-
     /**
-     * Navigate and get the new controller so you can pass data.
-     *
-     * Example:
-     *   DashboardController ctrl = ScreenManager.getInstance()
-     *       .navigateAndGetController(Screen.DASHBOARD);
-     *   ctrl.setUser(loggedInUser);
+     * Naviguer et récupérer le contrôleur de la nouvelle page
      */
     public <T> T navigateAndGetController(Screen screen) {
         if (current != null) {
-			history.push(current);
-		}
+            history.push(current);
+        }
         return loadAndGetController(screen);
     }
 
-    // ── Internal ─────────────────────────────────────────────────────────────
-
+    /**
+     * Chargement simple
+     */
     private void load(Screen screen) {
         String path = routes.get(screen);
+
         if (path == null) {
-			throw new IllegalArgumentException("Screen not registered: " + screen);
-		}
+            throw new IllegalArgumentException("Screen non enregistrée : " + screen);
+        }
 
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent root = loader.load();
             current = screen;
             applyScene(root);
         } catch (IOException e) {
@@ -127,11 +123,15 @@ public class ScreenManager {
         }
     }
 
+    /**
+     * Chargement avec récupération du contrôleur
+     */
     private <T> T loadAndGetController(Screen screen) {
         String path = routes.get(screen);
+
         if (path == null) {
-			throw new IllegalArgumentException("Screen not registered: " + screen);
-		}
+            throw new IllegalArgumentException("Screen non enregistrée : " + screen);
+        }
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
@@ -145,6 +145,9 @@ public class ScreenManager {
         }
     }
 
+    /**
+     * Appliquer la nouvelle scène avec une petite animation
+     */
     private void applyScene(Parent root) {
         root.setOpacity(0);
         root.setScaleX(0.98);
@@ -155,9 +158,9 @@ public class ScreenManager {
         } else {
             primaryStage.getScene().setRoot(root);
         }
-         // ← centrer l'app sur l'écran
+
         primaryStage.show();
-        
+        primaryStage.centerOnScreen();
 
         FadeTransition fade = new FadeTransition(Duration.millis(200), root);
         fade.setFromValue(0);
@@ -171,6 +174,7 @@ public class ScreenManager {
         scale.setToY(1);
         scale.setInterpolator(Interpolator.EASE_OUT);
 
-        new ParallelTransition(fade, scale).play();
+        ParallelTransition transition = new ParallelTransition(fade, scale);
+        transition.play();
     }
 }

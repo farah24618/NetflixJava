@@ -3,84 +3,131 @@ package tn.farah.NetflixJava.Entities;
 import java.time.LocalDateTime;
 
 public class Commentaire {
-    private int id;
-    private String contenu;
-    private LocalDateTime datePublication;
-    private int idUser;    // ID de l'auteur
-    private int idMedia;   // ID du Film ou de la Série
-    private boolean estSignale;
-  //hedhi
-    private boolean contientSpoils;
 
-    public Commentaire(int id, String contenu, LocalDateTime datePublication,
-                       int idUser, int idMedia, boolean estSignale, boolean contientSpoils) {
-        this.id = id;
-        this.contenu = contenu;
-        this.datePublication = datePublication;
-        this.idUser = idUser;
-        this.idMedia = idMedia;
-        this.estSignale = estSignale;
-        this.contientSpoils = contientSpoils;
+    private int id;
+    private int mediaId;
+    private String mediaType; // film, serie, episode
+    private int userId;
+    private String username;
+    private String contenu;
+    private int likes;
+    private boolean spoiler;
+    private LocalDateTime dateCommentaire;
+
+    public Commentaire() {
     }
 
-	public int getId() {
-		return id;
-	}
+    public Commentaire(int id, int mediaId, String mediaType, int userId, String username,
+                       String contenu, int likes, boolean spoiler, LocalDateTime dateCommentaire) {
+        this.id = id;
+        this.mediaId = mediaId;
+        this.mediaType = mediaType;
+        this.userId = userId;
+        this.username = username;
+        this.contenu = contenu;
+        this.likes = likes;
+        this.spoiler = spoiler;
+        this.dateCommentaire = dateCommentaire;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Commentaire(int mediaId, String mediaType, int userId, String username,
+                       String contenu, boolean spoiler) {
+        this.mediaId = mediaId;
+        this.mediaType = mediaType;
+        this.userId = userId;
+        this.username = username;
+        this.contenu = contenu;
+        this.likes = 0;
+        this.spoiler = spoiler;
+        this.dateCommentaire = LocalDateTime.now();
+    }
 
-	public String getContenu() {
-		return contenu;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setContenu(String contenu) {
-		this.contenu = contenu;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public LocalDateTime getDatePublication() {
-		return datePublication;
-	}
+    public int getMediaId() {
+        return mediaId;
+    }
 
-	public void setDatePublication(LocalDateTime datePublication) {
-		this.datePublication = datePublication;
-	}
+    public void setMediaId(int mediaId) {
+        this.mediaId = mediaId;
+    }
 
-	public int getIdUser() {
-		return idUser;
-	}
+    public String getMediaType() {
+        return mediaType;
+    }
 
-	public void setIdUser(int idUser) {
-		this.idUser = idUser;
-	}
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
 
-	public int getIdMedia() {
-		return idMedia;
-	}
+    public int getUserId() {
+        return userId;
+    }
 
-	public void setIdMedia(int idMedia) {
-		this.idMedia = idMedia;
-	}
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-	public boolean isEstSignale() {
-		return estSignale;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setEstSignale(boolean estSignale) {
-		this.estSignale = estSignale;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public boolean isContientSpoils() {
-		return contientSpoils;
-	}
+    public String getContenu() {
+        return contenu;
+    }
 
-	public void setContientSpoils(boolean contientSpoils) {
-		this.contientSpoils = contientSpoils;
-	}
+    public void setContenu(String contenu) {
+        this.contenu = contenu;
+    }
 
+    public int getLikes() {
+        return likes;
+    }
 
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public boolean isSpoiler() {
+        return spoiler;
+    }
+
+    public void setSpoiler(boolean spoiler) {
+        this.spoiler = spoiler;
+    }
+
+    public LocalDateTime getDateCommentaire() {
+        return dateCommentaire;
+    }
+
+    public void setDateCommentaire(LocalDateTime dateCommentaire) {
+        this.dateCommentaire = dateCommentaire;
+    }
+
+    @Override
+    public String toString() {
+        return "Commentaire{" +
+                "id=" + id +
+                ", mediaId=" + mediaId +
+                ", mediaType='" + mediaType + '\'' +
+                ", userId=" + userId +
+                ", username='" + username + '\'' +
+                ", contenu='" + contenu + '\'' +
+                ", likes=" + likes +
+                ", spoiler=" + spoiler +
+                ", dateCommentaire=" + dateCommentaire +
+                '}';
+    }
 }
-
 
 

@@ -35,10 +35,12 @@ public class Main extends Application {
         nav.register(Screen.signup3,        "/tn/farah/NetflixJava/signup3.fxml");
         nav.register(Screen.detail,        "/tn/farah/NetflixJava/DetailMovie2.fxml");
         nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
+        nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
 
 
         primaryStage.setTitle("RekchaNet");
         //nav.navigateTo(Screen.addProfile);
+        //nav.navigateTo(Screen.episodeComments);
 
         nav.navigateTo(Screen.home);
         primaryStage.setWidth(1280);   // ← largeur que tu veux

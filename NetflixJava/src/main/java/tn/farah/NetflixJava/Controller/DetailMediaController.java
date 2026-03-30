@@ -250,6 +250,7 @@ public class DetailMediaController implements Initializable {
             btnFavori.setStyle("-fx-background-color: #ffffff22;");
         }
     }
+    
 
     @FXML private void onBack()   { ScreenManager.getInstance().goBack(); }
     @FXML private void onHome()   { ScreenManager.getInstance().navigateTo(Screen.home); }
