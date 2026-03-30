@@ -1,7 +1,7 @@
 package tn.farah.NetflixJava.Entities;
 
 import java.util.Objects;
-
+//...
 public class Acteur {
 	private int id;
 	private String nom;
