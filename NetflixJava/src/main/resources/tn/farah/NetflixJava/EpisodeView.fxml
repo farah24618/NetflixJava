@@ -6,158 +6,258 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 
-<BorderPane prefHeight="900" prefWidth="1100" style="-fx-background-color: #141414;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="com.example.EpisodeController">
+<BorderPane prefHeight="900" prefWidth="1100" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.EpisodeViewController">
 
-    <!-- ═══════════════ TOP NAV ═══════════════ -->
+    <!-- ===================================================== -->
+    <!-- NAVBAR                                                  -->
+    <!-- ===================================================== -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="30" style="-fx-background-color: #141414; -fx-padding: 15 30 15 30;">
+
             <Label style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;" text="NETFLIX" />
+
             <HBox spacing="20">
-                <Label style="-fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;" text="Accueil" />
+                <Label style="-fx-text-fill: white;   -fx-font-size: 14px; -fx-cursor: hand;" text="Accueil" />
                 <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px; -fx-cursor: hand;" text="Séries" />
                 <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px; -fx-cursor: hand;" text="Films" />
                 <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px; -fx-cursor: hand;" text="Ma Liste" />
             </HBox>
+
             <HBox HBox.hgrow="ALWAYS" />
-            <TextField fx:id="searchField" prefWidth="240" promptText="Rechercher..." style="-fx-background-color: #333333; -fx-text-fill: white;                               -fx-prompt-text-fill: #888888; -fx-padding: 6 12 6 12;                               -fx-background-radius: 4;" />
+
+            <TextField fx:id="searchField" prefWidth="240" promptText="Rechercher..." style="-fx-background-color: #333333; -fx-text-fill: white;                        -fx-prompt-text-fill: #888888; -fx-padding: 6 12 6 12;                        -fx-background-radius: 4;" />
+
+            <!-- PROFIL UTILISATEUR -->
+            <HBox fx:id="profilBox" alignment="CENTER" onMouseClicked="#onProfilClicked" spacing="10" style="-fx-cursor: hand; -fx-padding: 4 10 4 10;                        -fx-background-color: #1f1f1f; -fx-background-radius: 8;">
+
+                <Label fx:id="labelUserName" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="Utilisateur" />
+
+                <StackPane fx:id="avatarContainer" prefHeight="38" prefWidth="38">
+                    <ImageView fx:id="avatarImage" fitHeight="38" fitWidth="38" preserveRatio="false" smooth="true">
+                        <clip>
+                            <Rectangle arcHeight="8" arcWidth="8" height="38" width="38" />
+                        </clip>
+                    </ImageView>
+                    <StackPane fx:id="avatarFallback" prefHeight="38" prefWidth="38" style="-fx-background-color: #E50914; -fx-background-radius: 8;">
+                        <Label fx:id="avatarInitiale" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;" text="U" />
+                    </StackPane>
+                </StackPane>
+
+                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text="▼" />
+            </HBox>
+
         </HBox>
     </top>
 
-    <!-- ═══════════════ CENTER ═══════════════ -->
+    <!-- ===================================================== -->
+    <!-- CONTENU PRINCIPAL                                       -->
+    <!-- ===================================================== -->
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-background: #141414; -fx-background-color: #141414;                            -fx-border-color: transparent;">
+        <ScrollPane fitToWidth="true" style="-fx-background: #141414; -fx-background-color: #141414;                    -fx-border-color: transparent;">
             <content>
                 <VBox spacing="0">
 
-                    <!-- ── VIDEO PLAYER ── -->
+                    <!-- ============================================= -->
+                    <!-- PLAYER VIDÉO                                   -->
+                    <!-- ============================================= -->
                     <StackPane fx:id="videoPane" prefHeight="520" style="-fx-background-color: #000000;">
 
-                        <!-- Placeholder -->
                         <VBox alignment="CENTER" spacing="12" style="-fx-background-color: #0d0d0d;" StackPane.alignment="CENTER">
                             <Label style="-fx-text-fill: white; -fx-font-size: 60px; -fx-opacity: 0.3;" text="▶" />
-                            <Label fx:id="episodeTitleVideo" style="-fx-text-fill: #aaaaaa; -fx-font-size: 16px;" text="S01 E04 — L'Échange" />
+                            <Label fx:id="episodeTitleVideo" style="-fx-text-fill: #aaaaaa; -fx-font-size: 16px;" text="S01 E01 — Le Monde à l'envers" />
                         </VBox>
 
-                        <!-- Controls overlay -->
                         <VBox spacing="8" style="-fx-padding: 20 30 20 30;" StackPane.alignment="BOTTOM_CENTER">
-
-                            <!-- Progress row -->
                             <HBox alignment="CENTER_LEFT" spacing="10">
-                                <Label fx:id="currentTime" style="-fx-text-fill: white; -fx-font-size: 12px;" text="13:00" />
-                                <Slider fx:id="progressSlider" max="100" min="0" style="-fx-accent: #E50914;" value="23" HBox.hgrow="ALWAYS" />
-                                <Label fx:id="totalTime" style="-fx-text-fill: white; -fx-font-size: 12px;" text="56:00" />
+                                <Label fx:id="currentTime" style="-fx-text-fill: white; -fx-font-size: 12px;" text="00:00" />
+                                <Slider fx:id="progressSlider" max="100" min="0" style="-fx-accent: #E50914;" value="0" HBox.hgrow="ALWAYS" />
+                                <Label fx:id="totalTime" style="-fx-text-fill: white; -fx-font-size: 12px;" text="48 min" />
                             </HBox>
-
-                            <!-- Buttons row -->
                             <HBox alignment="CENTER_LEFT" spacing="16">
-                                <Button fx:id="btnPlayPause" onAction="#onPlayPause" style="-fx-background-color: transparent; -fx-text-fill: white;                                                -fx-font-size: 22px; -fx-cursor: hand;" text="⏸" />
-                                <Button fx:id="btnRewind" onAction="#onRewind" style="-fx-background-color: transparent; -fx-text-fill: white;                                                -fx-font-size: 18px; -fx-cursor: hand;" text="⏪" />
-                                <Button fx:id="btnForward" onAction="#onForward" style="-fx-background-color: transparent; -fx-text-fill: white;                                                -fx-font-size: 18px; -fx-cursor: hand;" text="⏩" />
-                                <Label fx:id="currentTimeSmall" style="-fx-text-fill: white; -fx-font-size: 13px;" text="13:00 / 56:00" />
+                                <Button fx:id="btnPlayPause" onAction="#onPlayPause" style="-fx-background-color: transparent; -fx-text-fill: white;                                            -fx-font-size: 22px; -fx-cursor: hand;" text="⏸" />
+                                <Button fx:id="btnRewind" onAction="#onRewind" style="-fx-background-color: transparent; -fx-text-fill: white;                                            -fx-font-size: 18px; -fx-cursor: hand;" text="⏪" />
+                                <Button fx:id="btnForward" onAction="#onForward" style="-fx-background-color: transparent; -fx-text-fill: white;                                            -fx-font-size: 18px; -fx-cursor: hand;" text="⏩" />
+                                <Label fx:id="currentTimeSmall" style="-fx-text-fill: white; -fx-font-size: 13px;" text="00:00 / 48 min" />
                                 <HBox HBox.hgrow="ALWAYS" />
-                                <Button fx:id="btnSubtitles" onAction="#onSubtitles" style="-fx-background-color: transparent; -fx-text-fill: white;                                                -fx-font-size: 14px; -fx-cursor: hand;                                                -fx-border-color: white; -fx-border-radius: 3;                                                -fx-padding: 2 6 2 6;" text="CC" />
-                                <Button fx:id="btnVolume" onAction="#onVolume" style="-fx-background-color: transparent; -fx-text-fill: white;                                                -fx-font-size: 14px; -fx-cursor: hand;" text="Vol" />
+                                <Button fx:id="btnSubtitles" onAction="#onSubtitles" style="-fx-background-color: transparent; -fx-text-fill: white;                                            -fx-font-size: 14px; -fx-cursor: hand;                                            -fx-border-color: white; -fx-border-radius: 3;                                            -fx-padding: 2 6 2 6;" text="CC" />
+                                <Button fx:id="btnVolume" onAction="#onVolume" style="-fx-background-color: transparent; -fx-text-fill: white;                                            -fx-font-size: 14px; -fx-cursor: hand;" text="Vol" />
                                 <Slider fx:id="volumeSlider" max="100" min="0" prefWidth="80" style="-fx-accent: white;" value="80" />
-                                <Button fx:id="btnFullscreen" onAction="#onFullscreen" style="-fx-background-color: transparent; -fx-text-fill: white;                                                -fx-font-size: 14px; -fx-cursor: hand;" text="[ ]" />
+                                <Button fx:id="btnFullscreen" onAction="#onFullscreen" style="-fx-background-color: transparent; -fx-text-fill: white;                                            -fx-font-size: 14px; -fx-cursor: hand;" text="[ ]" />
                             </HBox>
                         </VBox>
 
-                        <!-- Skip intro -->
-                        <Button fx:id="btnSkipIntro" onAction="#onSkipIntro" style="-fx-background-color: transparent; -fx-text-fill: white;                                        -fx-border-color: white; -fx-border-radius: 4;                                        -fx-background-radius: 4; -fx-font-size: 13px;                                        -fx-padding: 8 16 8 16; -fx-cursor: hand;" text="Passer l'intro" StackPane.alignment="BOTTOM_RIGHT">
+                        <Button fx:id="btnSkipIntro" onAction="#onSkipIntro" style="-fx-background-color: transparent; -fx-text-fill: white;                                    -fx-border-color: white; -fx-border-radius: 4;                                    -fx-background-radius: 4; -fx-font-size: 13px;                                    -fx-padding: 8 16 8 16; -fx-cursor: hand;" text="Passer l'intro" StackPane.alignment="BOTTOM_RIGHT">
                             <StackPane.margin>
                                 <Insets bottom="80" right="30" />
                             </StackPane.margin>
                         </Button>
+
                     </StackPane>
 
-                    <!-- ── EPISODE INFO ── -->
+                    <!-- ============================================= -->
+                    <!-- INFOS ÉPISODE + DISTRIBUTION                  -->
+                    <!-- ============================================= -->
                     <HBox spacing="30" style="-fx-padding: 24 30 10 30;">
 
-                        <!-- LEFT -->
                         <VBox spacing="10" HBox.hgrow="ALWAYS">
 
-                            <!-- Breadcrumb -->
+                            <!-- Fil d'ariane -->
                             <HBox alignment="CENTER_LEFT" spacing="12">
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-cursor: hand;" text="Chasseurs d'Ombres" />
+                                <!-- ✅ MODIF 1 : fx:id ajouté -->
+                                <Label fx:id="labelTitreSerie" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-cursor: hand;" text="TitreSerie" />
                                 <Label style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="›" />
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-cursor: hand;" text="Saison 1" />
+                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-cursor: hand;" text="Saison " />
+                                <Label fx:id="labelNumeroSaison" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="1" />
                                 <Label style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="›" />
-                                <Label style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="Episode 4" />
+                                <Label style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="Episode " />
+                                <Label fx:id="labelNumeroEpisode" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="1" />
                             </HBox>
 
-                            <Label fx:id="episodeTitle" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;" text="L'Echange" />
+                            <!-- Titre épisode -->
+                            <Label fx:id="episodeTitle" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;" text="TitreEpisode" />
 
+                            <!-- Métadonnées -->
                             <HBox alignment="CENTER_LEFT" spacing="12">
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Saison 1 - Episode 4" />
+                                <Label fx:id="labelSaisonEpisode" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Saison 1 - Épisode 1" />
                                 <Label style="-fx-text-fill: #555555;" text="|" />
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="56 min" />
+                                <Label fx:id="labelDuree" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="48 min" />
                                 <Label style="-fx-text-fill: #555555;" text="|" />
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="2024" />
-                                <Label style="-fx-text-fill: white; -fx-font-size: 11px;                                               -fx-background-color: #555555;                                               -fx-padding: 2 6 2 6; -fx-background-radius: 3;" text="16+" />
+                                <Label fx:id="labelDateSortie" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="" />
                             </HBox>
 
-                            <Label fx:id="episodeDesc" maxWidth="620" style="-fx-text-fill: #cccccc; -fx-font-size: 14px;" text="resume" wrapText="true" />
+                            <!-- Description -->
+                            <Label fx:id="episodeDesc" maxWidth="620" style="-fx-text-fill: #cccccc; -fx-font-size: 14px;" text="" wrapText="true" />
 
-                            <!-- Action buttons -->
+                            <!-- Boutons actions -->
                             <HBox spacing="12" style="-fx-padding: 8 0 0 0;">
-                                <Button fx:id="btnLike" onAction="#onLike" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="J'aime" />
-                                <Button fx:id="btnDislike" onAction="#onDislike" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="Je n'aime pas" />
-                                <Button fx:id="btnShare" onAction="#onShare" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="Partager" />
-                                <Button fx:id="btnDownload" onAction="#onDownload" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="Telecharger" />
+                                <Button fx:id="btnLike" onAction="#onLike" style="-fx-background-color: #333333; -fx-text-fill: white;                                            -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                            -fx-cursor: hand; -fx-font-size: 13px;" text="J'aime" />
+                                <Button fx:id="btnDislike" onAction="#onDislike" style="-fx-background-color: #333333; -fx-text-fill: white;                                            -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                            -fx-cursor: hand; -fx-font-size: 13px;" text="Je n'aime pas" />
+                                <Button fx:id="btnShare" onAction="#onShare" style="-fx-background-color: #333333; -fx-text-fill: white;                                            -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                            -fx-cursor: hand; -fx-font-size: 13px;" text="Partager" />
+                                <Button fx:id="btnDownload" onAction="#onDownload" style="-fx-background-color: #333333; -fx-text-fill: white;                                            -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                            -fx-cursor: hand; -fx-font-size: 13px;" text="Telecharger" />
                             </HBox>
                         </VBox>
 
-                        <!-- RIGHT: Cast -->
-                        <VBox prefWidth="260" spacing="10" style="-fx-background-color: #1f1f1f; -fx-padding: 16;                                      -fx-background-radius: 6;">
-                            <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Distribution" />
+                        <!-- Distribution -->
+                        <VBox prefWidth="260" spacing="10" style="-fx-background-color: #1f1f1f; -fx-padding: 16;                                    -fx-background-radius: 6;">
+                            <Label style="-fx-text-fill: white; -fx-font-weight: bold;                                           -fx-font-size: 14px;" text="Distribution" />
                             <VBox fx:id="castList" spacing="10" />
                         </VBox>
+
                     </HBox>
 
-                    <!-- ── NEXT EPISODE ── -->
-                    <VBox spacing="12" style="-fx-padding: 10 30 20 30;">
-                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Episode suivant" />
-                        <HBox fx:id="nextEpisodeBox" alignment="CENTER_LEFT" onMouseClicked="#onNextEpisode" spacing="16" style="-fx-background-color: #1f1f1f; -fx-background-radius: 6;                                      -fx-padding: 16; -fx-cursor: hand;">
-                            <StackPane prefHeight="112" prefWidth="200" style="-fx-background-color: #2a2a2a; -fx-background-radius: 4;">
-                                <Label style="-fx-text-fill: #555555; -fx-font-size: 28px;" text="5" />
-                            </StackPane>
-                            <VBox spacing="6" HBox.hgrow="ALWAYS">
-                                <Label style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Episode 5 - Trahison" />
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="54 min" />
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Les allies de Damien revelent leur vrai visage..." wrapText="true" />
-                            </VBox>
-                            <Button onAction="#onNextEpisode" style="-fx-background-color: white; -fx-text-fill: black;                                            -fx-font-weight: bold; -fx-padding: 10 20 10 20;                                            -fx-background-radius: 4; -fx-cursor: hand;" text="Lire" />
-                        </HBox>
-                    </VBox>
+                    <!-- ============================================= -->
+                    <!-- BARRE ONGLETS                                  -->
+                    <!-- ============================================= -->
+                    <HBox alignment="CENTER_LEFT" spacing="0" style="-fx-background-color: #141414;                                -fx-border-color: transparent transparent #333333 transparent;                                -fx-border-width: 0 0 1 0; -fx-padding: 10 30 0 30;">
 
-                    <!-- ── COMMENTS ── -->
-                    <VBox spacing="14" style="-fx-padding: 10 30 30 30;">
+                        <VBox fx:id="tabApropos" alignment="CENTER" onMouseClicked="#onTabApropos" style="-fx-padding: 14 20 0 20; -fx-cursor: hand;">
+                            <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px;" text="À propos" />
+                            <HBox prefHeight="3" prefWidth="0" style="-fx-background-color: transparent; -fx-padding: 10 0 0 0;" />
+                        </VBox>
 
-                        <HBox alignment="CENTER_LEFT" spacing="16">
-                            <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Commentaires" />
-                            <Label fx:id="commentCount" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="295 commentaires" />
-                        </HBox>
+                        <VBox fx:id="tabEpisodes" alignment="CENTER" onMouseClicked="#onTabEpisodes" style="-fx-padding: 14 20 0 20; -fx-cursor: hand;">
+                            <Label style="-fx-text-fill: white; -fx-font-size: 14px;                                           -fx-font-weight: bold;" text="Épisodes" />
+                            <HBox prefHeight="3" style="-fx-background-color: #E50914;                                        -fx-background-radius: 2 2 0 0;                                        -fx-padding: 10 0 0 0;" HBox.hgrow="ALWAYS" />
+                        </VBox>
 
-                        <!-- New comment input -->
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <StackPane prefHeight="38" prefWidth="38" style="-fx-background-color: #E50914; -fx-background-radius: 38;">
-                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="M" />
-                            </StackPane>
-                            <TextField fx:id="commentInput" promptText="Ajouter un commentaire..." style="-fx-background-color: #222222; -fx-text-fill: white;                                               -fx-prompt-text-fill: #666666;                                               -fx-padding: 10 14 10 14; -fx-background-radius: 4;                                               -fx-border-color: #333333; -fx-border-radius: 4;" HBox.hgrow="ALWAYS" />
-                            <Button fx:id="btnSendComment" onAction="#onSendComment" style="-fx-background-color: #E50914; -fx-text-fill: white;                                            -fx-padding: 10 18 10 18; -fx-background-radius: 4;                                            -fx-cursor: hand; -fx-font-weight: bold;" text="Envoyer" />
-                        </HBox>
+                        <VBox fx:id="tabBandes" alignment="CENTER" onMouseClicked="#onTabBandes" style="-fx-padding: 14 20 0 20; -fx-cursor: hand;">
+                            <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px;" text="Bandes-annonces" />
+                            <HBox prefHeight="3" prefWidth="0" style="-fx-background-color: transparent; -fx-padding: 10 0 0 0;" />
+                        </VBox>
 
-                        <!-- Comment list (populated by controller) -->
-                        <VBox fx:id="commentsList" spacing="10" />
+                        <VBox fx:id="tabCommentaires" alignment="CENTER" onMouseClicked="#onTabCommentaires" style="-fx-padding: 14 20 0 20; -fx-cursor: hand;">
+                            <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px;" text="Commentaires" />
+                            <HBox prefHeight="3" prefWidth="0" style="-fx-background-color: transparent; -fx-padding: 10 0 0 0;" />
+                        </VBox>
+
+                        <VBox fx:id="tabSimilaires" alignment="CENTER" onMouseClicked="#onTabSimilaires" style="-fx-padding: 14 20 0 20; -fx-cursor: hand;">
+                            <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px;" text="Similaires" />
+                            <HBox prefHeight="3" prefWidth="0" style="-fx-background-color: transparent; -fx-padding: 10 0 0 0;" />
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- ============================================= -->
+                    <!-- ZONE CONTENU ONGLETS                          -->
+                    <!-- ============================================= -->
+                    <VBox fx:id="contenuOnglet" spacing="0" style="-fx-padding: 20 30 30 30;">
+
+                        <!-- ───── ONGLET ÉPISODES ───── -->
+                        <VBox fx:id="panelEpisodes" managed="true" spacing="16" visible="true">
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <Label style="-fx-text-fill: white; -fx-font-size: 18px;                                               -fx-font-weight: bold;" text="Saison 1" />
+                                <!-- ✅ MODIF 2 : fx:id ajouté, text dynamique -->
+                                <Label fx:id="labelNbEpisodes" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="0 épisodes" />
+                            </HBox>
+                            <VBox fx:id="listeEpisodes" spacing="12" />
+                        </VBox>
+
+                        <!-- ───── ONGLET À PROPOS ───── -->
+                        <VBox fx:id="panelApropos" managed="false" spacing="14" visible="false">
+                            <Label style="-fx-text-fill: white; -fx-font-size: 18px;                                           -fx-font-weight: bold;" text="À propos de la série" />
+                            <!-- ✅ MODIF 3 : fx:id ajouté, text vide → rempli par BD -->
+                            <Label fx:id="labelSynopsis" style="-fx-text-fill: #cccccc; -fx-font-size: 14px;" text="" wrapText="true" />
+                            <HBox spacing="30" style="-fx-padding: 10 0 0 0;">
+                                <VBox spacing="6">
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="CRÉATEUR" />
+                                    <Label style="-fx-text-fill: white; -fx-font-size: 14px;" text="Farah Ben Ali" />
+                                </VBox>
+                                <VBox spacing="6">
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="GENRE" />
+                                    <!-- ✅ MODIF 4 : fx:id ajouté -->
+                                    <Label fx:id="labelGenre" style="-fx-text-fill: white; -fx-font-size: 14px;" text="" />
+                                </VBox>
+                                <VBox spacing="6">
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 12px;" text="ANNÉE" />
+                                    <!-- ✅ MODIF 5 : fx:id ajouté -->
+                                    <Label fx:id="labelAnnee" style="-fx-text-fill: white; -fx-font-size: 14px;" text="" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+
+                        <!-- ───── ONGLET BANDES-ANNONCES ───── -->
+                        <VBox fx:id="panelBandes" managed="false" spacing="14" visible="false">
+                            <Label style="-fx-text-fill: white; -fx-font-size: 18px;                                           -fx-font-weight: bold;" text="Bandes-annonces" />
+                            <HBox spacing="16">
+                                <StackPane prefHeight="158" prefWidth="280" style="-fx-background-color: #2a2a2a;                                            -fx-background-radius: 6; -fx-cursor: hand;">
+                                    <Label style="-fx-text-fill: white; -fx-font-size: 40px;                                                   -fx-opacity: 0.5;" text="▶" />
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Bande-annonce officielle" StackPane.alignment="BOTTOM_LEFT">
+                                        <StackPane.margin>
+                                            <Insets bottom="12" left="12" />
+                                        </StackPane.margin>
+                                    </Label>
+                                </StackPane>
+                                <StackPane prefHeight="158" prefWidth="280" style="-fx-background-color: #2a2a2a;                                            -fx-background-radius: 6; -fx-cursor: hand;">
+                                    <Label style="-fx-text-fill: white; -fx-font-size: 40px;                                                   -fx-opacity: 0.5;" text="▶" />
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="Teaser Saison 1" StackPane.alignment="BOTTOM_LEFT">
+                                        <StackPane.margin>
+                                            <Insets bottom="12" left="12" />
+                                        </StackPane.margin>
+                                    </Label>
+                                </StackPane>
+                            </HBox>
+                        </VBox>
+
+                        <!-- ───── ONGLET SIMILAIRES ───── -->
+                        <VBox fx:id="panelSimilaires" managed="false" spacing="14" visible="false">
+                            <Label style="-fx-text-fill: white; -fx-font-size: 18px;                                           -fx-font-weight: bold;" text="Séries similaires" />
+                            <HBox fx:id="listeSimilaires" spacing="16" />
+                        </VBox>
+
+                        <!-- ───── ONGLET COMMENTAIRES (collègue) ───── -->
+
                     </VBox>
 
                 </VBox>
             </content>
         </ScrollPane>
     </center>
+
 </BorderPane>
