@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
+
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,8 +17,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import tn.farah.NetflixJava.DAO.EpisodeDAO;
-import tn.farah.NetflixJava.DAO.MediaDAO;
 import tn.farah.NetflixJava.DAO.SaisonDAO;
+import tn.farah.NetflixJava.DAO.SerieDAO;
 import tn.farah.NetflixJava.Entities.Episode;
 
 public class EpisodeViewController implements Initializable {
@@ -113,27 +114,27 @@ public class EpisodeViewController implements Initializable {
 
     // =============================================
     // INITIALIZE
-    // =============================================
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        chargerProfil("Enfants", "/images/profil.png");
-        chargerCast();
-
-        // ✅ Épisodes depuis BD
         episodesDB = EpisodeDAO.findBySaison(currentSaisonId);
 
-        // ✅ Infos série depuis BD
-        chargerInfosSerie();
+        int serieId = SaisonDAO.getSerieIdBySaison(currentSaisonId);
+        System.out.println("🔍 currentSaisonId = " + currentSaisonId);
+        System.out.println("🔍 serieId trouvé = " + serieId);
+        System.out.println("🔍 nb épisodes = " + (episodesDB != null ? episodesDB.size() : "null"));
+        
+        chargerInfosSerie(serieId);  // ← on passe serieId directement
+        chargerCast(serieId);        // ← même serieId, pas de dépendance
 
         chargerListeEpisodes();
         chargerSimilaires();
         configurerSliders();
+        chargerProfil("Enfants", "/images/profil.png");
 
         if (episodesDB != null && !episodesDB.isEmpty()) {
             episodeActuel = episodesDB.get(0);
             mettreAJourInfosEpisode(episodeActuel);
         }
-
         activerOnglet(tabEpisodes);
     }
 
@@ -147,20 +148,20 @@ public class EpisodeViewController implements Initializable {
     // =============================================
     // CHARGEMENT INFOS SÉRIE DEPUIS BD
     // =============================================
-    private void chargerInfosSerie() {
+    private void chargerInfosSerie(int serieId) {
         // 1. Récupérer serie_id via season
-        int serieId = SaisonDAO.getSerieIdBySaison(currentSaisonId);
+    	if (serieId == -1) return;
 
-        if (serieId == -1) return;
-
+        String[] infos = SerieDAO.getInfosMedia(serieId);
+        String genre    = SerieDAO.getGenreMedia(serieId);
         // 2. Récupérer titre, synopsis, année depuis media
-        String[] infos = MediaDAO.getInfosMedia(serieId);
+      
         String titre    = infos[0]; // ex: "Stranger Things"
         String synopsis = infos[1]; // synopsis complet
         String annee    = infos[2]; // ex: "2016"
 
         // 3. Récupérer le genre
-        String genre = MediaDAO.getGenreMedia(serieId);
+      
 
         // 4. Mettre à jour le fil d'ariane "TitreSerie"
         if (labelTitreSerie != null)
@@ -240,22 +241,34 @@ public class EpisodeViewController implements Initializable {
     // =============================================
     // CAST
     // =============================================
-    private void chargerCast() {
-        List<String[]> acteurs = List.of(
-            new String[]{"Jean Dujardin",    "Damien Moreau"},
-            new String[]{"Marion Cotillard", "Sophie Laurent"},
-            new String[]{"Omar Sy",          "Marcus Diallo"},
-            new String[]{"Isabelle Adjani",  "La Directrice"}
-        );
-        for (String[] acteur : acteurs) {
+    private void chargerCast(int serieId) {
+        castList.getChildren().clear();
+        if (serieId == -1) {
+            Label vide = new Label("Non disponible");
+            vide.setTextFill(Color.web("#aaaaaa"));
+            castList.getChildren().add(vide);
+            return;
+        }
+
+        String casting = SerieDAO.getCastingBySerieId(serieId);
+        if (casting == null || casting.isBlank()) {
+            Label vide = new Label("Non disponible");
+            vide.setTextFill(Color.web("#aaaaaa"));
+            castList.getChildren().add(vide);
+            return;
+        }
+
+        // Format attendu : "Jean Dujardin, Marion Cotillard, Omar Sy"
+        String[] acteurs = casting.split(",");
+        for (String acteur : acteurs) {
+            String nomNettoye = acteur.trim();
+            if (nomNettoye.isEmpty()) continue;
+
             VBox entree = new VBox(2);
-            Label nom = new Label(acteur[0]);
+            Label nom = new Label(nomNettoye);
             nom.setTextFill(Color.WHITE);
             nom.setFont(Font.font("System", FontWeight.BOLD, 13));
-            Label role = new Label(acteur[1]);
-            role.setTextFill(Color.web("#aaaaaa"));
-            role.setFont(Font.font(12));
-            entree.getChildren().addAll(nom, role);
+            entree.getChildren().add(nom);
             castList.getChildren().add(entree);
         }
     }

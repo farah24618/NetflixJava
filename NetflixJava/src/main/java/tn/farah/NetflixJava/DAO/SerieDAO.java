@@ -281,4 +281,62 @@ public class SerieDAO {
         String query = BASE_SELECT + "JOIN episode e ON e.serie_id = m.id WHERE e.id = ? LIMIT 1";
         List<Serie> series = executeAndGroup(query, ps -> ps.setInt(1, episodeId));
         return series.isEmpty() ? null : series.get(0);
-    }}
+    }
+ // Dans SerieDAO — ajouter ces méthodes statiques
+
+    
+
+    
+ 
+    public static String[] getInfosMedia(int serieId) {
+        String query = "SELECT m.titre, m.synopsis, YEAR(m.date_sortie) AS annee " +
+                       "FROM media m WHERE m.id = ?";
+        try (Connection con = ConxDB.getInstance();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, serieId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new String[]{
+                    rs.getString("titre"),
+                    rs.getString("synopsis"),
+                    String.valueOf(rs.getInt("annee"))
+                };
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return new String[]{"", "", ""};
+    }
+
+    public static String getGenreMedia(int serieId) {
+        String query = "SELECT c.nom FROM category c " +
+                       "JOIN media_category mc ON c.id = mc.category_id " +
+                       "WHERE mc.media_id = ?";
+        // Récupérer TOUS les genres séparés par " / "
+        StringBuilder genres = new StringBuilder();
+        try (Connection con = ConxDB.getInstance();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, serieId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                if (genres.length() > 0) genres.append(" / ");
+                genres.append(rs.getString("nom"));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return genres.toString();
+    }
+
+    public static String getCastingBySerieId(int serieId) {
+        String query = "SELECT m.casting FROM media m WHERE m.id = ?";
+        try (Connection con = ConxDB.getInstance();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, serieId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getString("casting");
+        } catch (SQLException e) { e.printStackTrace(); }
+        return "";
+    }
+
+
+
+
+
+}
