@@ -84,7 +84,7 @@ public class HomeController implements Initializable {
 
     private Consumer<Serie> goToSerieDetail() {
         return serie -> {
-            DetailMediaController ctrl = ScreenManager.getInstance()
+            EpisodeViewController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.detail);
             if (ctrl != null) ctrl.setSerie(serie);
         };

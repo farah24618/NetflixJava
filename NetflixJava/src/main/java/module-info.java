@@ -4,7 +4,8 @@ module tn.farah.NetflixJava {
     requires java.sql;
 	requires java.prefs;
 	requires javafx.base;
-	requires javafx.graphics; // Indispensable pour JDBC / ta DB
+	requires javafx.graphics;
+	requires javafx.media; // Indispensable pour JDBC / ta DB
 
     // Autorise le moteur FXML à accéder à tes contrôleurs par réflexion
     opens tn.farah.NetflixJava.Controller to javafx.fxml;

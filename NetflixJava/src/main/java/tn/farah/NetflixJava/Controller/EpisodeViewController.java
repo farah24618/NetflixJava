@@ -1,15 +1,19 @@
 package tn.farah.NetflixJava.Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -17,11 +21,16 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import tn.farah.NetflixJava.DAO.EpisodeDAO;
-import tn.farah.NetflixJava.DAO.SaisonDAO;
-import tn.farah.NetflixJava.DAO.SerieDAO;
 import tn.farah.NetflixJava.Entities.Episode;
+import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.SerieService;
+import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class EpisodeViewController implements Initializable {
+
+    private SerieService serieService;
 
     // =============================================
     // INJECTION FXML — NAVBAR / PROFIL
@@ -38,6 +47,7 @@ public class EpisodeViewController implements Initializable {
     // INJECTION FXML — PLAYER VIDÉO
     // =============================================
     @FXML private StackPane videoPane;
+    @FXML private MediaView mediaView;
     @FXML private Label     episodeTitleVideo;
     @FXML private Slider    progressSlider;
     @FXML private Slider    volumeSlider;
@@ -92,39 +102,44 @@ public class EpisodeViewController implements Initializable {
     @FXML private HBox listeSimilaires;
 
     // =============================================
-    // NOUVEAUX fx:id à ajouter dans le FXML
+    // LABELS DYNAMIQUES
     // =============================================
-    @FXML private Label labelTitreSerie;      // fil d'ariane "TitreSerie"
-    @FXML private Label labelNbEpisodes;      // "10 épisodes" → dynamique
-    @FXML private Label labelSynopsis;        // synopsis dans À propos
-    @FXML private Label labelGenre;           // genre dans À propos
-    @FXML private Label labelAnnee;           // année dans À propos
+    @FXML private Label labelTitreSerie;
+    @FXML private Label labelNbEpisodes;
+    @FXML private Label labelSynopsis;
+    @FXML private Label labelGenre;
+    @FXML private Label labelAnnee;
+    @FXML private Label labelProducteur;
 
     // =============================================
     // ÉTAT INTERNE
     // =============================================
-    private boolean isPlaying   = true;
-    private boolean isMuted     = false;
-    private boolean subtitlesOn = false;
-    private int     likeCount   = 0;
+    private boolean     isPlaying   = true;
+    private boolean     isMuted     = false;
+    private boolean     subtitlesOn = false;
+    private int         likeCount   = 0;
+    private int         serieId     = -1;
 
     private List<Episode> episodesDB;
-    private int currentSaisonId = 1;
-    private Episode episodeActuel = null;
+    private int           currentSaisonId = 1;
+    private Episode       episodeActuel   = null;
+
+    // =============================================
+    // MEDIAPLAYER
+    // =============================================
+    private MediaPlayer mediaPlayer;
 
     // =============================================
     // INITIALIZE
+    // =============================================
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        episodesDB = EpisodeDAO.findBySaison(currentSaisonId);
+        serieService = new SerieService(ConxDB.getInstance());
+        episodesDB   = EpisodeDAO.findBySaison(currentSaisonId);
 
-        int serieId = SaisonDAO.getSerieIdBySaison(currentSaisonId);
         System.out.println("🔍 currentSaisonId = " + currentSaisonId);
-        System.out.println("🔍 serieId trouvé = " + serieId);
-        System.out.println("🔍 nb épisodes = " + (episodesDB != null ? episodesDB.size() : "null"));
-        
-        chargerInfosSerie(serieId);  // ← on passe serieId directement
-        chargerCast(serieId);        // ← même serieId, pas de dépendance
+        System.out.println("🔍 serieId         = " + serieId);
+        System.out.println("🔍 nb épisodes     = " + (episodesDB != null ? episodesDB.size() : "null"));
 
         chargerListeEpisodes();
         chargerSimilaires();
@@ -139,43 +154,159 @@ public class EpisodeViewController implements Initializable {
     }
 
     // =============================================
-    // SETTER — appelé depuis le controller parent
+    // SETTERS — appelés depuis le controller parent
     // =============================================
     public void setSaisonId(int saisonId) {
         this.currentSaisonId = saisonId;
     }
 
+    public void setSerie(Serie serie) {
+        this.serieId = serie.getId();
+        chargerInfosSerie(this.serieId);
+        if (labelNbEpisodes != null && episodesDB != null) {
+            int nb = episodesDB.size();
+            labelNbEpisodes.setText(nb + " épisode" + (nb > 1 ? "s" : ""));
+        }
+    }
+
     // =============================================
-    // CHARGEMENT INFOS SÉRIE DEPUIS BD
+    // CHARGEMENT INFOS SÉRIE VIA SERVICE
     // =============================================
     private void chargerInfosSerie(int serieId) {
-        // 1. Récupérer serie_id via season
-    	if (serieId == -1) return;
+        if (serieId == -1) return;
 
-        String[] infos = SerieDAO.getInfosMedia(serieId);
-        String genre    = SerieDAO.getGenreMedia(serieId);
-        // 2. Récupérer titre, synopsis, année depuis media
-      
-        String titre    = infos[0]; // ex: "Stranger Things"
-        String synopsis = infos[1]; // synopsis complet
-        String annee    = infos[2]; // ex: "2016"
+        Serie serieAct = serieService.findById(serieId);
+        if (serieAct == null) {
+            System.err.println("❌ Série introuvable pour id=" + serieId);
+            return;
+        }
 
-        // 3. Récupérer le genre
-      
+        if (labelTitreSerie != null) labelTitreSerie.setText(serieAct.getTitre());
 
-        // 4. Mettre à jour le fil d'ariane "TitreSerie"
-        if (labelTitreSerie != null)
-            labelTitreSerie.setText(titre);
-
-        // 5. Mettre à jour le nombre exact d'épisodes
         int nbEpisodes = episodesDB != null ? episodesDB.size() : 0;
         if (labelNbEpisodes != null)
             labelNbEpisodes.setText(nbEpisodes + " épisode" + (nbEpisodes > 1 ? "s" : ""));
 
-        // 6. Mettre à jour l'onglet "À propos"
-        if (labelSynopsis != null) labelSynopsis.setText(synopsis);
-        if (labelGenre    != null) labelGenre.setText(genre);
-        if (labelAnnee    != null) labelAnnee.setText(annee);
+        if (labelSynopsis != null)
+            labelSynopsis.setText(serieAct.getSynopsis() != null ? serieAct.getSynopsis() : "Résumé non disponible");
+        if (labelGenre != null)
+            labelGenre.setText(serieAct.getGenre() != null ? serieAct.getGenre() : "Inconnu");
+        if (labelAnnee != null) {
+            int annee = serieAct.getDateSortie().getYear();
+            labelAnnee.setText(annee != 0 ? String.valueOf(annee) : "0");
+        }
+        if (labelProducteur != null)
+            labelProducteur.setText(serieAct.getProducteur() != null ? serieAct.getProducteur() : "N/A");
+    }
+
+    // =============================================
+    // CHARGEMENT VIDÉO
+    // =============================================
+    private void loadVideo(String videoUrl) {
+        if (mediaView == null) {
+            System.err.println("❌ ERREUR CRITIQUE : mediaView est null !");
+            return;
+        }
+
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+            mediaPlayer = null;
+        }
+
+        if (videoUrl == null || videoUrl.isBlank()) {
+            System.out.println("⚠️ Aucune URL vidéo pour cet épisode.");
+            return;
+        }
+
+        String url = videoUrl.trim().replace("\\", "/");
+        if (url.matches("^[A-Za-z]:.*")) {
+            url = "file:///" + url;
+        }
+
+        System.out.println("🎬 URL finale chargée : " + url);
+
+        if (url.startsWith("file:")) {
+            try {
+                java.io.File fichier = new java.io.File(new java.net.URI(url));
+                System.out.println("📁 Fichier existe ? " + fichier.exists());
+                System.out.println("📁 Peut lire ?     " + fichier.canRead());
+                if (!fichier.exists()) {
+                    System.err.println("❌ Fichier introuvable : " + fichier.getAbsolutePath());
+                    return;
+                }
+            } catch (Exception ex) {
+                System.err.println("❌ URI invalide : " + url + " → " + ex.getMessage());
+                return;
+            }
+        }
+
+        try {
+            Media media = new Media(url);
+            mediaPlayer = new MediaPlayer(media);
+            mediaView.setMediaPlayer(mediaPlayer);
+            mediaView.setPreserveRatio(true);
+
+            mediaPlayer.setOnReady(() -> {
+                Duration total = mediaPlayer.getTotalDuration();
+                String totalFormatted = formatTime((int) total.toSeconds());
+                totalTime.setText(totalFormatted);
+                currentTimeSmall.setText("00:00 / " + totalFormatted);
+                progressSlider.setValue(0);
+                mediaPlayer.play();
+                isPlaying = true;
+                btnPlayPause.setText("⏸");
+                System.out.println("✅ Vidéo prête et lancée !");
+            });
+
+            mediaPlayer.currentTimeProperty().addListener((obs, oldT, newT) -> {
+                if (!progressSlider.isValueChanging()) {
+                    double totalSec   = mediaPlayer.getTotalDuration().toSeconds();
+                    double currentSec = newT.toSeconds();
+                    if (totalSec > 0) progressSlider.setValue((currentSec / totalSec) * 100.0);
+                    String cur = formatTime((int) currentSec);
+                    String tot = formatTime((int) totalSec);
+                    currentTime.setText(cur);
+                    currentTimeSmall.setText(cur + " / " + tot);
+                }
+            });
+
+            progressSlider.valueChangingProperty().addListener((obs, wasChanging, changing) -> {
+                if (!changing && mediaPlayer != null) {
+                    double totalSec = mediaPlayer.getTotalDuration().toSeconds();
+                    mediaPlayer.seek(Duration.seconds((progressSlider.getValue() / 100.0) * totalSec));
+                }
+            });
+
+            progressSlider.setOnMouseClicked(e -> {
+                if (mediaPlayer != null) {
+                    double totalSec = mediaPlayer.getTotalDuration().toSeconds();
+                    mediaPlayer.seek(Duration.seconds((progressSlider.getValue() / 100.0) * totalSec));
+                }
+            });
+
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100.0);
+            volumeSlider.valueProperty().addListener((obs, o, n) -> {
+                if (mediaPlayer != null) mediaPlayer.setVolume(n.doubleValue() / 100.0);
+            });
+
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(Duration.ZERO);
+                mediaPlayer.pause();
+                isPlaying = false;
+                btnPlayPause.setText("▶");
+                progressSlider.setValue(0);
+            });
+
+            mediaPlayer.setOnError(() -> {
+                javafx.scene.media.MediaException err = mediaPlayer.getError();
+                System.err.println("❌ Erreur MediaPlayer : " + err.getType() + " → " + err.getMessage());
+            });
+
+        } catch (Exception e) {
+            System.err.println("❌ Impossible de charger la vidéo : " + url);
+            System.err.println("❌ Cause : " + e.getClass().getName() + " → " + e.getMessage());
+        }
     }
 
     // =============================================
@@ -195,21 +326,37 @@ public class EpisodeViewController implements Initializable {
         episodeTitle.setText(titre);
         labelSaisonEpisode.setText("Saison " + saison + " - Épisode " + numero);
         labelDuree.setText(duree);
-        labelDateSortie.setText(""); // ← plus d'affichage de l'ID
+        labelDateSortie.setText("");
         episodeDesc.setText(resume);
-
-        episodeTitleVideo.setText("S0" + saison + " E" +
-            String.format("%02d", ep.getNumeroEpisode()) + " — " + titre);
-        progressSlider.setValue(0);
+        episodeTitleVideo.setText("S0" + saison + " E" + String.format("%02d", ep.getNumeroEpisode()) + " — " + titre);
         currentTime.setText("00:00");
         totalTime.setText(duree);
         currentTimeSmall.setText("00:00 / " + duree);
+        progressSlider.setValue(0);
         isPlaying = true;
         btnPlayPause.setText("⏸");
 
-        configurerProgressSlider(ep.getDuree());
-
         System.out.println("✅ Épisode chargé : " + numero + " — " + titre);
+
+        if (ep.getVideoUrl() != null && !ep.getVideoUrl().isBlank()) {
+            String url = ep.getVideoUrl().trim().replace("\\", "/");
+            if (url.matches("^[A-Za-z]:.*")) url = "file:///" + url;
+            System.out.println("🎬 Chargement vidéo : " + url);
+            loadVideo(url);
+        } else {
+            String resourcePath = "/videos/episode_" + ep.getId() + ".mp4";
+            URL resourceUrl = getClass().getResource(resourcePath);
+            if (resourceUrl != null) {
+                loadVideo(resourceUrl.toExternalForm());
+            } else {
+                System.out.println("⚠️ Pas de vidéo trouvée pour l'épisode " + ep.getId());
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                    mediaPlayer.dispose();
+                    mediaPlayer = null;
+                }
+            }
+        }
     }
 
     // =============================================
@@ -239,38 +386,13 @@ public class EpisodeViewController implements Initializable {
     }
 
     // =============================================
-    // CAST
+    // UTILITAIRE CAST
     // =============================================
-    private void chargerCast(int serieId) {
-        castList.getChildren().clear();
-        if (serieId == -1) {
-            Label vide = new Label("Non disponible");
-            vide.setTextFill(Color.web("#aaaaaa"));
-            castList.getChildren().add(vide);
-            return;
-        }
-
-        String casting = SerieDAO.getCastingBySerieId(serieId);
-        if (casting == null || casting.isBlank()) {
-            Label vide = new Label("Non disponible");
-            vide.setTextFill(Color.web("#aaaaaa"));
-            castList.getChildren().add(vide);
-            return;
-        }
-
-        // Format attendu : "Jean Dujardin, Marion Cotillard, Omar Sy"
-        String[] acteurs = casting.split(",");
-        for (String acteur : acteurs) {
-            String nomNettoye = acteur.trim();
-            if (nomNettoye.isEmpty()) continue;
-
-            VBox entree = new VBox(2);
-            Label nom = new Label(nomNettoye);
-            nom.setTextFill(Color.WHITE);
-            nom.setFont(Font.font("System", FontWeight.BOLD, 13));
-            entree.getChildren().add(nom);
-            castList.getChildren().add(entree);
-        }
+    private void ajouterLabelMessage(String message) {
+        Label label = new Label(message);
+        label.setTextFill(Color.web("#aaaaaa"));
+        label.setFont(Font.font("System", 13));
+        castList.getChildren().add(label);
     }
 
     // =============================================
@@ -449,25 +571,25 @@ public class EpisodeViewController implements Initializable {
         );
     }
 
-    private void configurerProgressSlider(int dureeMinutes) {
-        double totalSeconds = dureeMinutes * 60.0;
-        progressSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            double currentSeconds = (newVal.doubleValue() / 100.0) * totalSeconds;
-            String formatted = formatTime((int) currentSeconds);
-            currentTime.setText(formatted);
-            currentTimeSmall.setText(formatted + " / " + formatTime((int) totalSeconds));
-        });
-    }
-
     // =============================================
     // HANDLERS PLAYER
     // =============================================
     @FXML private void onPlayPause() {
+        if (mediaPlayer == null) return;
         isPlaying = !isPlaying;
-        btnPlayPause.setText(isPlaying ? "⏸" : "▶");
+        if (isPlaying) { mediaPlayer.play();  btnPlayPause.setText("⏸"); }
+        else           { mediaPlayer.pause(); btnPlayPause.setText("▶"); }
     }
-    @FXML private void onRewind()   { progressSlider.setValue(Math.max(0, progressSlider.getValue() - 3)); }
-    @FXML private void onForward()  { progressSlider.setValue(Math.min(100, progressSlider.getValue() + 3)); }
+
+    @FXML private void onRewind() {
+        if (mediaPlayer == null) return;
+        mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(10)));
+    }
+
+    @FXML private void onForward() {
+        if (mediaPlayer == null) return;
+        mediaPlayer.seek(mediaPlayer.getCurrentTime().add(Duration.seconds(10)));
+    }
 
     @FXML private void onSubtitles() {
         subtitlesOn = !subtitlesOn;
@@ -478,7 +600,9 @@ public class EpisodeViewController implements Initializable {
     }
 
     @FXML private void onVolume() {
+        if (mediaPlayer == null) return;
         isMuted = !isMuted;
+        mediaPlayer.setMute(isMuted);
         volumeSlider.setValue(isMuted ? 0 : 80);
         btnVolume.setText(isMuted ? "🔇" : "Vol");
     }
@@ -489,13 +613,9 @@ public class EpisodeViewController implements Initializable {
     }
 
     @FXML private void onSkipIntro() {
-        if (episodeActuel != null && episodeActuel.getDurreeIntro() > 0) {
-            double totalSeconds = episodeActuel.getDuree() * 60.0;
-            double introPercent = (episodeActuel.getDurreeIntro() / totalSeconds) * 100.0;
-            progressSlider.setValue(introPercent);
-        } else {
-            progressSlider.setValue(10);
-        }
+        if (mediaPlayer == null || episodeActuel == null) return;
+        int introSecs = episodeActuel.getDurreeIntro();
+        mediaPlayer.seek(Duration.seconds(introSecs > 0 ? introSecs : 60));
     }
 
     // =============================================
@@ -569,5 +689,18 @@ public class EpisodeViewController implements Initializable {
         int min = totalSeconds / 60;
         int sec = totalSeconds % 60;
         return String.format("%02d:%02d", min, sec);
+    }
+
+    @FXML private void handleAcceuil(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.home);
+    }
+    @FXML private void handleFilm(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.films);
+    }
+    @FXML private void handleSeries(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.series);
+    }
+    @FXML private void handleMyList(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.myList);
     }
 }
