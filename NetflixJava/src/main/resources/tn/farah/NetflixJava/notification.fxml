@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.farah.NetflixJava.Controller.NotificationController"
+            prefWidth="900" prefHeight="600"
+            style="-fx-background-color: #141414;">
+
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="NETFLIX"
+                       style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                <Label text="Notifications"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                
+                <Label fx:id="badgeLabel" text="0" visible="false"
+                       style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 2 6 2 6; -fx-font-size: 12px; -fx-translate-y: -5;"/>
+            </HBox>
+
+            <Label text="Retrouvez vos alertes de sorties, rappels d'abonnement et informations importantes."
+                   style="-fx-text-fill: #B3B3B3; -fx-font-size: 14px;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="15" style="-fx-background-color: #141414;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <HBox spacing="10">
+                <Button text="Tout afficher"
+                        onAction="#showAllNotifications"
+                        style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                <Button text="Sorties séries"
+                        onAction="#showSeriesNotifications"
+                        style="-fx-background-color: #333333; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                <Button text="Paiements"
+                        onAction="#showPaymentNotifications"
+                        style="-fx-background-color: #333333; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                <Button text="Commentaires"
+                        onAction="#showCommentNotifications"
+                        style="-fx-background-color: #333333; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+
+            <ListView fx:id="notificationListView"
+                      prefHeight="450"
+                      style="-fx-control-inner-background: #141414; -fx-background-color: #141414; -fx-border-color: #333333; -fx-border-radius: 10;"/>
+        </VBox>
+    </center>
+
+</BorderPane>

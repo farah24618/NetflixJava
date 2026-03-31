@@ -1,10 +1,6 @@
 package tn.farah.NetflixJava.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,32 +9,31 @@ import tn.farah.NetflixJava.utils.ConxDB;
 
 public class EpisodeDAO {
 
-    private static Connection conn = ConxDB.getInstance();
-
     // ─────────────────────────────────
-    //  FIND ALL
+    // FIND ALL
     // ─────────────────────────────────
     public static List<Episode> findAll() {
-        Statement stml = null;
-        ResultSet rs = null;
         List<Episode> episodes = new ArrayList<>();
         String SQL = "SELECT * FROM episode";
-        try {
-            stml = conn.createStatement();
-            rs = stml.executeQuery(SQL);
+
+        try (Connection conn = ConxDB.getInstance();
+             Statement stml = conn.createStatement();
+             ResultSet rs = stml.executeQuery(SQL)) {
+
             while (rs.next()) {
-                int    id            = rs.getInt(1);       // id
-                int    saisonId      = rs.getInt(2);       // season_id
-                String titre         = rs.getString(3);    // titre
-                int    numeroEpisode = rs.getInt(4);       // numero
-                int    duree         = rs.getInt(5);       // duree_minutes
-                String resume        = rs.getString(6);    // resume
-                String videoUrl      = rs.getString(7);    // url_video
-                String miniatureUrl  = rs.getString(8);    // url_image
-                int    durreeIntro   = rs.getInt(9);       // duree_intro_sec
-                episodes.add(new Episode(id, saisonId, titre, numeroEpisode,
-                                         videoUrl, duree, resume, miniatureUrl, durreeIntro));
+                episodes.add(new Episode(
+                    rs.getInt(1),
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(7),
+                    rs.getInt(5),
+                    rs.getString(6),
+                    rs.getString(8),
+                    rs.getInt(9)
+                ));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,30 +41,30 @@ public class EpisodeDAO {
     }
 
     // ─────────────────────────────────
-    //  SAVE (INSERT)
+    // SAVE
     // ─────────────────────────────────
     public static int save(Episode episode) {
         int episodeId = 0;
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
         String sql = "INSERT INTO episode(season_id, titre, numero, duree_minutes, " +
-                     "resume, url_video, url_image, duree_intro_sec) " +
-                     "VALUES (?,?,?,?,?,?,?,?)";
-        try {
-            pstml = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstml.setInt(1,    episode.getSaisonId());
+                     "resume, url_video, url_image, duree_intro_sec) VALUES (?,?,?,?,?,?,?,?)";
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstml.setInt(1, episode.getSaisonId());
             pstml.setString(2, episode.getTitre());
-            pstml.setInt(3,    episode.getNumeroEpisode());
-            pstml.setInt(4,    episode.getDuree());           // duree_minutes
-            pstml.setString(5, episode.getResume());          // resume
-            pstml.setString(6, episode.getVideoUrl());        // url_video
-            pstml.setString(7, episode.getMiniatureUrl());    // url_image
-            pstml.setInt(8,    episode.getDurreeIntro());     // duree_intro_sec
+            pstml.setInt(3, episode.getNumeroEpisode());
+            pstml.setInt(4, episode.getDuree());
+            pstml.setString(5, episode.getResume());
+            pstml.setString(6, episode.getVideoUrl());
+            pstml.setString(7, episode.getMiniatureUrl());
+            pstml.setInt(8, episode.getDurreeIntro());
+
             pstml.executeUpdate();
-            rs = pstml.getGeneratedKeys();
-            if (rs.next()) {
-                episodeId = rs.getInt(1);
-            }
+
+            ResultSet rs = pstml.getGeneratedKeys();
+            if (rs.next()) episodeId = rs.getInt(1);
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -77,28 +72,31 @@ public class EpisodeDAO {
     }
 
     // ─────────────────────────────────
-    //  FIND BY ID
+    // FIND BY ID
     // ─────────────────────────────────
     public static Episode findById(int id) {
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
         String sql = "SELECT * FROM episode WHERE id = ?";
-        try {
-            pstml = conn.prepareStatement(sql);
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+
             pstml.setInt(1, id);
-            rs = pstml.executeQuery();
+            ResultSet rs = pstml.executeQuery();
+
             if (rs.next()) {
-                int    saisonId      = rs.getInt(2);       // season_id
-                String titre         = rs.getString(3);    // titre
-                int    numeroEpisode = rs.getInt(4);       // numero
-                int    duree         = rs.getInt(5);       // duree_minutes
-                String resume        = rs.getString(6);    // resume
-                String videoUrl      = rs.getString(7);    // url_video
-                String miniatureUrl  = rs.getString(8);    // url_image
-                int    dureeIntro    = rs.getInt(9);       // duree_intro_sec
-                return new Episode(id, saisonId, titre, numeroEpisode,
-                                   videoUrl, duree, resume, miniatureUrl, dureeIntro);
+                return new Episode(
+                    id,
+                    rs.getInt(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(7),
+                    rs.getInt(5),
+                    rs.getString(6),
+                    rs.getString(8),
+                    rs.getInt(9)
+                );
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -106,30 +104,32 @@ public class EpisodeDAO {
     }
 
     // ─────────────────────────────────
-    //  FIND BY SAISON
-    //  tous les épisodes d'une saison
+    // FIND BY SAISON
     // ─────────────────────────────────
     public static List<Episode> findBySaison(int saisonId) {
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
         List<Episode> episodes = new ArrayList<>();
         String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
-        try {
-            pstml = conn.prepareStatement(sql);
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+
             pstml.setInt(1, saisonId);
-            rs = pstml.executeQuery();
+            ResultSet rs = pstml.executeQuery();
+
             while (rs.next()) {
-                int    id            = rs.getInt(1);       // id
-                String titre         = rs.getString(3);    // titre
-                int    numeroEpisode = rs.getInt(4);       // numero
-                int    duree         = rs.getInt(5);       // duree_minutes
-                String resume        = rs.getString(6);    // resume
-                String videoUrl      = rs.getString(7);    // url_video
-                String miniatureUrl  = rs.getString(8);    // url_image
-                int    dureeIntro    = rs.getInt(9);       // duree_intro_sec
-                episodes.add(new Episode(id, saisonId, titre, numeroEpisode,
-                                         videoUrl, duree, resume, miniatureUrl, dureeIntro));
+                episodes.add(new Episode(
+                    rs.getInt(1),
+                    saisonId,
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(7),
+                    rs.getInt(5),
+                    rs.getString(6),
+                    rs.getString(8),
+                    rs.getInt(9)
+                ));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,90 +137,97 @@ public class EpisodeDAO {
     }
 
     // ─────────────────────────────────
-    //  FIND NEXT EPISODE
-    //  prochain épisode (binge-watching)
+    // FIND NEXT EPISODE
     // ─────────────────────────────────
     public static Episode findNextEpisode(int saisonId, int numeroEpisode) {
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
         String sql = "SELECT * FROM episode WHERE season_id = ? AND numero = ?";
-        try {
-            pstml = conn.prepareStatement(sql);
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+
             pstml.setInt(1, saisonId);
             pstml.setInt(2, numeroEpisode + 1);
-            rs = pstml.executeQuery();
+
+            ResultSet rs = pstml.executeQuery();
+
             if (rs.next()) {
-                int    id           = rs.getInt(1);        // id
-                String titre        = rs.getString(3);     // titre
-                int    duree        = rs.getInt(5);        // duree_minutes
-                String resume       = rs.getString(6);     // resume
-                String videoUrl     = rs.getString(7);     // url_video
-                String miniatureUrl = rs.getString(8);     // url_image
-                int    dureeIntro   = rs.getInt(9);        // duree_intro_sec
-                return new Episode(id, saisonId, titre, numeroEpisode + 1,
-                                   videoUrl, duree, resume, miniatureUrl, dureeIntro);
+                return new Episode(
+                    rs.getInt(1),
+                    saisonId,
+                    rs.getString(3),
+                    numeroEpisode + 1,
+                    rs.getString(7),
+                    rs.getInt(5),
+                    rs.getString(6),
+                    rs.getString(8),
+                    rs.getInt(9)
+                );
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; // pas d'épisode suivant = fin de saison
+        return null;
     }
 
     // ─────────────────────────────────
-    //  UPDATE
+    // UPDATE
     // ─────────────────────────────────
     public static void update(Episode episode) {
-        PreparedStatement pstml = null;
-        String sql = "UPDATE episode SET season_id = ?, titre = ?, numero = ?, " +
-                     "duree_minutes = ?, resume = ?, url_video = ?, " +
-                     "url_image = ?, duree_intro_sec = ? WHERE id = ?";
-        try {
-            pstml = conn.prepareStatement(sql);
-            pstml.setInt(1,    episode.getSaisonId());
+        String sql = "UPDATE episode SET season_id=?, titre=?, numero=?, duree_minutes=?, " +
+                     "resume=?, url_video=?, url_image=?, duree_intro_sec=? WHERE id=?";
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+
+            pstml.setInt(1, episode.getSaisonId());
             pstml.setString(2, episode.getTitre());
-            pstml.setInt(3,    episode.getNumeroEpisode());
-            pstml.setInt(4,    episode.getDuree());           // duree_minutes
-            pstml.setString(5, episode.getResume());          // resume
-            pstml.setString(6, episode.getVideoUrl());        // url_video
-            pstml.setString(7, episode.getMiniatureUrl());    // url_image
-            pstml.setInt(8,    episode.getDurreeIntro());     // duree_intro_sec
-            pstml.setInt(9,    episode.getId());
+            pstml.setInt(3, episode.getNumeroEpisode());
+            pstml.setInt(4, episode.getDuree());
+            pstml.setString(5, episode.getResume());
+            pstml.setString(6, episode.getVideoUrl());
+            pstml.setString(7, episode.getMiniatureUrl());
+            pstml.setInt(8, episode.getDurreeIntro());
+            pstml.setInt(9, episode.getId());
+
             pstml.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     // ─────────────────────────────────
-    //  DELETE
+    // DELETE
     // ─────────────────────────────────
     public static void delete(int id) {
-        PreparedStatement pstml = null;
         String sql = "DELETE FROM episode WHERE id = ?";
-        try {
-            pstml = conn.prepareStatement(sql);
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+
             pstml.setInt(1, id);
             pstml.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     // ─────────────────────────────────
-    //  COUNT BY SAISON
-    //  nombre d'épisodes d'une saison
+    // COUNT
     // ─────────────────────────────────
     public static int countBySaison(int saisonId) {
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
         String sql = "SELECT COUNT(*) FROM episode WHERE season_id = ?";
-        try {
-            pstml = conn.prepareStatement(sql);
+
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+
             pstml.setInt(1, saisonId);
-            rs = pstml.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
+            ResultSet rs = pstml.executeQuery();
+
+            if (rs.next()) return rs.getInt(1);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
