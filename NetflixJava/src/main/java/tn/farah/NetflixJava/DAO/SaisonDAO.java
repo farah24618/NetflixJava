@@ -12,17 +12,13 @@ public class SaisonDAO {
     // ─────────────────────────────────
     // FIND ALL
     // ─────────────────────────────────
-    public static List<Saison> findAll() {
+    public List<Saison> findAll() {
         List<Saison> saisons = new ArrayList<>();
         String SQL = "SELECT * FROM season";
 
         try (Connection conn = ConxDB.getInstance();
              Statement stml = conn.createStatement();
              ResultSet rs = stml.executeQuery(SQL)) {
-
-
-	    // ─────────────────────────────────
-	    
 
             while (rs.next()) {
                 saisons.add(new Saison(
@@ -38,11 +34,10 @@ public class SaisonDAO {
         return saisons;
     }
 
-
     // ─────────────────────────────────
     // SAVE (INSERT)
     // ─────────────────────────────────
-    public static int save(Saison saison) {
+    public int save(Saison saison) {
         int saisonId = 0;
         String sql = "INSERT INTO season(idSerie, numeroSaison) VALUES (?, ?)";
 
@@ -63,12 +58,11 @@ public class SaisonDAO {
         }
         return saisonId;
     }
-    
 
     // ─────────────────────────────────
     // FIND BY ID
     // ─────────────────────────────────
-    public static Saison findById(int id) {
+    public Saison findById(int id) {
         String sql = "SELECT * FROM season WHERE id = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -94,7 +88,7 @@ public class SaisonDAO {
     // ─────────────────────────────────
     // FIND BY SERIE
     // ─────────────────────────────────
-    public static List<Saison> findBySerie(int idSerie) {
+    public List<Saison> findBySerie(int idSerie) {
         List<Saison> saisons = new ArrayList<>();
         String sql = "SELECT * FROM season WHERE idSerie = ? ORDER BY numeroSaison ASC";
 
@@ -121,7 +115,7 @@ public class SaisonDAO {
     // ─────────────────────────────────
     // UPDATE
     // ─────────────────────────────────
-    public static void update(Saison saison) {
+    public void update(Saison saison) {
         String sql = "UPDATE season SET idSerie = ?, numeroSaison = ? WHERE id = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -140,7 +134,7 @@ public class SaisonDAO {
     // ─────────────────────────────────
     // DELETE
     // ─────────────────────────────────
-    public static void delete(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM season WHERE id = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -157,7 +151,7 @@ public class SaisonDAO {
     // ─────────────────────────────────
     // COUNT BY SERIE
     // ─────────────────────────────────
-    public static int countBySerie(int idSerie) {
+    public int countBySerie(int idSerie) {
         String sql = "SELECT COUNT(*) FROM season WHERE idSerie = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -179,7 +173,7 @@ public class SaisonDAO {
     // ─────────────────────────────────
     // GET SERIE ID BY SAISON
     // ─────────────────────────────────
-    public static int getSerieIdBySaison(int saisonId) {
+    public int getSerieIdBySaison(int saisonId) {
         String query = "SELECT serie_id FROM season WHERE id = ?";
 
         try (Connection con = ConxDB.getInstance();
@@ -197,43 +191,28 @@ public class SaisonDAO {
         }
         return -1;
     }
-   /* public static int countBySerie(int idSerie) {
-        PreparedStatement pstml = null;
-        ResultSet rs = null;
-        String sql = "SELECT COUNT(*) FROM saison WHERE idSerie = ?";
-        try {
-        	Connection conn = ConxDB.getInstance();
-            pstml = conn.prepareStatement(sql);
-            pstml.setInt(1, idSerie);
-            rs = pstml.executeQuery();
-            if (rs.next()) {
-				return rs.getInt(1);
-			}
+
+    // ─────────────────────────────────
+    // GET SAISON BY EPISODE ID
+    // ─────────────────────────────────
+    public Saison getSaisonbyIdEpidsode(int idEpisode) {
+        String sql = "SELECT * FROM season s JOIN episode e ON s.id=e.season_id WHERE e.id = ?";
+        
+        try (Connection conn = ConxDB.getInstance();
+             PreparedStatement pstml = conn.prepareStatement(sql)) {
+             
+            pstml.setInt(1, idEpisode);
+            try (ResultSet rs = pstml.executeQuery()) {
+                if (rs.next()) {
+                    int idSaison = rs.getInt(1);
+                    int idSerie = rs.getInt(2);
+                    int numeroSaison = rs.getInt(3);
+                    return new Saison(idSaison, idSerie, numeroSaison);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
-    }*/
-    public static Saison getSaisonbyIdEpidsode(int idEpisode){
-    	 PreparedStatement pstml = null;
-	        ResultSet rs = null;
-	        String sql = "SELECT * FROM season s JOIN episode e ON s.id=e.season_id WHERE e.id = ?";
-	        try {
-	        	Connection conn = ConxDB.getInstance();
-	            pstml = conn.prepareStatement(sql);
-	            pstml.setInt(1, idEpisode);
-	            rs = pstml.executeQuery();
-	            if (rs.next()) {
-	            	int idSaison=rs.getInt(1);
-	                int idSerie = rs.getInt(2);
-	                int numeroSaison = rs.getInt(3);
-	                return new Saison(idSaison, idSerie, numeroSaison);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return null;
-    	
-    	
+        return null;
     }
 }

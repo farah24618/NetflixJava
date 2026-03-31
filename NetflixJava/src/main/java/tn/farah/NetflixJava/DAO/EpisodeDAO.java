@@ -12,7 +12,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // FIND ALL
     // ─────────────────────────────────
-    public static List<Episode> findAll() {
+    public List<Episode> findAll() {
         List<Episode> episodes = new ArrayList<>();
         String SQL = "SELECT * FROM episode";
 
@@ -43,7 +43,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // SAVE
     // ─────────────────────────────────
-    public static int save(Episode episode) {
+    public int save(Episode episode) {
         int episodeId = 0;
         String sql = "INSERT INTO episode(season_id, titre, numero, duree_minutes, " +
                      "resume, url_video, url_image, duree_intro_sec) VALUES (?,?,?,?,?,?,?,?)";
@@ -74,7 +74,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // FIND BY ID
     // ─────────────────────────────────
-    public static Episode findById(int id) {
+    public Episode findById(int id) {
         String sql = "SELECT * FROM episode WHERE id = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -104,9 +104,9 @@ public class EpisodeDAO {
     }
 
     // ─────────────────────────────────
-    // FIND BY SAISON
+    // FIND BY SAISON (Correction: Non-statique)
     // ─────────────────────────────────
-    public static List<Episode> findBySaison(int saisonId) {
+    public List<Episode> findBySaison(int saisonId) {
         List<Episode> episodes = new ArrayList<>();
         String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
 
@@ -139,7 +139,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // FIND NEXT EPISODE
     // ─────────────────────────────────
-    public static Episode findNextEpisode(int saisonId, int numeroEpisode) {
+    public Episode findNextEpisode(int saisonId, int numeroEpisode) {
         String sql = "SELECT * FROM episode WHERE season_id = ? AND numero = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -173,7 +173,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // UPDATE
     // ─────────────────────────────────
-    public static void update(Episode episode) {
+    public void update(Episode episode) {
         String sql = "UPDATE episode SET season_id=?, titre=?, numero=?, duree_minutes=?, " +
                      "resume=?, url_video=?, url_image=?, duree_intro_sec=? WHERE id=?";
 
@@ -200,7 +200,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // DELETE
     // ─────────────────────────────────
-    public static void delete(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM episode WHERE id = ?";
 
         try (Connection conn = ConxDB.getInstance();
@@ -217,7 +217,7 @@ public class EpisodeDAO {
     // ─────────────────────────────────
     // COUNT
     // ─────────────────────────────────
-    public static int countBySaison(int saisonId) {
+    public int countBySaison(int saisonId) {
         String sql = "SELECT COUNT(*) FROM episode WHERE season_id = ?";
 
         try (Connection conn = ConxDB.getInstance();
