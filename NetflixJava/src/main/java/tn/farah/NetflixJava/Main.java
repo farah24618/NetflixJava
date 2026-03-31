@@ -33,7 +33,7 @@ public class Main extends Application {
         nav.register(Screen.signup1,        "/tn/farah/NetflixJava/signup1.fxml");
         nav.register(Screen.signup2,        "/tn/farah/NetflixJava/signup2.fxml");
         nav.register(Screen.signup3,        "/tn/farah/NetflixJava/signup3.fxml");
-        nav.register(Screen.detail,        "/tn/farah/NetflixJava/DetailMovie2.fxml");
+        nav.register(Screen.detail,        "/tn/farah/NetflixJava/EpisodeView2.fxml");
         nav.register(Screen.myList,"/tn/farah/NetflixJava/MyListView.fxml");
         nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
         nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
