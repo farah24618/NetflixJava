@@ -17,6 +17,7 @@ import tn.farah.NetflixJava.Entities.UserRole;
 import tn.farah.NetflixJava.Service.UserService;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionData;
 import tn.farah.NetflixJava.utils.ConxDB;
 //...
 public class signup1Controller implements Initializable {
@@ -89,7 +90,6 @@ public class signup1Controller implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Date invalide", "La date de naissance est invalide.");
             return;
         }
-
         User newUser = new User();
         newUser.setPrenom(firstName);
         newUser.setNom(lastName);
@@ -97,8 +97,11 @@ public class signup1Controller implements Initializable {
         newUser.setPasswordHash(password);
         newUser.setRole(UserRole.USER);
         newUser.setBirthDate(birthDate);
+        newUser.setPhone(phone); // Ajoute ceci car il manquait aussi le téléphone
         newUser.setActive(true);
-
+        
+        // AJOUTE CETTE LIGNE :
+        newUser.setPseudo(firstName + (int)(Math.random() * 100)); // Génère un pseudo simple comme "kalil42"
         // ✅ Try/catch ajouté ici
         boolean created = false;
         try {
@@ -108,8 +111,9 @@ public class signup1Controller implements Initializable {
             System.out.println(">>> EXCEPTION : " + e.getMessage());
             e.printStackTrace();
         }
-
+        
         if (created) {
+        	SessionData.setCurrentUser(newUser);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Compte créé avec succès !");
             ScreenManager.getInstance().navigateTo(Screen.signup2);
         } else {

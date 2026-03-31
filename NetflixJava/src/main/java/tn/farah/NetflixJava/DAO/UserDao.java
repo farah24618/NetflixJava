@@ -14,10 +14,49 @@ public class UserDao {
     public UserDao(Connection connection) {
         this.connection = connection;
     }
-
-    // 1️⃣ AJOUTER UN UTILISATEUR
     public boolean addUser(User user) {
-        String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone, pseudo, estPaye) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        // ✅ Ajout de Statement.RETURN_GENERATED_KEYS
+        try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, user.getPrenom());
+            pstmt.setString(2, user.getNom());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getPasswordHash());
+            pstmt.setString(5, user.getRole().name());
+            pstmt.setTimestamp(6, Timestamp.valueOf(user.getCreatedAt()));
+            
+            if (user.getLastLogin() != null) pstmt.setTimestamp(7, Timestamp.valueOf(user.getLastLogin()));
+            else pstmt.setNull(7, Types.TIMESTAMP);
+
+            pstmt.setBoolean(8, user.isActive());
+
+            if (user.getBirthDate() != null) pstmt.setDate(9, Date.valueOf(user.getBirthDate()));
+            else pstmt.setNull(9, Types.DATE);
+
+            pstmt.setString(10, user.getPhone());
+            pstmt.setString(11, user.getPseudo());
+            pstmt.setBoolean(12, user.isEstPaye());
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                // ✅ RÉCUPÉRATION DE L'ID GÉNÉRÉ
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        user.setId(generatedKeys.getInt(1)); // On injecte le vrai ID dans l'objet
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+ /*   public boolean addUser(User user) {
+        String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone,pseudo,estPaye) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, user.getPrenom());
             pstmt.setString(2, user.getNom());
@@ -42,6 +81,46 @@ public class UserDao {
             }
 
             pstmt.setString(10, user.getPhone());
+            pstmt.setString(11, user.getPseudo());
+            pstmt.setBoolean(12, user.isEstPaye());
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }*/
+
+    // 1️⃣ AJOUTER UN UTILISATEUR
+    public boolean addUser2(User user) {
+        String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone,pseudo,estPaye) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getPrenom());
+            pstmt.setString(2, user.getNom());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getPasswordHash());
+            pstmt.setString(5, user.getRole().name());
+
+            pstmt.setTimestamp(6, Timestamp.valueOf(user.getCreatedAt()));
+
+            if (user.getLastLogin() != null) {
+                pstmt.setTimestamp(7, Timestamp.valueOf(user.getLastLogin()));
+            } else {
+                pstmt.setNull(7, Types.TIMESTAMP);
+            }
+
+            pstmt.setBoolean(8, user.isActive());
+
+            if (user.getBirthDate() != null) {
+                pstmt.setDate(9, Date.valueOf(user.getBirthDate()));
+            } else {
+                pstmt.setNull(9, Types.DATE);
+            }
+
+            pstmt.setString(10, user.getPhone());
+            pstmt.setString(11, user.getPseudo());
+            pstmt.setBoolean(12, user.isEstPaye());
 
             return pstmt.executeUpdate() > 0;
 
@@ -76,7 +155,7 @@ public class UserDao {
 
     // 4️⃣ METTRE À JOUR UN UTILISATEUR
     public boolean updateUser(User user) {
-        String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, password_hash = ?, role = ?, is_active = ?, birth_date = ?, phone = ? WHERE id = ?";
+        String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, password_hash = ?, role = ?, is_active = ?, birth_date = ?, phone = ?, pseudo=?, estPaye=? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, user.getPrenom());
             pstmt.setString(2, user.getNom());
@@ -90,7 +169,8 @@ public class UserDao {
 
             pstmt.setString(8, user.getPhone());
             pstmt.setInt(9, user.getId());
-
+            pstmt.setString(10, user.getPseudo());
+            pstmt.setBoolean(11, user.isEstPaye());
             return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) { e.printStackTrace(); return false; }
@@ -167,7 +247,48 @@ public class UserDao {
         if (birthDateSql != null) user.setBirthDate(birthDateSql.toLocalDate());
 
         user.setPhone(rs.getString("phone"));
+        user.setPseudo(rs.getString("pseudo"));
+        user.setEstPaye(rs.getBoolean("estPaye"));
 
         return user;
+    }
+ // 8️⃣ RECHERCHER PAR PSEUDO
+    public User findByPseudo(String pseudo) {
+        String sql = "SELECT * FROM users WHERE pseudo = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            
+            pstmt.setString(1, pseudo);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToUser(rs); // ✅ réutilisation propre
+                }
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    public boolean updatePaymentStatus(int userId, boolean status) {
+        // La requête SQL pour mettre à jour la colonne estPaye selon l'ID
+        String sql = "UPDATE users SET estPaye = ? WHERE id = ?";
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            // Remplacement des paramètres (?)
+            st.setBoolean(1, status);
+            st.setInt(2, userId);
+
+            // Exécute la mise à jour et vérifie si au moins une ligne a été modifiée
+            int rowsUpdated = st.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
+            // Log de l'erreur pour le débogage
+            System.err.println("Erreur lors de la mise à jour du statut de paiement : " + e.getMessage());
+            return false;
+        }
     }
 }

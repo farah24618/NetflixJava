@@ -49,7 +49,7 @@ public class Main extends Application {
         
 
 
-        nav.navigateTo(Screen.login);
+        nav.navigateTo(Screen.signup1);
 
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux
