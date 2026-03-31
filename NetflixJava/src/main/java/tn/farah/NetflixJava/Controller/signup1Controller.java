@@ -20,6 +20,7 @@ import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionData;
 import tn.farah.NetflixJava.utils.ConxDB;
 //...
+//...
 public class signup1Controller implements Initializable {
 
     @FXML private TextField firstNameField;
