@@ -6,7 +6,7 @@ import tn.farah.NetflixJava.Entities.UserRole;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+//...
 public class UserDao {
 
     private Connection connection;
