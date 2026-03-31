@@ -20,6 +20,10 @@ public class SaisonDAO {
              Statement stml = conn.createStatement();
              ResultSet rs = stml.executeQuery(SQL)) {
 
+
+	    // ─────────────────────────────────
+	    
+
             while (rs.next()) {
                 saisons.add(new Saison(
                     rs.getInt(1),
@@ -33,6 +37,7 @@ public class SaisonDAO {
         }
         return saisons;
     }
+
 
     // ─────────────────────────────────
     // SAVE (INSERT)
@@ -58,6 +63,7 @@ public class SaisonDAO {
         }
         return saisonId;
     }
+    
 
     // ─────────────────────────────────
     // FIND BY ID
@@ -190,5 +196,44 @@ public class SaisonDAO {
             e.printStackTrace();
         }
         return -1;
+    }
+   /* public static int countBySerie(int idSerie) {
+        PreparedStatement pstml = null;
+        ResultSet rs = null;
+        String sql = "SELECT COUNT(*) FROM saison WHERE idSerie = ?";
+        try {
+        	Connection conn = ConxDB.getInstance();
+            pstml = conn.prepareStatement(sql);
+            pstml.setInt(1, idSerie);
+            rs = pstml.executeQuery();
+            if (rs.next()) {
+				return rs.getInt(1);
+			}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }*/
+    public static Saison getSaisonbyIdEpidsode(int idEpisode){
+    	 PreparedStatement pstml = null;
+	        ResultSet rs = null;
+	        String sql = "SELECT * FROM season s JOIN episode e ON s.id=e.season_id WHERE e.id = ?";
+	        try {
+	        	Connection conn = ConxDB.getInstance();
+	            pstml = conn.prepareStatement(sql);
+	            pstml.setInt(1, idEpisode);
+	            rs = pstml.executeQuery();
+	            if (rs.next()) {
+	            	int idSaison=rs.getInt(1);
+	                int idSerie = rs.getInt(2);
+	                int numeroSaison = rs.getInt(3);
+	                return new Saison(idSaison, idSerie, numeroSaison);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return null;
+    	
+    	
     }
 }

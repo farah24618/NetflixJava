@@ -156,4 +156,43 @@ public class HistoryDAO {
             rs.getBoolean("est_termine")
         );
     }
-}
+    public int findTempsTotalFilmByUserAndFilm(int userId, int filmId) {
+        String sql = """
+            SELECT f.duree_minutes
+            FROM film f
+            INNER JOIN history h ON h.film_id = f.id
+            WHERE h.user_id = ?
+              AND h.film_id = ?
+            ORDER BY h.date_visionnage DESC
+            LIMIT 1
+            """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, filmId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt("duree_minutes");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public int findTempsTotaEpisodeByUserAndEpisode(int userId, int filmId) {
+        String sql = """
+            SELECT e.duree_minutes
+            FROM episode e
+            INNER JOIN history h ON h.episode_id = e.id
+            WHERE h.user_id = ?
+              AND h.episode_id = ?
+            ORDER BY h.date_visionnage DESC
+            LIMIT 1
+            """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, filmId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt("duree_minutes");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }}
