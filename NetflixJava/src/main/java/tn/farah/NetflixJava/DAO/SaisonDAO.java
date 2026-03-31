@@ -159,6 +159,26 @@ public class SaisonDAO {
 	        }
 	        return 0;
 	    }
-
+	    public static Saison getSaisonbyIdEpidsode(int idEpisode){
+	    	 PreparedStatement pstml = null;
+		        ResultSet rs = null;
+		        String sql = "SELECT * FROM season s JOIN episode e ON s.id=e.season_id WHERE e.id = ?";
+		        try {
+		            pstml = conn.prepareStatement(sql);
+		            pstml.setInt(1, idEpisode);
+		            rs = pstml.executeQuery();
+		            if (rs.next()) {
+		            	int idSaison=rs.getInt(1);
+		                int idSerie = rs.getInt(2);
+		                int numeroSaison = rs.getInt(3);
+		                return new Saison(idSaison, idSerie, numeroSaison);
+		            }
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		        return null;
+	    	
+	    	
+	    }
 
 }

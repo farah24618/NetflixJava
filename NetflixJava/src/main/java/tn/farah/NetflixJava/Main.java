@@ -44,7 +44,7 @@ public class Main extends Application {
         //nav.navigateTo(Screen.addProfile);
         //nav.navigateTo(Screen.episodeComments);
 
-        nav.navigateTo(Screen.home);
+        nav.navigateTo(Screen.login);
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux
         primaryStage.centerOnScreen();

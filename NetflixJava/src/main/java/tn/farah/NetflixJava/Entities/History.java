@@ -69,4 +69,5 @@ public class History {
                ", dateVisionnage=" + dateVisionnage +
                ", tempsArret=" + tempsArret + ", estTermine=" + estTermine + "]";
     }
+    
 }

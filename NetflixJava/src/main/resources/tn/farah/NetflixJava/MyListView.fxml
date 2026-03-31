@@ -2,7 +2,6 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
@@ -46,7 +45,7 @@
                            style="-fx-text-fill: #aaa; -fx-font-size: 14px;"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Label text="Filtrer :" style="-fx-text-fill: #aaa; -fx-font-size: 13px;"/>
-                    <ComboBox fx:id="filterType" promptText="Type"
+                    <ComboBox fx:id="filterType"  promptText="Type"
                               style="-fx-background-color: #333; -fx-text-fill: white;
                                      -fx-border-color: #555; -fx-border-radius: 4; -fx-pref-width: 110;"
                               onAction="#applyFilters"/>
@@ -54,7 +53,7 @@
                               style="-fx-background-color: #333; -fx-text-fill: white;
                                      -fx-border-color: #555; -fx-border-radius: 4; -fx-pref-width: 140;"
                               onAction="#applyFilters"/>
-                    <ComboBox fx:id="sortCombo" promptText="Trier par"
+                    <ComboBox fx:id="sortCombo"   promptText="Trier par"
                               style="-fx-background-color: #333; -fx-text-fill: white;
                                      -fx-border-color: #555; -fx-border-radius: 4; -fx-pref-width: 150;"
                               onAction="#applyFilters"/>
@@ -72,7 +71,8 @@
                 <Label text="☰" style="-fx-font-size: 64px; -fx-text-fill: #555;"/>
                 <Label text="Votre liste est vide"
                        style="-fx-text-fill: #aaa; -fx-font-size: 22px; -fx-font-weight: bold;"/>
-                <Label text="Ajoutez des films et séries en cliquant sur + depuis leur page."
+                <Label styleClass="empty-message"
+                       text="Ajoutez des films et séries en cliquant sur + depuis leur page."
                        style="-fx-text-fill: #666; -fx-font-size: 14px;"/>
                 <Button text="Parcourir le catalogue" onAction="#goHome"
                         style="-fx-background-color: white; -fx-text-fill: black;
@@ -81,7 +81,7 @@
                                -fx-cursor: hand; -fx-pref-width: 220;"/>
             </VBox>
 
-            <!-- ✅ pageContainer — les carousels sont injectés ici -->
+            <!-- pageContainer — carousels injectés ici dynamiquement -->
             <ScrollPane fitToWidth="true"
                         style="-fx-background: #141414; -fx-background-color: #141414;
                                -fx-border-color: transparent;"

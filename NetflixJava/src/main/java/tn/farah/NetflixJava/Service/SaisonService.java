@@ -118,4 +118,7 @@ public class SaisonService {
         // donc la dernière saison est le dernier élément
         return saisons.get(saisons.size() - 1);
     }
+    public static Saison getSaisonbyEpisodeId(int idEp) {
+    	return SaisonDAO.getSaisonbyIdEpidsode(idEp);
+    }
 }
