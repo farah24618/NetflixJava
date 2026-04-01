@@ -21,10 +21,13 @@
             <Insets bottom="20.0" left="32.0" right="32.0" top="20.0" />
          </padding>
          <children>
-            <ImageView fitHeight="45.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@ImagesNet/netflixLogo.jpg" />
+                  <Image url="@ImagesNet/RAKCHANET.jpg" />
                </image>
+               <HBox.margin>
+                  <Insets left="-30.0" top="-20.0" />
+               </HBox.margin>
             </ImageView>
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="handleRetour" mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-padding: 7 15;" text="retour" />

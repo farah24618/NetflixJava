@@ -55,42 +55,7 @@ public class UserDao {
             return false;
         }
     }
- /*   public boolean addUser(User user) {
-        String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone,pseudo,estPaye) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, user.getPrenom());
-            pstmt.setString(2, user.getNom());
-            pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getPasswordHash());
-            pstmt.setString(5, user.getRole().name());
-
-            pstmt.setTimestamp(6, Timestamp.valueOf(user.getCreatedAt()));
-
-            if (user.getLastLogin() != null) {
-                pstmt.setTimestamp(7, Timestamp.valueOf(user.getLastLogin()));
-            } else {
-                pstmt.setNull(7, Types.TIMESTAMP);
-            }
-
-            pstmt.setBoolean(8, user.isActive());
-
-            if (user.getBirthDate() != null) {
-                pstmt.setDate(9, Date.valueOf(user.getBirthDate()));
-            } else {
-                pstmt.setNull(9, Types.DATE);
-            }
-
-            pstmt.setString(10, user.getPhone());
-            pstmt.setString(11, user.getPseudo());
-            pstmt.setBoolean(12, user.isEstPaye());
-
-            return pstmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }*/
+ 
 
     // 1️⃣ AJOUTER UN UTILISATEUR
     public boolean addUser2(User user) {
@@ -153,9 +118,11 @@ public class UserDao {
         return users;
     }
 
-    // 4️⃣ METTRE À JOUR UN UTILISATEUR
+ // 4️⃣ METTRE À JOUR UN UTILISATEUR
     public boolean updateUser(User user) {
-        String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, password_hash = ?, role = ?, is_active = ?, birth_date = ?, phone = ?, pseudo=?, estPaye=? WHERE id = ?";
+        // La requête SQL définie
+        String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, password_hash = ?, role = ?, is_active = ?, birth_date = ?, phone = ?, pseudo = ?, estPaye = ? WHERE id = ?";
+        
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, user.getPrenom());
             pstmt.setString(2, user.getNom());
@@ -168,14 +135,16 @@ public class UserDao {
             else pstmt.setNull(7, Types.DATE);
 
             pstmt.setString(8, user.getPhone());
-            pstmt.setInt(9, user.getId());
-            pstmt.setString(10, user.getPseudo());
-            pstmt.setBoolean(11, user.isEstPaye());
+            pstmt.setString(9, user.getPseudo());  // Index 9 pour le pseudo
+            pstmt.setBoolean(10, user.isEstPaye()); // Index 10 pour estPaye
+            pstmt.setInt(11, user.getId());        // Index 11 pour le WHERE id
+
             return pstmt.executeUpdate() > 0;
-
-        } catch (SQLException e) { e.printStackTrace(); return false; }
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+            return false; 
+        }
     }
-
     // 5️⃣ SUPPRIMER UN UTILISATEUR
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
@@ -288,6 +257,20 @@ public class UserDao {
         } catch (SQLException e) {
             // Log de l'erreur pour le débogage
             System.err.println("Erreur lors de la mise à jour du statut de paiement : " + e.getMessage());
+            return false;
+        }
+    }
+    public boolean updatePassword(String email, String hashedPass) {
+        String sql = "UPDATE users SET password_hash = ? WHERE email = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, hashedPass);
+            pstmt.setString(2, email);
+            
+            int affected = pstmt.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

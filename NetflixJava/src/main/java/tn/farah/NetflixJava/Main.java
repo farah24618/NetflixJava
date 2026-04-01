@@ -39,7 +39,6 @@ public class Main extends Application {
         nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
         nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
- 
         nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
 
@@ -50,7 +49,7 @@ public class Main extends Application {
         
 
 
-        nav.navigateTo(Screen.video);
+        nav.navigateTo(Screen.signup1);
 
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux
