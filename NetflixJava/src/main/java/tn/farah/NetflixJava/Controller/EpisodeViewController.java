@@ -3,37 +3,46 @@ package tn.farah.NetflixJava.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Duration;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import tn.farah.NetflixJava.DAO.EpisodeDAO;
+import tn.farah.NetflixJava.Entities.Category;
+import tn.farah.NetflixJava.Entities.Commentaire;
 import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.CommentaireService;
+import tn.farah.NetflixJava.Service.SaisonService;
 import tn.farah.NetflixJava.Service.SerieService;
+import tn.farah.NetflixJava.utils.CardFactory;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 public class EpisodeViewController implements Initializable {
 
-    private SerieService serieService;
+    private SerieService       serieService;
+    private CommentaireService commentaireService;
+
+    // mediaType doit correspondre exactement a la valeur stockee en DB
+    private static final String MEDIA_TYPE = "serie";
+    private static final DateTimeFormatter DATE_FMT =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     // =============================================
-    // INJECTION FXML — NAVBAR / PROFIL
+    // INJECTION FXML -- NAVBAR / PROFIL
     // =============================================
     @FXML private HBox      profilBox;
     @FXML private Label     labelUserName;
@@ -44,26 +53,18 @@ public class EpisodeViewController implements Initializable {
     @FXML private TextField searchField;
 
     // =============================================
-    // INJECTION FXML — PLAYER VIDÉO
+    // INJECTION FXML -- POSTER
     // =============================================
     @FXML private StackPane videoPane;
-    @FXML private MediaView mediaView;
+    @FXML private ImageView posterImage;
     @FXML private Label     episodeTitleVideo;
-    @FXML private Slider    progressSlider;
-    @FXML private Slider    volumeSlider;
-    @FXML private Label     currentTime;
-    @FXML private Label     totalTime;
-    @FXML private Label     currentTimeSmall;
-    @FXML private Button    btnPlayPause;
-    @FXML private Button    btnRewind;
-    @FXML private Button    btnForward;
-    @FXML private Button    btnSubtitles;
-    @FXML private Button    btnVolume;
-    @FXML private Button    btnFullscreen;
-    @FXML private Button    btnSkipIntro;
+    @FXML private Label     posterDesc;
+    @FXML private Button    btnLire;
+    @FXML private Button    btnFavoris;
+    @FXML private Label     categories;
 
     // =============================================
-    // INJECTION FXML — INFOS ÉPISODE
+    // INJECTION FXML -- INFOS EPISODE
     // =============================================
     @FXML private Label labelNumeroSaison;
     @FXML private Label labelNumeroEpisode;
@@ -72,10 +73,10 @@ public class EpisodeViewController implements Initializable {
     @FXML private Label labelDateSortie;
     @FXML private Label episodeTitle;
     @FXML private Label episodeDesc;
-    @FXML private VBox  castList;
+    @FXML private Label castings;
 
     // =============================================
-    // INJECTION FXML — BOUTONS ACTIONS
+    // INJECTION FXML -- BOUTONS ACTIONS
     // =============================================
     @FXML private Button btnLike;
     @FXML private Button btnDislike;
@@ -83,7 +84,7 @@ public class EpisodeViewController implements Initializable {
     @FXML private Button btnDownload;
 
     // =============================================
-    // INJECTION FXML — ONGLETS
+    // INJECTION FXML -- ONGLETS
     // =============================================
     @FXML private VBox tabApropos;
     @FXML private VBox tabEpisodes;
@@ -92,14 +93,15 @@ public class EpisodeViewController implements Initializable {
     @FXML private VBox tabSimilaires;
 
     // =============================================
-    // INJECTION FXML — PANNEAUX CONTENU
+    // INJECTION FXML -- PANNEAUX CONTENU
     // =============================================
-    @FXML private VBox panelEpisodes;
-    @FXML private VBox panelApropos;
-    @FXML private VBox panelBandes;
-    @FXML private VBox panelSimilaires;
-    @FXML private VBox listeEpisodes;
-    @FXML private HBox listeSimilaires;
+    @FXML private VBox  panelEpisodes;
+    @FXML private VBox  panelApropos;
+    @FXML private VBox  panelBandes;
+    @FXML private VBox  panelSimilaires;
+    @FXML private VBox  panelCommentaires;
+    @FXML private VBox  listeEpisodes;
+    @FXML private HBox  listeSimilaires;
 
     // =============================================
     // LABELS DYNAMIQUES
@@ -112,52 +114,66 @@ public class EpisodeViewController implements Initializable {
     @FXML private Label labelProducteur;
 
     // =============================================
-    // ÉTAT INTERNE
+    // ETAT INTERNE
     // =============================================
-    private boolean     isPlaying   = true;
-    private boolean     isMuted     = false;
-    private boolean     subtitlesOn = false;
-    private int         likeCount   = 0;
-    private int         serieId     = -1;
-
+    private int           likeCount       = 0;
+    private int           serieId         = -1;
     private List<Episode> episodesDB;
     private int           currentSaisonId = 1;
     private Episode       episodeActuel   = null;
 
-    // =============================================
-    // MEDIAPLAYER
-    // =============================================
-    private MediaPlayer mediaPlayer;
+    // References UI commentaires (construites en Java)
+    private VBox     commentListContainer;
+    private TextArea commentInput;
+    private CheckBox spoilerCheck;
+
+    private final Pane[] overlayRef = new Pane[1];
 
     // =============================================
     // INITIALIZE
     // =============================================
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        serieService = new SerieService(ConxDB.getInstance());
-        episodesDB   = EpisodeDAO.findBySaison(currentSaisonId);
+        serieService       = new SerieService(ConxDB.getInstance());
+        commentaireService = new CommentaireService();
 
-        System.out.println("🔍 currentSaisonId = " + currentSaisonId);
-        System.out.println("🔍 serieId         = " + serieId);
-        System.out.println("🔍 nb épisodes     = " + (episodesDB != null ? episodesDB.size() : "null"));
+        episodesDB = serieService.findEpisodeBySaison(currentSaisonId);
 
         chargerListeEpisodes();
-        chargerSimilaires();
-        configurerSliders();
         chargerProfil("Enfants", "/images/profil.png");
 
         if (episodesDB != null && !episodesDB.isEmpty()) {
             episodeActuel = episodesDB.get(0);
             mettreAJourInfosEpisode(episodeActuel);
         }
+
         activerOnglet(tabEpisodes);
+
+        if (videoPane != null) {
+            videoPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null && overlayRef[0] == null) {
+                    CardFactory.createOverlay(newScene, overlayRef);
+                    chargerSimilaires();
+                }
+            });
+        } else {
+            chargerSimilaires();
+        }
+
+        if (panelCommentaires != null) {
+            construireInterfaceCommentaires();
+        }
     }
 
     // =============================================
-    // SETTERS — appelés depuis le controller parent
+    // SETTERS
     // =============================================
     public void setSaisonId(int saisonId) {
         this.currentSaisonId = saisonId;
+        if (serieService != null) {
+            episodesDB = serieService.findEpisodeBySaison(saisonId);
+            chargerListeEpisodes();
+        }
     }
 
     public void setSerie(Serie serie) {
@@ -165,158 +181,83 @@ public class EpisodeViewController implements Initializable {
         chargerInfosSerie(this.serieId);
         if (labelNbEpisodes != null && episodesDB != null) {
             int nb = episodesDB.size();
-            labelNbEpisodes.setText(nb + " épisode" + (nb > 1 ? "s" : ""));
+            labelNbEpisodes.setText(nb + " episode" + (nb > 1 ? "s" : ""));
+        }
+        // Recharge les commentaires maintenant qu'on connait serieId
+        if (commentListContainer != null) {
+            rafraichirListeCommentaires();
         }
     }
 
     // =============================================
-    // CHARGEMENT INFOS SÉRIE VIA SERVICE
+    // CHARGEMENT INFOS SERIE
     // =============================================
     private void chargerInfosSerie(int serieId) {
         if (serieId == -1) return;
-
         Serie serieAct = serieService.findById(serieId);
-        if (serieAct == null) {
-            System.err.println("❌ Série introuvable pour id=" + serieId);
-            return;
-        }
+        if (serieAct == null) return;
 
         if (labelTitreSerie != null) labelTitreSerie.setText(serieAct.getTitre());
+        if (labelSynopsis   != null) labelSynopsis.setText(
+                serieAct.getSynopsis() != null ? serieAct.getSynopsis() : "");
+        if (labelGenre      != null) labelGenre.setText(
+                serieAct.getGenre() != null ? serieAct.getGenre() : "Inconnu");
+        if (labelAnnee      != null) labelAnnee.setText(
+                String.valueOf(serieAct.getDateSortie().getYear()));
+        if (labelProducteur != null) labelProducteur.setText(
+                serieAct.getProducteur() != null ? serieAct.getProducteur() : "N/A");
 
-        int nbEpisodes = episodesDB != null ? episodesDB.size() : 0;
+        int nb = episodesDB != null ? episodesDB.size() : 0;
         if (labelNbEpisodes != null)
-            labelNbEpisodes.setText(nbEpisodes + " épisode" + (nbEpisodes > 1 ? "s" : ""));
+            labelNbEpisodes.setText(nb + " episode" + (nb > 1 ? "s" : ""));
 
-        if (labelSynopsis != null)
-            labelSynopsis.setText(serieAct.getSynopsis() != null ? serieAct.getSynopsis() : "Résumé non disponible");
-        if (labelGenre != null)
-            labelGenre.setText(serieAct.getGenre() != null ? serieAct.getGenre() : "Inconnu");
-        if (labelAnnee != null) {
-            int annee = serieAct.getDateSortie().getYear();
-            labelAnnee.setText(annee != 0 ? String.valueOf(annee) : "0");
-        }
-        if (labelProducteur != null)
-            labelProducteur.setText(serieAct.getProducteur() != null ? serieAct.getProducteur() : "N/A");
-    }
-
-    // =============================================
-    // CHARGEMENT VIDÉO
-    // =============================================
-    private void loadVideo(String videoUrl) {
-        if (mediaView == null) {
-            System.err.println("❌ ERREUR CRITIQUE : mediaView est null !");
-            return;
-        }
-
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-            mediaPlayer = null;
-        }
-
-        if (videoUrl == null || videoUrl.isBlank()) {
-            System.out.println("⚠️ Aucune URL vidéo pour cet épisode.");
-            return;
-        }
-
-        String url = videoUrl.trim().replace("\\", "/");
-        if (url.matches("^[A-Za-z]:.*")) {
-            url = "file:///" + url;
-        }
-
-        System.out.println("🎬 URL finale chargée : " + url);
-
-        if (url.startsWith("file:")) {
-            try {
-                java.io.File fichier = new java.io.File(new java.net.URI(url));
-                System.out.println("📁 Fichier existe ? " + fichier.exists());
-                System.out.println("📁 Peut lire ?     " + fichier.canRead());
-                if (!fichier.exists()) {
-                    System.err.println("❌ Fichier introuvable : " + fichier.getAbsolutePath());
-                    return;
-                }
-            } catch (Exception ex) {
-                System.err.println("❌ URI invalide : " + url + " → " + ex.getMessage());
-                return;
+        if (posterImage != null) {
+            String affiche = serieAct.getUrlImageCover();
+            if (affiche != null && !affiche.isBlank()) {
+                try {
+                    InputStream s = getClass().getResourceAsStream(affiche);
+                    if (s != null) posterImage.setImage(new Image(s));
+                } catch (Exception ignored) {}
             }
         }
 
-        try {
-            Media media = new Media(url);
-            mediaPlayer = new MediaPlayer(media);
-            mediaView.setMediaPlayer(mediaPlayer);
-            mediaView.setPreserveRatio(true);
+        if (episodeTitleVideo != null) episodeTitleVideo.setText(serieAct.getTitre());
 
-            mediaPlayer.setOnReady(() -> {
-                Duration total = mediaPlayer.getTotalDuration();
-                String totalFormatted = formatTime((int) total.toSeconds());
-                totalTime.setText(totalFormatted);
-                currentTimeSmall.setText("00:00 / " + totalFormatted);
-                progressSlider.setValue(0);
-                mediaPlayer.play();
-                isPlaying = true;
-                btnPlayPause.setText("⏸");
-                System.out.println("✅ Vidéo prête et lancée !");
-            });
+        if (posterDesc != null && serieAct.getSynopsis() != null) {
+            String syn = serieAct.getSynopsis();
+            posterDesc.setText(syn.length() > 160 ? syn.substring(0, 157) + "..." : syn);
+        }
 
-            mediaPlayer.currentTimeProperty().addListener((obs, oldT, newT) -> {
-                if (!progressSlider.isValueChanging()) {
-                    double totalSec   = mediaPlayer.getTotalDuration().toSeconds();
-                    double currentSec = newT.toSeconds();
-                    if (totalSec > 0) progressSlider.setValue((currentSec / totalSec) * 100.0);
-                    String cur = formatTime((int) currentSec);
-                    String tot = formatTime((int) totalSec);
-                    currentTime.setText(cur);
-                    currentTimeSmall.setText(cur + " / " + tot);
-                }
-            });
+        // Cast
+        if (castings != null) {
+            String casting = serieAct.getCasting();
+            castings.setText(casting != null && !casting.isBlank() ? casting : "Non renseigne");
+            castings.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");
+            castings.setWrapText(true);
+        }
 
-            progressSlider.valueChangingProperty().addListener((obs, wasChanging, changing) -> {
-                if (!changing && mediaPlayer != null) {
-                    double totalSec = mediaPlayer.getTotalDuration().toSeconds();
-                    mediaPlayer.seek(Duration.seconds((progressSlider.getValue() / 100.0) * totalSec));
-                }
-            });
-
-            progressSlider.setOnMouseClicked(e -> {
-                if (mediaPlayer != null) {
-                    double totalSec = mediaPlayer.getTotalDuration().toSeconds();
-                    mediaPlayer.seek(Duration.seconds((progressSlider.getValue() / 100.0) * totalSec));
-                }
-            });
-
-            mediaPlayer.setVolume(volumeSlider.getValue() / 100.0);
-            volumeSlider.valueProperty().addListener((obs, o, n) -> {
-                if (mediaPlayer != null) mediaPlayer.setVolume(n.doubleValue() / 100.0);
-            });
-
-            mediaPlayer.setOnEndOfMedia(() -> {
-                mediaPlayer.seek(Duration.ZERO);
-                mediaPlayer.pause();
-                isPlaying = false;
-                btnPlayPause.setText("▶");
-                progressSlider.setValue(0);
-            });
-
-            mediaPlayer.setOnError(() -> {
-                javafx.scene.media.MediaException err = mediaPlayer.getError();
-                System.err.println("❌ Erreur MediaPlayer : " + err.getType() + " → " + err.getMessage());
-            });
-
-        } catch (Exception e) {
-            System.err.println("❌ Impossible de charger la vidéo : " + url);
-            System.err.println("❌ Cause : " + e.getClass().getName() + " → " + e.getMessage());
+        // Genres -- BUG FIX: etait isEmpty() au lieu de !isEmpty()
+        String genreText = "-";
+        if (serieAct.getGenres() != null && !serieAct.getGenres().isEmpty()) {
+            genreText = serieAct.getGenres().stream()
+                    .map(Category::getName).limit(2)
+                    .reduce((a, b) -> a + " - " + b).orElse("-");
+        }
+        if (categories != null) {
+            categories.setText(genreText);
+            categories.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 13px;");
         }
     }
 
     // =============================================
-    // MISE À JOUR INFOS ÉPISODE
+    // MISE A JOUR INFOS EPISODE
     // =============================================
     private void mettreAJourInfosEpisode(Episode ep) {
         episodeActuel = ep;
 
         String numero = String.valueOf(ep.getNumeroEpisode());
-        String saison = String.valueOf(ep.getSaisonId());
+        String saison = String.valueOf(
+                SaisonService.getSaisonbyEpisodeId(ep.getId()).getNumeroSaison());
         String titre  = ep.getTitre();
         String duree  = ep.getDuree() + " min";
         String resume = ep.getResume() != null ? ep.getResume() : "";
@@ -324,38 +265,26 @@ public class EpisodeViewController implements Initializable {
         labelNumeroSaison.setText(saison);
         labelNumeroEpisode.setText(numero);
         episodeTitle.setText(titre);
-        labelSaisonEpisode.setText("Saison " + saison + " - Épisode " + numero);
+        labelSaisonEpisode.setText("Saison " + saison + " - Episode " + numero);
         labelDuree.setText(duree);
         labelDateSortie.setText("");
         episodeDesc.setText(resume);
-        episodeTitleVideo.setText("S0" + saison + " E" + String.format("%02d", ep.getNumeroEpisode()) + " — " + titre);
-        currentTime.setText("00:00");
-        totalTime.setText(duree);
-        currentTimeSmall.setText("00:00 / " + duree);
-        progressSlider.setValue(0);
-        isPlaying = true;
-        btnPlayPause.setText("⏸");
 
-        System.out.println("✅ Épisode chargé : " + numero + " — " + titre);
+        if (episodeTitleVideo != null)
+            episodeTitleVideo.setText(
+                    "S0" + saison + " E" + String.format("%02d", ep.getNumeroEpisode())
+                    + " - " + titre);
 
-        if (ep.getVideoUrl() != null && !ep.getVideoUrl().isBlank()) {
-            String url = ep.getVideoUrl().trim().replace("\\", "/");
-            if (url.matches("^[A-Za-z]:.*")) url = "file:///" + url;
-            System.out.println("🎬 Chargement vidéo : " + url);
-            loadVideo(url);
-        } else {
-            String resourcePath = "/videos/episode_" + ep.getId() + ".mp4";
-            URL resourceUrl = getClass().getResource(resourcePath);
-            if (resourceUrl != null) {
-                loadVideo(resourceUrl.toExternalForm());
-            } else {
-                System.out.println("⚠️ Pas de vidéo trouvée pour l'épisode " + ep.getId());
-                if (mediaPlayer != null) {
-                    mediaPlayer.stop();
-                    mediaPlayer.dispose();
-                    mediaPlayer = null;
-                }
-            }
+        if (posterDesc != null) {
+            String shortDesc = resume.length() > 160 ? resume.substring(0, 157) + "..." : resume;
+            posterDesc.setText(shortDesc);
+        }
+
+        if (posterImage != null && ep.getMiniatureUrl() != null && !ep.getMiniatureUrl().isBlank()) {
+            try {
+                InputStream imgStream = getClass().getResourceAsStream(ep.getMiniatureUrl());
+                if (imgStream != null) posterImage.setImage(new Image(imgStream));
+            } catch (Exception ignored) {}
         }
     }
 
@@ -386,22 +315,12 @@ public class EpisodeViewController implements Initializable {
     }
 
     // =============================================
-    // UTILITAIRE CAST
-    // =============================================
-    private void ajouterLabelMessage(String message) {
-        Label label = new Label(message);
-        label.setTextFill(Color.web("#aaaaaa"));
-        label.setFont(Font.font("System", 13));
-        castList.getChildren().add(label);
-    }
-
-    // =============================================
-    // LISTE DES ÉPISODES
+    // LISTE DES EPISODES
     // =============================================
     private void chargerListeEpisodes() {
         listeEpisodes.getChildren().clear();
         if (episodesDB == null || episodesDB.isEmpty()) {
-            Label vide = new Label("Aucun épisode disponible.");
+            Label vide = new Label("Aucun episode disponible.");
             vide.setTextFill(Color.web("#aaaaaa"));
             vide.setFont(Font.font(14));
             listeEpisodes.getChildren().add(vide);
@@ -409,14 +328,14 @@ public class EpisodeViewController implements Initializable {
         }
         for (Episode ep : episodesDB) {
             boolean estActuel = episodeActuel != null
-                ? ep.getId() == episodeActuel.getId()
-                : ep.getId() == episodesDB.get(0).getId();
+                    ? ep.getId() == episodeActuel.getId()
+                    : ep.getId() == episodesDB.get(0).getId();
             listeEpisodes.getChildren().add(creerCarteEpisode(ep, estActuel));
         }
     }
 
     // =============================================
-    // CARTE ÉPISODE
+    // CARTE EPISODE
     // =============================================
     private HBox creerCarteEpisode(Episode ep, boolean estActuel) {
         String numero = String.valueOf(ep.getNumeroEpisode());
@@ -426,10 +345,9 @@ public class EpisodeViewController implements Initializable {
 
         HBox carte = new HBox(16);
         carte.setStyle(
-            "-fx-background-color: " + (estActuel ? "#2a2a2a" : "#1a1a1a") + ";" +
-            "-fx-background-radius: 6; -fx-padding: 14; -fx-cursor: hand;" +
-            (estActuel ? "-fx-border-color: #E50914; -fx-border-radius: 6; -fx-border-width: 1;" : "")
-        );
+                "-fx-background-color: " + (estActuel ? "#2a2a2a" : "#1a1a1a") + ";" +
+                "-fx-background-radius: 6; -fx-padding: 14; -fx-cursor: hand;" +
+                (estActuel ? "-fx-border-color: #E50914; -fx-border-radius: 6; -fx-border-width: 1;" : ""));
 
         StackPane miniature = new StackPane();
         miniature.setPrefSize(180, 100);
@@ -458,7 +376,7 @@ public class EpisodeViewController implements Initializable {
         numLabel.setTextFill(Color.web(estActuel ? "#E50914" : "#555555"));
         numLabel.setFont(Font.font("System", FontWeight.BOLD, 26));
 
-        Label playIcon = new Label("▶");
+        Label playIcon = new Label(">");
         playIcon.setTextFill(Color.WHITE);
         playIcon.setFont(Font.font(28));
         playIcon.setOpacity(0);
@@ -469,15 +387,15 @@ public class EpisodeViewController implements Initializable {
             playIcon.setOpacity(0.8);
             numLabel.setOpacity(0);
             if (!estActuel) carte.setStyle(
-                "-fx-background-color: #252525; -fx-background-radius: 6;" +
-                "-fx-padding: 14; -fx-cursor: hand;");
+                    "-fx-background-color: #252525; -fx-background-radius: 6;" +
+                    "-fx-padding: 14; -fx-cursor: hand;");
         });
         carte.setOnMouseExited(e -> {
             playIcon.setOpacity(0);
             numLabel.setOpacity(1);
             if (!estActuel) carte.setStyle(
-                "-fx-background-color: #1a1a1a; -fx-background-radius: 6;" +
-                "-fx-padding: 14; -fx-cursor: hand;");
+                    "-fx-background-color: #1a1a1a; -fx-background-radius: 6;" +
+                    "-fx-padding: 14; -fx-cursor: hand;");
         });
 
         VBox infos = new VBox(6);
@@ -486,7 +404,7 @@ public class EpisodeViewController implements Initializable {
         HBox ligneTitre = new HBox(12);
         ligneTitre.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        Label titreLabel = new Label("Épisode " + numero + " — " + titre);
+        Label titreLabel = new Label("Episode " + numero + " - " + titre);
         titreLabel.setTextFill(estActuel ? Color.web("#E50914") : Color.WHITE);
         titreLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
         HBox.setHgrow(titreLabel, Priority.ALWAYS);
@@ -494,7 +412,6 @@ public class EpisodeViewController implements Initializable {
         Label dureeLabel = new Label(duree);
         dureeLabel.setTextFill(Color.web("#aaaaaa"));
         dureeLabel.setFont(Font.font(12));
-
         ligneTitre.getChildren().addAll(titreLabel, dureeLabel);
 
         Label descLabel = new Label(desc);
@@ -504,7 +421,7 @@ public class EpisodeViewController implements Initializable {
         descLabel.setMaxWidth(600);
 
         if (estActuel) {
-            Label badge = new Label("● En cours");
+            Label badge = new Label("En cours");
             badge.setTextFill(Color.web("#E50914"));
             badge.setFont(Font.font("System", FontWeight.BOLD, 11));
             infos.getChildren().addAll(ligneTitre, badge, descLabel);
@@ -512,17 +429,15 @@ public class EpisodeViewController implements Initializable {
             infos.getChildren().addAll(ligneTitre, descLabel);
         }
 
-        Button btnLire = new Button("▶  Lire");
-        btnLire.setStyle(
-            "-fx-background-color: " + (estActuel ? "#E50914" : "#333333") + ";" +
-            "-fx-text-fill: white; -fx-font-weight: bold;" +
-            "-fx-padding: 8 16 8 16; -fx-background-radius: 4; -fx-cursor: hand;"
-        );
-
-        btnLire.setOnAction(e -> { mettreAJourInfosEpisode(ep); rafraichirListeEpisodes(ep); });
+        Button btnLireLocal = new Button(">  Lire");
+        btnLireLocal.setStyle(
+                "-fx-background-color: " + (estActuel ? "#E50914" : "#333333") + ";" +
+                "-fx-text-fill: white; -fx-font-weight: bold;" +
+                "-fx-padding: 8 16 8 16; -fx-background-radius: 4; -fx-cursor: hand;");
+        btnLireLocal.setOnAction(e -> { mettreAJourInfosEpisode(ep); rafraichirListeEpisodes(ep); });
         carte.setOnMouseClicked(e -> { mettreAJourInfosEpisode(ep); rafraichirListeEpisodes(ep); });
 
-        carte.getChildren().addAll(miniature, infos, btnLire);
+        carte.getChildren().addAll(miniature, infos, btnLireLocal);
         return carte;
     }
 
@@ -538,111 +453,307 @@ public class EpisodeViewController implements Initializable {
     // SIMILAIRES
     // =============================================
     private void chargerSimilaires() {
-        List<String[]> series = List.of(
-            new String[]{"Infiltré",  "#1a3a5c"},
-            new String[]{"Rupture",   "#3a1a1a"},
-            new String[]{"Vertige",   "#1a3a1a"},
-            new String[]{"Le Réseau", "#2a1a3a"}
+        if (panelSimilaires == null) return;
+        List<Serie> toutesLesSeries = serieService.getAllSeries();
+        List<Serie> similaires = toutesLesSeries.stream()
+                .filter(s -> s.getId() != serieId).limit(10).toList();
+
+        if (similaires.isEmpty()) {
+            Label vide = new Label("Aucune serie similaire trouvee.");
+            vide.setTextFill(Color.web("#aaaaaa"));
+            vide.setFont(Font.font(14));
+            panelSimilaires.getChildren().setAll(vide);
+            return;
+        }
+        VBox carousel = CardFactory.buildSerieCarousel(
+                "Series similaires", similaires, overlayRef,
+                serie -> System.out.println("Serie similaire : " + serie.getTitre()));
+        panelSimilaires.getChildren().setAll(carousel);
+    }
+
+    // =============================================
+    // COMMENTAIRES -- Construction UI
+    // =============================================
+    private void construireInterfaceCommentaires() {
+        panelCommentaires.getChildren().clear();
+        panelCommentaires.setSpacing(20);
+
+        Label titre = new Label("Commentaires");
+        titre.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+
+        VBox formulaire = new VBox(12);
+        formulaire.setStyle(
+                "-fx-background-color: #1f1f1f; -fx-background-radius: 8;" +
+                "-fx-padding: 16; -fx-border-color: #333333;" +
+                "-fx-border-radius: 8; -fx-border-width: 1;");
+
+        Label formTitle = new Label("Ecrire un commentaire");
+        formTitle.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-font-weight: bold;");
+
+        // ── FIX TextArea blanc ──────────────────────────────────────────────────
+        // JavaFX ignore -fx-background-color sur TextArea via inline style.
+        // Le fond visible est controle par -fx-control-inner-background.
+        commentInput = new TextArea();
+        commentInput.setPromptText("Partagez votre avis sur cet episode...");
+        commentInput.setPrefRowCount(3);
+        commentInput.setWrapText(true);
+        commentInput.setStyle(
+                "-fx-control-inner-background: #2a2a2a;" +
+                "-fx-text-fill: white;"                  +
+                "-fx-prompt-text-fill: #666666;"         +
+                "-fx-background-radius: 6;"              +
+                "-fx-border-color: #444444;"             +
+                "-fx-border-radius: 6;"                  +
+                "-fx-border-width: 1;"                   +
+                "-fx-font-size: 13px;");
+        // ────────────────────────────────────────────────────────────────────────
+
+        spoilerCheck = new CheckBox("  Ce commentaire contient un spoiler");
+        spoilerCheck.setStyle("-fx-text-fill: #ffcc00; -fx-font-size: 13px;");
+
+        HBox formActions = new HBox(12);
+        formActions.setAlignment(Pos.CENTER_RIGHT);
+
+        Button btnAnnuler = new Button("Annuler");
+        btnAnnuler.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #aaaaaa;" +
+                "-fx-border-color: #555555; -fx-border-radius: 4;" +
+                "-fx-border-width: 1; -fx-padding: 7 18 7 18; -fx-cursor: hand;");
+        btnAnnuler.setOnAction(e -> {
+            commentInput.clear();
+            spoilerCheck.setSelected(false);
+        });
+
+        Button btnPublier = new Button("Publier");
+        btnPublier.setStyle(
+                "-fx-background-color: #E50914; -fx-text-fill: white;" +
+                "-fx-font-weight: bold; -fx-padding: 7 22 7 22;" +
+                "-fx-background-radius: 4; -fx-cursor: hand;");
+        btnPublier.setOnAction(e -> publierCommentaire());
+
+        formActions.getChildren().addAll(btnAnnuler, btnPublier);
+        formulaire.getChildren().addAll(formTitle, commentInput, spoilerCheck, formActions);
+
+        commentListContainer = new VBox(12);
+        panelCommentaires.getChildren().addAll(titre, formulaire, commentListContainer);
+
+        rafraichirListeCommentaires();
+    }
+
+    // =============================================
+    // COMMENTAIRES -- Publier en DB
+    // =============================================
+    private void publierCommentaire() {
+    	final int    userId = SessionManager.getInstance().getCurrentUserId();
+        String texte = commentInput != null ? commentInput.getText().trim() : "";
+        if (texte.isEmpty()) return;
+        if (serieId == -1) return;
+
+        boolean isSpoiler = spoilerCheck != null && spoilerCheck.isSelected();
+
+        Commentaire c = new Commentaire(
+        		userId,
+                serieId,
+                0,                          // userId -- remplace par l'id utilisateur connecte si dispo
+                texte,
+                isSpoiler
         );
-        for (String[] serie : series) {
-            VBox carte = new VBox(8);
-            carte.setStyle("-fx-cursor: hand;");
-            StackPane img = new StackPane();
-            img.setPrefSize(160, 90);
-            img.setStyle("-fx-background-color: " + serie[1] + "; -fx-background-radius: 6;");
-            Label titre = new Label(serie[0]);
-            titre.setTextFill(Color.WHITE);
-            titre.setFont(Font.font("System", FontWeight.BOLD, 13));
-            img.getChildren().add(titre);
-            Label lbl = new Label(serie[0]);
-            lbl.setTextFill(Color.web("#aaaaaa"));
-            lbl.setFont(Font.font(12));
-            carte.getChildren().addAll(img, lbl);
-            listeSimilaires.getChildren().add(carte);
+        System.out.println(c.getUserId());
+
+        boolean ok = commentaireService.ajouterCommentaire(c);
+        if (ok) {
+            if (commentInput != null) commentInput.clear();
+            if (spoilerCheck != null) spoilerCheck.setSelected(false);
+            rafraichirListeCommentaires();   // recharge depuis la DB
+        } else {
+            System.err.println("Impossible d'enregistrer le commentaire.");
         }
     }
 
     // =============================================
-    // SLIDERS
+    // COMMENTAIRES -- Recharge depuis DB
     // =============================================
-    private void configurerSliders() {
-        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-            btnVolume.setText(newVal.doubleValue() == 0 ? "🔇" : "Vol")
-        );
-    }
+    private void rafraichirListeCommentaires() {
+        if (commentListContainer == null) return;
+        commentListContainer.getChildren().clear();
 
-    // =============================================
-    // HANDLERS PLAYER
-    // =============================================
-    @FXML private void onPlayPause() {
-        if (mediaPlayer == null) return;
-        isPlaying = !isPlaying;
-        if (isPlaying) { mediaPlayer.play();  btnPlayPause.setText("⏸"); }
-        else           { mediaPlayer.pause(); btnPlayPause.setText("▶"); }
-    }
+        if (serieId == -1) return;
 
-    @FXML private void onRewind() {
-        if (mediaPlayer == null) return;
-        mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(10)));
-    }
+        List<Commentaire> commentaires =
+                commentaireService.getCommentairesByMedia(serieId, MEDIA_TYPE);
 
-    @FXML private void onForward() {
-        if (mediaPlayer == null) return;
-        mediaPlayer.seek(mediaPlayer.getCurrentTime().add(Duration.seconds(10)));
-    }
+        if (commentaires == null || commentaires.isEmpty()) {
+            Label vide = new Label("Soyez le premier a commenter !");
+            vide.setStyle("-fx-text-fill: #555555; -fx-font-size: 13px;");
+            commentListContainer.getChildren().add(vide);
+            return;
+        }
 
-    @FXML private void onSubtitles() {
-        subtitlesOn = !subtitlesOn;
-        btnSubtitles.setStyle(
-            "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" +
-            "-fx-cursor: hand; -fx-border-color: " + (subtitlesOn ? "#E50914" : "white") + ";" +
-            "-fx-border-radius: 3; -fx-padding: 2 6 2 6;");
-    }
-
-    @FXML private void onVolume() {
-        if (mediaPlayer == null) return;
-        isMuted = !isMuted;
-        mediaPlayer.setMute(isMuted);
-        volumeSlider.setValue(isMuted ? 0 : 80);
-        btnVolume.setText(isMuted ? "🔇" : "Vol");
-    }
-
-    @FXML private void onFullscreen() {
-        javafx.stage.Stage stage = (javafx.stage.Stage) videoPane.getScene().getWindow();
-        stage.setFullScreen(!stage.isFullScreen());
-    }
-
-    @FXML private void onSkipIntro() {
-        if (mediaPlayer == null || episodeActuel == null) return;
-        int introSecs = episodeActuel.getDurreeIntro();
-        mediaPlayer.seek(Duration.seconds(introSecs > 0 ? introSecs : 60));
+        for (Commentaire c : commentaires) {
+            commentListContainer.getChildren().add(creerCarteCommentaire(c));
+        }
     }
 
     // =============================================
-    // HANDLERS BOUTONS ACTIONS
+    // COMMENTAIRES -- Carte (entite DB)
+    // =============================================
+    private VBox creerCarteCommentaire(Commentaire comment) {
+        VBox carte = new VBox(8);
+        carte.setStyle(
+                "-fx-background-color: #1a1a1a; -fx-background-radius: 8;" +
+                "-fx-padding: 14; -fx-border-color: #2a2a2a;" +
+                "-fx-border-radius: 8; -fx-border-width: 1;");
+
+        // Header : avatar + username + date + badge spoiler
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        StackPane avatarSP = new StackPane();
+        avatarSP.setPrefSize(34, 34);
+        avatarSP.setMinSize(34, 34);
+        avatarSP.setStyle("-fx-background-color: #E50914; -fx-background-radius: 17;");
+        String initial = (comment.getUsername() != null && !comment.getUsername().isEmpty())
+                ? String.valueOf(comment.getUsername().charAt(0)).toUpperCase() : "?";
+        Label initLabel = new Label(initial);
+        initLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        avatarSP.getChildren().add(initLabel);
+
+        Label userLabel = new Label(comment.getUsername() != null ? comment.getUsername() : "Anonyme");
+        userLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+
+        HBox spacer = new HBox();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        header.getChildren().addAll(avatarSP, userLabel, spacer);
+
+        if (comment.getDateCommentaire() != null) {
+            Label dateLabel = new Label(comment.getDateCommentaire().format(DATE_FMT));
+            dateLabel.setStyle("-fx-text-fill: #555555; -fx-font-size: 11px;");
+            header.getChildren().add(dateLabel);
+        }
+
+        if (comment.isSpoiler()) {
+            Label spoilerBadge = new Label("SPOILER");
+            spoilerBadge.setStyle(
+                    "-fx-background-color: #ffcc0022; -fx-text-fill: #ffcc00;" +
+                    "-fx-font-size: 11px; -fx-font-weight: bold;" +
+                    "-fx-background-radius: 4; -fx-padding: 2 8 2 8;" +
+                    "-fx-border-color: #ffcc0055; -fx-border-radius: 4; -fx-border-width: 1;");
+            header.getChildren().add(spoilerBadge);
+        }
+
+        // Texte (masque si spoiler jusqu'au clic)
+        final boolean[] revealed = {!comment.isSpoiler()};
+        Label textLabel = new Label(
+                comment.isSpoiler() && !revealed[0]
+                        ? "Cliquez sur Voir le spoiler pour reveler ce commentaire."
+                        : comment.getContenu());
+        textLabel.setStyle("-fx-text-fill: " +
+                (comment.isSpoiler() && !revealed[0] ? "#555555" : "#cccccc") +
+                "; -fx-font-size: 13px;");
+        textLabel.setWrapText(true);
+
+        if (comment.isSpoiler()) {
+            Button btnReveal = new Button("Voir le spoiler");
+            btnReveal.setStyle(
+                    "-fx-background-color: #2a2a2a; -fx-text-fill: #ffcc00;" +
+                    "-fx-font-size: 12px; -fx-padding: 5 12 5 12;" +
+                    "-fx-background-radius: 4; -fx-cursor: hand;");
+            btnReveal.setOnAction(e -> {
+                revealed[0] = true;
+                textLabel.setText(comment.getContenu());
+                textLabel.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");
+                btnReveal.setVisible(false);
+                btnReveal.setManaged(false);
+            });
+            carte.getChildren().addAll(header, btnReveal, textLabel);
+        } else {
+            carte.getChildren().addAll(header, textLabel);
+        }
+
+        // Actions : Like (DB) + Signaler
+        HBox actions = new HBox(10);
+        actions.setAlignment(Pos.CENTER_LEFT);
+        actions.setStyle("-fx-padding: 6 0 0 0;");
+
+        final int[] likesCount = {comment.getLikes()};
+        Button btnLikeC = new Button("J'aime" + (likesCount[0] > 0 ? " (" + likesCount[0] + ")" : ""));
+        btnLikeC.setStyle(
+                "-fx-background-color: #2a2a2a; -fx-text-fill: #aaaaaa;" +
+                "-fx-font-size: 12px; -fx-padding: 5 14 5 14;" +
+                "-fx-background-radius: 4; -fx-cursor: hand;");
+        btnLikeC.setOnAction(e -> {
+            commentaireService.ajouterLike(comment.getId());   // persiste en DB
+            likesCount[0]++;
+            btnLikeC.setText("J'aime (" + likesCount[0] + ")");
+            btnLikeC.setStyle(
+                    "-fx-background-color: #2a2a2a; -fx-text-fill: #E50914;" +
+                    "-fx-font-size: 12px; -fx-padding: 5 14 5 14;" +
+                    "-fx-background-radius: 4; -fx-cursor: hand;");
+            btnLikeC.setDisable(true);   // empeche le double-like
+        });
+
+        Button btnReport = new Button("Signaler");
+        btnReport.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #aaaaaa;" +
+                "-fx-font-size: 12px; -fx-padding: 5 14 5 14;" +
+                "-fx-background-radius: 4; -fx-cursor: hand;");
+        //ici je veux signaler le commentaire en vraie en appelant commentService
+        btnReport.setOnAction(e -> {
+            btnReport.setText("Signale");
+            btnReport.setStyle(
+                    "-fx-background-color: transparent; -fx-text-fill: #555555;" +
+                    "-fx-font-size: 12px; -fx-padding: 5 14 5 14;" +
+                    "-fx-background-radius: 4; -fx-cursor: hand;");
+            btnReport.setDisable(true);
+        });
+
+        actions.getChildren().addAll(btnLikeC, btnReport);
+        carte.getChildren().add(actions);
+        return carte;
+    }
+
+    // =============================================
+    // HANDLERS POSTER
+    // =============================================
+    @FXML private void onLire() {
+        if (episodeActuel != null) System.out.println("Lire : " + episodeActuel.getTitre());
+    }
+
+    @FXML private void onFavoris() {
+        if (btnFavoris == null) return;
+        btnFavoris.setText("Ajoute aux favoris");
+        btnFavoris.setStyle(
+                "-fx-background-color: #E50914; -fx-text-fill: white;" +
+                "-fx-font-weight: bold; -fx-font-size: 15px;" +
+                "-fx-padding: 11 28 11 28; -fx-background-radius: 4; -fx-cursor: hand;");
+        
+    }
+
+    // =============================================
+    // HANDLERS BOUTONS
     // =============================================
     @FXML private void onLike() {
         likeCount++;
         btnLike.setText("J'aime (" + likeCount + ")");
         btnLike.setStyle("-fx-background-color: #E50914; -fx-text-fill: white;" +
-            "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
+                "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
     }
 
     @FXML private void onDislike() {
         btnDislike.setStyle("-fx-background-color: #555555; -fx-text-fill: white;" +
-            "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
+                "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
     }
 
     @FXML private void onShare() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Partager");
         alert.setHeaderText(null);
-        alert.setContentText("Lien copié dans le presse-papiers !");
+        alert.setContentText("Lien copie dans le presse-papiers !");
         alert.showAndWait();
     }
 
     @FXML private void onDownload() {
-        btnDownload.setText("Téléchargement...");
+        btnDownload.setText("Telechargement...");
         btnDownload.setDisable(true);
     }
 
@@ -663,7 +774,7 @@ public class EpisodeViewController implements Initializable {
             if (onglet == ongletActif) {
                 label.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;");
                 indicateur.setStyle(
-                    "-fx-background-color: #E50914; -fx-background-radius: 2 2 0 0; -fx-padding: 10 0 0 0;");
+                        "-fx-background-color: #E50914; -fx-background-radius: 2 2 0 0; -fx-padding: 10 0 0 0;");
                 indicateur.setPrefWidth(Region.USE_COMPUTED_SIZE);
             } else {
                 label.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 14px;");
@@ -671,36 +782,26 @@ public class EpisodeViewController implements Initializable {
                 indicateur.setPrefWidth(0);
             }
         }
-        panelApropos.setVisible(false);    panelApropos.setManaged(false);
-        panelEpisodes.setVisible(false);   panelEpisodes.setManaged(false);
-        panelBandes.setVisible(false);     panelBandes.setManaged(false);
-        panelSimilaires.setVisible(false); panelSimilaires.setManaged(false);
 
-        if      (ongletActif == tabEpisodes)   { panelEpisodes.setVisible(true);   panelEpisodes.setManaged(true); }
-        else if (ongletActif == tabApropos)    { panelApropos.setVisible(true);    panelApropos.setManaged(true); }
-        else if (ongletActif == tabBandes)     { panelBandes.setVisible(true);     panelBandes.setManaged(true); }
-        else if (ongletActif == tabSimilaires) { panelSimilaires.setVisible(true); panelSimilaires.setManaged(true); }
+        panelApropos.setVisible(false);        panelApropos.setManaged(false);
+        panelEpisodes.setVisible(false);       panelEpisodes.setManaged(false);
+        panelBandes.setVisible(false);         panelBandes.setManaged(false);
+        panelSimilaires.setVisible(false);     panelSimilaires.setManaged(false);
+        panelCommentaires.setVisible(false);   panelCommentaires.setManaged(false);
+
+        if      (ongletActif == tabEpisodes)     { panelEpisodes.setVisible(true);     panelEpisodes.setManaged(true); }
+        else if (ongletActif == tabApropos)      { panelApropos.setVisible(true);      panelApropos.setManaged(true); }
+        else if (ongletActif == tabBandes)       { panelBandes.setVisible(true);       panelBandes.setManaged(true); }
+        else if (ongletActif == tabSimilaires)   { panelSimilaires.setVisible(true);   panelSimilaires.setManaged(true); }
+        else if (ongletActif == tabCommentaires) { panelCommentaires.setVisible(true); panelCommentaires.setManaged(true); }
     }
 
     // =============================================
-    // UTILITAIRES
+    // NAVIGATION
     // =============================================
-    private String formatTime(int totalSeconds) {
-        int min = totalSeconds / 60;
-        int sec = totalSeconds % 60;
-        return String.format("%02d:%02d", min, sec);
-    }
-
-    @FXML private void handleAcceuil(ActionEvent event) {
-        ScreenManager.getInstance().navigateTo(Screen.home);
-    }
-    @FXML private void handleFilm(ActionEvent event) {
-        ScreenManager.getInstance().navigateTo(Screen.films);
-    }
-    @FXML private void handleSeries(ActionEvent event) {
-        ScreenManager.getInstance().navigateTo(Screen.series);
-    }
-    @FXML private void handleMyList(ActionEvent event) {
-        ScreenManager.getInstance().navigateTo(Screen.myList);
-    }
+    //!!!!ces bouton ne marche pas
+    @FXML private void handleAcceuil(ActionEvent event) { ScreenManager.getInstance().navigateTo(Screen.home); }
+    @FXML private void handleFilm(ActionEvent event)    { ScreenManager.getInstance().navigateTo(Screen.films); }
+    @FXML private void handleSeries(ActionEvent event)  { ScreenManager.getInstance().navigateTo(Screen.series); }
+    @FXML private void handleMyList(ActionEvent event)  { ScreenManager.getInstance().navigateTo(Screen.myList); }
 }

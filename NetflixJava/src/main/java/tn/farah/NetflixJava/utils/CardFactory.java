@@ -10,8 +10,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Entities.Category;
+import tn.farah.NetflixJava.Entities.Favori;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.FavoriService;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,6 +25,9 @@ import java.util.function.Consumer;
  * ce qui permet de le capturer par référence dans les lambdas.
  * Ainsi même si overlayPane est null au moment de la construction du carousel,
  * il sera disponible au moment du hover (après que la scène soit prête).
+ *
+ * ADD-TO-LIST FIX : FavoriService est stocké statiquement (setFavoriService)
+ * et le bouton + bascule en ✓ selon l'état réel en base.
  */
 public class CardFactory {
 
@@ -37,18 +42,24 @@ public class CardFactory {
     public static final double CARDS_VISIBLE = 3.0;
     public static final double ASPECT        = 9.0 / 16.0;
 
+    // ── FavoriService (set once at app startup) ───────────────────
+    private static FavoriService favoriService;
+
+    public static void setFavoriService(FavoriService service) {
+        favoriService = service;
+    }
+
+    private static FavoriService getFavoriService() {
+        return favoriService;
+    }
+
     // ═══════════════════════════════════════════════════════════════
     //  OVERLAY — appelé une seule fois par controller
     // ═══════════════════════════════════════════════════════════════
 
-    /**
-     * Crée l'overlay et le stocke dans overlayRef[0].
-     * Passe overlayRef (pas overlayRef[0]) aux méthodes de carousel
-     * pour que les lambdas de hover capturent toujours la valeur à jour.
-     */
     public static Pane createOverlay(javafx.scene.Scene scene, Pane[] overlayRef) {
         if (!(scene.getRoot() instanceof Pane root)) return null;
-        if (overlayRef[0] != null) return overlayRef[0]; // déjà créé
+        if (overlayRef[0] != null) return overlayRef[0];
 
         Pane overlay = new Pane();
         overlay.setMouseTransparent(false);
@@ -279,8 +290,12 @@ public class CardFactory {
         Label genreLbl = new Label(genreText);
         genreLbl.getStyleClass().add("popup-genre");
 
-        VBox info = buildPopupInfo(popupW, titleLbl, meta, genreLbl, onInfo != null
-            ? () -> onInfo.accept(film) : null);
+        VBox info = buildPopupInfo(
+            popupW, titleLbl, meta, genreLbl,
+            onInfo != null ? () -> onInfo.accept(film) : null,
+            getFavoriService(),
+            film.getId()
+        );
         return assemblePopup(popupW, thumbH, bigThumb, info);
     }
 
@@ -315,8 +330,12 @@ public class CardFactory {
         Label genreLbl = new Label(genreText);
         genreLbl.getStyleClass().add("popup-genre");
 
-        VBox info = buildPopupInfo(popupW, titleLbl, meta, genreLbl, onInfo != null
-            ? () -> onInfo.accept(serie) : null);
+        VBox info = buildPopupInfo(
+            popupW, titleLbl, meta, genreLbl,
+            onInfo != null ? () -> onInfo.accept(serie) : null,
+            getFavoriService(),
+            serie.getId()
+        );
         return assemblePopup(popupW, thumbH, bigThumb, info);
     }
 
@@ -395,27 +414,57 @@ public class CardFactory {
     }
 
     /**
-     * Boutons du popup — onInfoAction est le callback pour le bouton ℹ
-     * qui navigue vers la page détail.
+     * Boutons du popup.
+     * ✅ addBtn toggle : lit l'état réel depuis FavoriService à chaque clic.
+     * ✅ userId lu depuis SessionManager au moment du clic (jamais mis en cache).
      */
     private static VBox buildPopupInfo(double popupW, Label titleLbl,
                                         HBox meta, Label genreLbl,
-                                        Runnable onInfoAction) {
+                                        Runnable onInfoAction,
+                                        FavoriService favoriService,
+                                        int mediaId) {
         Button playBtn = new Button("▶"); playBtn.getStyleClass().add("btn-round-white");
-        Button addBtn  = new Button("+"); addBtn .getStyleClass().add("btn-round-outline");
         Button likeBtn = new Button("♥"); likeBtn.getStyleClass().add("btn-round-outline");
-        // Bouton ℹ — ouvre la page détail
         Button infoBtn = new Button("ℹ"); infoBtn.getStyleClass().add("btn-round-outline");
         Region spacer  = new Region();    HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // ✅ FIX : le bouton ℹ déclenche onInfoAction si disponible
+        // ── Add-to-list button ────────────────────────────────────
+        int userId = SessionManager.getInstance().getCurrentUserId();
+        boolean alreadyFav = favoriService != null && userId > 0
+                             && favoriService.estFavori(userId, mediaId);
+
+        Button addBtn = new Button(alreadyFav ? "✓" : "+");
+        addBtn.getStyleClass().add(alreadyFav ? "btn-round-white" : "btn-round-outline");
+
+        if (favoriService != null && userId > 0) {
+            addBtn.setOnAction(e -> {
+                int uid = SessionManager.getInstance().getCurrentUserId();
+                if (uid <= 0) return;
+
+                boolean isFav = favoriService.estFavori(uid, mediaId);
+                if (isFav) {
+                    favoriService.supprimerFavori(uid, mediaId);
+                    addBtn.setText("+");
+                    addBtn.getStyleClass().setAll("btn-round-outline");
+                } else {
+                    Favori favori = new Favori();
+                    favori.setUserId(uid);
+                    favori.setMediaId(mediaId);
+                    favoriService.ajouterFavori(favori);
+                    addBtn.setText("✓");
+                    addBtn.getStyleClass().setAll("btn-round-white");
+                }
+            });
+            addBtn.setStyle("-fx-cursor: hand;");
+        }
+        // ─────────────────────────────────────────────────────────
+
         if (onInfoAction != null) {
             infoBtn.setOnAction(e -> onInfoAction.run());
             infoBtn.setStyle("-fx-cursor: hand;");
         }
 
         playBtn.setOnAction(e -> System.out.println("▶ Play : " + titleLbl.getText()));
-        addBtn .setOnAction(e -> System.out.println("+ Ma liste : " + titleLbl.getText()));
         likeBtn.setOnAction(e -> System.out.println("♥ Like : " + titleLbl.getText()));
 
         HBox actions = new HBox(8, playBtn, addBtn, likeBtn, spacer, infoBtn);
@@ -441,15 +490,13 @@ public class CardFactory {
     /**
      * FIX OVERLAY NULL :
      * On utilise overlayRef[0] au moment du hover (pas au moment de la construction).
-     * Ainsi même si overlayPane était null quand le carousel a été construit,
-     * il sera disponible au moment où l'utilisateur survole la carte.
      */
     private static void attachHoverBehavior(StackPane card, VBox popup,
                                              double cardW, Pane[] overlayRef) {
         double popupW = cardW * HOVER_SCALE;
 
         Timeline showTimer = new Timeline(new KeyFrame(Duration.millis(300), e -> {
-            Pane overlay = overlayRef[0]; // ← lu au moment du hover, pas à la construction
+            Pane overlay = overlayRef[0];
             if (overlay == null) return;
 
             Bounds b    = card.localToScene(card.getBoundsInLocal());

@@ -1,0 +1,7 @@
+/* mainView.css */
+.hero-section {
+    -fx-background-image: url("/ImageNet/images.jpeg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
