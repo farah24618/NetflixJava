@@ -15,6 +15,9 @@ public class Main extends Application {
 
 	@Override
     public void start(Stage primaryStage) {
+		
+		
+		
 
         ScreenManager nav = ScreenManager.getInstance();
 
@@ -41,6 +44,8 @@ public class Main extends Application {
         nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
         nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+ 
+        nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
 
 
         primaryStage.setTitle("RekchaNet");
@@ -49,7 +54,13 @@ public class Main extends Application {
         
 
 
+
         nav.navigateTo(Screen.signup1);
+
+
+
+     // Test pour voir si le ScreenManager marche encore
+        //nav.navigateTo(Screen.login);
 
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux
