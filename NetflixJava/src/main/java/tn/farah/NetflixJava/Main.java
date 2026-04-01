@@ -41,6 +41,7 @@ public class Main extends Application {
         nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
         nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
         nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
+        nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
  
         nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
@@ -54,10 +55,15 @@ public class Main extends Application {
         
 
 
+<<<<<<< HEAD
         nav.navigateTo(Screen.admin_main);
 
      // Test pour voir si le ScreenManager marche encore
         //nav.navigateTo(Screen.login);
+=======
+        nav.navigateTo(Screen.video);
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux
         primaryStage.centerOnScreen();

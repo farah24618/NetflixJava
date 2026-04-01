@@ -4,6 +4,7 @@ import tn.farah.NetflixJava.Entities.Commentaire;
 import tn.farah.NetflixJava.utils.ConxDB;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +12,18 @@ public class CommentaireDAO {
 
     private static Connection conn = ConxDB.getInstance();
 
-    public static List<Commentaire> findByMedia(int mediaId, String mediaType) {
+    public static List<Commentaire> findByMedia(int mediaId) {
         List<Commentaire> commentaires = new ArrayList<>();
-        String sql = "SELECT * FROM commentaire WHERE media_id = ? AND media_type = ? ORDER BY date_commentaire DESC";
-
+     // Make sure there is a space before FROM and JOIN
+        String sql = "SELECT c.*, u.nom " +
+                     "FROM comment c " + 
+                     "JOIN users u ON c.user_id = u.id " + 
+                     "WHERE c.media_id = ? " + 
+                     "ORDER BY c.date_publication DESC";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, mediaId);
-            ps.setString(2, mediaType);
+           
 
             ResultSet rs = ps.executeQuery();
 
@@ -26,14 +31,14 @@ public class CommentaireDAO {
                 Commentaire c = new Commentaire();
                 c.setId(rs.getInt("id"));
                 c.setMediaId(rs.getInt("media_id"));
-                c.setMediaType(rs.getString("media_type"));
+                //c.setMediaType(rs.getString("media_type"));
                 c.setUserId(rs.getInt("user_id"));
-                c.setUsername(rs.getString("username"));
+                c.setUsername(rs.getString("nom"));
                 c.setContenu(rs.getString("contenu"));
                 c.setLikes(rs.getInt("likes"));
-                c.setSpoiler(rs.getBoolean("spoiler"));
+                c.setSpoiler(rs.getBoolean("contient_spoils"));
 
-                Timestamp ts = rs.getTimestamp("date_commentaire");
+                Timestamp ts = rs.getTimestamp("date_publication");
                 if (ts != null) {
                     c.setDateCommentaire(ts.toLocalDateTime());
                 }
@@ -51,19 +56,20 @@ public class CommentaireDAO {
     public static int save(Commentaire commentaire) {
         int commentaireId = 0;
 
-        String sql = "INSERT INTO commentaire (media_id, media_type, user_id, username, contenu, spoiler, likes, date_commentaire) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO comment (media_id, user_id, contenu, contient_spoils, likes, date_publication) " +
+                     "VALUES (?, ?, ?, ?, ?, NOW())";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, commentaire.getMediaId());
-            ps.setString(2, commentaire.getMediaType());
-            ps.setInt(3, commentaire.getUserId());
-            ps.setString(4, commentaire.getUsername());
-            ps.setString(5, commentaire.getContenu());
-            ps.setBoolean(6, commentaire.isSpoiler());
-            ps.setInt(7, 0);
+            
+            ps.setInt(2, commentaire.getUserId());
+           
+            ps.setString(3, commentaire.getContenu());
+            ps.setBoolean(4, commentaire.isSpoiler());
+            ps.setInt(5, 0);
+           
 
             ps.executeUpdate();
 
@@ -80,7 +86,7 @@ public class CommentaireDAO {
     }
 
     public static void incrementLike(int commentaireId) {
-        String sql = "UPDATE commentaire SET likes = likes + 1 WHERE id = ?";
+        String sql = "UPDATE comment SET likes = likes + 1 WHERE id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -90,4 +96,5 @@ public class CommentaireDAO {
             e.printStackTrace();
         }
     }
+    
 }

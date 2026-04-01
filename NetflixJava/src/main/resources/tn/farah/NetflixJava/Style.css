@@ -89,3 +89,14 @@
     -fx-shape: "M 0 5 L 10 5"; /* Horizontal line for minus */
     -fx-rotate: 180;
 }
+.context-menu {
+    -fx-background-color: #2b2b2b;
+    -fx-border-color: white;
+    -fx-border-width: 0.5;
+}
+.menu-item .label {
+    -fx-text-fill: white;
+}
+.menu-item:focused {
+    -fx-background-color: #e50914; /* Rouge Netflix au survol */
+}

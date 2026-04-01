@@ -42,7 +42,15 @@ public class Commentaire {
         this.dateCommentaire = LocalDateTime.now();
     }
 
-    public int getId() {
+    public Commentaire(int userId2,int mediaid ,int i, String texte, boolean isSpoiler) {
+   this.userId=userId2;
+   this.mediaId=mediaid;
+   this.likes=i;
+   this.contenu=texte;
+   this.spoiler=isSpoiler;
+    }
+
+	public int getId() {
         return id;
     }
 
