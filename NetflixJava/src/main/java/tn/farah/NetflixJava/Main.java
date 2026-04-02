@@ -1,73 +1,72 @@
 package tn.farah.NetflixJava;
 
 import javafx.application.Application;
-
-
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class Main extends Application {
 
-	@Override
+    @Override
     public void start(Stage primaryStage) {
-		
-		
-		
+        try {
+            ScreenManager nav = ScreenManager.getInstance();
+            nav.init(primaryStage);
 
-        ScreenManager nav = ScreenManager.getInstance();
+            // 1. ENREGISTREMENT DE TOUTES LES INTERFACES
+            // Authentification & Profils
+            nav.register(Screen.login,           "/tn/farah/NetflixJava/login.fxml");
+            nav.register(Screen.logup,           "/tn/farah/NetflixJava/logup.fxml");
+            nav.register(Screen.oublie,          "/tn/farah/NetflixJava/oublie.fxml");
+            nav.register(Screen.ResetPassword,   "/tn/farah/NetflixJava/ResetPassword.fxml");
+            nav.register(Screen.pofiles,         "/tn/farah/NetflixJava/profiles.fxml");
+            nav.register(Screen.addProfile,      "/tn/farah/NetflixJava/addProfile.fxml");
 
-        // 1. Give the manager the stage (once only)
-        nav.init(primaryStage);
+            // Navigation Client
+            nav.register(Screen.mainView,        "/tn/farah/NetflixJava/MainView.fxml");
+            nav.register(Screen.home,            "/tn/farah/NetflixJava/Home.fxml");
+            nav.register(Screen.films,           "/tn/farah/NetflixJava/Films.fxml");
+            nav.register(Screen.series,          "/tn/farah/NetflixJava/Series.fxml");
+            nav.register(Screen.search,          "/tn/farah/NetflixJava/Search.fxml");
+            nav.register(Screen.myList,          "/tn/farah/NetflixJava/MyListView.fxml");
+            nav.register(Screen.notification,    "/tn/farah/NetflixJava/notification.fxml");
 
-        // 2. Register every screen
-        nav.register(Screen.login,          "/tn/farah/NetflixJava/login.fxml");
-        nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");
-        nav.register(Screen.logup,        "/tn/farah/NetflixJava/logup.fxml");
-        nav.register(Screen.mainView,        "/tn/farah/NetflixJava/MainView.fxml");
-        nav.register(Screen.home,        "/tn/farah/NetflixJava/Home.fxml");
-        nav.register(Screen.films,        "/tn/farah/NetflixJava/Films.fxml");
-        nav.register(Screen.series,        "/tn/farah/NetflixJava/Series.fxml");
-        nav.register(Screen.search,        "/tn/farah/NetflixJava/Search.fxml");
-        nav.register(Screen.signup1,        "/tn/farah/NetflixJava/signup1.fxml");
-        nav.register(Screen.signup2,        "/tn/farah/NetflixJava/signup2.fxml");
-        nav.register(Screen.signup3,        "/tn/farah/NetflixJava/signup3.fxml");
-        nav.register(Screen.detail,        "/tn/farah/NetflixJava/EpisodeView2.fxml");
-        nav.register(Screen.myList,"/tn/farah/NetflixJava/MyListView.fxml");
-        nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
-        nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
-        nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
-        nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
- 
-        nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
-        nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
- 
-        nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
+            // Inscription (Steps)
+            nav.register(Screen.signup1,         "/tn/farah/NetflixJava/signup1.fxml");
+            nav.register(Screen.signup2,         "/tn/farah/NetflixJava/signup2.fxml");
+            nav.register(Screen.signup3,         "/tn/farah/NetflixJava/signup3.fxml");
 
-
-        primaryStage.setTitle("RekchaNet");
-        //nav.navigateTo(Screen.addProfile);
-        //nav.navigateTo(Screen.episodeComments);
-        
+            // Contenu & Lecteur
+            nav.register(Screen.detail,          "/tn/farah/NetflixJava/EpisodeView2.fxml");
+            nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
+            nav.register(Screen.video,           "/tn/farah/NetflixJava/video.fxml");
+            
+            // Administration
+            nav.register(Screen.admin_main,      "/tn/farah/NetflixJava/admin_main.fxml");
+            nav.register(Screen.comments,      "/tn/farah/NetflixJava/comments.fxml");
 
 
-<<<<<<< HEAD
-        nav.navigateTo(Screen.admin_main);
+            // 2. CONFIGURATION DE LA FENÊTRE
+            primaryStage.setTitle("RekchaNet - Mode Test");
+            primaryStage.setWidth(1280);
+            primaryStage.setHeight(720);
+            primaryStage.centerOnScreen();
 
-     // Test pour voir si le ScreenManager marche encore
-        //nav.navigateTo(Screen.login);
-=======
-        nav.navigateTo(Screen.video);
+            // 3. CHOIX DE L'INTERFACE À TESTER
+            // Décommente la ligne que tu veux tester et commente les autres :
+            
+           // nav.navigateTo(Screen.admin_main);      // Test Liste des films (Admin)
+            // nav.navigateTo(Screen.video);        // Test Lecteur Vidéo
+            // nav.navigateTo(Screen.login);        // Test Login
+             nav.navigateTo(Screen.comments); // Test Commentaires
 
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
-        primaryStage.setWidth(1280);   // ← largeur que tu veux
-        primaryStage.setHeight(720);   // ← hauteur que tu veux
-        primaryStage.centerOnScreen();
+            primaryStage.show();
+            System.out.println("✅ Application lancée sur l'écran : " + Screen.admin_main);
 
+        } catch (Exception e) {
+            System.err.println("❌ Erreur critique lors de l'enregistrement des écrans :");
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

@@ -1,0 +1,93 @@
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.farah.NetflixJava.Controller.CommentListController"
+            stylesheets="@netflix-theme.css">
+
+    <!-- TOP -->
+    <top>
+        <HBox spacing="10" style="-fx-padding:10;">
+            <Label fx:id="filmTitleLabel" text="Film Title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Close" onAction="#handleClose"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+        <VBox spacing="10" style="-fx-padding:10;">
+
+            <!-- Search + Filters -->
+            <HBox spacing="10">
+                <TextField fx:id="searchField" promptText="Search..."
+                           onKeyReleased="#handleSearch"/>
+
+                <ToggleButton fx:id="btnAll" text="All"
+                              onAction="#filterAll" selected="true"/>
+
+                <ToggleButton fx:id="btnSpoiler" text="Spoiler"
+                              onAction="#filterSpoiler"/>
+
+                <ToggleButton fx:id="btnRecent" text="Recent"
+                              onAction="#filterRecent"/>
+
+                <ComboBox fx:id="sortCombo"/>
+
+                <Button fx:id="bulkDeleteBtn"
+                        text="Delete Selected"
+                        onAction="#handleDeleteSelected"
+                        disable="true"/>
+
+                <CheckBox fx:id="selectAllCb"
+                          text="Select All"
+                          onAction="#handleSelectAll"/>
+            </HBox>
+
+            <!-- Comments -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <VBox fx:id="commentsContainer"/>
+            </ScrollPane>
+
+            <!-- Stats -->
+            <HBox spacing="20">
+                <Label fx:id="commentCountLabel" text="0 total"/>
+                <Label fx:id="spoilerCountLabel" text="0 spoilers"/>
+                <Label fx:id="deletedCountLabel" text="0 deleted"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="statusLabel" text="Ready"/>
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+         <children>
+            <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefWidth="300.0" promptText="Rechercher..." style="-fx-background-color: #333333; -fx-text-fill: white;" />
+            <ComboBox fx:id="sortCombo" prefWidth="150.0" style="-fx-background-color: #333333;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="commentCountLabel" text="0 commentaires" textFill="#888888" />
+         </children>
+      </HBox>
+
+      <ScrollPane fitToWidth="true" style="-fx-background: #111111; -fx-background-color: #111111;" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="commentsContainer" spacing="10.0" style="-fx-background-color: #111111;">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+
+      <HBox alignment="CENTER_LEFT" minHeight="30.0" style="-fx-background-color: #000000;">
+         <padding>
+            <Insets left="15.0" />
+         </padding>
+         <children>
+            <Label fx:id="statusLabel" text="Connecté" textFill="#555555" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

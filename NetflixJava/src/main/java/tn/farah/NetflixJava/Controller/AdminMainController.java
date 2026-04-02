@@ -3,22 +3,47 @@ package tn.farah.NetflixJava.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.DAO.FilmDao;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.utils.DatabaseConnection;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 public class AdminMainController {
+	@FXML private TableView<Film> tableFilms;
 
     @FXML private VBox movieListContainer;
     @FXML private TextField searchField;
     
     private FilmDao filmDao;
+    @FXML
+    private void inspecterCommentaires() {
+        // 1. On récupère le film sélectionné dans la table
+        Film selectionne = tableFilms.getSelectionModel().getSelectedItem();
+        
+        if (selectionne != null) {
+            // 2. On change d'écran
+            ScreenManager.getInstance().navigateTo(Screen.episodeComments);
+            
+            // 3. On récupère le contrôleur de l'écran des commentaires
+            CommentListController controller = (CommentListController) ScreenManager.getInstance().getController();
+            
+            // 4. On lui passe le film pour charger les bons commentaires
+            controller.setFilm(selectionne);
+            
+            System.out.println("✅ Chargement des commentaires pour : " + selectionne.getTitre());
+        } else {
+            System.out.println("⚠️ Veuillez sélectionner un film dans la table d'abord !");
+        }
+    }
 
     @FXML
     public void initialize() {
