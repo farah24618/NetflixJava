@@ -212,7 +212,36 @@ public class FilmDao {
         }
         return new ArrayList<>(filmMap.values());
     }
+    public Map<String, List<Film>> findAllGroupedByCategory() throws SQLException {
+        // On récupère d'abord TOUS les films avec leurs catégories
+        List<Film> allFilms = findAll();
 
+        // On transforme la liste plate en Map groupée par le nom de la catégorie
+        // Un film peut apparaître dans plusieurs catégories s'il a plusieurs genres
+        return allFilms.stream()
+            .flatMap(film -> film.getGenres().stream()
+                .map(category -> new java.util.AbstractMap.SimpleEntry<>(category.getName(), film)))
+            .collect(Collectors.groupingBy(
+                java.util.Map.Entry::getKey,
+                Collectors.mapping(java.util.Map.Entry::getValue, Collectors.toList())
+            ));
+    }
+    public List<Film> findByManyCategories(List<Integer> categoryIds) throws SQLException {
+        if (categoryIds == null || categoryIds.isEmpty()) return findAll();
+
+        // On crée dynamiquement les "?" pour la clause IN
+        String placeholders = categoryIds.stream().map(id -> "?").collect(Collectors.joining(","));
+        
+        String query = BASE_SELECT + 
+                       "WHERE c.id IN (" + placeholders + ") " +
+                       "ORDER BY m.date_sortie DESC";
+
+        return executeAndGroup(query, ps -> {
+            for (int i = 0; i < categoryIds.size(); i++) {
+                ps.setInt(i + 1, categoryIds.get(i));
+            }
+        });
+    }
     @FunctionalInterface
     private interface ParamSetter {
         void set(PreparedStatement ps) throws SQLException;

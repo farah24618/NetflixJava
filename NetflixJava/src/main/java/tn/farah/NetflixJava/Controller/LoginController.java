@@ -125,8 +125,8 @@ public class LoginController implements Initializable{
 	    private void handleLearnMore(ActionEvent event) {
 	        // TODO: Open browser / info dialog about Google reCAPTCHA
 	        showAlert(Alert.AlertType.INFORMATION,
-	                  "About reCAPTCHA",
-	                  "Google reCAPTCHA protects this page from automated abuse.");
+	                  "À propos de reCAPTCHA",
+	                  "Google reCAPTCHA protège cette page contre les abus automatisés.");
 	    }
 	    @FXML
 	    private void handleEnterKey(KeyEvent event) {
