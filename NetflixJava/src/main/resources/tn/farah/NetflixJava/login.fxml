@@ -45,7 +45,7 @@
                   <Insets right="220.0" />
                </padding>
             </Label>
-            <TextField fx:id="emailField" prefHeight="38.0" prefWidth="290.0" promptText="Email or Phone Number" style="-fx-background-color: transparent; -fx-border-color: white;">
+            <TextField fx:id="emailField" prefHeight="38.0" prefWidth="290.0" promptText="Email or Phone Number" style="-fx-background-color: transparent; -fx-border-color: white;; -fx-text-fill: white;">
                <font>
                   <Font size="13.0" />
                </font>
@@ -53,7 +53,7 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
-            <PasswordField fx:id="passwordField" prefHeight="38.0" prefWidth="206.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: white;">
+            <PasswordField fx:id="passwordField" prefHeight="38.0" prefWidth="206.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: white; ; -fx-text-fill: white;">
                <font>
                   <Font size="13.0" />
                </font>

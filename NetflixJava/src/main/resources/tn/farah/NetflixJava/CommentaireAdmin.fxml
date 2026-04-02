@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #0b0b0b, #141414);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AdminCommentsController">
+
+    <top>
+        <AnchorPane prefHeight="78.0" style="-fx-background-color: linear-gradient(to right, #0f0f0f, #1a1a1a); -fx-border-color: #2a2a2a; -fx-border-width: 0 0 1 0;">
+            <children>
+                <Label layoutX="28.0" layoutY="18.0" style="-fx-text-fill: #E50914; -fx-font-size: 34px; -fx-font-weight: bold;" text="RAKSHANET ADMIN" />
+
+                <HBox alignment="CENTER_RIGHT" spacing="16.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="16.0">
+                    <children>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Gestion des commentaires" />
+                        <Button onAction="#handleBackDashboard" style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-background-radius: 18; -fx-padding: 10 16; -fx-font-weight: bold; -fx-cursor: hand;" text="Retour Dashboard" />
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+    </top>
+
+    <center>
+        <HBox spacing="18.0" style="-fx-padding: 22;">
+            <children>
+
+                <!-- LEFT SIDE -->
+                <VBox prefWidth="860.0" spacing="16.0" HBox.hgrow="ALWAYS">
+
+                    <!-- Filters -->
+                    <HBox spacing="12.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #262626; -fx-border-radius: 18;">
+                        <children>
+                            <TextField fx:id="searchField" onKeyReleased="#handleSearch" promptText="Rechercher par auteur, contenu ou média..." style="-fx-background-color: #1d1d1d; -fx-text-fill: white; -fx-prompt-text-fill: #8f8f8f; -fx-background-radius: 14; -fx-padding: 10 14; -fx-pref-width: 320;" />
+
+                            <ComboBox fx:id="statusFilterCombo" onAction="#handleFilter" promptText="Statut" style="-fx-background-color: #1d1d1d; -fx-text-fill: white; -fx-background-radius: 14; -fx-pref-width: 160;" />
+
+                            <ComboBox fx:id="typeFilterCombo" onAction="#handleFilter" promptText="Type" style="-fx-background-color: #1d1d1d; -fx-text-fill: white; -fx-background-radius: 14; -fx-pref-width: 160;" />
+
+                            <Button fx:id="refreshButton" onAction="#handleRefresh" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-background-radius: 14; -fx-padding: 10 16; -fx-font-weight: bold; -fx-cursor: hand;" text="Actualiser" />
+                        </children>
+                    </HBox>
+
+                    <!-- Summary -->
+                    <HBox spacing="14.0">
+                        <children>
+                            <VBox prefWidth="200.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #262626; -fx-border-radius: 18;">
+                                <children>
+                                    <Label style="-fx-text-fill: #bfbfbf; -fx-font-size: 16px;" text="Total" />
+                                    <Label fx:id="totalCommentsLabel" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
+                                </children>
+                            </VBox>
+
+                            <VBox prefWidth="200.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #262626; -fx-border-radius: 18;">
+                                <children>
+                                    <Label style="-fx-text-fill: #bfbfbf; -fx-font-size: 16px;" text="Signalés" />
+                                    <Label fx:id="flaggedCommentsLabel" style="-fx-text-fill: #ffb347; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
+                                </children>
+                            </VBox>
+
+                            <VBox prefWidth="200.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #262626; -fx-border-radius: 18;">
+                                <children>
+                                    <Label style="-fx-text-fill: #bfbfbf; -fx-font-size: 16px;" text="Masqués" />
+                                    <Label fx:id="hiddenCommentsLabel" style="-fx-text-fill: #E50914; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
+                                </children>
+                            </VBox>
+
+                            <VBox style="-fx-background-color: linear-gradient(to right, #2a0a0d, #140709); -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #5a161c; -fx-border-radius: 18;" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label style="-fx-text-fill: #ff4d57; -fx-font-size: 18px; -fx-font-weight: bold;" text="Détection automatique" />
+                                    <Label style="-fx-text-fill: white; -fx-font-size: 14px;" text="Les commentaires contenant des mots grossiers ou suspects peuvent être automatiquement signalés." wrapText="true" />
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+
+                    <!-- Comments list -->
+                    <VBox spacing="12.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #262626; -fx-border-radius: 18;" VBox.vgrow="ALWAYS">
+                        <children>
+                            <Label style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" text="Liste des commentaires" />
+
+                            <ListView fx:id="commentsListView" style="-fx-background-color: transparent; -fx-control-inner-background: #141414; -fx-background-insets: 0; -fx-padding: 6;" VBox.vgrow="ALWAYS" />
+                        </children>
+                    </VBox>
+                </VBox>
+
+                <!-- RIGHT SIDE -->
+                <VBox prefWidth="430.0" spacing="16.0">
+                    <VBox spacing="14.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 18; -fx-border-color: #262626; -fx-border-radius: 18;">
+                        <children>
+                            <Label style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" text="Détails du commentaire" />
+
+                            <Separator />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Auteur" />
+                            <Label fx:id="authorLabel" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="—" />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Média" />
+                            <Label fx:id="mediaLabel" style="-fx-text-fill: #f2f2f2; -fx-font-size: 16px;" text="—" />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Type" />
+                            <Label fx:id="typeLabel" style="-fx-text-fill: #f2f2f2; -fx-font-size: 16px;" text="—" />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Date" />
+                            <Label fx:id="dateLabel" style="-fx-text-fill: #f2f2f2; -fx-font-size: 16px;" text="—" />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Statut" />
+                            <Label fx:id="statusLabel" style="-fx-text-fill: #ffb347; -fx-font-size: 16px; -fx-font-weight: bold;" text="—" />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Niveau de risque" />
+                            <Label fx:id="riskLabel" style="-fx-text-fill: #ff4d57; -fx-font-size: 16px; -fx-font-weight: bold;" text="—" />
+
+                            <Label style="-fx-text-fill: #9e9e9e; -fx-font-size: 14px;" text="Contenu" />
+                            <TextArea fx:id="contentArea" editable="false" prefHeight="150.0" style="-fx-control-inner-background: #1c1c1c; -fx-text-fill: white; -fx-background-radius: 12; -fx-border-radius: 12;" wrapText="true" />
+                        </children>
+                    </VBox>
+
+                    <VBox spacing="12.0" style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 18; -fx-border-color: #262626; -fx-border-radius: 18;">
+                        <children>
+                            <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Actions administrateur" />
+
+                            <HBox spacing="10.0">
+                                <children>
+                                    <Button fx:id="flagButton" onAction="#handleFlagComment" style="-fx-background-color: #ffb347; -fx-text-fill: #111111; -fx-font-weight: bold; -fx-background-radius: 14; -fx-padding: 10 16; -fx-cursor: hand;" text="Signaler" />
+                                    <Button fx:id="hideButton" onAction="#handleHideComment" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 14; -fx-padding: 10 16; -fx-cursor: hand;" text="Masquer" />
+                                </children>
+                            </HBox>
+
+                            <HBox spacing="10.0">
+                                <children>
+                                    <Button fx:id="restoreButton" onAction="#handleRestoreComment" style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 14; -fx-padding: 10 16; -fx-cursor: hand;" text="Restaurer" />
+                                    <Button fx:id="deleteButton" onAction="#handleDeleteComment" style="-fx-background-color: #7f0008; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 14; -fx-padding: 10 16; -fx-cursor: hand;" text="Supprimer" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+
+                    <VBox spacing="10.0" style="-fx-background-color: linear-gradient(to right, #181818, #131313); -fx-background-radius: 18; -fx-padding: 18; -fx-border-color: #262626; -fx-border-radius: 18;">
+                        <children>
+                            <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Suggestions utiles" />
+                            <Label style="-fx-text-fill: #d0d0d0; -fx-font-size: 14px;" text="• Ajouter une colonne “motif du signalement”" />
+                            <Label style="-fx-text-fill: #d0d0d0; -fx-font-size: 14px;" text="• Conserver la date de modération" />
+                            <Label style="-fx-text-fill: #d0d0d0; -fx-font-size: 14px;" text="• Sauvegarder l’admin qui a traité le commentaire" />
+                            <Label style="-fx-text-fill: #d0d0d0; -fx-font-size: 14px;" text="• Ajouter un filtre “automatiquement détecté”" />
+                        </children>
+                    </VBox>
+                </VBox>
+
+            </children>
+        </HBox>
+    </center>
+
+</BorderPane>

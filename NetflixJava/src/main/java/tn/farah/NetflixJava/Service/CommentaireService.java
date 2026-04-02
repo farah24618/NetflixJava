@@ -8,7 +8,7 @@ import java.util.List;
 public class CommentaireService {
 
     public List<Commentaire> getCommentairesByMedia(int mediaId, String mediaType) {
-        return CommentaireDAO.findByMedia(mediaId, mediaType);
+        return CommentaireDAO.findByMedia(mediaId);
     }
 
     public boolean ajouterCommentaire(Commentaire commentaire) {

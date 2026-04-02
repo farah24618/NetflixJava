@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 import tn.farah.NetflixJava.Entities.AgeRating;
 import tn.farah.NetflixJava.Entities.Category;
+import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Warning;
-import tn.farah.NetflixJava.utils.ConxDB;
 
 public class SerieDAO {
     private Connection connection;
@@ -26,12 +26,9 @@ public class SerieDAO {
         this.connection = connection;
     }
 
-    // =========================================================
-    // BASE QUERY — reused everywhere
-    // =========================================================
     private static final String BASE_SELECT =
         "SELECT m.id AS media_id, m.titre, m.synopsis, m.casting, m.date_sortie, " +
-        "m.url_image_cover, m.url_image_banner, m.url_teaser, " +
+        "m.url_image_cover, m.url_image_banner, m.url_teaser, m.producteur, " +
         "s.est_complet, m.rating_moyen, " +
         "ac.label AS age_category_name, " +
         "c.id AS category_id, c.nom AS category_nom, " +
@@ -44,13 +41,10 @@ public class SerieDAO {
         "LEFT JOIN media_warning mw ON m.id = mw.media_id " +
         "LEFT JOIN content_warning w ON mw.warning_id = w.id " +
         "LEFT JOIN liaison_serie_category sc ON m.id = sc.id_serie " +
-        "LEFT JOIN category_serie cs ON cs.id = sc.id_category ";  // trailing space
+        "LEFT JOIN category_serie cs ON cs.id = sc.id_category ";
 
-    // =========================================================
-    // CREATE
-    // =========================================================
-    public void create(Serie Serie) throws SQLException {
-        String queryMedia = "INSERT INTO `media` (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void create(Serie serie) {
+        String queryMedia = "INSERT INTO `media` (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, producteur, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String querySerie = "INSERT INTO serie (id, est_complet) VALUES (?, ?)";
 
         try {
@@ -58,49 +52,44 @@ public class SerieDAO {
             int generatedId = 0;
 
             try (PreparedStatement psM = connection.prepareStatement(queryMedia, Statement.RETURN_GENERATED_KEYS)) {
-                psM.setString(1, Serie.getTitre());
-                psM.setString(2, Serie.getSynopsis());
-                psM.setString(3, Serie.getCasting());
-                psM.setDate(4, Date.valueOf(Serie.getDateSortie()));
-                psM.setString(5, Serie.getUrlImageCover());
-                psM.setString(6, Serie.getUrlImageBanner());
-                psM.setString(7, Serie.getUrlTeaser());
-                psM.setInt(8, Serie.getAgeRating().getId());
-                psM.setString(9, "SERIE");
+                psM.setString(1, serie.getTitre());
+                psM.setString(2, serie.getSynopsis());
+                psM.setString(3, serie.getCasting());
+                psM.setDate(4, Date.valueOf(serie.getDateSortie()));
+                psM.setString(5, serie.getUrlImageCover());
+                psM.setString(6, serie.getUrlImageBanner());
+                psM.setString(7, serie.getUrlTeaser());
+                psM.setString(8, serie.getProducteur());
+                psM.setInt(9, serie.getAgeRating().getId());
+                psM.setString(10, "SERIE");
                 psM.executeUpdate();
 
                 ResultSet rs = psM.getGeneratedKeys();
                 if (rs.next()) generatedId = rs.getInt(1);
-                Serie.setId(generatedId);
+                serie.setId(generatedId);
             }
 
             try (PreparedStatement psF = connection.prepareStatement(querySerie)) {
                 psF.setInt(1, generatedId);
-                psF.setBoolean(2, Serie.isTerminee());
+                psF.setBoolean(2, serie.isTerminee());
                 psF.executeUpdate();
             }
             connection.commit();
         } catch (SQLException e) {
-            connection.rollback();
-            throw e;
+            try { connection.rollback(); } catch (SQLException ex) { throw new RuntimeException("Erreur rollback", ex); }
+            throw new RuntimeException("Erreur create série", e);
         } finally {
-            connection.setAutoCommit(true);
+            try { connection.setAutoCommit(true); } catch (SQLException e) { throw new RuntimeException("Erreur autoCommit", e); }
         }
     }
 
-    // =========================================================
-    // READ ALL
-    // =========================================================
-    public List<Serie> findAll() throws SQLException {
+    public List<Serie> findAll() {
         String query = BASE_SELECT + "ORDER BY m.id";
         return executeAndGroup(query, ps -> {});
     }
 
-    // =========================================================
-    // UPDATE
-    // =========================================================
-    public void update(Serie serie) throws SQLException {
-        String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=? WHERE id=?";
+    public void update(Serie serie) {
+        String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, producteur=?, age_rating_id=? WHERE id=?";
         String updateSerie = "UPDATE serie SET est_complet=? WHERE id=?";
 
         try {
@@ -113,8 +102,9 @@ public class SerieDAO {
                 psM.setString(5, serie.getUrlImageCover());
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
-                psM.setInt(8, serie.getAgeRating().getId());
-                psM.setInt(9, serie.getId());
+                psM.setString(8, serie.getProducteur());
+                psM.setInt(9, serie.getAgeRating().getId());
+                psM.setInt(10, serie.getId());
                 psM.executeUpdate();
             }
             try (PreparedStatement psF = connection.prepareStatement(updateSerie)) {
@@ -124,53 +114,40 @@ public class SerieDAO {
             }
             connection.commit();
         } catch (SQLException e) {
-            connection.rollback();
-            throw e;
+            try { connection.rollback(); } catch (SQLException ex) { throw new RuntimeException("Erreur rollback", ex); }
+            throw new RuntimeException("Erreur update série", e);
         } finally {
-            connection.setAutoCommit(true);
+            try { connection.setAutoCommit(true); } catch (SQLException e) { throw new RuntimeException("Erreur autoCommit", e); }
         }
     }
 
-    // =========================================================
-    // DELETE
-    // =========================================================
-    public void delete(int id) throws SQLException {
+    public void delete(int id) {
         String query = "DELETE FROM `media` WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur delete série id=" + id, e);
         }
     }
 
-    // =========================================================
-    // FIND BY ID
-    // =========================================================
-    public Serie findById(int id) throws SQLException {
+    public Serie findById(int id) {
         String query = BASE_SELECT + "WHERE m.id = ?";
         List<Serie> series = executeAndGroup(query, ps -> ps.setInt(1, id));
         return series.isEmpty() ? null : series.get(0);
     }
 
-    // =========================================================
-    // FIND BY YEAR
-    // =========================================================
-    public List<Serie> findByYear(int year) throws SQLException {
+    public List<Serie> findByYear(int year) {
         String query = BASE_SELECT + "WHERE YEAR(m.date_sortie) = ? ORDER BY m.date_sortie DESC";
         return executeAndGroup(query, ps -> ps.setInt(1, year));
     }
 
-    // =========================================================
-    // FIND BY TITLE
-    // =========================================================
-    public List<Serie> findByTitle(String title) throws SQLException {
+    public List<Serie> findByTitle(String title) {
         String query = BASE_SELECT + "WHERE m.titre LIKE ? ORDER BY m.date_sortie DESC";
         return executeAndGroup(query, ps -> ps.setString(1, "%" + title + "%"));
     }
 
-    // =========================================================
-    // FIND BY MANY CATEGORIES
-    // =========================================================
-    public List<Serie> findByManyCategories(List<Integer> categoryIds) throws SQLException {
+    public List<Serie> findByManyCategories(List<Integer> categoryIds) {
         if (categoryIds == null || categoryIds.isEmpty()) return findAll();
 
         String placeholders = categoryIds.stream().map(id -> "?").collect(Collectors.joining(", "));
@@ -184,10 +161,7 @@ public class SerieDAO {
         });
     }
 
-    // =========================================================
-    // FIND ALL GROUPED BY CATEGORY
-    // =========================================================
-    public Map<String, List<Serie>> findAllGroupedByCategory() throws SQLException {
+    public Map<String, List<Serie>> findAllGroupedByCategory() {
         Map<String, List<Serie>> result = new LinkedHashMap<>();
         String query = BASE_SELECT + "ORDER BY c.nom, m.titre";
 
@@ -201,15 +175,39 @@ public class SerieDAO {
         return result;
     }
 
-    // =========================================================
-    // CORE HELPER — executes query, groups rows into Serie objects
-    // =========================================================
+    public Serie findByEpisodeId(int episodeId) {
+        String query = BASE_SELECT +
+            "JOIN season se ON se.serie_id = m.id " +
+            "JOIN episode e ON e.season_id = se.id " +
+            "WHERE e.id = ? LIMIT 1";
+        List<Serie> series = executeAndGroup(query, ps -> ps.setInt(1, episodeId));
+        return series.isEmpty() ? null : series.get(0);
+    }
+
+    /**
+     * Retourne le nombre d'épisodes dans une saison donnée.
+     */
+    public int countEpisodesBySaison(int saisonId) {
+        String query = "SELECT COUNT(*) FROM episode WHERE season_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saisonId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur countEpisodesBySaison id=" + saisonId, e);
+        }
+        return 0;
+    }
+
+    // --- Private helpers ---
+
     @FunctionalInterface
     private interface ParamSetter {
         void set(PreparedStatement ps) throws SQLException;
     }
 
-    private List<Serie> executeAndGroup(String query, ParamSetter setter) throws SQLException {
+    private List<Serie> executeAndGroup(String query, ParamSetter setter) {
         Map<Integer, Serie> filmMap = new LinkedHashMap<>();
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -229,6 +227,7 @@ public class SerieDAO {
                             newFilm.setUrlImageCover(rs.getString("url_image_cover"));
                             newFilm.setUrlImageBanner(rs.getString("url_image_banner"));
                             newFilm.setUrlTeaser(rs.getString("url_teaser"));
+                            newFilm.setProducteur(rs.getString("producteur"));
                             newFilm.setRatingMoyen(rs.getDouble("rating_moyen"));
                             newFilm.setTerminee(rs.getBoolean("est_complet"));
 
@@ -248,7 +247,6 @@ public class SerieDAO {
                         }
                     });
 
-                    // Accumulate Category
                     int catId = rs.getInt("category_id");
                     if (!rs.wasNull()) {
                         boolean catExists = f.getGenres().stream().anyMatch(c -> c.getId() == catId);
@@ -260,7 +258,6 @@ public class SerieDAO {
                         }
                     }
 
-                    // Accumulate Warning
                     int warningId = rs.getInt("warning_id");
                     if (!rs.wasNull()) {
                         boolean warnExists = f.getWarnings().stream().anyMatch(w -> w.getId() == warningId);
@@ -273,7 +270,38 @@ public class SerieDAO {
                     }
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur executeAndGroup", e);
         }
         return new ArrayList<>(filmMap.values());
+    }
+    public List<Episode> findEpisodeBySaison(int saisonId) {
+        List<Episode> episodes = new ArrayList<>();
+        // Requête basée sur la structure de votre table episode
+        String query = "SELECT id, season_id, titre, numero, duree_minutes, resume, url_video, url_image, duree_intro_sec " +
+                       "FROM episode WHERE season_id = ? ORDER BY numero ASC";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saisonId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Episode ep = new Episode();
+                    ep.setId(rs.getInt("id"));
+                    ep.setTitre(rs.getString("titre"));
+                    ep.setNumeroEpisode(rs.getInt("numero"));
+                    ep.setDuree(rs.getInt("duree_minutes"));
+                    ep.setResume(rs.getString("resume"));
+                    ep.setVideoUrl(rs.getString("url_video"));
+                    ep.setMiniatureUrl(rs.getString("url_image"));
+                    ep.setDurrentro(rs.getInt("duree_intro_sec"));
+                    
+                    episodes.add(ep);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur findEpisodeBySaison pour saison_id=" + saisonId, e);
+        }
+        
+        return episodes;
     }
 }

@@ -15,19 +15,22 @@ public class User {
     private LocalDateTime lastLogin;
     private boolean isActive;
     private LocalDate birthDate;
-    private String phone; 
+    private String phone;
+    private String pseudo;
+    private boolean estPaye;
 
    
     public User() {
     	 this.role = UserRole.USER;
     	 this.isActive = true;
+    	 this.estPaye=false;
     	 this.createdAt = LocalDateTime.now();
     }
 
    
 
     public User(int id, String email, String passwordHash, String prenom, String nom, UserRole role,
-			LocalDateTime createdAt, LocalDateTime lastLogin, boolean isActive, LocalDate birthDate, String phone) {
+			LocalDateTime createdAt, LocalDateTime lastLogin, boolean isActive, LocalDate birthDate, String phone,String pseudo,boolean estPaye) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -40,6 +43,8 @@ public class User {
 		this.isActive = isActive;
 		this.birthDate = birthDate;
 		this.phone = phone;
+		this.pseudo=pseudo;
+		this.estPaye=estPaye;
 	}
 
 
@@ -47,7 +52,7 @@ public class User {
 	
 
     public User(String email, String passwordHash, String prenom, String nom, UserRole role, LocalDateTime createdAt,
-			LocalDateTime lastLogin, boolean isActive, LocalDate birthDate, String phone) {
+			LocalDateTime lastLogin, boolean isActive, LocalDate birthDate, String phone,String pseudo,boolean estPaye) {
 		super();
 		this.email = email;
 		this.passwordHash = passwordHash;
@@ -59,6 +64,8 @@ public class User {
 		this.isActive = isActive;
 		this.birthDate = birthDate;
 		this.phone = phone;
+		this.pseudo=pseudo;
+		this.estPaye=estPaye;
 	}
 
 
@@ -86,6 +93,30 @@ public class User {
 
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+
+
+
+	public String getPseudo() {
+		return pseudo;
+	}
+
+
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
+
+
+
+	public boolean isEstPaye() {
+		return estPaye;
+	}
+
+
+
+	public void setEstPaye(boolean estPaye) {
+		this.estPaye = estPaye;
 	}
 
 
@@ -129,6 +160,16 @@ public class User {
    
 
     @Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", passwordHash=" + passwordHash + ", prenom=" + prenom
+				+ ", nom=" + nom + ", role=" + role + ", createdAt=" + createdAt + ", lastLogin=" + lastLogin
+				+ ", isActive=" + isActive + ", birthDate=" + birthDate + ", phone=" + phone + ", pseudo=" + pseudo
+				+ ", estPaye=" + estPaye + "]";
+	}
+
+
+
+	@Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;

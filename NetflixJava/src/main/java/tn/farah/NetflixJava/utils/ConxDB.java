@@ -1,38 +1,34 @@
 package tn.farah.NetflixJava.utils;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
-
 public class ConxDB {
-	 private static Connection connexion;
+    private static Connection connexion;
 
-	    private final String DB_URL = "jdbc:mysql://localhost:3306/netflix";
-	    private final String USER = "root";
-	    private final String PASS = "";
+    private final String DB_URL = "jdbc:mysql://localhost:3306/netflix";
+    private final String USER = "root";
+    private final String PASS = "";
 
-	    private ConxDB() throws SQLException{
+    private ConxDB() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        connexion = DriverManager.getConnection(DB_URL, USER, PASS);
+    }
 
-	        try{
-	               Class.forName("com.mysql.cj.jdbc.Driver");
-	        } catch (ClassNotFoundException e) {
-
-	            e.printStackTrace();
-	        }
-	        connexion= DriverManager.getConnection(DB_URL, USER, PASS);
-	    }
-
-	    public static Connection getInstance(){
-	        if (connexion == null) {
-				try {
-	                new ConxDB();
-	            }catch(Exception e){
-	                System.out.println("--"+e.getMessage());
-	            }
-			}
-	        return connexion;
-	    }
+    public static Connection getInstance() {
+        try {
+            // Reconnecte si la connexion est null, fermée, ou plus valide
+            if (connexion == null || connexion.isClosed() || !connexion.isValid(3)) {
+                new ConxDB();
+            }
+        } catch (Exception e) {
+            System.out.println("-- " + e.getMessage());
+        }
+        return connexion;
+    }
 }

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+<StackPane
+    prefHeight="450.0"
+    prefWidth="800.0"
+    style="-fx-background-color: black;"
+    xmlns="http://javafx.com/javafx/25"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="tn.farah.NetflixJava.Controller.videoController">
+
+   <children>
+
+      <!-- VIDEO -->
+      <MediaView fx:id="mediaView" />
+
+      <!-- OVERLAY CONTRÔLES (auto-masqué) -->
+      <BorderPane
+          fx:id="controlsPane"
+          prefHeight="200.0"
+          prefWidth="200.0"
+          style="-fx-background-color: rgba(0,0,0,0.0);">
+
+         <!-- TITRE EN HAUT -->
+         <top>
+            <HBox
+                alignment="CENTER_LEFT"
+                prefHeight="60.0"
+                spacing="20.0"
+                style="-fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);"
+                BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="titleLabel" text="Saison n° Episode n°" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="25.0" top="15.0" />
+               </padding>
+            </HBox>
+         </top>
+
+         <!-- BOUTONS PLAY/REWIND/FORWARD AU CENTRE -->
+         <center>
+            <HBox alignment="CENTER" spacing="60.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button
+                      mnemonicParsing="false"
+                      onAction="#rewind10"
+                      style="-fx-background-color: transparent;"
+                      text="↺ 10"
+                      textFill="WHITE">
+                     <font><Font size="26.0" /></font>
+                  </Button>
+
+                  <Button
+                      fx:id="playButton"
+                      mnemonicParsing="false"
+                      onAction="#handlePlayPause"
+                      style="-fx-background-color: transparent;"
+                      text="▶"
+                      textFill="WHITE">
+                     <font><Font size="45.0" /></font>
+                  </Button>
+
+                  <Button
+                      mnemonicParsing="false"
+                      onAction="#forward10"
+                      style="-fx-background-color: transparent;"
+                      text="10 ↻"
+                      textFill="WHITE">
+                     <font><Font size="26.0" /></font>
+                  </Button>
+               </children>
+            </HBox>
+         </center>
+
+         <!-- BARRE DU BAS -->
+         <bottom>
+            <VBox
+                alignment="BOTTOM_CENTER"
+                prefHeight="140.0"
+                spacing="5.0"
+                style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.75), transparent);"
+                BorderPane.alignment="CENTER">
+               <children>
+
+                  <!-- BOUTON SKIP INTRO (en bas à droite, toujours présent, masqué si hors intro) -->
+                  <AnchorPane prefHeight="50.0">
+                     <children>
+                        <Button
+                            fx:id="skipIntroButton"
+                            mnemonicParsing="false"
+                            onAction="#handleSkipIntro"
+                            style="-fx-background-color: rgba(0,0,0,0.75); -fx-border-color: white; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;"
+                            text="⏩  Passer l'intro"
+                            textFill="WHITE"
+                            visible="false"
+                            managed="false"
+                            AnchorPane.bottomAnchor="5.0"
+                            AnchorPane.rightAnchor="30.0">
+                           <padding>
+                              <Insets bottom="8.0" left="20.0" right="20.0" top="8.0" />
+                           </padding>
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+
+                  <!-- PROGRESS BAR + TEMPS -->
+                  <HBox alignment="CENTER" spacing="15.0">
+                     <children>
+                        <Slider fx:id="progressBar" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="timeLabel" minWidth="90.0" text="00:00 / 00:00" textFill="WHITE" />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </HBox>
+
+                  <!-- BOUTONS BAS -->
+                  <HBox alignment="CENTER" prefHeight="70.0" spacing="30.0">
+                     <children>
+
+                        <Button
+                            fx:id="vitesseButton"
+                            mnemonicParsing="false"
+                            onAction="#handleVitesse"
+                            style="-fx-background-color: transparent;"
+                            text="Vitesse"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            fx:id="lockButton"
+                            mnemonicParsing="false"
+                            onAction="#handleVerrouiller"
+                            style="-fx-background-color: transparent;"
+                            text="Verrouiller"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            mnemonicParsing="false"
+                            onAction="#handleOpenEpisodes"
+                            style="-fx-background-color: transparent;"
+                            text="Épisodes"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            mnemonicParsing="false"
+                            onAction="#handleAudioMenu"
+                            style="-fx-background-color: transparent;"
+                            text="Audio/UT"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            mnemonicParsing="false"
+                            onAction="#handleNextEpisode"
+                            style="-fx-background-color: transparent;"
+                            text="Épisode suivant  ⏭"
+                            textFill="WHITE">
+                           <font><Font name="System Bold" size="14.0" /></font>
+                        </Button>
+
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                  </HBox>
+
+               </children>
+            </VBox>
+         </bottom>
+
+      </BorderPane>
+
+   </children>
+</StackPane>

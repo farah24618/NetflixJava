@@ -2,7 +2,9 @@ package tn.farah.NetflixJava.Entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class  Media {
@@ -17,6 +19,7 @@ public abstract class  Media {
     private Double ratingMoyen = 0.0;
     private AgeRating ageRating;
     private TypeMedia type;
+    private String producteur;
 	private Set<Warning> warnings;
     private LocalDateTime dateAjout = LocalDateTime.now();
     private Set<Category> genres = new HashSet<>();
@@ -26,10 +29,10 @@ public abstract class  Media {
     public Media() {
         this.genres   = new HashSet<>();
         this.warnings = new HashSet<>();
-        this.ageRating=AgeRating.ALL;
+       
     }
 
-    // ─── Constructeur complet ─────────────────────────────────────────────────
+    // ─── Constructeur sans detail de acteurs et prod ─────────────────────────────────────────────────
     public Media(int id, String titre, String synopsis, String casting,
                  LocalDate dateSortie, String urlImageCover, String urlImageBanner,
                  String urlTeaser, Double ratingMoyen, AgeRating ageRating,
@@ -51,7 +54,45 @@ public abstract class  Media {
         this.genres         = genres;
         this.warnings       = warnings;
     }
-    public Set<Warning> getWarnings() {
+    
+    public Media(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
+			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
+			String producteur, Set<Warning> warnings, LocalDateTime dateAjout,
+			Set<Category> genres) {
+		super();
+		this.id = id;
+		this.titre = titre;
+		this.synopsis = synopsis;
+		this.casting = casting;
+		this.dateSortie = dateSortie;
+		this.urlImageCover = urlImageCover;
+		this.urlImageBanner = urlImageBanner;
+		this.urlTeaser = urlTeaser;
+		this.ratingMoyen = ratingMoyen;
+		this.ageRating = ageRating;
+		this.type = type;
+		this.producteur = producteur;
+		this.warnings = warnings;
+		this.dateAjout = dateAjout;
+		this.genres = genres;
+	}
+
+	public String getProducteur() {
+		return producteur;
+	}
+
+	public void setProducteur(String producteur) {
+		this.producteur = producteur;
+	}
+
+	public Media(int id2, String titre2, String synopsis2) {
+    	this.id=id;
+    	this.titre=titre2;
+    	this.synopsis=synopsis2;
+		// TODO Auto-generated constructor stub
+	}
+
+	public Set<Warning> getWarnings() {
 		return warnings;
 		//hedhi
 	}
