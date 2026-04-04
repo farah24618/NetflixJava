@@ -7,7 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Service.FavoriService;
 import tn.farah.NetflixJava.Service.FilmService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -28,6 +30,7 @@ public class FilmsController implements Initializable {
     @FXML private FlowPane  filterBar;
 
     private FilmService filmService;
+    private FavoriService favoriService;
 
     // ✅ FIX : tableau à 1 élément — capturé par référence dans les lambdas
     private final Pane[] overlayRef = new Pane[1];
@@ -46,12 +49,15 @@ public class FilmsController implements Initializable {
         if (connection == null) return;
 
         filmService = new FilmService(connection);
+        favoriService=new FavoriService(connection);
+        CardFactory.setNotificationService(new NotificationService(connection));
+        CardFactory.setFavoriService(favoriService);
 
         try {
             allFilms        = filmService.getAllFilmsSorted();
             filmsByCategory = filmService.getAllFilmsByCategory();
         } catch (SQLException e) { e.printStackTrace(); }
-
+        CardFactory.setFavoriService(favoriService);
         buildFilterBar();
         renderSections(allFilms);
 
@@ -138,8 +144,7 @@ public class FilmsController implements Initializable {
             .limit(20).collect(Collectors.toList());
         if (!recent.isEmpty())
             carouselContainer.getChildren().add(
-                CardFactory.buildFilmCarousel("🆕  Récemment ajoutés", recent,
-                    overlayRef, goToDetail()));
+            		CardFactory.buildFilmCarousel("🆕  Récemment ajoutés", recent, overlayRef, goToFilmDetail()));
 
         // 2. Top Rated
         List<Film> topRated = source.stream()
@@ -196,11 +201,19 @@ public class FilmsController implements Initializable {
     @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.home); }
     @FXML private void onMovies()    { /* déjà ici */ }
     @FXML private void onSeries()    { ScreenManager.getInstance().navigateTo(Screen.series); }
-    @FXML private void onMyList()    { /* ScreenManager.getInstance().navigateTo(Screen.MY_LIST); */ }
+    @FXML private void onMyList()    { ScreenManager.getInstance().navigateTo(Screen.myList); }
     @FXML private void onSearchBtn() { onSearch(); }
 
     @FXML
     private void onSearch() {
         applySearch(searchField != null ? searchField.getText().trim() : "");
     }
+    private Consumer<Film> goToFilmDetail() {
+        return film -> {
+            final FilmViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.detailFilm);
+            if (ctrl != null) ctrl.setFilm(film);
+        };
+    }
+    
 }

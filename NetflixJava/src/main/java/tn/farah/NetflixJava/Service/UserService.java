@@ -12,8 +12,8 @@ public class UserService {
 
     private UserDao userDao;
 
-    public UserService(Connection connexion) {
-        this.userDao = new UserDao(connexion);
+    public UserService(Connection c) {
+        this.userDao = new UserDao(c);
     }
 
     // 1️⃣ INSCRIPTION
@@ -87,5 +87,8 @@ public class UserService {
     public boolean updatePaymentStatus(int userId, boolean status) {
         if (userId <= 0) return false;
         return userDao.updatePaymentStatus(userId, status); 
+    }
+    public User findUserById(int userId) {
+    	return userDao.getUserById(userId);
     }
 }

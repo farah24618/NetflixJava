@@ -6,7 +6,7 @@ public class Commentaire {
 
     private int id;
     private int mediaId;
-    private String mediaType; // film, serie, episode
+    private boolean signale; // film, serie, episode
     private int userId;
     private String username;
     private String contenu;
@@ -17,11 +17,11 @@ public class Commentaire {
     public Commentaire() {
     }
 
-    public Commentaire(int id, int mediaId, String mediaType, int userId, String username,
+    public Commentaire(int id, int mediaId, boolean signale, int userId, String username,
                        String contenu, int likes, boolean spoiler, LocalDateTime dateCommentaire) {
         this.id = id;
         this.mediaId = mediaId;
-        this.mediaType = mediaType;
+        this.signale=signale;
         this.userId = userId;
         this.username = username;
         this.contenu = contenu;
@@ -30,10 +30,18 @@ public class Commentaire {
         this.dateCommentaire = dateCommentaire;
     }
 
-    public Commentaire(int mediaId, String mediaType, int userId, String username,
+    public boolean isSignale() {
+		return signale;
+	}
+
+	public void setSignale(boolean signale) {
+		this.signale = signale;
+	}
+
+	public Commentaire(int mediaId, String mediaType, int userId, String username,
                        String contenu, boolean spoiler) {
         this.mediaId = mediaId;
-        this.mediaType = mediaType;
+       
         this.userId = userId;
         this.username = username;
         this.contenu = contenu;
@@ -66,13 +74,7 @@ public class Commentaire {
         this.mediaId = mediaId;
     }
 
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
+  
 
     public int getUserId() {
         return userId;
@@ -127,7 +129,7 @@ public class Commentaire {
         return "Commentaire{" +
                 "id=" + id +
                 ", mediaId=" + mediaId +
-                ", mediaType='" + mediaType + '\'' +
+               
                 ", userId=" + userId +
                 ", username='" + username + '\'' +
                 ", contenu='" + contenu + '\'' +

@@ -102,7 +102,7 @@ public class LoginController implements Initializable{
 	            }*/
 
 	            // 3. Naviguer vers les profils
-	            ScreenManager.getInstance().navigateTo(Screen.home);
+	            ScreenManager.getInstance().navigateWithSplash(Screen.home);
 
 	        } else {
 	            showAlert(Alert.AlertType.ERROR,

@@ -18,10 +18,13 @@ import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Warning;
+import tn.farah.NetflixJava.utils.ConxDB;
 
 public class SerieDAO {
-    private Connection connection;
 
+    private final Connection connection;
+
+    // Le constructeur reçoit désormais la connexion
     public SerieDAO(Connection connection) {
         this.connection = connection;
     }
@@ -184,9 +187,6 @@ public class SerieDAO {
         return series.isEmpty() ? null : series.get(0);
     }
 
-    /**
-     * Retourne le nombre d'épisodes dans une saison donnée.
-     */
     public int countEpisodesBySaison(int saisonId) {
         String query = "SELECT COUNT(*) FROM episode WHERE season_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -275,9 +275,9 @@ public class SerieDAO {
         }
         return new ArrayList<>(filmMap.values());
     }
+
     public List<Episode> findEpisodeBySaison(int saisonId) {
         List<Episode> episodes = new ArrayList<>();
-        // Requête basée sur la structure de votre table episode
         String query = "SELECT id, season_id, titre, numero, duree_minutes, resume, url_video, url_image, duree_intro_sec " +
                        "FROM episode WHERE season_id = ? ORDER BY numero ASC";
 

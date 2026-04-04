@@ -1,20 +1,24 @@
 package tn.farah.NetflixJava.Service;
 
+import java.sql.Connection;
 import java.util.List;
 import tn.farah.NetflixJava.DAO.EpisodeDAO;
 import tn.farah.NetflixJava.Entities.Episode;
 
 public class EpisodeService {
 
+    // Attribut privé pour la connexion
+    private Connection connection;
+
     // Attribut privé pour accéder à la couche de données
     private final EpisodeDAO episodeDAO;
 
     /**
-     * Constructeur : On initialise l'instance de EpisodeDAO.
-     * Dans une architecture plus avancée, on pourrait injecter cette dépendance.
+     * Constructeur : On initialise l'instance de EpisodeDAO avec la connexion.
      */
-    public EpisodeService() {
-        this.episodeDAO = new EpisodeDAO();
+    public EpisodeService(Connection connection) {
+        this.connection = connection;
+        this.episodeDAO = new EpisodeDAO(connection);
     }
 
     // ─────────────────────────────────
