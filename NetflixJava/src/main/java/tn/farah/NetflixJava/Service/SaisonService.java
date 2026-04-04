@@ -1,5 +1,6 @@
 package tn.farah.NetflixJava.Service;
 
+import java.sql.Connection;
 import java.util.List;
 import tn.farah.NetflixJava.DAO.SaisonDAO;
 import tn.farah.NetflixJava.Entities.Saison;
@@ -10,8 +11,8 @@ public class SaisonService {
     private final SaisonDAO saisonDAO;
 
     // Constructeur pour initialiser le DAO
-    public SaisonService() {
-        this.saisonDAO = new SaisonDAO();
+    public SaisonService(Connection cnx) {
+        this.saisonDAO = new SaisonDAO(cnx);
     }
 
     // ─────────────────────────────────
@@ -128,6 +129,10 @@ public class SaisonService {
     //  RÉCUPÉRER LA SAISON PAR ID EPISODE
     // ──────────────────────────────────────────────
     public Saison getSaisonbyEpisodeId(int idEp) {
+    	
         return saisonDAO.getSaisonbyIdEpidsode(idEp);
+    }
+    public int findFirstSeasonIdBySerie(int serieId) {
+    	return saisonDAO.findFirstSeasonIdBySerie(serieId);
     }
 }

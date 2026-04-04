@@ -23,7 +23,6 @@ public class Main extends Application {
 
         // 1. Give the manager the stage (once only)
         nav.init(primaryStage);
-
         // 2. Register every screen
         nav.register(Screen.login,          "/tn/farah/NetflixJava/login.fxml");
         nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");
@@ -39,29 +38,43 @@ public class Main extends Application {
         nav.register(Screen.detail,        "/tn/farah/NetflixJava/EpisodeView2.fxml");
         nav.register(Screen.myList,"/tn/farah/NetflixJava/MyListView.fxml");
         nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
-        nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
         nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
+
+        nav.register(Screen.detailFilm,        "/tn/farah/NetflixJava/FilmView.fxml");
+
         nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
+
+        nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+        nav.register(Screen.filmPlayer,  "/tn/farah/NetflixJava/FilmPlayer.fxml");
+
+
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
  
         nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
+
         nav.register(Screen.notificationAdmin, "/tn/farah/NetflixJava/notificationAdmin.fxml");
 
 
-        primaryStage.setTitle("RekchaNet");
+
+
+
+        primaryStage.setTitle("RakchaNet");
+     
         //nav.navigateTo(Screen.addProfile);
         //nav.navigateTo(Screen.episodeComments);
         
 
 
 
-        nav.navigateTo(Screen.notificationAdmin);
+
+       
+
+        nav.navigateTo(Screen.login);
 
 
 
-     // Test pour voir si le ScreenManager marche encore
-        //nav.navigateTo(Screen.login);
+   
 
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux

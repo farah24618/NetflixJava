@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javafx.animation.Animation;
@@ -52,6 +54,8 @@ public class MyListController implements Initializable {
     private FilmService    filmService;
     private SerieService   serieService;
     private HistoryService historyService;
+    private EpisodeService episodeService;
+    private SaisonService saisonService;
 
     private List<Favori>  allFavoris;
     private List<History> allHistory;
@@ -73,6 +77,8 @@ public class MyListController implements Initializable {
         filmService    = new FilmService(conn);
         serieService   = new SerieService(conn);
         historyService = new HistoryService(conn);
+        saisonService= new SaisonService(conn);
+        episodeService=new EpisodeService(conn);
         userId = SessionManager.getInstance().getCurrentUserId();
         initCombos();
         loadPage();
@@ -81,11 +87,14 @@ public class MyListController implements Initializable {
     private void initCombos() {
         filterType.getItems().addAll("Tous", "Film", "Série");
         filterType.setValue("Tous");
-        filterGenre.getItems().addAll(
-            "Tous", "Action", "Aventure", "Animation", "Comédie",
-            "Crime", "Documentaire", "Drame", "Fantasy", "Horreur",
-            "Romance", "Science-fiction", "Thriller", "Western"
-        );
+        Set<String> genres = new TreeSet<>();
+        try {
+            filmService.getAllFilmsByCategory().keySet().forEach(genres::add);
+            serieService.getAllSeriesByCategory().keySet().forEach(genres::add);
+        } catch (Exception ignored) {}
+
+        filterGenre.getItems().add("Tous");
+        filterGenre.getItems().addAll(genres);
         filterGenre.setValue("Tous");
         sortCombo.getItems().addAll("Ajout récent", "Titre A→Z", "Titre Z→A");
         sortCombo.setValue("Ajout récent");
@@ -150,8 +159,8 @@ public class MyListController implements Initializable {
                 mediaId   = s.getId();
                 progress  = historyService.getProgressPercentEpisode(h.getId());
                 subInfo   = formatTimeLeft(h);
-                saisonNbr = SaisonService.getSaisonbyEpisodeId(h.getEpisodeId()).getNumeroSaison();
-                episodeNbre = EpisodeService.findById(h.getEpisodeId()).getNumeroEpisode();
+                saisonNbr = saisonService.getSaisonbyEpisodeId(h.getEpisodeId()).getNumeroSaison();
+                episodeNbre = episodeService.findById(h.getEpisodeId()).getNumeroEpisode();
                 
                 // AJOUT : Formatage avec S et E directement à côté du titre
                 titre     = s.getTitre() + " (S " + saisonNbr + " E " + episodeNbre + ")";
@@ -316,7 +325,16 @@ public class MyListController implements Initializable {
         Label lblSub = new Label(subInfo != null ? subInfo : "");
         lblSub.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 10px;");
 
-        Label lblBadge = new Label((isHistory || !history.getEstTermine()) ? "● En cours" : (subInfo != null ? subInfo : ""));
+     // Remplacez la ligne du lblBadge par celle-ci :
+        String badgeText = "";
+        if (isHistory && history != null) {
+            badgeText = !history.getEstTermine() ? "● En cours" : "Terminé";
+        } else {
+            // Si c'est un favori, on affiche juste le subInfo (Film ou Série)
+            badgeText = (subInfo != null) ? subInfo : "";
+        }
+
+        Label lblBadge = new Label(badgeText);
         lblBadge.setStyle("-fx-text-fill: #e50914; -fx-font-size: 10px; -fx-font-weight: bold;");
 
         infoPane.getChildren().addAll(lblTitre, lblSub, lblBadge);
@@ -397,7 +415,12 @@ public class MyListController implements Initializable {
         });
 
         card.setOnMouseClicked(e -> {
-            if (!(e.getTarget() instanceof Button)) ouvrirDetail(mediaId);
+            if (e.getTarget() instanceof Button) return;
+            if (isHistory && history != null) {
+                ouvrirHistoryDetail(history);
+            } else {
+                ouvrirDetail(mediaId);
+            }
         });
 
         return card;
@@ -509,17 +532,33 @@ public class MyListController implements Initializable {
     // ─── Filtres ─────────────────────────────────────────────────────────────
 
     @FXML
+   
     private void applyFilters() {
         if (allFavoris == null) return;
-        String type = filterType.getValue();
-        String sort = sortCombo.getValue();
+        String type  = filterType.getValue();
+        String genre = filterGenre.getValue();
+        String sort  = sortCombo.getValue();
 
         List<Favori> filtered = allFavoris.stream()
             .filter(f -> {
-                if (type == null || type.equals("Tous")) return true;
-                Film film = filmService.findById(f.getMediaId());
-                if (type.equals("Film"))  return film != null;
-                if (type.equals("Série")) return film == null;
+                Film  film  = filmService.findById(f.getMediaId());
+                Serie serie = (film == null) ? serieService.findById(f.getMediaId()) : null;
+
+                // Filtre type
+                if ("Film".equals(type)  && film  == null) return false;
+                if ("Série".equals(type) && serie == null) return false;
+
+                // ✅ Filtre genre depuis la base
+                if (genre != null && !genre.equals("Tous")) {
+                    boolean hasGenre = false;
+                    if (film != null && film.getGenres() != null)
+                        hasGenre = film.getGenres().stream()
+                            .anyMatch(g -> g.getName().equalsIgnoreCase(genre));
+                    if (serie != null && serie.getGenres() != null)
+                        hasGenre = serie.getGenres().stream()
+                            .anyMatch(g -> g.getName().equalsIgnoreCase(genre));
+                    if (!hasGenre) return false;
+                }
                 return true;
             }).collect(Collectors.toList());
 
@@ -558,20 +597,26 @@ public class MyListController implements Initializable {
     @FXML private void goHome() { ScreenManager.getInstance().navigateTo(Screen.home); }
 
     private void ouvrirDetail(int mediaId) {
-        Film film = filmService.findById(mediaId);
-        if (film != null) {
-            DetailMediaController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
-            if (ctrl != null) ctrl.setFilm(film);
-            return;
+       
+        	Film film = filmService.findById(mediaId);
+        	if (film != null) {
+        	    FilmViewController ctrl = ScreenManager.getInstance()
+        	        .navigateAndGetController(Screen.detailFilm);
+        	    if (ctrl != null) ctrl.setFilm(film);
+        	    return;
+        	}
+        	Serie serie = serieService.findById(mediaId);
+        	if (serie != null) {
+        	    EpisodeViewController ctrl = ScreenManager.getInstance()
+        	        .navigateAndGetController(Screen.detail);  // ← ou Screen.episodeView selon ton enum
+        	    if (ctrl != null) {
+        	        ctrl.setSerie(serie);
+        	        int saisonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
+        	        ctrl.setSaisonId(saisonId);
+        	    }
+        	}
         }
-        Serie serie = serieService.findById(mediaId);
-        if (serie != null) {
-            DetailMediaController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
-            if (ctrl != null) ctrl.setSerie(serie);
-        }
-    }
+        
 
     private void showEmpty(String message) {
         emptyState.setVisible(true); emptyState.setManaged(true);
@@ -586,4 +631,34 @@ public class MyListController implements Initializable {
         Serie serie = serieService.findById(f.getMediaId());
         return serie != null ? serie.getTitre() : "";
     }
+    private void ouvrirHistoryDetail(History history) {
+        if (history == null) return;
+
+        if (history.isFilm()) {
+            // ── Film : ouvrir le lecteur film ──────────────────────────────
+            Integer filmId = history.getFilmId();
+            if (filmId == null) return;
+            Film film = filmService.findById(filmId);
+            if (film == null) return;
+            FilmPlayerController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.filmPlayer);
+            if (ctrl != null) {
+                ctrl.initFilm(film);
+                ctrl.seekToSeconds(history.getTempsArret());
+            }
+        } else {
+            // ── Épisode / Série : ouvrir le lecteur épisode ───────────────
+            Integer episodeId = history.getEpisodeId();
+            if (episodeId == null) return;
+            videoController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.video);
+            if (ctrl != null) {
+                ctrl.initEpisode(episodeId);
+                ctrl.seekToSeconds(history.getTempsArret());
+            }
+        }
+    }
+    @FXML private void onMovies()  { ScreenManager.getInstance().navigateTo(Screen.films); }
+    @FXML private void onSeries()  { ScreenManager.getInstance().navigateTo(Screen.series); }
+    @FXML private void onMyList()  { /* déjà ici */ }
 }

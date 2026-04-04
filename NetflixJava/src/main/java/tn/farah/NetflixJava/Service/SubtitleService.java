@@ -1,85 +1,91 @@
 package tn.farah.NetflixJava.Service;
 
 import java.util.List;
-
 import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.Entities.Subtitle;
 
 public class SubtitleService {
 
+    private final SubtitleDAO subtitleDAO;
+
+    // Injection du DAO via le constructeur
+    public SubtitleService(SubtitleDAO subtitleDAO) {
+        this.subtitleDAO = subtitleDAO;
+    }
+
     // ─────────────────────────────────
     //  AJOUTER UN SOUS-TITRE
     // ─────────────────────────────────
-    public static int save(Subtitle subtitle) {
+    public int save(Subtitle subtitle) {
 
         // Règle métier n°1 : la langue ne doit pas être vide
         if (subtitle.getLangage() == null || subtitle.getLangage().trim().isEmpty()) {
-            System.out.println("Erreur : la langue est obligatoire");
+            System.err.println("Erreur : la langue est obligatoire");
             return 0;
         }
 
         // Règle métier n°2 : l'URL ne doit pas être vide
         if (subtitle.getUrl() == null || subtitle.getUrl().trim().isEmpty()) {
-            System.out.println("Erreur : l'URL du fichier est obligatoire");
+            System.err.println("Erreur : l'URL du fichier est obligatoire");
             return 0;
         }
 
         // Règle métier n°3 : un sous-titre pour cette langue existe déjà ?
-        Subtitle existing = SubtitleDAO.findByMediaAndLangage(
+        Subtitle existing = subtitleDAO.findByMediaAndLangage(
                 subtitle.getIdMedia(), subtitle.getLangage());
+        
         if (existing != null) {
-            System.out.println("Erreur : sous-titre en "
+            System.err.println("Erreur : sous-titre en "
                     + subtitle.getLangage() + " existe déjà pour ce média");
             return 0;
         }
 
-        return SubtitleDAO.save(subtitle);
+        return subtitleDAO.save(subtitle);
     }
 
     // ─────────────────────────────────
     //  MODIFIER
     // ─────────────────────────────────
-    public static void update(Subtitle subtitle) {
-        Subtitle existing = SubtitleDAO.findById(subtitle.getId());
+    public void update(Subtitle subtitle) {
+        Subtitle existing = subtitleDAO.findById(subtitle.getId());
         if (existing == null) {
-            System.out.println("Erreur : sous-titre introuvable");
+            System.err.println("Erreur : sous-titre introuvable");
             return;
         }
-        SubtitleDAO.update(subtitle);
+        subtitleDAO.update(subtitle);
     }
 
     // ─────────────────────────────────
     //  SUPPRIMER
     // ─────────────────────────────────
-    public static void delete(int id) {
-        Subtitle existing = SubtitleDAO.findById(id);
+    public void delete(int id) {
+        Subtitle existing = subtitleDAO.findById(id);
         if (existing == null) {
-            System.out.println("Erreur : sous-titre introuvable");
+            System.err.println("Erreur : sous-titre introuvable");
             return;
         }
-        SubtitleDAO.delete(id);
+        subtitleDAO.delete(id);
     }
 
     // ─────────────────────────────────
     //  FIND ALL
     // ─────────────────────────────────
-    public static List<Subtitle> findAll() {
-        return SubtitleDAO.findAll();
+    public List<Subtitle> findAll() {
+        return subtitleDAO.findAll();
     }
 
     // ─────────────────────────────────
     //  FIND BY ID
     // ─────────────────────────────────
-    public static Subtitle findById(int id) {
-        return SubtitleDAO.findById(id);
+    public Subtitle findById(int id) {
+        return subtitleDAO.findById(id);
     }
 
     // ─────────────────────────────────
     //  FIND BY MEDIA
-    //  langues disponibles pour un media
     // ─────────────────────────────────
-    public static List<Subtitle> findByMedia(int idMedia) {
-        List<Subtitle> subtitles = SubtitleDAO.findByMedia(idMedia);
+    public List<Subtitle> findByMedia(int idMedia) {
+        List<Subtitle> subtitles = subtitleDAO.findByMedia(idMedia);
         if (subtitles.isEmpty()) {
             System.out.println("Aucun sous-titre disponible pour ce média");
         }
@@ -88,15 +94,14 @@ public class SubtitleService {
 
     // ──────────────────────────────────────────────
     //  CHARGER LE SOUS-TITRE DANS LE PLAYER
-    //  Retourne l'URL du fichier .srt selon la langue
     // ──────────────────────────────────────────────
-    public static String getSubtitleUrl(int idMedia, String langage) {
-        Subtitle subtitle = SubtitleDAO.findByMediaAndLangage(idMedia, langage);
+    public String getSubtitleUrl(int idMedia, String langage) {
+        Subtitle subtitle = subtitleDAO.findByMediaAndLangage(idMedia, langage);
 
         // Règle métier : si langue demandée non disponible → chercher FR par défaut
         if (subtitle == null) {
             System.out.println(langage + " non disponible, tentative en FR...");
-            subtitle = SubtitleDAO.findByMediaAndLangage(idMedia, "FR");
+            subtitle = subtitleDAO.findByMediaAndLangage(idMedia, "FR");
         }
 
         // Aucun sous-titre disponible
@@ -111,7 +116,7 @@ public class SubtitleService {
     // ─────────────────────────────────
     //  VÉRIFIER SI SOUS-TITRE EXISTE
     // ─────────────────────────────────
-    public static boolean exists(int idMedia, String langage) {
-        return SubtitleDAO.findByMediaAndLangage(idMedia, langage) != null;
+    public boolean exists(int idMedia, String langage) {
+        return subtitleDAO.findByMediaAndLangage(idMedia, langage) != null;
     }
 }
