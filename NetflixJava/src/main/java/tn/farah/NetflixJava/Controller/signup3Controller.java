@@ -1,7 +1,6 @@
 package tn.farah.NetflixJava.Controller;
 
 import java.net.URL;
-
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -20,7 +19,7 @@ import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionData;
 import javafx.event.ActionEvent;
-//...
+
 public class signup3Controller implements Initializable {
 
     @FXML private Button retourButton;
@@ -33,11 +32,13 @@ public class signup3Controller implements Initializable {
     @FXML private Button commencerAbonnementButton;
     @FXML private VBox paiementVBox;
     @FXML private HBox headerBox;
+
     private UserService userService;
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	userService = new UserService(ConxDB.getInstance());
-        // ✅ Lire le forfait choisi depuis SessionData
+        userService = new UserService(ConxDB.getInstance());
+        
         forfaitLabel.setText(SessionData.getForfaitNom());
         prixLabel.setText(SessionData.getForfaitPrix());
 
@@ -54,13 +55,11 @@ public class signup3Controller implements Initializable {
 
     @FXML
     private void handleCommencerAbonnement(ActionEvent event) {
-        // 1. Récupération des données saisies
         String numero   = numeroCarteField.getText().trim();
         String date     = dateExpirationField.getText().trim();
         String cvv      = cvvField.getText().trim();
         String nomCarte = nomCarteField.getText().trim();
 
-        // 2. Validations graphiques
         if (numero.isEmpty() || date.isEmpty() || cvv.isEmpty() || nomCarte.isEmpty()) {
             showAlert("Champs manquants", "Veuillez remplir tous les champs de paiement.");
             return;
@@ -76,28 +75,26 @@ public class signup3Controller implements Initializable {
             return;
         }
 
-        // 3. Mise à jour de l'utilisateur
-        User currentUser = SessionData.getCurrentUser(); // On récupère l'user en session
+        // --- ENREGISTREMENT FINAL EN BASE DE DONNÉES ---
+        User currentUser = SessionData.getCurrentUser(); 
 
         if (currentUser != null) {
-            // Mise à jour en Base de données
-        	System.out.println("Tentative d'update pour l'ID : " + currentUser.getId());
-        	
-            boolean success = userService.updatePaymentStatus(currentUser.getId(), true);
+            // On valide le statut de paiement dans l'objet
+            currentUser.setEstPaye(true);
+            
+            // On appelle registerUser pour faire l'INSERT en base
+            boolean success = userService.registerUser(currentUser);
 
             if (success) {
-                // Mise à jour de l'objet localement pour la session actuelle
-                currentUser.setEstPaye(true);
-                
-                showAlert("Abonnement", "Paiement effectué avec succès ! Bienvenue chez Netflix.");
-                
-                // 4. Navigation vers l'écran suivant
-                ScreenManager.getInstance().navigateTo(Screen.pofiles);
+                showAlert("Abonnement", "Compte créé et paiement effectué avec succès ! Bienvenue.");
+                // Maintenant qu'il est en DB, on peut aller vers les profils
+                ScreenManager.getInstance().navigateTo(Screen.addProfile);
             } else {
-                showAlert("Erreur DB", "Impossible de mettre à jour votre statut de paiement.");
+                showAlert("Erreur DB", "Impossible de créer votre compte. L'email est peut-être déjà utilisé.");
             }
         } else {
-            showAlert("Erreur Session", "Utilisateur non identifié. Veuillez recommencer.");
+            showAlert("Erreur Session", "Données utilisateur perdues. Veuillez recommencer.");
+            ScreenManager.getInstance().navigateTo(Screen.signup1);
         }
     }
 

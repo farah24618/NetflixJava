@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -71,20 +70,6 @@
             </Button>
             <HBox prefHeight="30.0" prefWidth="390.0">
                <children>
-                  <CheckBox fx:id="remenberMeCheckBox" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#handleRememberMe" prefHeight="37.0" prefWidth="196.0" text="Remenber me" textFill="WHITE">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </CheckBox>
                   <Button fx:id="forgotPasswordButton" mnemonicParsing="false" onAction="#handleForgotPassword" prefHeight="26.0" prefWidth="223.0" style="-fx-background-color: transparent;" text="Forget your Password ?" textFill="#f4efef">
                      <opaqueInsets>
                         <Insets />

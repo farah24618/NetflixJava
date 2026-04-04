@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="itemRoot" alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="1100.0" spacing="20.0" style="-fx-background-color: #141414; -fx-border-color: #2b2b2b; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.MovieItemController">
+   
+   <padding>
+      <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+   </padding>
+   
+   <children>
+      <ImageView fx:id="moviePoster" fitHeight="90.0" fitWidth="160.0" pickOnBounds="true" />
+
+      <VBox alignment="CENTER_LEFT" spacing="3.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="movieTitle" style="-fx-font-size: 17px; -fx-font-weight: bold;" text="Title Name" textFill="WHITE" />
+            <HBox spacing="8.0">
+               <children>
+                  <Label fx:id="idLabel" style="-fx-font-size: 13px;" text="81000000" textFill="#808080" />
+                  <Label text="•" textFill="#808080" />
+                  <Label style="-fx-font-size: 13px;" text="Movie" textFill="#808080" />
+                  <Label text="•" textFill="#808080" />
+                  <Label fx:id="yearLabel" style="-fx-font-size: 13px;" text="2024" textFill="#808080" />
+               </children>
+            </HBox>
+            <Label fx:id="statusBadge" style="-fx-background-color: #3d1a3a; -fx-text-fill: #e887ff; -fx-padding: 2 8 2 8; -fx-background-radius: 4; -fx-font-size: 11px;" text="QC Checked" />
+         </children>
+      </VBox>
+
+      <Region HBox.hgrow="ALWAYS" />
+
+      <HBox alignment="CENTER" spacing="30.0">
+         <children>
+            <VBox alignment="CENTER" spacing="5.0">
+               <Label style="-fx-font-size: 16px;" text="▶" textFill="#b3b3b3" />
+               <Label style="-fx-font-size: 11px;" text="12" textFill="#b3b3b3" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0">
+               <Label style="-fx-font-size: 16px;" text="🎧" textFill="#b3b3b3" />
+               <Label style="-fx-font-size: 11px;" text="8" textFill="#b3b3b3" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0">
+               <Label onMouseClicked="#handleShowComments" style="-fx-font-size: 16px;" text="💬" textFill="#b3b3b3">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor></Label>
+               <Label style="-fx-font-size: 11px;" text="4" textFill="#b3b3b3" />
+            </VBox>
+            
+            <Button onAction="#handleDelete" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand;" text="DELETE" />
+            
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="❯" textFill="#808080">
+               <padding><Insets left="15.0" /></padding>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</HBox>
