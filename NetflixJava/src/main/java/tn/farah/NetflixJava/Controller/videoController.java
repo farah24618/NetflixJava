@@ -93,6 +93,7 @@ public class videoController {
     // ─────────────────────────────────────────────
     private void chargerEpisode(int episodeId) {
         this.currentEpisode = episodeService.findById(episodeId);
+        		
 
         if (currentEpisode != null) {
             Platform.runLater(() -> {

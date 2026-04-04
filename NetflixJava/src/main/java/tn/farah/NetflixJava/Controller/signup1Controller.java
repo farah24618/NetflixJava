@@ -19,8 +19,7 @@ import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionData;
 import tn.farah.NetflixJava.utils.ConxDB;
-//...
-//...
+//..
 public class signup1Controller implements Initializable {
 
     @FXML private TextField firstNameField;
@@ -32,7 +31,6 @@ public class signup1Controller implements Initializable {
     @FXML private ComboBox<String> monthComboBox;
     @FXML private ComboBox<Integer> yearComboBox;
     @FXML private Button continueButton;
-    @FXML private Button seConnecterButton;
 
     private UserService userService;
 
@@ -40,20 +38,29 @@ public class signup1Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         userService = new UserService(ConxDB.getInstance());
 
-        dayComboBox.setItems(FXCollections.observableArrayList(
-                IntStream.rangeClosed(1, 31).boxed().toList()));
-
-        monthComboBox.setItems(FXCollections.observableArrayList(
-                "Janvier","Février","Mars","Avril","Mai","Juin",
-                "Juillet","Août","Septembre","Octobre","Novembre","Décembre"));
-
+        // Configuration des ComboBox
+        dayComboBox.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(1, 31).boxed().toList()));
+        monthComboBox.setItems(FXCollections.observableArrayList("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"));
         int currentYear = LocalDate.now().getYear();
-        yearComboBox.setItems(FXCollections.observableArrayList(
-                IntStream.rangeClosed(currentYear - 100, currentYear)
-                        .boxed()
-                        .sorted((a, b) -> b - a)
-                        .toList()));
+        yearComboBox.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(currentYear - 100, currentYear).boxed().sorted((a, b) -> b - a).toList()));
 
+        // --- RÉCUPÉRATION DES DONNÉES SI RETOUR ---
+        User existingUser = SessionData.getCurrentUser();
+        if (existingUser != null) {
+            firstNameField.setText(existingUser.getPrenom());
+            lastNameField.setText(existingUser.getNom());
+            emailField.setText(existingUser.getEmail());
+            phoneField.setText(existingUser.getPhone());
+            
+            if (existingUser.getBirthDate() != null) {
+                dayComboBox.setValue(existingUser.getBirthDate().getDayOfMonth());
+                monthComboBox.setValue(numberToMonth(existingUser.getBirthDate().getMonthValue()));
+                yearComboBox.setValue(existingUser.getBirthDate().getYear());
+            }
+            // Note: Le mot de passe reste vide par sécurité pour éviter de modifier le hash existant par erreur
+        }
+
+        // Handlers
         firstNameField.setOnKeyPressed(this::handleEnterKey);
         lastNameField.setOnKeyPressed(this::handleEnterKey);
         emailField.setOnKeyPressed(this::handleEnterKey);
@@ -66,86 +73,77 @@ public class signup1Controller implements Initializable {
         String firstName = firstNameField.getText().trim();
         String lastName  = lastNameField.getText().trim();
         String email     = emailField.getText().trim();
-        String password  = passwordField.getText();
+        String passwordRaw = passwordField.getText();
         String phone     = phoneField.getText().trim();
 
-        Integer day   = dayComboBox.getValue();
-        String month  = monthComboBox.getValue();
-        Integer year  = yearComboBox.getValue();
-
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() ||
-            password.isEmpty() || phone.isEmpty() || day == null || month == null || year == null) {
+        // 1. Vérification des champs vides
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() || 
+            dayComboBox.getValue() == null || monthComboBox.getValue() == null || yearComboBox.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs.");
             return;
         }
 
-        if (!isValidEmail(email)) {
-            showAlert(Alert.AlertType.ERROR, "Email invalide", "Veuillez entrer un email valide.");
+        // 2. Validation du Prénom et Nom (min 3 caractères)
+        if (firstName.length() < 3 || lastName.length() < 3) {
+            showAlert(Alert.AlertType.WARNING, "Format Nom/Prénom", "Le nom et le prénom doivent contenir au moins 3 caractères.");
             return;
         }
 
-        LocalDate birthDate;
-        try {
-            birthDate = LocalDate.of(year, monthToNumber(month), day);
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Date invalide", "La date de naissance est invalide.");
+        // 3. Validation de l'Email (min 3 car. avant @gmail.com)
+        if (!email.matches("^[\\w.]{3,}@gmail\\.com$")) {
+            showAlert(Alert.AlertType.WARNING, "Email invalide", "L'email doit contenir au moins 3 caractères avant '@gmail.com'.");
             return;
         }
-        User newUser = new User();
-        newUser.setPrenom(firstName);
-        newUser.setNom(lastName);
-        newUser.setEmail(email);
-        newUser.setPasswordHash(password);
-        newUser.setRole(UserRole.USER);
-        newUser.setBirthDate(birthDate);
-        newUser.setPhone(phone); // Ajoute ceci car il manquait aussi le téléphone
-        newUser.setActive(true);
-        
-        // AJOUTE CETTE LIGNE :
-        newUser.setPseudo(firstName + (int)(Math.random() * 100)); // Génère un pseudo simple comme "kalil42"
-        // ✅ Try/catch ajouté ici
-        boolean created = false;
-        try {
-            created = userService.registerUser(newUser);
-            System.out.println(">>> registerUser retourne : " + created);
-        } catch (Exception e) {
-            System.out.println(">>> EXCEPTION : " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        if (created) {
-        	SessionData.setCurrentUser(newUser);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Compte créé avec succès !");
-            ScreenManager.getInstance().navigateTo(Screen.signup2);
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de créer le compte. Vérifiez vos informations.");
-        }
-    }
 
-    @FXML
-    private void handleSeConnecter(ActionEvent event) {
-        ScreenManager.getInstance().navigateTo(Screen.mainView);
-    }
+        // 4. Validation du Téléphone (Exactement 8 chiffres)
+        if (!phone.matches("^\\d{8}$")) {
+            showAlert(Alert.AlertType.WARNING, "Téléphone invalide", "Le numéro de téléphone doit contenir exactement 8 chiffres.");
+            return;
+        }
 
-    private boolean isValidEmail(String input) {
-        return input.matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$");
+        // 5. Validation du Password (min 6 caractères)
+        if (!passwordRaw.isEmpty() && passwordRaw.length() < 6) {
+            showAlert(Alert.AlertType.WARNING, "Sécurité faible", "Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        // --- SI TOUT EST VALIDE : TRAITEMENT ---
+        User user = (SessionData.getCurrentUser() != null) ? SessionData.getCurrentUser() : new User();
+        
+        user.setPrenom(firstName);
+        user.setNom(lastName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setBirthDate(LocalDate.of(yearComboBox.getValue(), monthToNumber(monthComboBox.getValue()), dayComboBox.getValue()));
+        user.setRole(UserRole.USER);
+        user.setActive(true);
+        user.setEstPaye(false);
+
+        if (!passwordRaw.isEmpty()) {
+            user.setPasswordHash(hashSHA256(passwordRaw));
+        } else if (user.getPasswordHash() == null) {
+            showAlert(Alert.AlertType.WARNING, "Sécurité", "Veuillez saisir un mot de passe.");
+            return;
+        }
+
+        if (user.getPseudo() == null) {
+            user.setPseudo(firstName.toLowerCase() + (int)(Math.random() * 1000));
+        }
+
+        SessionData.setCurrentUser(user);
+        ScreenManager.getInstance().navigateTo(Screen.signup2);
+    }
+    private String numberToMonth(int n) {
+        String[] months = {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
+        return (n >= 1 && n <= 12) ? months[n-1] : "Janvier";
     }
 
     private int monthToNumber(String month) {
         return switch (month) {
-            case "Janvier"   -> 1;
-            case "Février"   -> 2;
-            case "Mars"      -> 3;
-            case "Avril"     -> 4;
-            case "Mai"       -> 5;
-            case "Juin"      -> 6;
-            case "Juillet"   -> 7;
-            case "Août"      -> 8;
-            case "Septembre" -> 9;
-            case "Octobre"   -> 10;
-            case "Novembre"  -> 11;
-            case "Décembre"  -> 12;
-            default          -> 1;
+            case "Janvier" -> 1; case "Février" -> 2; case "Mars" -> 3; case "Avril" -> 4;
+            case "Mai" -> 5; case "Juin" -> 6; case "Juillet" -> 7; case "Août" -> 8;
+            case "Septembre" -> 9; case "Octobre" -> 10; case "Novembre" -> 11; case "Décembre" -> 12;
+            default -> 1;
         };
     }
 
@@ -159,5 +157,19 @@ public class signup1Controller implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private String hashSHA256(String data) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(data.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (Exception e) { return data; }
+    }
+    
+    @FXML private void handleSeConnecter(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.mainView);
     }
 }

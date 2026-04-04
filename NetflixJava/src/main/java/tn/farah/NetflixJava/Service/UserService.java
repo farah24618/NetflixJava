@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Service;
 
 import tn.farah.NetflixJava.DAO.UserDao;
 
+
 import tn.farah.NetflixJava.Entities.User;
 
 import java.sql.Connection;
@@ -25,7 +26,7 @@ public class UserService {
         if (user.getBirthDate() == null || user.getBirthDate().isAfter(java.time.LocalDate.now())) return false;
         if (user.getPhone() != null && !user.getPhone().matches("^\\+?[0-9]{8,15}$")) return false;
         if (userDao.findByEmail(user.getEmail()) != null) return false;
-        user.setEstPaye(false);
+        
         return userDao.addUser(user);
     }
 
@@ -88,7 +89,25 @@ public class UserService {
         if (userId <= 0) return false;
         return userDao.updatePaymentStatus(userId, status); 
     }
+
     public User findUserById(int userId) {
-    	return userDao.getUserById(userId);
+    	return userDao.getUserById(userId);}
+
+ // 5️⃣ UPDATE PASSWORD
+    public boolean updatePassword(String email, String hashedPass) {
+        // Validation de base
+        if (email == null || email.trim().isEmpty() || hashedPass == null || hashedPass.isEmpty()) {
+            return false;
+        }
+        
+        // Appel au DAO
+        return userDao.updatePassword(email, hashedPass);
+    }
+ // Dans UserService.java
+    public boolean updateUser(User user) {
+        if (user == null || user.getId() <= 0) return false;
+        // Tu peux ajouter ici une validation pour vérifier si le pseudo est déjà pris
+        return userDao.updateUser(user);
+
     }
 }

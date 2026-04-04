@@ -15,6 +15,9 @@ public class Main extends Application {
 
 	@Override
     public void start(Stage primaryStage) {
+		
+		
+		
 
         ScreenManager nav = ScreenManager.getInstance();
 
@@ -37,10 +40,18 @@ public class Main extends Application {
         nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
         nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
+
         nav.register(Screen.detailFilm,        "/tn/farah/NetflixJava/FilmView.fxml");
+
         nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
+
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
         nav.register(Screen.filmPlayer,  "/tn/farah/NetflixJava/FilmPlayer.fxml");
+
+
+        nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+ 
+        nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
 
 
 
@@ -51,7 +62,13 @@ public class Main extends Application {
         
 
 
+
         nav.navigateTo(Screen.login);
+
+
+
+
+   
 
         primaryStage.setWidth(1280);   // ← largeur que tu veux
         primaryStage.setHeight(720);   // ← hauteur que tu veux

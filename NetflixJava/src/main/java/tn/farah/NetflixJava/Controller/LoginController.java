@@ -59,35 +59,47 @@ public class LoginController implements Initializable{
 	        PreferencesStore.clearEmail();
 	    }*/
 	}
-	 @FXML
-	    private void handleSignIn(ActionEvent event) {
-	        String email    = emailField.getText().trim();
-	        String password = passwordField.getText();
+	@FXML
+	private void handleSignIn(ActionEvent event) {
+	    String email = emailField.getText().trim();
+	    String passwordRaw = passwordField.getText(); // Mot de passe en clair (ex: "123456")
 
-	        // Basic validation
-	        if (email.isEmpty() || password.isEmpty()) {
-	            showAlert(Alert.AlertType.WARNING,
-	                      "Missing Fields",
-	                      "Please enter both your email / phone number and password.");
-	            return;
-	        }
+	    // 1. Validations de base
+	    if (email.isEmpty() || passwordRaw.isEmpty()) {
+	        showAlert(Alert.AlertType.WARNING,
+	                  "Champs manquants",
+	                  "Veuillez entrer votre email et votre mot de passe.");
+	        return;
+	    }
 
-	        if (!isValidEmail(email)) {
-	            showAlert(Alert.AlertType.ERROR,
-	                      "Invalid Email",
-	                      "Please enter a valid email address or phone number.");
-	            return;
-	        }
+	    if (!isValidEmail(email)) {
+	        showAlert(Alert.AlertType.ERROR,
+	                  "Email invalide",
+	                  "Veuillez entrer une adresse email valide.");
+	        return;
+	    }
 
-	        // Persist email when "Remember me" is checked
-	        /*if (rememberMeCheckBox.isSelected()) {
+	    // 2. Hachage du mot de passe saisi
+	    // On transforme le texte clair en SHA-256 pour comparer des chosess comparables en DB
+	    String passwordHashed = hashSHA256(passwordRaw);
+
+	    // 3. Appel au service avec le mot de passe HACHÉ
+	    User authenticated = userservice.loginUser(email, passwordHashed);
+
+	    if (authenticated != null) {
+	        // Succès : Enregistrement de la session
+	        SessionManager.getInstance().login(authenticated);
+
+	        // Gestion du "Remember me" (optionnel)
+	      /*  if (rememberMeCheckBox.isSelected()) {
 	            PreferencesStore.saveEmail(email);
 	        } else {
 	            PreferencesStore.clearEmail();
 	        }*/
 
-	        // TODO: Replace this block with your real authentication logic
-	       User authenticated = userservice.loginUser(email, password);
+	        // Navigation vers l'accueil
+	        ScreenManager.getInstance().navigateTo(Screen.home);
+	        System.out.println("DEBUG: Login réussi pour " + email);
 
 	      
 	        if (authenticated != null) {
@@ -104,20 +116,23 @@ public class LoginController implements Initializable{
 	            // 3. Naviguer vers les profils
 	            ScreenManager.getInstance().navigateWithSplash(Screen.home);
 
-	        } else {
-	            showAlert(Alert.AlertType.ERROR,
-	                      "Sign In Failed",
-	                      "Incorrect email or password. Please try again.");
-	            passwordField.clear();
-	            passwordField.requestFocus();
-	        }
-	    }
+	        
+	    } else {
+	        // Échec : Mot de passe ou Email incorrect
+	        showAlert(Alert.AlertType.ERROR,
+	                  "Échec de connexion",
+	                  "Email ou mot de passe incorrect. Veuillez réessayer.");
+	        
+	        passwordField.clear();
+	        passwordField.requestFocus();
 
+	    }}
+	}
 	    // ── Forgot Password ──────────────────────────────────────────────────────
 	    @FXML
 	    private void handleForgotPassword(ActionEvent event) {
-
-	    	//ScreenManager.getInstance().navigateTo();
+	    	ScreenManager.getInstance().navigateTo(Screen.oublie);
+	    	
 	    }
 	    @FXML
 	    private void handleSignUp(ActionEvent event) {
@@ -127,8 +142,8 @@ public class LoginController implements Initializable{
 	    private void handleLearnMore(ActionEvent event) {
 	        // TODO: Open browser / info dialog about Google reCAPTCHA
 	        showAlert(Alert.AlertType.INFORMATION,
-	                  "About reCAPTCHA",
-	                  "Google reCAPTCHA protects this page from automated abuse.");
+	                  "À propos de reCAPTCHA",
+	                  "Google reCAPTCHA protège cette page contre les abus automatisés.");
 	    }
 	    @FXML
 	    private void handleEnterKey(KeyEvent event) {
@@ -154,6 +169,19 @@ public class LoginController implements Initializable{
 		public void prefillEmail(String email) {
 			emailField.setText(email);
 			
+		}
+		private String hashSHA256(String data) {
+		    try {
+		        java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+		        byte[] hash = md.digest(data.getBytes());
+		        StringBuilder sb = new StringBuilder();
+		        for (byte b : hash) { 
+		            sb.append(String.format("%02x", b)); 
+		        }
+		        return sb.toString();
+		    } catch (Exception e) { 
+		        return data; 
+		    }
 		}
 
 

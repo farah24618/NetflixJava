@@ -9,10 +9,14 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import tn.farah.NetflixJava.Service.UserService;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+
 import java.security.MessageDigest;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ResetPasswordController {
 
@@ -22,11 +26,26 @@ public class ResetPasswordController {
     @FXML private ProgressIndicator progressIndicator;
     @FXML private Rectangle strengthBar;
 
+    // Instance du service (doit être initialisée)
+    private UserService userService;
     public static String userEmail; 
 
     @FXML
     public void initialize() {
-        // Initialisation propre
+        // --- INITIALISATION DU SERVICE ---
+        try {
+            // Connexion à la base de données
+            String url = "jdbc:mysql://localhost:3306/netflix";
+            Connection conn = DriverManager.getConnection(url, "root", "");
+            
+            // Création de l'instance UserService avec la connexion
+            this.userService = new UserService(conn);
+        } catch (SQLException e) {
+            System.err.println("ERREUR : Impossible de se connecter à la DB dans ResetPasswordController");
+            e.printStackTrace();
+        }
+
+        // --- CONFIGURATION UI ---
         statusLabel.setVisible(false);
         progressIndicator.setVisible(false);
         strengthBar.setWidth(0);
@@ -66,10 +85,10 @@ public class ResetPasswordController {
         String text;
 
         switch (score) {
-            case 0: case 1: targetWidth = 80; color = "#e50914"; text = "Weak (Too risky)"; break;
-            case 2: targetWidth = 160; color = "#f39c12"; text = "Medium (Better)"; break;
-            case 3: targetWidth = 240; color = "#f1c40f"; text = "Strong (Good)"; break;
-            case 4: targetWidth = 350; color = "#2ecc71"; text = "Ultra Secure (Perfect)"; break;
+            case 0: case 1: targetWidth = 80; color = "#e50914"; text = "Faible (Risqué)"; break;
+            case 2: targetWidth = 160; color = "#f39c12"; text = "Moyen"; break;
+            case 3: targetWidth = 240; color = "#f1c40f"; text = "Fort"; break;
+            case 4: targetWidth = 350; color = "#2ecc71"; text = "Très sécurisé"; break;
             default: targetWidth = 0; color = "#333333"; text = "";
         }
 
@@ -94,7 +113,7 @@ public class ResetPasswordController {
         String confirm = confirmPasswordField.getText();
 
         if (pass.isEmpty() || !pass.equals(confirm)) {
-            showStatus("Passwords must match!", "#e50914");
+            showStatus("Les mots de passe ne correspondent pas !", "#e50914");
             return;
         }
 
@@ -103,17 +122,17 @@ public class ResetPasswordController {
 
         PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
         delay.setOnFinished(event -> {
-            if (updatePasswordInDB(userEmail, hashSHA256(pass))) {
-                showStatus("✅ Success! Redirecting...", "#2ecc71");
+            // Utilisation du service (ne sera plus null)
+            if (userService != null && userService.updatePassword(userEmail, hashSHA256(pass))) {
+                showStatus("✅ Succès ! Redirection...", "#2ecc71");
                 
-                // Redirection vers Profiles
                 PauseTransition nav = new PauseTransition(Duration.seconds(1.5));
-                nav.setOnFinished(e -> ScreenManager.getInstance().navigateTo(Screen.pofiles));
+                nav.setOnFinished(e -> ScreenManager.getInstance().navigateTo(Screen.home));
                 nav.play();
             } else {
                 saveBtn.setDisable(false);
                 progressIndicator.setVisible(false);
-                showStatus("Error: Database connection failed.", "#e50914");
+                showStatus("Erreur lors de la mise à jour.", "#e50914");
             }
         });
         delay.play();
@@ -127,26 +146,6 @@ public class ResetPasswordController {
             for (byte b : hash) { sb.append(String.format("%02x", b)); }
             return sb.toString();
         } catch (Exception e) { return data; }
-    }
-
-    private boolean updatePasswordInDB(String email, String hashedPass) {
-        String url = "jdbc:mysql://localhost:3306/netflix"; 
-        // Note: Assure-toi que la colonne s'appelle 'password_hash' comme vu sur ta capture
-        String sql = "UPDATE users SET password_hash = ? WHERE email = ?";
-
-        try (Connection conn = DriverManager.getConnection(url, "root", "");
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, hashedPass);
-            pstmt.setString(2, email);
-            
-            int affected = pstmt.executeUpdate();
-            System.out.println("DEBUG: Row updated: " + affected + " for " + email);
-            return affected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     private void showStatus(String message, String colorCode) {

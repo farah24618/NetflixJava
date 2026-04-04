@@ -1,69 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane
-    style="-fx-background-color: rgba(0,0,0,0.88);"
-    xmlns="http://javafx.com/javafx/19"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="tn.farah.NetflixJava.Controller.OublieController">
+<StackPane style="-fx-background-color: rgba(0,0,0,0.88);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.OublieController">
 
-    <VBox fx:id="mainContainer"
-          alignment="TOP_CENTER"
-          maxWidth="450"
-          minWidth="450"
-          spacing="0"
-          style="-fx-background-color: #141414;
-                 -fx-background-radius: 10;
-                 -fx-border-color: #2a2a2a;
-                 -fx-border-width: 1;
-                 -fx-border-radius: 10;
-                 -fx-padding: 36 44 40 44;">
+    <VBox fx:id="mainContainer" alignment="TOP_CENTER" maxWidth="450" minWidth="450" spacing="0" style="-fx-background-color: #141414;                  -fx-background-radius: 10;                  -fx-border-color: #2a2a2a;                  -fx-border-width: 1;                  -fx-border-radius: 10;                  -fx-padding: 36 44 40 44;">
 
         <!-- ── TOP BAR : Logo + Fermer ── -->
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 0 28 0;">
-            <Label text="NETFLIX"
-                   style="-fx-text-fill: #E50914;
-                          -fx-font-family: 'Arial Black';
-                          -fx-font-size: 22px;
-                          -fx-font-weight: bold;
-                          -fx-letter-spacing: 1px;"
-                   HBox.hgrow="ALWAYS"/>
-            <Label fx:id="closeBtn"
-                   text="&#x2715;"
-                   onMouseClicked="#handleClose"
-                   style="-fx-text-fill: #888888;
-                          -fx-font-size: 18px;
-                          -fx-cursor: hand;"/>
+         <ImageView fitHeight="150.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@ImagesNet/RAKCHANET.jpg" />
+            </image>
+         </ImageView>
         </HBox>
 
         <!-- ── TITRE ── -->
-        <Label text="Mot de passe oublié ?"
-               style="-fx-text-fill: white;
-                      -fx-font-family: 'Arial Black';
-                      -fx-font-size: 22px;
-                      -fx-font-weight: bold;
-                      -fx-padding: 0 0 8 0;"/>
+        <Label style="-fx-text-fill: white;                       -fx-font-family: 'Arial Black';                       -fx-font-size: 22px;                       -fx-font-weight: bold;                       -fx-padding: 0 0 8 0;" text="Mot de passe oublié ?" />
 
         <!-- ── SOUS-TITRE / INSTRUCTION ── -->
-        <Label fx:id="instructionLabel"
-               text="Nous vous enverrons un code à votre adresse email."
-               wrapText="true"
-               maxWidth="370"
-               style="-fx-text-fill: #aaaaaa;
-                      -fx-font-size: 13px;
-                      -fx-line-spacing: 2;
-                      -fx-padding: 0 0 24 0;"/>
+        <Label fx:id="instructionLabel" maxWidth="370" style="-fx-text-fill: #aaaaaa;                       -fx-font-size: 13px;                       -fx-line-spacing: 2;                       -fx-padding: 0 0 24 0;" text="Nous vous enverrons un code à votre adresse email." wrapText="true" />
 
         <!-- ══════════════════════════════════ -->
         <!-- ÉTAPE 1 : EMAIL                    -->
@@ -72,170 +37,66 @@
 
             <!-- Wrapper champ email avec validation visuelle -->
             <StackPane>
-                <TextField fx:id="emailField"
-                           promptText="Adresse email"
-                           style="-fx-background-color: #2a2a2a;
-                                  -fx-text-fill: white;
-                                  -fx-prompt-text-fill: #777777;
-                                  -fx-font-size: 14px;
-                                  -fx-padding: 15 44 15 16;
-                                  -fx-background-radius: 6;
-                                  -fx-border-color: #555555;
-                                  -fx-border-radius: 6;
-                                  -fx-border-width: 1.5;"/>
+                <TextField fx:id="emailField" promptText="Adresse email" style="-fx-background-color: #2a2a2a;                                   -fx-text-fill: white;                                   -fx-prompt-text-fill: #777777;                                   -fx-font-size: 14px;                                   -fx-padding: 15 44 15 16;                                   -fx-background-radius: 6;                                   -fx-border-color: #555555;                                   -fx-border-radius: 6;                                   -fx-border-width: 1.5;" />
 
                 <!-- Icone de validation (affichée via controller) -->
-                <Label fx:id="emailValidIcon"
-                       text="&#10003;"
-                       visible="false"
-                       StackPane.alignment="CENTER_RIGHT"
-                       style="-fx-text-fill: #2ecc71;
-                              -fx-font-size: 15px;
-                              -fx-font-weight: bold;
-                              -fx-padding: 0 14 0 0;"/>
+                <Label fx:id="emailValidIcon" style="-fx-text-fill: #2ecc71;                               -fx-font-size: 15px;                               -fx-font-weight: bold;                               -fx-padding: 0 14 0 0;" text="✓" visible="false" StackPane.alignment="CENTER_RIGHT" />
             </StackPane>
 
             <!-- Message de feedback validation -->
-            <Label fx:id="emailFeedbackLabel"
-                   text=""
-                   style="-fx-font-size: 12px;
-                          -fx-padding: 0 0 0 4;"/>
+            <Label fx:id="emailFeedbackLabel" style="-fx-font-size: 12px;                           -fx-padding: 0 0 0 4;" text="" />
         </VBox>
 
         <!-- ══════════════════════════════════ -->
         <!-- ÉTAPE 2 : CODE PIN (masqué init)  -->
         <!-- ══════════════════════════════════ -->
-        <VBox fx:id="codeContainer"
-              alignment="CENTER"
-              managed="false"
-              visible="false"
-              spacing="14"
-              style="-fx-padding: 0 0 18 0;">
+        <VBox fx:id="codeContainer" alignment="CENTER" managed="false" spacing="14" style="-fx-padding: 0 0 18 0;" visible="false">
 
             <!-- 4 cases PIN -->
             <HBox alignment="CENTER" spacing="12">
 
-                <TextField fx:id="code1"
-                           alignment="CENTER"
-                           prefHeight="56" prefWidth="56"
-                           style="-fx-background-color: #2a2a2a;
-                                  -fx-text-fill: white;
-                                  -fx-font-size: 22px;
-                                  -fx-font-weight: bold;
-                                  -fx-background-radius: 8;
-                                  -fx-border-color: #555555;
-                                  -fx-border-radius: 8;
-                                  -fx-border-width: 1.5;"/>
+                <TextField fx:id="code1" alignment="CENTER" prefHeight="56" prefWidth="56" style="-fx-background-color: #2a2a2a;                                   -fx-text-fill: white;                                   -fx-font-size: 22px;                                   -fx-font-weight: bold;                                   -fx-background-radius: 8;                                   -fx-border-color: #555555;                                   -fx-border-radius: 8;                                   -fx-border-width: 1.5;" />
 
-                <TextField fx:id="code2"
-                           alignment="CENTER"
-                           prefHeight="56" prefWidth="56"
-                           style="-fx-background-color: #2a2a2a;
-                                  -fx-text-fill: white;
-                                  -fx-font-size: 22px;
-                                  -fx-font-weight: bold;
-                                  -fx-background-radius: 8;
-                                  -fx-border-color: #555555;
-                                  -fx-border-radius: 8;
-                                  -fx-border-width: 1.5;"/>
+                <TextField fx:id="code2" alignment="CENTER" prefHeight="56" prefWidth="56" style="-fx-background-color: #2a2a2a;                                   -fx-text-fill: white;                                   -fx-font-size: 22px;                                   -fx-font-weight: bold;                                   -fx-background-radius: 8;                                   -fx-border-color: #555555;                                   -fx-border-radius: 8;                                   -fx-border-width: 1.5;" />
 
-                <TextField fx:id="code3"
-                           alignment="CENTER"
-                           prefHeight="56" prefWidth="56"
-                           style="-fx-background-color: #2a2a2a;
-                                  -fx-text-fill: white;
-                                  -fx-font-size: 22px;
-                                  -fx-font-weight: bold;
-                                  -fx-background-radius: 8;
-                                  -fx-border-color: #555555;
-                                  -fx-border-radius: 8;
-                                  -fx-border-width: 1.5;"/>
+                <TextField fx:id="code3" alignment="CENTER" prefHeight="56" prefWidth="56" style="-fx-background-color: #2a2a2a;                                   -fx-text-fill: white;                                   -fx-font-size: 22px;                                   -fx-font-weight: bold;                                   -fx-background-radius: 8;                                   -fx-border-color: #555555;                                   -fx-border-radius: 8;                                   -fx-border-width: 1.5;" />
 
-                <TextField fx:id="code4"
-                           alignment="CENTER"
-                           prefHeight="56" prefWidth="56"
-                           style="-fx-background-color: #2a2a2a;
-                                  -fx-text-fill: white;
-                                  -fx-font-size: 22px;
-                                  -fx-font-weight: bold;
-                                  -fx-background-radius: 8;
-                                  -fx-border-color: #555555;
-                                  -fx-border-radius: 8;
-                                  -fx-border-width: 1.5;"/>
+                <TextField fx:id="code4" alignment="CENTER" prefHeight="56" prefWidth="56" style="-fx-background-color: #2a2a2a;                                   -fx-text-fill: white;                                   -fx-font-size: 22px;                                   -fx-font-weight: bold;                                   -fx-background-radius: 8;                                   -fx-border-color: #555555;                                   -fx-border-radius: 8;                                   -fx-border-width: 1.5;" />
             </HBox>
 
             <!-- Renvoyer le code -->
             <HBox alignment="CENTER" spacing="6">
-                <Label text="Vous n'avez pas reçu le code ?"
-                       style="-fx-text-fill: #888888; -fx-font-size: 12px;"/>
-                <Label fx:id="resendBtn"
-                       text="Renvoyer"
-                       onMouseClicked="#handleResend"
-                       style="-fx-text-fill: #E50914;
-                              -fx-font-size: 12px;
-                              -fx-underline: true;
-                              -fx-cursor: hand;"/>
+                <Label style="-fx-text-fill: #888888; -fx-font-size: 12px;" text="Vous n'avez pas reçu le code ?" />
+                <Label fx:id="resendBtn" onMouseClicked="#handleResend" style="-fx-text-fill: #E50914;                               -fx-font-size: 12px;                               -fx-underline: true;                               -fx-cursor: hand;" text="Renvoyer" />
             </HBox>
         </VBox>
 
         <!-- ══════════════════════════════════ -->
         <!-- CAPTCHA reCAPTCHA                  -->
         <!-- ══════════════════════════════════ -->
-        <HBox fx:id="captchaBox"
-              alignment="CENTER_LEFT"
-              spacing="10"
-              style="-fx-background-color: #f4f4f4;
-                     -fx-padding: 12 14 12 14;
-                     -fx-background-radius: 5;
-                     -fx-border-color: #dddddd;
-                     -fx-border-width: 1;
-                     -fx-border-radius: 5;
-                     -fx-margin: 0 0 20 0;">
+        <HBox fx:id="captchaBox" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f4f4f4;                      -fx-padding: 12 14 12 14;                      -fx-background-radius: 5;                      -fx-border-color: #dddddd;                      -fx-border-width: 1;                      -fx-border-radius: 5;                      -fx-margin: 0 0 20 0;">
 
-            <CheckBox fx:id="robotCheckBox"
-                      style="-fx-text-fill: #444444;
-                             -fx-font-size: 13px;"
-                      text="Je ne suis pas un robot"/>
+            <CheckBox fx:id="robotCheckBox" style="-fx-text-fill: #444444;                              -fx-font-size: 13px;" text="Je ne suis pas un robot" />
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
             <VBox alignment="CENTER" spacing="2">
-                <Label text="&#x267F;"
-                       style="-fx-font-size: 22px; -fx-text-fill: #4A90D9;"/>
-                <Label text="reCAPTCHA"
-                       style="-fx-font-size: 9px; -fx-text-fill: #999999;"/>
-                <Label text="Confidentialité - Conditions"
-                       style="-fx-font-size: 8px; -fx-text-fill: #aaaaaa;"/>
+                <Label style="-fx-font-size: 22px; -fx-text-fill: #4A90D9;" text="♿" />
+                <Label style="-fx-font-size: 9px; -fx-text-fill: #999999;" text="reCAPTCHA" />
+                <Label style="-fx-font-size: 8px; -fx-text-fill: #aaaaaa;" text="Confidentialité - Conditions" />
             </VBox>
         </HBox>
 
         <!-- Espacement avant le bouton -->
-        <Region prefHeight="6"/>
+        <Region prefHeight="6" />
 
         <!-- ── BOUTON PRINCIPAL ── -->
-        <Button fx:id="confirmBtn"
-                maxWidth="Infinity"
-                onAction="#handleConfirm"
-                text="CONTINUER"
-                style="-fx-background-color: #E50914;
-                       -fx-text-fill: white;
-                       -fx-font-weight: bold;
-                       -fx-font-size: 16px;
-                       -fx-padding: 14;
-                       -fx-background-radius: 5;
-                       -fx-cursor: hand;
-                       -fx-border-color: transparent;"/>
+        <Button fx:id="confirmBtn" maxWidth="Infinity" onAction="#handleConfirm" style="-fx-background-color: #E50914;                        -fx-text-fill: white;                        -fx-font-weight: bold;                        -fx-font-size: 16px;                        -fx-padding: 14;                        -fx-background-radius: 5;                        -fx-cursor: hand;                        -fx-border-color: transparent;" text="CONTINUER" />
 
         <!-- ── LIEN RETOUR CONNEXION ── -->
         <HBox alignment="CENTER" spacing="6" style="-fx-padding: 18 0 0 0;">
-            <Label text="Vous vous souvenez ?"
-                   style="-fx-text-fill: #888888; -fx-font-size: 13px;"/>
-            <Label text="Se connecter"
-                   onMouseClicked="#handleGoToLogin"
-                   style="-fx-text-fill: #E50914;
-                          -fx-font-size: 13px;
-                          -fx-cursor: hand;
-                          -fx-underline: true;"/>
+            <Label style="-fx-text-fill: #888888; -fx-font-size: 13px;" text="Vous vous souvenez ?" />
+            <Label onMouseClicked="#handleGoToLogin" style="-fx-text-fill: #E50914;                           -fx-font-size: 13px;                           -fx-cursor: hand;                           -fx-underline: true;" text="Se connecter" />
         </HBox>
 
     </VBox>

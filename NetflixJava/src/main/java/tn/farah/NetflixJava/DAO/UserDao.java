@@ -56,6 +56,48 @@ public class UserDao {
         }
     }
 
+ 
+
+    // 1️⃣ AJOUTER UN UTILISATEUR
+    public boolean addUser2(User user) {
+        String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone,pseudo,estPaye) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getPrenom());
+            pstmt.setString(2, user.getNom());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getPasswordHash());
+            pstmt.setString(5, user.getRole().name());
+
+            pstmt.setTimestamp(6, Timestamp.valueOf(user.getCreatedAt()));
+
+            if (user.getLastLogin() != null) {
+                pstmt.setTimestamp(7, Timestamp.valueOf(user.getLastLogin()));
+            } else {
+                pstmt.setNull(7, Types.TIMESTAMP);
+            }
+
+            pstmt.setBoolean(8, user.isActive());
+
+            if (user.getBirthDate() != null) {
+                pstmt.setDate(9, Date.valueOf(user.getBirthDate()));
+            } else {
+                pstmt.setNull(9, Types.DATE);
+            }
+
+            pstmt.setString(10, user.getPhone());
+            pstmt.setString(11, user.getPseudo());
+            pstmt.setBoolean(12, user.isEstPaye());
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 2️⃣ RÉCUPÉRER UN UTILISATEUR PAR ID
+
     public User getUserById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -77,8 +119,11 @@ public class UserDao {
         return users;
     }
 
+
     public boolean updateUser(User user) {
-        String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, password_hash = ?, role = ?, is_active = ?, birth_date = ?, phone = ?, pseudo=?, estPaye=? WHERE id = ?";
+        // La requête SQL définie
+        String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, password_hash = ?, role = ?, is_active = ?, birth_date = ?, phone = ?, pseudo = ?, estPaye = ? WHERE id = ?";
+        
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             
             pstmt.setString(1, user.getPrenom());
@@ -95,10 +140,13 @@ public class UserDao {
             pstmt.setString(9, user.getPseudo());
             pstmt.setBoolean(10, user.isEstPaye());
             pstmt.setInt(11, user.getId());
-            
             return pstmt.executeUpdate() > 0;
+
         } catch (SQLException e) { e.printStackTrace(); return false; }
+
     }
+
+
 
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
@@ -191,6 +239,20 @@ public class UserDao {
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erreur lors de la mise à jour : " + e.getMessage());
+            return false;
+        }
+    }
+    public boolean updatePassword(String email, String hashedPass) {
+        String sql = "UPDATE users SET password_hash = ? WHERE email = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, hashedPass);
+            pstmt.setString(2, email);
+            
+            int affected = pstmt.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
