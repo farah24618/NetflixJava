@@ -18,7 +18,7 @@ public class RatingDao {
     }
 
     public boolean addRating(Rating rating) {
-        String sql = "INSERT INTO ratings (user_id, film_id, score) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO rating (user_id, media_id, note) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, rating.getUserId());
             pstmt.setInt(2, rating.getFilmId());
@@ -32,7 +32,7 @@ public class RatingDao {
 
     public List<Rating> getRatingsByFilmId(int filmId) {
         List<Rating> ratings = new ArrayList<>();
-        String sql = "SELECT * FROM ratings WHERE film_id = ?";
+        String sql = "SELECT * FROM rating WHERE media_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, filmId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -47,7 +47,7 @@ public class RatingDao {
     }
 
     public double getAverageScoreForFilm(int filmId) {
-        String sql = "SELECT AVG(score) as moyenne FROM ratings WHERE film_id = ?";
+        String sql = "SELECT AVG(note) as moyenne FROM rating WHERE media_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, filmId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -63,10 +63,22 @@ public class RatingDao {
 
     private Rating mapResultSetToRating(ResultSet rs) throws SQLException {
         Rating rating = new Rating();
-        rating.setId(rs.getInt("id"));
         rating.setUserId(rs.getInt("user_id"));
-        rating.setFilmId(rs.getInt("film_id"));
-        rating.setScore(rs.getInt("score"));
+        rating.setFilmId(rs.getInt("media_id"));
+        rating.setScore(rs.getInt("note"));
         return rating;
+    }
+    public boolean hasRated(int userId, int mediaId) {
+        String sql = "SELECT COUNT(*) FROM rating WHERE user_id = ? AND media_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, mediaId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

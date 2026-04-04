@@ -1,19 +1,27 @@
 package tn.farah.NetflixJava.Service;
 
 import tn.farah.NetflixJava.DAO.AdminDashboardDAO;
-import tn.farah.NetflixJava.Entities.AdminStats;
-
-import java.sql.Connection;
+import java.util.Map;
 
 public class AdminDashboardService {
+    private final AdminDashboardDAO dashboardDAO;
 
-    private final AdminDashboardDAO adminDashboardDAO;
-
-    public AdminDashboardService(Connection connection) {
-        this.adminDashboardDAO = new AdminDashboardDAO(connection);
+    public AdminDashboardService() {
+        this.dashboardDAO = new AdminDashboardDAO();
     }
 
-    public AdminStats getDashboardStats() {
-        return adminDashboardDAO.getDashboardStats();
+    // On utilise les VRAIS noms de vos tables : "film", "serie", "episode", "user", "comment"
+    public int getTotalFilms() { return dashboardDAO.getCount("film"); }
+    public int getTotalSeries() { return dashboardDAO.getCount("serie"); }
+    public int getTotalEpisodes() { return dashboardDAO.getCount("episode"); }
+    public int getTotalUsers() { return dashboardDAO.getCount("user"); }
+    public int getTotalComments() { return dashboardDAO.getCount("comment"); }
+
+    public Map<String, Integer> getContentByYearData() {
+        return dashboardDAO.getContentByYear();
+    }
+
+    public Map<String, Integer> getCommentsByTypeData() {
+        return dashboardDAO.getCommentsByType();
     }
 }

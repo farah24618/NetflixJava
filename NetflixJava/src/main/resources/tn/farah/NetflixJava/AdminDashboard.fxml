@@ -48,44 +48,53 @@
     </top>
 
     <!-- ================= LEFT MENU ================= -->
-    <left>
-        <VBox spacing="15.0"
-              prefWidth="220.0"
-              style="-fx-background-color: #111111;">
-            <padding>
-                <Insets top="25" right="15" bottom="25" left="15"/>
+<left>
+        <VBox spacing="5.0" 
+              prefWidth="250.0" 
+              style="-fx-background-color: #000000;"> <padding>
+                <Insets top="30" right="15" bottom="30" left="15"/>
             </padding>
 
             <children>
-                <Label text="Navigation"
-                       style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label text="Navigation" 
+                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 15 10;"/>
 
-                <Button text="Dashboard"
-                        style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+                <Button text="⊞   Dashboard" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-background-radius: 8; -fx-cursor: hand;"/>
 
-                <Button text="Films"
-                        onAction="#goToFilmsAdmin"
-                        style="-fx-background-color: transparent; -fx-text-fill: #cccccc;"/>
+                <Button text="🎬   Films" 
+                        onAction="#goToFilmsAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
 
-                <Button text="Séries"
-                        onAction="#goToSeriesAdmin"
-                        style="-fx-background-color: transparent; -fx-text-fill: #cccccc;"/>
+                <Button text="📺   Séries" 
+                        onAction="#goToSeriesAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
 
-                <Button text="Épisodes"
-                        onAction="#goToEpisodesAdmin"
-                        style="-fx-background-color: transparent; -fx-text-fill: #cccccc;"/>
+                <Button text="👤   Utilisateurs" 
+                        onAction="#goToUsersAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
 
-                <Button text="Utilisateurs"
-                        onAction="#goToUsersAdmin"
-                        style="-fx-background-color: transparent; -fx-text-fill: #cccccc;"/>
+                <Button text="🔔   Notifications" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
 
-                <Button text="Commentaires"
-                        onAction="#goToCommentsAdmin"
-                        style="-fx-background-color: transparent; -fx-text-fill: #cccccc;"/>
+                <Button text="💬   Commentaires" 
+                        onAction="#goToCommentsAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
 
-                <Button text="Favoris"
-                        onAction="#goToFavoritesAdmin"
-                        style="-fx-background-color: transparent; -fx-text-fill: #cccccc;"/>
+                <Button text="★   Favoris" 
+                        onAction="#goToFavoritesAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="⚙   Paramètres" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
             </children>
         </VBox>
     </left>

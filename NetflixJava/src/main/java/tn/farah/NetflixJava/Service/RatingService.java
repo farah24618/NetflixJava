@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Service;
 
 
+import java.sql.Connection;
 import java.util.List;
 
 import tn.farah.NetflixJava.DAO.RatingDao;
@@ -9,9 +10,10 @@ import tn.farah.NetflixJava.Entities.Rating;
 public class RatingService {
 
     private RatingDao ratingDao;
+    
 
-    public RatingService(RatingDao ratingDao) {
-        this.ratingDao = ratingDao;
+    public RatingService(Connection c) {
+        this.ratingDao = new RatingDao(c);
     }
 
     public boolean addRating(Rating rating) {
@@ -43,5 +45,8 @@ public class RatingService {
 
         double average = ratingDao.getAverageScoreForFilm(filmId);
         return Math.round(average * 10.0) / 10.0;
+    }
+    public boolean hasRated(int userId, int mediaId) {
+        return ratingDao.hasRated(userId, mediaId);
     }
 }

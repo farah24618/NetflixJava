@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+<StackPane
+fx:id="rootPane"
+    prefHeight="450.0"
+    prefWidth="800.0"
+    style="-fx-background-color: black;"
+    xmlns="http://javafx.com/javafx/21"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="tn.farah.NetflixJava.Controller.FilmPlayerController">
+
+   <children>
+
+      <!-- VIDEO -->
+      <MediaView fx:id="mediaView" />
+
+      <!-- OVERLAY CONTRÔLES (auto-masqué) -->
+      <BorderPane
+          fx:id="controlsPane"
+          style="-fx-background-color: rgba(0,0,0,0.0);">
+
+         <!-- ═══ HAUT : titre + bouton retour ═══ -->
+         <top>
+            <HBox
+                alignment="CENTER_LEFT"
+                prefHeight="60.0"
+                spacing="20.0"
+                style="-fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);"
+                BorderPane.alignment="CENTER">
+               <children>
+                  <!-- Bouton retour -->
+                  <Button
+                      mnemonicParsing="false"
+                      onAction="#handleRetour"
+                      style="-fx-background-color: transparent; -fx-cursor: hand;"
+                      text="← Retour"
+                      textFill="WHITE">
+                     <font><Font name="System Bold" size="15.0" /></font>
+                  </Button>
+
+                  <!-- Titre du film -->
+                  <Label fx:id="titleLabel" text="Titre du film" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="20.0" top="15.0" />
+               </padding>
+            </HBox>
+         </top>
+
+         <!-- ═══ CENTRE : ↺ Play ↻ ═══ -->
+         <center>
+            <HBox alignment="CENTER" spacing="60.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button
+                      mnemonicParsing="false"
+                      onAction="#rewind10"
+                      style="-fx-background-color: transparent;"
+                      text="↺ 10"
+                      textFill="WHITE">
+                     <font><Font size="26.0" /></font>
+                  </Button>
+
+                  <Button
+                      fx:id="playButton"
+                      mnemonicParsing="false"
+                      onAction="#handlePlayPause"
+                      style="-fx-background-color: transparent;"
+                      text="▶"
+                      textFill="WHITE">
+                     <font><Font size="45.0" /></font>
+                  </Button>
+
+                  <Button
+                      mnemonicParsing="false"
+                      onAction="#forward10"
+                      style="-fx-background-color: transparent;"
+                      text="10 ↻"
+                      textFill="WHITE">
+                     <font><Font size="26.0" /></font>
+                  </Button>
+               </children>
+            </HBox>
+         </center>
+
+         <!-- ═══ BAS : barre de progression + boutons ═══ -->
+         <bottom>
+            <VBox
+                alignment="BOTTOM_CENTER"
+                prefHeight="140.0"
+                spacing="5.0"
+                style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.75), transparent);"
+                BorderPane.alignment="CENTER">
+               <children>
+
+                  <!-- Zone vide pour espacer (pas de skip intro pour un film) -->
+                  <AnchorPane prefHeight="10.0" />
+
+                  <!-- PROGRESS BAR + TEMPS -->
+                  <HBox alignment="CENTER" spacing="15.0">
+                     <children>
+                        <Slider fx:id="progressBar" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="timeLabel" minWidth="110.0" text="00:00 / 00:00" textFill="WHITE" />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </HBox>
+
+                  <!-- BOUTONS BAS -->
+                  <!--
+                      Boutons disponibles :
+                      - Vitesse        → cycle entre 0.5x / 1x / 1.25x / 1.5x / 2x
+                      - Verrouiller    → bloque tous les contrôles (utile en mode plein-écran mobile)
+                      - Audio/UT       → menu contextuel langue audio + sous-titres
+                      - Plein écran    → passe en plein écran (toggle)
+                      - Retour film    → retourne à la page FilmView du film en cours
+                  -->
+                  <HBox alignment="CENTER" prefHeight="70.0" spacing="30.0">
+                     <children>
+
+                        <Button
+                            fx:id="vitesseButton"
+                            mnemonicParsing="false"
+                            onAction="#handleVitesse"
+                            style="-fx-background-color: transparent;"
+                            text="Vitesse"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            fx:id="lockButton"
+                            mnemonicParsing="false"
+                            onAction="#handleVerrouiller"
+                            style="-fx-background-color: transparent;"
+                            text="🔓 Verrouiller"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            mnemonicParsing="false"
+                            onAction="#handleAudioMenu"
+                            style="-fx-background-color: transparent;"
+                            text="🎧 Audio/UT"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button
+                            fx:id="fullscreenButton"
+                            mnemonicParsing="false"
+                            onAction="#handleFullscreen"
+                            style="-fx-background-color: transparent;"
+                            text="⛶ Plein écran"
+                            textFill="WHITE">
+                           <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <!-- Retourne à la page FilmView (fiche du film) -->
+                        <Button
+                            mnemonicParsing="false"
+                            onAction="#handleRetour"
+                            style="-fx-background-color: transparent;"
+                            text="🎬 Fiche film"
+                            textFill="WHITE">
+                           <font><Font name="System Bold" size="14.0" /></font>
+                        </Button>
+
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                  </HBox>
+
+               </children>
+            </VBox>
+         </bottom>
+
+      </BorderPane>
+
+   </children>
+</StackPane>

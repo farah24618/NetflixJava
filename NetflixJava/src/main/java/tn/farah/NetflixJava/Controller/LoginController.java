@@ -101,6 +101,22 @@ public class LoginController implements Initializable{
 	        ScreenManager.getInstance().navigateTo(Screen.home);
 	        System.out.println("DEBUG: Login réussi pour " + email);
 
+	      
+	        if (authenticated != null) {
+	            // 1. Enregistrer la session EN PREMIER
+	            SessionManager.getInstance().login(authenticated);
+
+	            // 2. Persister l'email si "Remember me" coché
+	            /*if (rememberMeCheckBox.isSelected()) {
+	                PreferencesStore.saveEmail(email);
+	            } else {
+	                PreferencesStore.clearEmail();
+	            }*/
+
+	            // 3. Naviguer vers les profils
+	            ScreenManager.getInstance().navigateWithSplash(Screen.home);
+
+	        
 	    } else {
 	        // Échec : Mot de passe ou Email incorrect
 	        showAlert(Alert.AlertType.ERROR,
@@ -109,7 +125,8 @@ public class LoginController implements Initializable{
 	        
 	        passwordField.clear();
 	        passwordField.requestFocus();
-	    }
+
+	    }}
 	}
 	    // ── Forgot Password ──────────────────────────────────────────────────────
 	    @FXML
@@ -125,8 +142,8 @@ public class LoginController implements Initializable{
 	    private void handleLearnMore(ActionEvent event) {
 	        // TODO: Open browser / info dialog about Google reCAPTCHA
 	        showAlert(Alert.AlertType.INFORMATION,
-	                  "About reCAPTCHA",
-	                  "Google reCAPTCHA protects this page from automated abuse.");
+	                  "À propos de reCAPTCHA",
+	                  "Google reCAPTCHA protège cette page contre les abus automatisés.");
 	    }
 	    @FXML
 	    private void handleEnterKey(KeyEvent event) {

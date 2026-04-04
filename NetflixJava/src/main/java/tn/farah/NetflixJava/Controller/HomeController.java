@@ -14,6 +14,8 @@ import tn.farah.NetflixJava.Service.FavoriService;
 import tn.farah.NetflixJava.Service.FilmService;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.Service.HistoryService;
+import tn.farah.NetflixJava.Service.NotificationService;
+import tn.farah.NetflixJava.Service.SaisonService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -38,11 +40,14 @@ public class HomeController implements Initializable {
     @FXML private TextField searchField;
     @FXML private Label     avatarLabel;
     @FXML private VBox      carouselContainer;
+    @FXML private Label notifBadge;
 
     // ── Services ─────────────────────────────────────────────────────────────
     private FilmService    filmService;
     private SerieService   serieService;
     private FavoriService  FavoriService;
+    private SaisonService saisonService;
+    private Connection connection;
 
     // ── Data caches (loaded once, filtered on demand) ─────────────────────
     private List<Film>              allFilms  = Collections.emptyList();
@@ -63,13 +68,15 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
-        final Connection connection = ConxDB.getInstance();
+         connection = ConxDB.getInstance();
         if (connection == null) return;
 
         filmService   = new FilmService(connection);
         serieService  = new SerieService(connection);
         FavoriService = new FavoriService(connection);
-
+        saisonService=new SaisonService(connection);
+        CardFactory.setFavoriService(FavoriService);
+        CardFactory.setNotificationService(new NotificationService(connection));
         loadData();
         initHero();
         buildCarousels(allFilms, allSeries, filmsByCategory, seriesByCategory);
@@ -325,17 +332,26 @@ public class HomeController implements Initializable {
 
     private Consumer<Film> goToFilmDetail() {
         return film -> {
-            final DetailMediaController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
+            final FilmViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.detailFilm);
             if (ctrl != null) ctrl.setFilm(film);
         };
     }
 
     private Consumer<Serie> goToSerieDetail() {
         return serie -> {
+            // 1. On récupère l'ID de la première saison (via un nouveau DAO ou méthode)
+            int firstSeasonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
+
+            // 2. Navigation
             final EpisodeViewController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.detail);
-            if (ctrl != null) ctrl.setSerie(serie);
+
+            if (ctrl != null) {
+                ctrl.setSerie(serie);
+                System.out.println("saison:"+firstSeasonId);
+                ctrl.setSaisonId(firstSeasonId); // Nouvelle méthode dans votre EpisodeViewController
+            }
         };
     }
 
@@ -346,9 +362,49 @@ public class HomeController implements Initializable {
     @FXML private void onMyList()           { ScreenManager.getInstance().navigateTo(Screen.myList); }
     @FXML private void onMovies()           { ScreenManager.getInstance().navigateTo(Screen.films); }
     @FXML private void onSeries()           { ScreenManager.getInstance().navigateTo(Screen.series); }
-    @FXML private void onPlayFeatured()     { System.out.println("Lecture hero"); }
-    @FXML private void onMoreInfoFeatured() {
-        if (!heroFilms.isEmpty()) goToFilmDetail().accept(heroFilms.get(heroIndex));
+    @FXML 
+    private void onPlayFeatured() {
+        if (heroFilms.isEmpty()) {
+        	System.out.println("hero is empty");
+        	return;
+        }
+        
+        // 1. Stopper le timer AVANT de naviguer
+        if (heroTimer != null) heroTimer.stop();
+        
+        // 2. Capturer le film IMMÉDIATEMENT
+        final Film film = heroFilms.get(heroIndex);
+        
+        // 3. Naviguer
+        FilmPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.filmPlayer); 
+            
+        if (ctrl != null) {
+            ctrl.initFilm(film);
+        } else {
+            System.err.println("FilmPlayerController null — vérifie Screen.filmPlayer");
+        }
+    }   
+
+    @FXML 
+    private void onMoreInfoFeatured() {
+        if (heroFilms.isEmpty()) return;
+        
+        // 1. Stopper le timer AVANT de naviguer
+        if (heroTimer != null) heroTimer.stop();
+        
+        // 2. Capturer le film IMMÉDIATEMENT
+        final Film film = heroFilms.get(heroIndex);
+        
+        // 3. Naviguer
+        FilmViewController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.detailFilm);
+            
+        if (ctrl != null) {
+            ctrl.setFilm(film);
+        } else {
+            System.err.println("FilmViewController null — vérifie Screen.detailFilm");
+        }
     }
     @FXML
     private void onSearch() {
@@ -362,6 +418,19 @@ public class HomeController implements Initializable {
         // called by the 🔍 button
         applySearch(searchField.getText() == null ? ""
                 : searchField.getText().trim().toLowerCase());
+    }
+   /* private void chargerBadgeNotif() {
+        int userId = SessionManager.getInstance().getCurrentUserId();
+        NotificationService service = new NotificationService(connection);
+        int count = service.countUnread(userId);
+        if (notifBadge != null) {
+            notifBadge.setText(String.valueOf(count));
+            notifBadge.setVisible(count > 0);
+        }
+    }
+*/
+    @FXML private void onNotifications() {
+        ScreenManager.getInstance().navigateTo(Screen.notification); // adapte le nom exact
     }
 
 }

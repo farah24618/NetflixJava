@@ -13,8 +13,8 @@ public class UserService {
 
     private UserDao userDao;
 
-    public UserService(Connection connexion) {
-        this.userDao = new UserDao(connexion);
+    public UserService(Connection c) {
+        this.userDao = new UserDao(c);
     }
 
     // 1️⃣ INSCRIPTION
@@ -89,6 +89,10 @@ public class UserService {
         if (userId <= 0) return false;
         return userDao.updatePaymentStatus(userId, status); 
     }
+
+    public User findUserById(int userId) {
+    	return userDao.getUserById(userId);}
+
  // 5️⃣ UPDATE PASSWORD
     public boolean updatePassword(String email, String hashedPass) {
         // Validation de base
@@ -104,5 +108,6 @@ public class UserService {
         if (user == null || user.getId() <= 0) return false;
         // Tu peux ajouter ici une validation pour vérifier si le pseudo est déjà pris
         return userDao.updateUser(user);
+
     }
 }
