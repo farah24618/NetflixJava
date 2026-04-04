@@ -46,6 +46,7 @@ public class Main extends Application {
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
  
         nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
+        nav.register(Screen.notificationAdmin, "/tn/farah/NetflixJava/notificationAdmin.fxml");
 
 
         primaryStage.setTitle("RekchaNet");
@@ -55,7 +56,7 @@ public class Main extends Application {
 
 
 
-        nav.navigateTo(Screen.signup1);
+        nav.navigateTo(Screen.notificationAdmin);
 
 
 

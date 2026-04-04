@@ -99,4 +99,17 @@ public class NotificationDAO {
             e.printStackTrace();
         }
     }
+ // Dans NotificationDAO.java
+    public int countAll(int userId) {
+        String query = "SELECT COUNT(*) FROM notifications WHERE user_id=?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }	

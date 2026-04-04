@@ -27,4 +27,7 @@ public class NotificationService {
     public void addNotification(Notification notification) {
         dao.addNotification(notification);
     }
+    public int countAll(int userId) {
+        return dao.countAll(userId);
+    }
 }
