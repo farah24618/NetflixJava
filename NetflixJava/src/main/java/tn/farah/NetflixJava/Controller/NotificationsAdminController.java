@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Service.NotificationService;
+import tn.farah.NetflixJava.utils.ConxDB;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,7 +37,7 @@ public class NotificationsAdminController implements Initializable {
     @FXML private CheckBox selectAllCheckbox;
 
     // Service
-    private final NotificationService notificationService = new NotificationService();
+    private final NotificationService notificationService = new NotificationService(ConxDB.getInstance());
     private ObservableList<Notification> masterData = FXCollections.observableArrayList();
     
     // ID utilisateur (statique pour l'exemple, à lier à votre session)
