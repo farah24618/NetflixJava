@@ -3,7 +3,7 @@ package tn.farah.NetflixJava.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.TableView;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.DAO.FilmDao;
@@ -16,38 +16,18 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminMainController {
-	@FXML private TableView<Film> tableFilms;
 
     @FXML private VBox movieListContainer;
     @FXML private TextField searchField;
-    
+    @FXML private Label titleCountLabel;
+
     private FilmDao filmDao;
-    @FXML
-    private void inspecterCommentaires() {
-        // 1. On récupère le film sélectionné dans la table
-        Film selectionne = tableFilms.getSelectionModel().getSelectedItem();
-        
-        if (selectionne != null) {
-            // 2. On change d'écran
-            ScreenManager.getInstance().navigateTo(Screen.episodeComments);
-            
-            // 3. On récupère le contrôleur de l'écran des commentaires
-            CommentListController controller = (CommentListController) ScreenManager.getInstance().getController();
-            
-            // 4. On lui passe le film pour charger les bons commentaires
-            controller.setFilm(selectionne);
-            
-            System.out.println("✅ Chargement des commentaires pour : " + selectionne.getTitre());
-        } else {
-            System.out.println("⚠️ Veuillez sélectionner un film dans la table d'abord !");
-        }
-    }
 
     @FXML
     public void initialize() {
-        // Récupération de la connexion via ta méthode static
         Connection conn = DatabaseConnection.getConnection();
         
         if (conn != null) {
@@ -62,50 +42,95 @@ public class AdminMainController {
                 loadMovies(newValue);
             });
         } else {
-            System.out.println("❌ Erreur : Impossible de se connecter à MySQL.");
+            System.err.println("❌ Erreur : Impossible de se connecter à MySQL.");
         }
     }
 
     private void loadMovies(String query) {
         try {
+            if (movieListContainer == null) return;
+            
             movieListContainer.getChildren().clear();
-            List<Film> movies;
+            List<Film> allTitles;
             
             if (query == null || query.isEmpty()) {
-                movies = filmDao.findAll();
+                allTitles = filmDao.findAll();
             } else {
-                movies = filmDao.findByTitle(query);
+                allTitles = filmDao.findByTitle(query);
             }
 
-            System.out.println("🎬 Tentative d'affichage de " + movies.size() + " films.");
+            // CORRECTION ICI : Utilisation de .name() pour comparer l'Enum avec une String
+            List<Film> onlyMovies = allTitles.stream()
+                .filter(f -> f.getType() != null && f.getType().name().equalsIgnoreCase("MOVIE"))
+                .collect(Collectors.toList());
 
-            for (Film f : movies) {
-                // TEST : On utilise un chemin relatif par rapport à la racine des ressources
-                // Vérifie bien que "View" prend une majuscule et que le fichier finit bien par .fxml
-            	String fxmlPath = "/tn/farah/NetflixJava/admin_movie_item.fxml";
+            if (titleCountLabel != null) {
+                titleCountLabel.setText("Mes Films (" + onlyMovies.size() + ")");
+            }
+
+            for (Film f : onlyMovies) {
+                String fxmlPath = "/tn/farah/NetflixJava/admin_movie_item.fxml";
                 java.net.URL location = getClass().getResource(fxmlPath);
 
                 if (location == null) {
-                    System.err.println("❌ Erreur : Le fichier FXML est introuvable à l'adresse : " + fxmlPath);
-                    return; // On arrête pour éviter le crash "Location is not set"
+                    System.err.println("❌ Fichier introuvable : " + fxmlPath);
+                    continue; 
                 }
 
                 FXMLLoader loader = new FXMLLoader(location);
-                Parent item = loader.load();
-                
-                MovieItemController controller = loader.getController();
-                controller.setFilmData(f);
-                
-                movieListContainer.getChildren().add(item);
+                try {
+                    Parent item = loader.load();
+                    MovieItemController controller = loader.getController();
+                    
+                    if (controller != null) {
+                        controller.setFilmData(f); 
+                        movieListContainer.getChildren().add(item);
+                    }
+                } catch (IOException e) {
+                    System.err.println("❌ Erreur chargement de l'item pour : " + f.getTitre());
+                    e.printStackTrace();
+                }
             }
-        } catch (SQLException | IOException e) {
-            System.err.println("❌ Erreur lors du rendu de la liste : " + e.getMessage());
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur SQL lors du chargement : " + e.getMessage());
         }
     }
+
+    // --- NAVIGATION ---
+
+    @FXML
+    private void handleNavDashboard() {
+        ScreenManager.getInstance().navigateTo(Screen.dashboard);
+    }
+
+    @FXML
+    private void handleNavUsers() {
+        ScreenManager.getInstance().navigateTo(Screen.manageUsers);
+    }
+
+    @FXML
+    private void handleNavSeries() {
+        // Logique pour l'interface série à venir
+        System.out.println("📺 Navigation vers Séries (Interface à créer)");
+    }
+
+    @FXML
+    private void handleNavNotifications() {
+        System.out.println("🔔 Notifications cliquées");
+    }
+
+    @FXML
+    private void handleNavComments() {
+        ScreenManager.getInstance().navigateTo(Screen.episodeComments);
+    }
+
     @FXML
     private void handleAddMovie() {
-        // Cette méthode répare l'erreur de chargement FXML (LoadException)
-        System.out.println("Ouverture du formulaire d'ajout...");
+        System.out.println("➕ Ajout d'un nouveau film");
+    }
+
+    @FXML
+    private void handleLogout() {
+        System.exit(0);
     }
 }

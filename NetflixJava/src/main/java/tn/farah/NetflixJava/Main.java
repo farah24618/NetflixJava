@@ -44,21 +44,61 @@ public class Main extends Application {
             // Administration
             nav.register(Screen.admin_main,      "/tn/farah/NetflixJava/admin_main.fxml");
             nav.register(Screen.comments,      "/tn/farah/NetflixJava/comments.fxml");
+            
+            
+            
+            nav.register(Screen.userManagement,      "/tn/farah/NetflixJava/userManagement.fxml");
 
+        // 2. Register every screen
+        nav.register(Screen.login,          "/tn/farah/NetflixJava/login.fxml");
+        nav.register(Screen.pofiles,        "/tn/farah/NetflixJava/profiles.fxml");
+        nav.register(Screen.logup,        "/tn/farah/NetflixJava/logup.fxml");
+        nav.register(Screen.mainView,        "/tn/farah/NetflixJava/MainView.fxml");
+        nav.register(Screen.home,        "/tn/farah/NetflixJava/Home.fxml");
+        nav.register(Screen.films,        "/tn/farah/NetflixJava/Films.fxml");
+        nav.register(Screen.series,        "/tn/farah/NetflixJava/Series.fxml");
+        nav.register(Screen.search,        "/tn/farah/NetflixJava/Search.fxml");
+        nav.register(Screen.signup1,        "/tn/farah/NetflixJava/signup1.fxml");
+        nav.register(Screen.signup2,        "/tn/farah/NetflixJava/signup2.fxml");
+        nav.register(Screen.signup3,        "/tn/farah/NetflixJava/signup3.fxml");
+        nav.register(Screen.detail,        "/tn/farah/NetflixJava/EpisodeView2.fxml");
+        nav.register(Screen.myList,"/tn/farah/NetflixJava/MyListView.fxml");
+        nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
+        nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
+        nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
+        nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
+        nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
+        nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+ 
+        nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
+        nav.register(Screen.comments, "/tn/farah/NetflixJava/comments.fxml");
 
-            // 2. CONFIGURATION DE LA FENÊTRE
+          // 2. CONFIGURATION DE LA FENÊTRE
             primaryStage.setTitle("RekchaNet - Mode Test");
             primaryStage.setWidth(1280);
             primaryStage.setHeight(720);
             primaryStage.centerOnScreen();
 
-            // 3. CHOIX DE L'INTERFACE À TESTER
-            // Décommente la ligne que tu veux tester et commente les autres :
+        primaryStage.setTitle("RekchaNet");
+        //nav.navigateTo(Screen.addProfile);
+        //nav.navigateTo(Screen.episodeComments);
+        
+
+
+
+       // nav.navigateTo(Screen.signup1);
+
+
+
             
-           // nav.navigateTo(Screen.admin_main);      // Test Liste des films (Admin)
+            
+           nav.navigateTo(Screen.admin_main);      // Test Liste des films (Admin)
             // nav.navigateTo(Screen.video);        // Test Lecteur Vidéo
             // nav.navigateTo(Screen.login);        // Test Login
-             nav.navigateTo(Screen.comments); // Test Commentaires
+             //nav.navigateTo(Screen.comments); // Test Commentaires
+        
+        
+      //  nav.navigateTo(Screen.userManagement); // Test Commentaires
 
             primaryStage.show();
             System.out.println("✅ Application lancée sur l'écran : " + Screen.admin_main);
@@ -67,6 +107,14 @@ public class Main extends Application {
             System.err.println("❌ Erreur critique lors de l'enregistrement des écrans :");
             e.printStackTrace();
         }
+
+     // Test pour voir si le ScreenManager marche encore
+        //nav.navigateTo(Screen.login);
+
+        primaryStage.setWidth(1280);   // ← largeur que tu veux
+        primaryStage.setHeight(720);   // ← hauteur que tu veux
+        primaryStage.centerOnScreen();
+
     }
 
     public static void main(String[] args) {

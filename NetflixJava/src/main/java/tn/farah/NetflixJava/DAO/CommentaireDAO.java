@@ -9,18 +9,19 @@ public class CommentaireDAO {
 
     private Connection conn;
 
-    // Constructeur pour recevoir la connexion du contrôleur
     public CommentaireDAO(Connection conn) {
         this.conn = conn;
     }
 
+    /**
+     * Récupère les commentaires d'un film.
+     * Utilise directement la colonne 'username' de la table 'comment'.
+     */
     public List<Commentaire> findByFilmId(int filmId) {
         List<Commentaire> commentaires = new ArrayList<>();
-        String sql = "SELECT c.*, u.nom " +
-                     "FROM comment c " + 
-                     "JOIN users u ON c.user_id = u.id " + 
-                     "WHERE c.media_id = ? " + 
-                     "ORDER BY c.date_publication DESC";
+        // On sélectionne directement depuis 'comment' car 'username' y est déjà
+        String sql = "SELECT * FROM comment WHERE media_id = ? ORDER BY date_publication DESC";
+        
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, filmId);
             ResultSet rs = ps.executeQuery();
@@ -30,10 +31,13 @@ public class CommentaireDAO {
                 c.setId(rs.getInt("id"));
                 c.setMediaId(rs.getInt("media_id"));
                 c.setUserId(rs.getInt("user_id"));
-                c.setUsername(rs.getString("nom"));
+                // On utilise la colonne username de la table comment
+                c.setUsername(rs.getString("username")); 
                 c.setContenu(rs.getString("contenu"));
-                c.setLikes(rs.getInt("likes"));
-                c.setSpoiler(rs.getBoolean("contient_spoils"));
+                
+                // On vérifie les deux colonnes possibles pour le flag signalement
+                boolean isSpoiler = rs.getBoolean("contient_spoils") || rs.getBoolean("is_spoiler");
+                c.setSpoiler(isSpoiler);
 
                 Timestamp ts = rs.getTimestamp("date_publication");
                 if (ts != null) {
@@ -42,21 +46,24 @@ public class CommentaireDAO {
                 commentaires.add(c);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Erreur findByFilmId : " + e.getMessage());
         }
         return commentaires;
     }
 
+    /**
+     * Sauvegarde un nouveau commentaire
+     */
     public int save(Commentaire commentaire) {
         int generatedId = 0;
-        String sql = "INSERT INTO comment (media_id, user_id, contenu, contient_spoils, likes, date_publication) " +
+        String sql = "INSERT INTO comment (media_id, user_id, username, contenu, contient_spoils, date_publication) " +
                      "VALUES (?, ?, ?, ?, ?, NOW())";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, commentaire.getMediaId());
             ps.setInt(2, commentaire.getUserId());
-            ps.setString(3, commentaire.getContenu());
-            ps.setBoolean(4, commentaire.isSpoiler());
-            ps.setInt(5, 0);
+            ps.setString(3, commentaire.getUsername());
+            ps.setString(4, commentaire.getContenu());
+            ps.setBoolean(5, commentaire.isSpoiler());
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -64,32 +71,22 @@ public class CommentaireDAO {
                 generatedId = rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Erreur save : " + e.getMessage());
         }
         return generatedId;
-    } 
+    }
+
+    /**
+     * Supprime un commentaire (Action Admin)
+     */
     public void delete(int id) {
         String sql = "DELETE FROM comment WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
-            int rowsDeleted = ps.executeUpdate();
-            
-            if (rowsDeleted > 0) {
-                System.out.println("✅ Commentaire ID " + id + " supprimé avec succès.");
-            }
-        } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de la suppression : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void incrementLike(int commentaireId) {
-        String sql = "UPDATE comment SET likes = likes + 1 WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, commentaireId);
             ps.executeUpdate();
+            System.out.println("✅ Commentaire " + id + " supprimé.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Erreur suppression : " + e.getMessage());
         }
     }
 }

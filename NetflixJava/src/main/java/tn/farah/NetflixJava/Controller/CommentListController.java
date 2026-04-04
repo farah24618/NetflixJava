@@ -1,239 +1,101 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import tn.farah.NetflixJava.DAO.CommentaireDAO;
 import tn.farah.NetflixJava.Entities.Commentaire;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.utils.DatabaseConnection;
+import tn.farah.NetflixJava.utils.ScreenManager;
+import javafx.scene.Node;
+import java.sql.Connection;
+import java.util.List;
 
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+public class CommentListController {
 
-public class CommentListController implements Initializable {
-
-    // ── FXML ─────────────────────────────
     @FXML private VBox commentsContainer;
     @FXML private Label filmTitleLabel;
     @FXML private Label commentCountLabel;
-    @FXML private Label spoilerCountLabel;
-    @FXML private Label deletedCountLabel;
-    @FXML private TextField searchField;
-    @FXML private ToggleButton btnAll;
-    @FXML private ToggleButton btnSpoiler;
-    @FXML private ToggleButton btnRecent;
-    @FXML private ComboBox<String> sortCombo;
-    @FXML private Button bulkDeleteBtn;
-    @FXML private CheckBox selectAllCb;
-    @FXML private Label statusLabel;
+    @FXML private TextField commentInput;
 
-    // ── DATA ─────────────────────────────
     private Film currentFilm;
     private CommentaireDAO dao;
-    private List<Commentaire> allComments = new ArrayList<>();
-    private final Set<Integer> selectedIds = new HashSet<>();
-    private int deletedCount = 0;
-    private String activeFilter = "ALL";
 
-    private static final DateTimeFormatter FMT =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        var conn = DatabaseConnection.getConnection();
+    @FXML
+    public void initialize() {
+        Connection conn = DatabaseConnection.getConnection();
         if (conn != null) dao = new CommentaireDAO(conn);
-
-        sortCombo.getItems().addAll("Newest first", "Oldest first");
-        sortCombo.getSelectionModel().selectFirst();
-        sortCombo.setOnAction(e -> applyFiltersAndSort());
     }
 
     public void setFilm(Film film) {
         this.currentFilm = film;
-        filmTitleLabel.setText(film.getTitre());
-        loadComments();
+        if (film != null) {
+            filmTitleLabel.setText("Comments for " + film.getTitre());
+            loadComments();
+        }
     }
 
-    // ── LOAD DATA ────────────────────────
     private void loadComments() {
-        try {
-            if (dao != null && currentFilm != null)
-                allComments = dao.findByFilmId(currentFilm.getId());
-        } catch (Exception e) {
-            allComments = new ArrayList<>();
-        }
-
-        applyFiltersAndSort();
-    }
-
-    // ── FILTER + SORT ────────────────────
-    private void applyFiltersAndSort() {
-
-        String q = searchField.getText() == null ? "" :
-                searchField.getText().toLowerCase();
-
-        List<Commentaire> filtered = allComments.stream()
-                .filter(c -> {
-                    if (!q.isEmpty()) {
-                        String body = c.getContenu() == null ? "" : c.getContenu().toLowerCase();
-                        String user = c.getUsername() == null ? "" : c.getUsername().toLowerCase();
-                        if (!body.contains(q) && !user.contains(q)) return false;
-                    }
-
-                    return switch (activeFilter) {
-                        case "SPOILER" -> c.isSpoiler();
-                        case "RECENT" -> c.getDateCommentaire() != null &&
-                                c.getDateCommentaire().isAfter(LocalDateTime.now().minusDays(7));
-                        default -> true;
-                    };
-                })
-                .sorted(buildComparator())
-                .collect(Collectors.toList());
-
-        renderRows(filtered);
-        refreshStats();
-    }
-
-    private Comparator<Commentaire> buildComparator() {
-        Comparator<Commentaire> cmp =
-                Comparator.comparing(c ->
-                        c.getDateCommentaire() == null ? LocalDateTime.MIN : c.getDateCommentaire());
-
-        return sortCombo.getValue().equals("Newest first") ? cmp.reversed() : cmp;
-    }
-
-    // ── RENDER ───────────────────────────
-    private void renderRows(List<Commentaire> list) {
+        if (dao == null || currentFilm == null) return;
         commentsContainer.getChildren().clear();
-        selectedIds.clear();
+        
+        List<Commentaire> comments = dao.findByFilmId(currentFilm.getId());
+        commentCountLabel.setText("Comments (" + comments.size() + ")");
 
-        for (Commentaire c : list) {
-            commentsContainer.getChildren().add(buildRow(c));
+        for (Commentaire c : comments) {
+            Node item = createCommentItem(c);
+            if (item != null) commentsContainer.getChildren().add(item);
         }
     }
 
-    private HBox buildRow(Commentaire c) {
+    private HBox createCommentItem(Commentaire c) {
+        try {
+            HBox row = new HBox(15);
+            row.setAlignment(Pos.TOP_LEFT);
+            row.setPadding(new Insets(10, 0, 10, 0));
 
-        HBox row = new HBox(10);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(10));
+            // SECURITÉ NOM : Evite le crash si username est vide ou nul
+            String name = (c.getUsername() != null && !c.getUsername().isEmpty()) ? c.getUsername() : "User";
+            String initial = name.substring(0, 1).toUpperCase();
 
-        // 🔥 IMPORTANT FIX
-        row.setUserData(c);
+            // Avatar
+            StackPane avatar = new StackPane();
+            Circle circle = new Circle(18, Color.web(c.isSpoiler() ? "#E50914" : "#333333"));
+            Label lblInitial = new Label(initial);
+            lblInitial.setTextFill(Color.WHITE);
+            avatar.getChildren().addAll(circle, lblInitial);
 
-        CheckBox cb = new CheckBox();
-        cb.setOnAction(e -> {
-            if (cb.isSelected()) selectedIds.add(c.getId());
-            else selectedIds.remove(c.getId());
-            updateBulkBtn();
-        });
+            // Texte
+            VBox textStack = new VBox(3);
+            HBox.setHgrow(textStack, Priority.ALWAYS);
+            Label userLabel = new Label(name + " • Now");
+            userLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+            Label contentLabel = new Label(c.getContenu());
+            contentLabel.setStyle("-fx-text-fill: #cccccc;");
+            contentLabel.setWrapText(true);
+            textStack.getChildren().addAll(userLabel, contentLabel);
 
-        Label user = new Label(c.getUsername());
-        Label content = new Label(c.getContenu());
-        Label date = new Label(
-                c.getDateCommentaire() != null ?
-                        c.getDateCommentaire().format(FMT) : "-"
-        );
+            // Delete
+            Button delBtn = new Button("🗑");
+            delBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #E50914; -fx-cursor: hand;");
+            delBtn.setOnAction(e -> {
+                dao.delete(c.getId());
+                loadComments();
+            });
 
-        Label spoiler = new Label(c.isSpoiler() ? "⚠ Spoiler" : "OK");
-
-        Button flag = new Button("🚩");
-        flag.setOnAction(e -> {
-            c.setSpoiler(!c.isSpoiler());
-            if (dao != null) dao.save(c);
-            applyFiltersAndSort();
-            status("Comment by \"" + c.getUsername() + "\" updated");
-        });
-
-        Button delete = new Button("🗑");
-        delete.setOnAction(e -> {
-            if (dao != null) dao.delete(c.getId());
-            allComments.remove(c);
-            deletedCount++;
-            applyFiltersAndSort();
-            status("Comment deleted");
-        });
-
-        row.getChildren().addAll(cb, user, content, date, spoiler, flag, delete);
-        return row;
+            row.getChildren().addAll(avatar, textStack, delBtn);
+            return row;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Si un item plante, on ne bloque pas les autres
+        }
     }
 
-    // ── SELECT ALL FIXED ─────────────────
-    @FXML
-    private void handleSelectAll() {
-
-        boolean selected = selectAllCb.isSelected();
-        selectedIds.clear();
-
-        commentsContainer.getChildren().forEach(node -> {
-            if (node instanceof HBox row) {
-
-                Commentaire c = (Commentaire) row.getUserData();
-
-                row.getChildren().stream()
-                        .filter(n -> n instanceof CheckBox)
-                        .map(n -> (CheckBox) n)
-                        .findFirst()
-                        .ifPresent(cb -> {
-                            cb.setSelected(selected);
-                            if (selected) selectedIds.add(c.getId());
-                        });
-            }
-        });
-
-        updateBulkBtn();
-    }
-
-    @FXML
-    private void handleDeleteSelected() {
-        if (selectedIds.isEmpty()) return;
-
-        selectedIds.forEach(id -> {
-            if (dao != null) dao.delete(id);
-        });
-
-        allComments.removeIf(c -> selectedIds.contains(c.getId()));
-        deletedCount += selectedIds.size();
-
-        applyFiltersAndSort();
-        status("Deleted " + selectedIds.size() + " comments");
-    }
-
-    private void updateBulkBtn() {
-        bulkDeleteBtn.setDisable(selectedIds.isEmpty());
-    }
-
-    // ── FILTER HANDLERS ──────────────────
-    @FXML private void filterAll()     { activeFilter = "ALL"; applyFiltersAndSort(); }
-    @FXML private void filterSpoiler() { activeFilter = "SPOILER"; applyFiltersAndSort(); }
-    @FXML private void filterRecent()  { activeFilter = "RECENT"; applyFiltersAndSort(); }
-    @FXML private void handleSearch()  { applyFiltersAndSort(); }
-
-    // ── STATS ───────────────────────────
-    private void refreshStats() {
-        commentCountLabel.setText(allComments.size() + " total");
-        spoilerCountLabel.setText(
-                allComments.stream().filter(Commentaire::isSpoiler).count() + " spoilers");
-        deletedCountLabel.setText(deletedCount + " deleted");
-    }
-
-    // ── WINDOW ──────────────────────────
-    @FXML
-    private void handleClose() {
-        ((Stage) commentsContainer.getScene().getWindow()).close();
-    }
-
-    // ── STATUS ──────────────────────────
-    private void status(String msg) {
-        statusLabel.setText(msg);
-    }
+    @FXML private void handleClose() { ScreenManager.getInstance().goBack(); }
+    @FXML private void handlePostComment() { /* Ton code save ici */ }
 }

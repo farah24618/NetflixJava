@@ -1,7 +1,8 @@
 package tn.farah.NetflixJava.utils;
 
 public enum Screen {
-    // Liste unique et propre sans les symboles <<<< ==== >>>>
+
+    
     login,
     pofiles,
     logup,
@@ -22,5 +23,9 @@ public enum Screen {
     ResetPassword,
     admin_main,
     video,
-    episodeView, comments
+    episodeView, comments, userManagement
 }
+
+
+
+

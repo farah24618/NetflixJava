@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -12,12 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0"
-            prefWidth="1200.0"
-            style="-fx-background-color: #141414;"
-            xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.farah.NetflixJava.Controller.AddProfileController">
+<BorderPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AddProfileController">
 
     <top>
         <HBox alignment="TOP_LEFT" prefHeight="90.0">
@@ -25,10 +19,13 @@
                 <Insets bottom="0.0" left="40.0" right="40.0" top="25.0" />
             </padding>
             <children>
-                <ImageView fitHeight="40.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@ImagesNet/ChatGPT%20Image%20Feb%209,%202026,%2005_10_50%20PM.png" />
+                        <Image url="@ImagesNet/RAKCHANET.jpg" />
                     </image>
+               <HBox.margin>
+                  <Insets left="-30.0" top="-20.0" />
+               </HBox.margin>
                 </ImageView>
             </children>
         </HBox>
@@ -41,9 +38,9 @@
             </padding>
 
             <children>
-                <Label style="-fx-text-fill: white; -fx-font-size: 56; -fx-font-weight: 300;" text="Add Profile" />
+                <Label style="-fx-text-fill: white; -fx-font-size: 56; -fx-font-weight: 300;" text="Ajouter Profil" />
 
-                <Label style="-fx-text-fill: #b3b3b3; -fx-font-size: 16;" text="Add a profile for another person watching Netflix" />
+                <Label style="-fx-text-fill: #b3b3b3; -fx-font-size: 16;" text="Ajouter un profil pour une autre personne regardant Netflix" />
 
                 <Separator prefWidth="980.0" style="-fx-background-color: #2a2a2a;" />
 
@@ -57,20 +54,7 @@
 
                         <VBox alignment="CENTER_LEFT" spacing="12.0">
                             <children>
-                                <TextField fx:id="nameField"
-                                           prefHeight="42.0"
-                                           prefWidth="520.0"
-                                           promptText="Name"
-                                           style="-fx-background-color: #3a3a3a;
-                                                  -fx-text-fill: #e6e6e6;
-                                                  -fx-prompt-text-fill: #a0a0a0;
-                                                  -fx-font-size: 16;
-                                                  -fx-background-radius: 4;
-                                                  -fx-border-color: transparent;" />
-
-                                <CheckBox fx:id="kidCheckBox"
-                                          style="-fx-text-fill: white; -fx-font-size: 14;"
-                                          text="Kid?" />
+                                <TextField fx:id="nameField" prefHeight="42.0" prefWidth="520.0" promptText="pseudo" style="-fx-background-color: #3a3a3a;                                                   -fx-text-fill: #e6e6e6;                                                   -fx-prompt-text-fill: #a0a0a0;                                                   -fx-font-size: 16;                                                   -fx-background-radius: 4;                                                   -fx-border-color: transparent;" />
                             </children>
                         </VBox>
                     </children>
@@ -85,28 +69,7 @@
                 <Insets bottom="45.0" top="35.0" />
             </padding>
             <children>
-                <Button onAction="#handleContinue"
-                        prefHeight="42.0"
-                        prefWidth="140.0"
-                        style="-fx-background-color: #e6e6e6;
-                               -fx-text-fill: black;
-                               -fx-font-weight: bold;
-                               -fx-font-size: 14;
-                               -fx-background-radius: 2;"
-                        text="Continue" />
-
-                <Button onAction="#handleCancel"
-                        prefHeight="42.0"
-                        prefWidth="140.0"
-                        style="-fx-background-color: transparent;
-                               -fx-border-color: #5a5a5a;
-                               -fx-text-fill: #9a9a9a;
-                               -fx-font-weight: bold;
-                               -fx-font-size: 14;
-                               -fx-border-width: 1;
-                               -fx-background-radius: 2;
-                               -fx-border-radius: 2;"
-                        text="Cancel" />
+                <Button onAction="#handleConfirmer" prefHeight="42.0" prefWidth="140.0" style="-fx-background-color: #e6e6e6;                                -fx-text-fill: black;                                -fx-font-weight: bold;                                -fx-font-size: 14;                                -fx-background-radius: 2;" text="Confirme" />
             </children>
         </HBox>
     </bottom>

@@ -15,16 +15,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Gestionnaire de navigation fluide pour l'application Netflix
+ */
 public class ScreenManager {
 
     private static ScreenManager instance;
     private Stage primaryStage;
     private final Map<Screen, String> routes = new HashMap<>();
     private final Stack<Screen> history = new Stack<>();
-    private Screen current;
+    private Screen currentScreen;
     
-    // --- AJOUT : Variable pour stocker le contrôleur actuel ---
-    private Object currentController;
+    // Garde en mémoire le dernier loader pour extraire le contrôleur
+    private FXMLLoader lastLoader;
 
     private ScreenManager() {}
 
@@ -39,20 +42,28 @@ public class ScreenManager {
         this.primaryStage = stage;
     }
 
+    /**
+     * Enregistre un écran et son chemin FXML associé
+     * (Corrige l'erreur dans Main.java)
+     */
     public void register(Screen screen, String fxmlPath) {
         routes.put(screen, fxmlPath);
     }
 
     /**
-     * AJOUT : Permet de récupérer le contrôleur de la page affichée
+     * Récupère le contrôleur de la page chargée
+     * Le <T> permet un cast automatique vers CommentListController par exemple.
+     * (Corrige l'erreur dans AdminMainController)
      */
-    public Object getController() {
-        return currentController;
+    @SuppressWarnings("unchecked")
+    public <T> T getController() {
+        if (lastLoader == null) return null;
+        return (T) lastLoader.getController();
     }
 
     public void navigateTo(Screen screen) {
-        if (current != null) {
-            history.push(current);
+        if (currentScreen != null) {
+            history.push(currentScreen);
         }
         load(screen);
     }
@@ -69,26 +80,31 @@ public class ScreenManager {
 
     private void load(Screen screen) {
         String path = routes.get(screen);
-        if (path == null) throw new IllegalArgumentException("Screen non enregistrée : " + screen);
+        if (path == null) {
+            System.err.println("❌ Erreur : L'écran " + screen + " n'est pas enregistré !");
+            return;
+        }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-            Parent root = loader.load();
+            // Initialisation du Loader
+            lastLoader = new FXMLLoader(getClass().getResource(path));
+            Parent root = lastLoader.load();
             
-            // --- CRUCIAL : On mémorise le contrôleur chargé ---
-            this.currentController = loader.getController();
-            
-            current = screen;
+            currentScreen = screen;
             applyScene(root);
+            
+            System.out.println("🚀 Navigation vers : " + screen);
         } catch (IOException e) {
+            System.err.println("❌ Impossible de charger le fichier FXML : " + path);
             e.printStackTrace();
         }
     }
 
     private void applyScene(Parent root) {
+        // Préparation de l'animation
         root.setOpacity(0);
-        root.setScaleX(0.98);
-        root.setScaleY(0.98);
+        root.setScaleX(0.95);
+        root.setScaleY(0.95);
 
         if (primaryStage.getScene() == null) {
             primaryStage.setScene(new Scene(root));
@@ -97,16 +113,16 @@ public class ScreenManager {
         }
 
         primaryStage.show();
-        primaryStage.centerOnScreen();
 
-        FadeTransition fade = new FadeTransition(Duration.millis(200), root);
+        // Animation de transition (Style Netflix)
+        FadeTransition fade = new FadeTransition(Duration.millis(300), root);
         fade.setFromValue(0);
         fade.setToValue(1);
         fade.setInterpolator(Interpolator.EASE_IN);
 
-        ScaleTransition scale = new ScaleTransition(Duration.millis(200), root);
-        scale.setFromX(0.98);
-        scale.setFromY(0.98);
+        ScaleTransition scale = new ScaleTransition(Duration.millis(300), root);
+        scale.setFromX(0.95);
+        scale.setFromY(0.95);
         scale.setToX(1);
         scale.setToY(1);
         scale.setInterpolator(Interpolator.EASE_OUT);

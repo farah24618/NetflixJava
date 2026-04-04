@@ -65,13 +65,13 @@ public class MainViewController implements Initializable {
         String email = emailField.getText().trim();
 
         if (email.isEmpty()) {
-            showError("Email Required", "Please enter your email address to continue.");
+            showError("Adresse e-mail requise", "Veuillez saisir votre adresse e-mail pour continuer.");
             emailField.requestFocus();
             return;
         }
 
         if (!isValidEmail(email)) {
-            showError("Invalid Email", "Please enter a valid email address.");
+            showError("Adresse e-mail invalide", "Veuillez saisir une adresse e-mail valide.");
             emailField.requestFocus();
             return;
         }

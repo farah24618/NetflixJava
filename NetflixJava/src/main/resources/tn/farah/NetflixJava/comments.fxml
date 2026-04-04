@@ -1,93 +1,68 @@
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.farah.NetflixJava.Controller.CommentListController"
-            stylesheets="@netflix-theme.css">
+<?xml version="1.0" encoding="UTF-8"?>
 
-    <!-- TOP -->
-    <top>
-        <HBox spacing="10" style="-fx-padding:10;">
-            <Label fx:id="filmTitleLabel" text="Film Title"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Close" onAction="#handleClose"/>
-        </HBox>
-    </top>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-    <!-- CENTER -->
-    <center>
-        <VBox spacing="10" style="-fx-padding:10;">
-
-            <!-- Search + Filters -->
-            <HBox spacing="10">
-                <TextField fx:id="searchField" promptText="Search..."
-                           onKeyReleased="#handleSearch"/>
-
-                <ToggleButton fx:id="btnAll" text="All"
-                              onAction="#filterAll" selected="true"/>
-
-                <ToggleButton fx:id="btnSpoiler" text="Spoiler"
-                              onAction="#filterSpoiler"/>
-
-                <ToggleButton fx:id="btnRecent" text="Recent"
-                              onAction="#filterRecent"/>
-
-                <ComboBox fx:id="sortCombo"/>
-
-                <Button fx:id="bulkDeleteBtn"
-                        text="Delete Selected"
-                        onAction="#handleDeleteSelected"
-                        disable="true"/>
-
-                <CheckBox fx:id="selectAllCb"
-                          text="Select All"
-                          onAction="#handleSelectAll"/>
+<StackPane prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: rgba(0,0,0,0.85);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.CommentListController">
+   <children>
+      <VBox maxHeight="550.0" maxWidth="600.0" style="-fx-background-color: #181818; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 30, 0, 0, 0);">
+         <children>
+            
+            <HBox alignment="CENTER_LEFT">
+               <padding>
+                  <Insets bottom="15.0" left="25.0" right="25.0" top="20.0" />
+               </padding>
+               <children>
+                  <VBox spacing="2">
+                     <children>
+                        <Label fx:id="filmTitleLabel" text="Comments for Film" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="commentCountLabel" text="Comments (0)" textFill="#888888">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button onAction="#handleClose" style="-fx-background-color: transparent; -fx-text-fill: #aaaaaa; -fx-cursor: hand;" text="✕">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Button>
+               </children>
             </HBox>
 
-            <!-- Comments -->
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                <VBox fx:id="commentsContainer"/>
+            <Separator opacity="0.05" />
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="commentsContainer" prefHeight="-1.0" spacing="10.0" style="-fx-background-color: #181818;">
+                     <padding>
+                        <Insets bottom="20.0" left="25.0" right="25.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </content>
             </ScrollPane>
 
-            <!-- Stats -->
-            <HBox spacing="20">
-                <Label fx:id="commentCountLabel" text="0 total"/>
-                <Label fx:id="spoilerCountLabel" text="0 spoilers"/>
-                <Label fx:id="deletedCountLabel" text="0 deleted"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Label fx:id="statusLabel" text="Ready"/>
-            </HBox>
+            <Separator opacity="0.05" />
 
-        </VBox>
-    </center>
-
-</BorderPane>
-         <padding>
-            <Insets left="20.0" right="20.0" />
-         </padding>
-         <children>
-            <TextField fx:id="searchField" onKeyReleased="#handleSearch" prefWidth="300.0" promptText="Rechercher..." style="-fx-background-color: #333333; -fx-text-fill: white;" />
-            <ComboBox fx:id="sortCombo" prefWidth="150.0" style="-fx-background-color: #333333;" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="commentCountLabel" text="0 commentaires" textFill="#888888" />
-         </children>
-      </HBox>
-
-      <ScrollPane fitToWidth="true" style="-fx-background: #111111; -fx-background-color: #111111;" VBox.vgrow="ALWAYS">
-         <content>
-            <VBox fx:id="commentsContainer" spacing="10.0" style="-fx-background-color: #111111;">
+            <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: #202020; -fx-background-radius: 0 0 12 12;">
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
                </padding>
-            </VBox>
-         </content>
-      </ScrollPane>
-
-      <HBox alignment="CENTER_LEFT" minHeight="30.0" style="-fx-background-color: #000000;">
-         <padding>
-            <Insets left="15.0" />
-         </padding>
-         <children>
-            <Label fx:id="statusLabel" text="Connecté" textFill="#555555" />
+               <children>
+                  <TextField fx:id="commentInput" promptText="Add a comment..." HBox.hgrow="ALWAYS" style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5; -fx-padding: 10;" />
+                  <Button onAction="#handlePostComment" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand; -fx-background-radius: 5;" text="Post" />
+               </children>
+            </HBox>
+            
          </children>
-      </HBox>
+      </VBox>
    </children>
-</VBox>
+</StackPane>

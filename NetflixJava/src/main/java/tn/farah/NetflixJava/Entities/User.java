@@ -181,4 +181,50 @@ public class User {
     public int hashCode() {
         return Integer.hashCode(id);
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //zedtha hajti beha fl admin
+ // Dans User.java
+
+    public String getInitial() {
+        // On vérifie que le prénom n'est pas nul ET pas vide
+        if (prenom != null && !prenom.trim().isEmpty()) {
+            return prenom.substring(0, 1).toUpperCase();
+        }
+        // Si pas de prénom, on essaie l'email
+        if (email != null && !email.trim().isEmpty()) {
+            return email.substring(0, 1).toUpperCase();
+        }
+        return "?";
+    }
+
+    public String getUsername() {
+        // On vérifie que prenom et nom existent et ne sont pas vides
+        if (prenom != null && !prenom.trim().isEmpty() && 
+            nom != null && !nom.trim().isEmpty()) {
+            return prenom + "." + nom.substring(0, 1).toUpperCase();
+        }
+        // Sinon, on affiche juste le prénom ou l'email par défaut
+        return (prenom != null && !prenom.isEmpty()) ? prenom : email;
+    }
+    
+    public String getStatus() {
+        if (!isActive) return "Blocked";
+        return (role == UserRole.ADMIN) ? "Admin" : "User";
+    }
+    
+    
+    
 }

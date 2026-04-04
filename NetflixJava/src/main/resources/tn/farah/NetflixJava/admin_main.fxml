@@ -1,91 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox spacing="0.0" style="-fx-background-color: #0b0b0b;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AdminMainController">
-      
-   <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="20.0" style="-fx-padding: 0 25 0 25;">
-         <children>
-            <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="My Titles (30)" textFill="WHITE" />
-            <Button style="-fx-background-color: #3d4454; -fx-text-fill: #a2a9b8; -fx-background-radius: 4;" text="Dashboard">
-               <padding>
-                  <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
-               </padding>
-            </Button>
-            <Region HBox.hgrow="ALWAYS" />
-            <HBox alignment="CENTER" spacing="15.0">
-               <children>
-                  <Label text="⚙" textFill="#b3b3b3" style="-fx-font-size: 18px;" />
-                  <Label text="🔔" textFill="#b3b3b3" style="-fx-font-size: 18px;" />
-                  <Label style="-fx-background-color: #4f4f4f; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 5 8;" text="DT" />
-               </children>
+<BorderPane style="-fx-background-color: #0a0a0c;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AdminMainController">
+    
+    <top>
+        <HBox style="-fx-background-color: #000000; -fx-padding: 15 25; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;">
+            <Label text="RAKSHANET ADMIN" style="-fx-text-fill: #e50914; -fx-font-size: 22px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" />
+        </HBox>
+    </top>
+
+    <left>
+        <VBox prefWidth="210" spacing="0" style="-fx-background-color: #000000; -fx-border-color: #1a1a1a; -fx-border-width: 0 1 0 0;">
+            <Label text="Navigation" style="-fx-text-fill: #555; -fx-padding: 20 20 10 20; -fx-font-size: 11px; -fx-font-weight: bold; -fx-letter-spacing: 1px;" />
+
+            <VBox spacing="4" style="-fx-padding: 5 12;">
+                <Button onAction="#handleNavDashboard" prefWidth="185" alignment="CENTER_LEFT" text="⊞  Tableau de bord" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-cursor: hand; -fx-padding: 10 12;" />
+                <Button prefWidth="185" alignment="CENTER_LEFT" text="🎬  Films" style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 12; -fx-font-weight: bold;" />
+                <Button onAction="#handleNavSeries" prefWidth="185" alignment="CENTER_LEFT" text="📺  Séries" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-cursor: hand; -fx-padding: 10 12;" />
+                <Button onAction="#handleNavUsers" prefWidth="185" alignment="CENTER_LEFT" text="👤  Utilisateurs" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-cursor: hand; -fx-padding: 10 12;" />
+                
+                <HBox alignment="CENTER_LEFT">
+                    <Button onAction="#handleNavNotifications" prefWidth="185" alignment="CENTER_LEFT" text="🔔  Notifications" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-cursor: hand; -fx-padding: 10 12;" />
+                    <Label text="12" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-size: 9; -fx-padding: 2 5; -fx-background-radius: 10;" translateX="-45" />
+                </HBox>
+                
+                <Button onAction="#handleNavComments" prefWidth="185" alignment="CENTER_LEFT" text="💬  Commentaires" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-cursor: hand; -fx-padding: 10 12;" />
+            </VBox>
+            
+            <Region VBox.vgrow="ALWAYS" />
+            <Button onAction="#handleLogout" prefWidth="210" alignment="CENTER_LEFT" text="⏻  Déconnexion" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-padding: 25; -fx-cursor: hand;" />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="0">
+            <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 30; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;">
+                <Label fx:id="titleCountLabel" text="Mes Films (0)" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleNavDashboard" text="Retour Dashboard" 
+                        style="-fx-background-color: #333333; -fx-text-fill: white; -fx-background-radius: 30; -fx-padding: 10 25; -fx-font-weight: bold; -fx-cursor: hand;" />
             </HBox>
-         </children>
-      </HBox>
 
-      <VBox style="-fx-padding: 0 25 15 25;">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="45.0" spacing="10.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #333333; -fx-border-radius: 4; -fx-background-radius: 4;">
-               <padding>
-                  <Insets left="15.0" right="15.0" />
-               </padding>
-               <children>
-                  <HBox alignment="CENTER" spacing="12.0">
-                     <children>
-                        <Label style="-fx-font-size: 18px; -fx-cursor: hand;" text="≡" textFill="WHITE" />
-                        <Label style="-fx-font-size: 20px; -fx-cursor: hand;" text="+" textFill="#808080" />
-                     </children>
-                  </HBox>
-                  
-                  <Separator orientation="VERTICAL" prefHeight="20.0" />
-                  
-                  <TextField fx:id="searchField" promptText="Filter titles..." style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: #555555;" HBox.hgrow="ALWAYS" />
-                  
-                  <Label style="-fx-cursor: hand;" text="Reset" textFill="#808080" />
-                  <Separator orientation="VERTICAL" prefHeight="20.0" />
-                  
-                  <HBox alignment="CENTER" spacing="8.0" style="-fx-cursor: hand;">
-                     <children>
-                        <Label text="🔖" textFill="WHITE" />
-                        <Label text="Saved Filters" textFill="WHITE" />
-                     </children>
-                  </HBox>
-                  
-                  <Region prefWidth="20.0" />
-                  
-                  <HBox alignment="CENTER" spacing="0.0" style="-fx-border-color: #333333; -fx-border-radius: 4;">
-                     <children>
-                        <Label style="-fx-background-color: #3d4454; -fx-padding: 5 10; -fx-background-radius: 4 0 0 4;" text="🗂" textFill="WHITE" />
-                        <Label style="-fx-padding: 5 10;" text="≡" textFill="#808080" />
-                     </children>
-                  </HBox>
-                  
-                  <HBox alignment="CENTER" spacing="5.0" style="-fx-padding: 0 10;">
-                     <children>
-                        <Label text="|||" textFill="#808080" />
-                        <Label text="Columns" textFill="WHITE" />
-                     </children>
-                  </HBox>
-                  
-                  <Button onAction="#handleAddMovie" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;" text="+ Add Title" />
-               </children>
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15 30;">
+                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #1a1a1a; -fx-padding: 8 15; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+                    <Label text="🔍" style="-fx-text-fill: #555;" />
+                    <TextField fx:id="searchField" promptText="Rechercher un film..." style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: transparent;" HBox.hgrow="ALWAYS" />
+                </HBox>
+                <Button onAction="#handleAddMovie" text="+ Ajouter un film" 
+                        style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;" />
             </HBox>
-         </children>
-      </VBox>
 
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0 25 0 25;" VBox.vgrow="ALWAYS">
-         <content>
-            <VBox fx:id="movieListContainer" spacing="2.0" style="-fx-background-color: #0b0b0b;" />
-         </content>
-      </ScrollPane>
-   </children>
-</VBox>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="movieListContainer" spacing="2.0" style="-fx-background-color: #0a0a0c;" />
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>
