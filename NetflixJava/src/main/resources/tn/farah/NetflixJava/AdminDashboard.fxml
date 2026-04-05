@@ -20,7 +20,6 @@
             prefHeight="900.0"
             style="-fx-background-color: #141414;">
 
-    <!-- ================= TOP BAR ================= -->
     <top>
         <HBox alignment="CENTER_LEFT"
               spacing="20.0"
@@ -47,11 +46,11 @@
         </HBox>
     </top>
 
-    <!-- ================= LEFT MENU ================= -->
-<left>
+    <left>
         <VBox spacing="5.0" 
               prefWidth="250.0" 
-              style="-fx-background-color: #000000;"> <padding>
+              style="-fx-background-color: #000000;"> 
+            <padding>
                 <Insets top="30" right="15" bottom="30" left="15"/>
             </padding>
 
@@ -99,7 +98,6 @@
         </VBox>
     </left>
 
-    <!-- ================= CENTER ================= -->
     <center>
         <VBox spacing="20.0" style="-fx-background-color: #141414;">
             <padding>
@@ -111,7 +109,6 @@
                 <Label text="Tableau de bord"
                        style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;"/>
 
-                <!-- ======= CARDS ======= -->
                 <GridPane hgap="15.0" vgap="15.0">
                     <children>
                         <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
@@ -181,7 +178,6 @@
                     </children>
                 </GridPane>
 
-                <!-- ======= CHARTS ROW 1 ======= -->
                 <HBox spacing="15.0">
                     <children>
                         <VBox prefWidth="480.0" prefHeight="320.0"
@@ -201,22 +197,21 @@
                               spacing="10.0"
                               style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
                             <children>
-                                <Label text="Contenu par année"
+                                <Label text="Évolution des inscriptions"
                                        style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                                <LineChart fx:id="contentByYearChart" prefHeight="260.0" animated="false">
+                                <LineChart fx:id="inscriptionsChart" prefHeight="260.0" animated="false">
                                     <xAxis>
-                                        <CategoryAxis label="Année"/>
+                                        <CategoryAxis label="Date"/>
                                     </xAxis>
                                     <yAxis>
-                                        <NumberAxis label="Nombre"/>
+                                        <NumberAxis label="Nouveaux inscrits"/>
                                     </yAxis>
                                 </LineChart>
                             </children>
                         </VBox>
-                    </children>
+                        </children>
                 </HBox>
 
-                <!-- ======= CHARTS ROW 2 ======= -->
                 <HBox spacing="15.0">
                     <children>
                         <VBox prefWidth="580.0" prefHeight="320.0"

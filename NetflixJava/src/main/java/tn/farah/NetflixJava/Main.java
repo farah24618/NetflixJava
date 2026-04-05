@@ -87,7 +87,7 @@ public class Main extends Application {
 
        
 
-        nav.navigateTo(Screen.login);
+        //nav.navigateTo(Screen.login);
 
 
    

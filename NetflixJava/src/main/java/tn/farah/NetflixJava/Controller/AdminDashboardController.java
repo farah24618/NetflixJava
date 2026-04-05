@@ -8,9 +8,12 @@ import javafx.scene.control.Label;
 import tn.farah.NetflixJava.Service.AdminDashboardService;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
-
+import tn.farah.NetflixJava.utils.DatabaseConnection; // Import ajouté pour la BD
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -27,7 +30,7 @@ public class AdminDashboardController implements Initializable {
 
     // --- Charts ---
     @FXML private PieChart contentPieChart;
-    @FXML private LineChart<String, Number> contentByYearChart;
+    @FXML private LineChart<String, Number> inscriptionsChart; // <-- L'ancien contentByYearChart a été remplacé
     @FXML private BarChart<String, Number> commentsByTypeChart;
 
     // Service
@@ -42,6 +45,9 @@ public class AdminDashboardController implements Initializable {
 
         loadStatistics();
         loadCharts();
+        
+        // Appel de notre nouvelle méthode pour le graphique des inscriptions
+        chargerGraphiqueInscriptions(); 
     }
 
     private void loadStatistics() {
@@ -64,16 +70,7 @@ public class AdminDashboardController implements Initializable {
         PieChart.Data sliceSeries = new PieChart.Data("Séries", dashboardService.getTotalSeries());
         contentPieChart.getData().addAll(sliceFilms, sliceSeries);
 
-        // 2. Line Chart (Contenu par année)
-        XYChart.Series<String, Number> yearSeries = new XYChart.Series<>();
-        yearSeries.setName("Sorties par année");
-        Map<String, Integer> yearData = dashboardService.getContentByYearData();
-        for (Map.Entry<String, Integer> entry : yearData.entrySet()) {
-            yearSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
-        }
-        contentByYearChart.getData().add(yearSeries);
-
-        // 3. Bar Chart (Commentaires par type)
+        // 2. Bar Chart (Commentaires par type)
         XYChart.Series<String, Number> commentSeries = new XYChart.Series<>();
         commentSeries.setName("Commentaires");
         Map<String, Integer> commentData = dashboardService.getCommentsByTypeData();
@@ -83,8 +80,36 @@ public class AdminDashboardController implements Initializable {
         commentsByTypeChart.getData().add(commentSeries);
     }
 
- // ==========================================
-    // =         NAVIGATION METHODS             =
+    // --- NOUVELLE MÉTHODE POUR LE GRAPHIQUE DES INSCRIPTIONS ---
+    private void chargerGraphiqueInscriptions() {
+        inscriptionsChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Nouveaux inscrits");
+
+        // Requête SQL directe
+        String query = "SELECT DATE(date_inscription) as jour, COUNT(*) as total " +
+                       "FROM user GROUP BY DATE(date_inscription) ORDER BY jour ASC LIMIT 7";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String jour = rs.getString("jour");
+                int total = rs.getInt("total");
+                series.getData().add(new XYChart.Data<>(jour, total));
+            }
+
+            inscriptionsChart.getData().add(series);
+
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement du graphique des inscriptions :");
+            e.printStackTrace();
+        }
+    }
+
+    // ==========================================
+    // =          NAVIGATION METHODS            =
     // ==========================================
 
     @FXML
@@ -119,6 +144,7 @@ public class AdminDashboardController implements Initializable {
     void goToFavoritesAdmin(ActionEvent event) {
         System.out.println("Page Favoris non définie dans l'enum Screen pour le moment");
     }
+    
     @FXML
     void handleLogout(ActionEvent event) {
         System.out.println("Déconnexion en cours...");
