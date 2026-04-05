@@ -59,6 +59,10 @@ public class Main extends Application {
  
         nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
 
+        nav.register(Screen.notificationAdmin, "/tn/farah/NetflixJava/notificationAdmin.fxml");
+
+
+
 
 
         primaryStage.setTitle("RakchaNet");
@@ -77,10 +81,13 @@ public class Main extends Application {
 
 
 
+
         //nav.navigateTo(Screen.login);
 
 
+       
 
+        nav.navigateTo(Screen.login);
 
 
    
