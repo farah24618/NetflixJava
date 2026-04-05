@@ -9,6 +9,12 @@ import tn.farah.NetflixJava.utils.ConxDB;
 
 public class EpisodeDAO {
 
+    private Connection connection;
+
+    public EpisodeDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     // ─────────────────────────────────
     // FIND ALL
     // ─────────────────────────────────
@@ -16,8 +22,7 @@ public class EpisodeDAO {
         List<Episode> episodes = new ArrayList<>();
         String SQL = "SELECT * FROM episode";
 
-        try (Connection conn = ConxDB.getInstance();
-             Statement stml = conn.createStatement();
+        try (Statement stml = connection.createStatement();
              ResultSet rs = stml.executeQuery(SQL)) {
 
             while (rs.next()) {
@@ -48,8 +53,7 @@ public class EpisodeDAO {
         String sql = "INSERT INTO episode(season_id, titre, numero, duree_minutes, " +
                      "resume, url_video, url_image, duree_intro_sec) VALUES (?,?,?,?,?,?,?,?)";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstml.setInt(1, episode.getSaisonId());
             pstml.setString(2, episode.getTitre());
@@ -77,8 +81,7 @@ public class EpisodeDAO {
     public Episode findById(int id) {
         String sql = "SELECT * FROM episode WHERE id = ?";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
 
             pstml.setInt(1, id);
             ResultSet rs = pstml.executeQuery();
@@ -104,14 +107,13 @@ public class EpisodeDAO {
     }
 
     // ─────────────────────────────────
-    // FIND BY SAISON (Correction: Non-statique)
+    // FIND BY SAISON
     // ─────────────────────────────────
     public List<Episode> findBySaison(int saisonId) {
         List<Episode> episodes = new ArrayList<>();
         String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
 
             pstml.setInt(1, saisonId);
             ResultSet rs = pstml.executeQuery();
@@ -142,8 +144,7 @@ public class EpisodeDAO {
     public Episode findNextEpisode(int saisonId, int numeroEpisode) {
         String sql = "SELECT * FROM episode WHERE season_id = ? AND numero = ?";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
 
             pstml.setInt(1, saisonId);
             pstml.setInt(2, numeroEpisode + 1);
@@ -177,8 +178,7 @@ public class EpisodeDAO {
         String sql = "UPDATE episode SET season_id=?, titre=?, numero=?, duree_minutes=?, " +
                      "resume=?, url_video=?, url_image=?, duree_intro_sec=? WHERE id=?";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
 
             pstml.setInt(1, episode.getSaisonId());
             pstml.setString(2, episode.getTitre());
@@ -203,8 +203,7 @@ public class EpisodeDAO {
     public void delete(int id) {
         String sql = "DELETE FROM episode WHERE id = ?";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
 
             pstml.setInt(1, id);
             pstml.executeUpdate();
@@ -220,8 +219,7 @@ public class EpisodeDAO {
     public int countBySaison(int saisonId) {
         String sql = "SELECT COUNT(*) FROM episode WHERE season_id = ?";
 
-        try (Connection conn = ConxDB.getInstance();
-             PreparedStatement pstml = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
 
             pstml.setInt(1, saisonId);
             ResultSet rs = pstml.executeQuery();

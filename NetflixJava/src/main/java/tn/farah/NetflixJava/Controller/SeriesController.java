@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.FavoriService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
@@ -28,6 +30,7 @@ public class SeriesController implements Initializable {
     @FXML private FlowPane  filterBar;
 
     private SerieService serieService;
+    private FavoriService favoriService;
 
     // ✅ FIX : tableau à 1 élément — capturé par référence dans les lambdas
     private final Pane[] overlayRef = new Pane[1];
@@ -46,11 +49,12 @@ public class SeriesController implements Initializable {
         if (connection == null) return;
 
         serieService = new SerieService(connection);
+        favoriService=new FavoriService(connection);
+        CardFactory.setNotificationService(new NotificationService(connection));
+        CardFactory.setFavoriService(favoriService);
 
-        try {
-            allSeries     = serieService.getAllFilmsSorted();
-            seriesByGenre = serieService.getAllFilmsByCategory();
-        } catch (SQLException e) { e.printStackTrace(); }
+        allSeries     = serieService.getAllSeries();
+		seriesByGenre = serieService.getAllSeriesByCategory();
 
         buildFilterBar();
         renderSections(allSeries);
@@ -139,7 +143,7 @@ public class SeriesController implements Initializable {
         if (!recent.isEmpty())
             carouselContainer.getChildren().add(
                 CardFactory.buildSerieCarousel("🆕  Récemment ajoutées", recent,
-                    overlayRef, goToDetail()));
+                    overlayRef, goToSerieDetail()));
 
         // 2. Top Rated
         List<Serie> topRated = source.stream()
@@ -149,7 +153,7 @@ public class SeriesController implements Initializable {
         if (!topRated.isEmpty())
             carouselContainer.getChildren().add(
                 CardFactory.buildSerieCarousel("⭐  Top Rated", topRated,
-                    overlayRef, goToDetail()));
+                    overlayRef, goToSerieDetail()));
 
         // 3. Par genre
         Map<String, List<Serie>> byGenre = new LinkedHashMap<>();
@@ -162,7 +166,7 @@ public class SeriesController implements Initializable {
             if (!series.isEmpty())
                 carouselContainer.getChildren().add(
                     CardFactory.buildSerieCarousel("📺  " + genre, series,
-                        overlayRef, goToDetail()));
+                        overlayRef, goToSerieDetail()));
         });
     }
 
@@ -196,11 +200,23 @@ public class SeriesController implements Initializable {
     @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.home); }
     @FXML private void onMovies()    { ScreenManager.getInstance().navigateTo(Screen.films); }
     @FXML private void onSeries()    { /* déjà ici */ }
-    @FXML private void onMyList()    { /* ScreenManager.getInstance().navigateTo(Screen.MY_LIST); */ }
+    @FXML private void onMyList()    {  ScreenManager.getInstance().navigateTo(Screen.myList); }
     @FXML private void onSearchBtn() { onSearch(); }
 
     @FXML
     private void onSearch() {
         applySearch(searchField != null ? searchField.getText().trim() : "");
     }
+    private Consumer<Serie> goToSerieDetail() {
+        return serie -> {
+            EpisodeViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.detail);
+            if (ctrl != null) {
+                ctrl.setSerie(serie);
+                // setSerie charge déjà le premier épisode automatiquement
+            }
+        };
+    }
+
+    
 }

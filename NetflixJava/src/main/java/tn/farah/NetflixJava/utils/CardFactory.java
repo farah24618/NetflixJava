@@ -9,11 +9,18 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import tn.farah.NetflixJava.Controller.EpisodeViewController;
+import tn.farah.NetflixJava.Controller.FilmPlayerController;
+import tn.farah.NetflixJava.Controller.videoController;
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Favori;
 import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Service.FavoriService;
+import tn.farah.NetflixJava.Service.NotificationService;
+import tn.farah.NetflixJava.Service.SaisonService;
+import tn.farah.NetflixJava.Service.SerieService;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -44,6 +51,8 @@ public class CardFactory {
 
     // ── FavoriService (set once at app startup) ───────────────────
     private static FavoriService favoriService;
+    private static NotificationService notificationService;
+
 
     public static void setFavoriService(FavoriService service) {
         favoriService = service;
@@ -291,11 +300,12 @@ public class CardFactory {
         genreLbl.getStyleClass().add("popup-genre");
 
         VBox info = buildPopupInfo(
-            popupW, titleLbl, meta, genreLbl,
-            onInfo != null ? () -> onInfo.accept(film) : null,
-            getFavoriService(),
-            film.getId()
-        );
+        	    popupW, titleLbl, meta, genreLbl,
+        	    onInfo != null ? () -> onInfo.accept(film) : null,
+        	    () -> lancerFilm(film),           // ← onPlayAction null pour les films
+        	    getFavoriService(),
+        	    film.getId()
+        	);
         return assemblePopup(popupW, thumbH, bigThumb, info);
     }
 
@@ -331,11 +341,12 @@ public class CardFactory {
         genreLbl.getStyleClass().add("popup-genre");
 
         VBox info = buildPopupInfo(
-            popupW, titleLbl, meta, genreLbl,
-            onInfo != null ? () -> onInfo.accept(serie) : null,
-            getFavoriService(),
-            serie.getId()
-        );
+        	    popupW, titleLbl, meta, genreLbl,
+        	    onInfo != null ? () -> onInfo.accept(serie) : null,
+        	    () -> lancerPremierEpisode(serie),           // ← onPlayAction null pour les films
+        	    getFavoriService(),
+        	    serie.getId()
+        	);
         return assemblePopup(popupW, thumbH, bigThumb, info);
     }
 
@@ -382,6 +393,7 @@ public class CardFactory {
         scroll.setMinHeight(SCROLL_H);
         scroll.setMaxHeight(SCROLL_H);
         scroll.getStyleClass().add("carousel-scroll");
+        
         return scroll;
     }
 
@@ -419,10 +431,11 @@ public class CardFactory {
      * ✅ userId lu depuis SessionManager au moment du clic (jamais mis en cache).
      */
     private static VBox buildPopupInfo(double popupW, Label titleLbl,
-                                        HBox meta, Label genreLbl,
-                                        Runnable onInfoAction,
-                                        FavoriService favoriService,
-                                        int mediaId) {
+            HBox meta, Label genreLbl,
+            Runnable onInfoAction,
+            Runnable onPlayAction,       // ← NOUVEAU
+            FavoriService favoriService,
+            int mediaId) {
         Button playBtn = new Button("▶"); playBtn.getStyleClass().add("btn-round-white");
         Button likeBtn = new Button("♥"); likeBtn.getStyleClass().add("btn-round-outline");
         Button infoBtn = new Button("ℹ"); infoBtn.getStyleClass().add("btn-round-outline");
@@ -433,7 +446,7 @@ public class CardFactory {
         boolean alreadyFav = favoriService != null && userId > 0
                              && favoriService.estFavori(userId, mediaId);
 
-        Button addBtn = new Button(alreadyFav ? "✓" : "+");
+        Button addBtn = new Button(alreadyFav ? "  ✓" : "  +");
         addBtn.getStyleClass().add(alreadyFav ? "btn-round-white" : "btn-round-outline");
 
         if (favoriService != null && userId > 0) {
@@ -453,6 +466,15 @@ public class CardFactory {
                     favoriService.ajouterFavori(favori);
                     addBtn.setText("✓");
                     addBtn.getStyleClass().setAll("btn-round-white");
+                    if (notificationService != null) {
+                        Notification n = new Notification(0, uid, "FAVORI",
+                            "Ajouté à Ma Liste",
+                            "\"" + titleLbl.getText() + "\" a été ajouté à votre liste.",
+                            java.time.LocalDate.now().toString(),
+                            false, false);
+                        notificationService.addNotification(n);
+                    }
+                    
                 }
             });
             addBtn.setStyle("-fx-cursor: hand;");
@@ -464,8 +486,22 @@ public class CardFactory {
             infoBtn.setStyle("-fx-cursor: hand;");
         }
 
-        playBtn.setOnAction(e -> System.out.println("▶ Play : " + titleLbl.getText()));
-        likeBtn.setOnAction(e -> System.out.println("♥ Like : " + titleLbl.getText()));
+        if (onPlayAction != null) {
+            playBtn.setOnAction(e -> onPlayAction.run());
+            playBtn.setStyle("-fx-cursor: hand;");
+        } else {
+        }
+    
+        final boolean[] liked = { false };
+        likeBtn.setOnAction(e -> {
+            liked[0] = !liked[0];
+            if (liked[0]) {
+                likeBtn.setStyle("-fx-background-color: #E50914; -fx-text-fill: white; -fx-background-radius: 50%; -fx-cursor: hand;");
+            } else {
+                likeBtn.getStyleClass().setAll("btn-round-outline");
+                likeBtn.setStyle("-fx-cursor: hand;");
+            }
+        });
 
         HBox actions = new HBox(8, playBtn, addBtn, likeBtn, spacer, infoBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
@@ -541,5 +577,34 @@ public class CardFactory {
 
     public static int computeMatch(String titre) {
         return 60 + (Math.abs(titre != null ? titre.hashCode() : 0) % 35);
+    }
+    private static void lancerPremierEpisode(Serie serie) {
+        // 1. Récupère la connexion et les services
+        java.sql.Connection conn = ConxDB.getInstance();
+        SaisonService saisonService = new SaisonService(conn);
+        SerieService serieService = new SerieService(conn);
+
+        // 2. Trouve le premier épisode
+        int firstSaisonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
+        if (firstSaisonId == -1) return;
+
+        List<tn.farah.NetflixJava.Entities.Episode> episodes =
+            serieService.findEpisodeBySaison(firstSaisonId);
+        if (episodes == null || episodes.isEmpty()) return;
+
+        int episodeId = episodes.get(0).getId();
+
+        // 3. Navigate vers le lecteur
+        videoController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.video); // adapte au nom de ton Screen
+        if (ctrl != null) ctrl.initEpisode(episodeId);
+    }
+    public static void setNotificationService(NotificationService service) {
+        notificationService = service;
+    }
+    private static void lancerFilm(Film film) {
+        FilmPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.filmPlayer); // adapte au nom de ton Screen
+        if (ctrl != null) ctrl.initFilm(film);
     }
 }

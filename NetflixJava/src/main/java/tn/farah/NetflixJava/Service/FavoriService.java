@@ -1,5 +1,6 @@
 package tn.farah.NetflixJava.Service;
 
+
 import java.sql.Connection;
 import java.util.List;
 
@@ -10,8 +11,8 @@ public class FavoriService {
 
     private FavoriDAO favoriDao;
 
-    public FavoriService(Connection conn) {
-        favoriDao = new FavoriDAO(conn);
+    public FavoriService(Connection cnx) {
+        favoriDao = new FavoriDAO(cnx);
     }
 
     // Ajouter un favori
@@ -47,5 +48,8 @@ public class FavoriService {
     // Récupérer un favori par userId + mediaId
     public Favori findByUserIdAndMediaId(int userId, int mediaId) {
         return favoriDao.findByUserIdAndMediaId(userId, mediaId);
+    }
+    public boolean exist(int userId,int mediaId) {
+    	return favoriDao.existe(userId,mediaId );
     }
 }

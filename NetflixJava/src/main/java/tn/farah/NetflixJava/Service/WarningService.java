@@ -1,10 +1,10 @@
 package tn.farah.NetflixJava.Service;
 import java.sql.Connection;
+
 import java.sql.SQLException;
 import java.util.List;
 
 import tn.farah.NetflixJava.DAO.WarningDao;
-import tn.farah.NetflixJava.Entities.ContientWarning;
 import tn.farah.NetflixJava.Entities.Warning;
 
 public class WarningService {
@@ -17,24 +17,16 @@ public class WarningService {
 
     /**
      * Met à jour les warnings d'un film (remplace les anciens par les nouveaux)
+     * @throws SQLException 
      */
-    public void updateFilmWarnings(int filmId, List<Warning> warnings) throws SQLException {
-        if (warnings == null) {
-			return;
-		}
-
-        // On nettoie d'abord les anciens pour éviter les doublons
-        warningDao.delete(filmId);
-
-        // On insère les nouveaux
-        if (!warnings.isEmpty()) {
-            warningDao.saveWarnings(filmId, warnings);
-        }
+   
+    public List<Warning> getAllWarnings() throws SQLException {
+        return warningDao.findAll();
     }
 
-    public List<Warning> getWarningsForFilm(int filmId) throws SQLException {
-        return warningDao.getWarningsByFilm(filmId);
-    }
+    
+   
+    
 }
 
 

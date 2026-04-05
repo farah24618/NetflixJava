@@ -1,6 +1,9 @@
+
+
 package tn.farah.NetflixJava.utils;
 
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -12,24 +15,28 @@ import javafx.animation.ScaleTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
 
 /**
- * Gestionnaire de navigation fluide pour l'application Netflix
+ * ScreenManager : gestionnaire de navigation entre les interfaces JavaFX.
  */
 public class ScreenManager {
 
     private static ScreenManager instance;
+
     private Stage primaryStage;
     private final Map<Screen, String> routes = new HashMap<>();
     private final Stack<Screen> history = new Stack<>();
-    private Screen currentScreen;
-    
-    // Garde en mémoire le dernier loader pour extraire le contrôleur
-    private FXMLLoader lastLoader;
+    private Screen current;
 
-    private ScreenManager() {}
+    private ScreenManager() {
+    }
 
     public static ScreenManager getInstance() {
         if (instance == null) {
@@ -38,73 +45,121 @@ public class ScreenManager {
         return instance;
     }
 
+    /**
+     * À appeler une seule fois dans Main.java
+     */
     public void init(Stage stage) {
         this.primaryStage = stage;
     }
 
     /**
-     * Enregistre un écran et son chemin FXML associé
-     * (Corrige l'erreur dans Main.java)
+     * Enregistrer une page avec son chemin FXML
      */
     public void register(Screen screen, String fxmlPath) {
         routes.put(screen, fxmlPath);
     }
 
     /**
-     * Récupère le contrôleur de la page chargée
-     * Le <T> permet un cast automatique vers CommentListController par exemple.
-     * (Corrige l'erreur dans AdminMainController)
+     * Aller vers une page et garder l’ancienne dans l’historique
      */
-    @SuppressWarnings("unchecked")
-    public <T> T getController() {
-        if (lastLoader == null) return null;
-        return (T) lastLoader.getController();
-    }
-
     public void navigateTo(Screen screen) {
-        if (currentScreen != null) {
-            history.push(currentScreen);
+        if (current != null) {
+            history.push(current);
         }
         load(screen);
     }
 
+    /**
+     * Aller vers une page sans garder l’historique
+     */
     public void navigateAndReplace(Screen screen) {
         history.clear();
         load(screen);
     }
 
+    /**
+     * Retour arrière
+     */
     public void goBack() {
-        if (history.isEmpty()) return;
+        if (history.isEmpty()) {
+            return;
+        }
         load(history.pop());
     }
 
+    /**
+     * Vérifier s’il y a une page précédente
+     */
+    public boolean canGoBack() {
+        return !history.isEmpty();
+    }
+
+    /**
+     * Retourne la page actuelle
+     */
+    public Screen getCurrent() {
+        return current;
+    }
+
+    /**
+     * Naviguer et récupérer le contrôleur de la nouvelle page
+     */
+    public <T> T navigateAndGetController(Screen screen) {
+        if (current != null) {
+            history.push(current);
+        }
+        return loadAndGetController(screen);
+    }
+
+    /**
+     * Chargement simple
+     */
     private void load(Screen screen) {
         String path = routes.get(screen);
+
         if (path == null) {
-            System.err.println("❌ Erreur : L'écran " + screen + " n'est pas enregistré !");
-            return;
+            throw new IllegalArgumentException("Screen non enregistrée : " + screen);
         }
 
         try {
-            // Initialisation du Loader
-            lastLoader = new FXMLLoader(getClass().getResource(path));
-            Parent root = lastLoader.load();
-            
-            currentScreen = screen;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent root = loader.load();
+            current = screen;
             applyScene(root);
-            
-            System.out.println("🚀 Navigation vers : " + screen);
         } catch (IOException e) {
-            System.err.println("❌ Impossible de charger le fichier FXML : " + path);
             e.printStackTrace();
         }
     }
 
+    /**
+     * Chargement avec récupération du contrôleur
+     */
+    private <T> T loadAndGetController(Screen screen) {
+        String path = routes.get(screen);
+
+        if (path == null) {
+            throw new IllegalArgumentException("Screen non enregistrée : " + screen);
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent root = loader.load();
+            current = screen;
+            applyScene(root);
+            return loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Appliquer la nouvelle scène avec une petite animation
+     */
     private void applyScene(Parent root) {
-        // Préparation de l'animation
         root.setOpacity(0);
-        root.setScaleX(0.95);
-        root.setScaleY(0.95);
+        root.setScaleX(0.98);
+        root.setScaleY(0.98);
 
         if (primaryStage.getScene() == null) {
             primaryStage.setScene(new Scene(root));
@@ -113,20 +168,74 @@ public class ScreenManager {
         }
 
         primaryStage.show();
+        primaryStage.centerOnScreen();
 
-        // Animation de transition (Style Netflix)
-        FadeTransition fade = new FadeTransition(Duration.millis(300), root);
+        FadeTransition fade = new FadeTransition(Duration.millis(200), root);
         fade.setFromValue(0);
         fade.setToValue(1);
         fade.setInterpolator(Interpolator.EASE_IN);
 
-        ScaleTransition scale = new ScaleTransition(Duration.millis(300), root);
-        scale.setFromX(0.95);
-        scale.setFromY(0.95);
+        ScaleTransition scale = new ScaleTransition(Duration.millis(200), root);
+        scale.setFromX(0.98);
+        scale.setFromY(0.98);
         scale.setToX(1);
         scale.setToY(1);
         scale.setInterpolator(Interpolator.EASE_OUT);
 
-        new ParallelTransition(fade, scale).play();
+        ParallelTransition transition = new ParallelTransition(fade, scale);
+        transition.play();
+    }
+    public void navigateWithSplash(Screen screen) {
+        if (current != null) history.push(current);
+
+        // 1. Splash instantané
+       Image logoImg = new Image(
+        	    ScreenManager.class.getResource("/tn/farah/NetflixJava/ImagesNet/rakchanetLogo.png").toExternalForm()
+        	);
+        	javafx.scene.image.ImageView logo = new ImageView(logoImg);
+        	logo.setFitWidth(700);
+        	logo.setPreserveRatio(true);
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setStyle("-fx-progress-color: #E50914;");
+        spinner.setPrefSize(50, 50);
+
+        Label loading = new Label("Chargement...");
+        loading.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 14px;");
+
+        VBox splashRoot = new VBox(30, logo, spinner, loading);
+        splashRoot.setAlignment(javafx.geometry.Pos.CENTER);
+        splashRoot.setStyle("-fx-background-color: #141414;");
+        splashRoot.setPrefSize(1280, 720);
+
+        // 2. Afficher le splash IMMÉDIATEMENT sur le JavaFX thread
+        if (primaryStage.getScene() == null) {
+            primaryStage.setScene(new Scene(splashRoot, 1280, 720));
+        } else {
+            primaryStage.getScene().setRoot(splashRoot);
+        }
+        primaryStage.show();
+
+        // 3. Charger le FXML dans un thread séparé (ne bloque plus l'UI)
+        String path = routes.get(screen);
+        Thread loadThread = new Thread(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+                Parent root = loader.load(); // ← chargement lourd ici, hors JavaFX thread
+
+                // 4. Une fois prêt, revenir sur le JavaFX thread pour afficher
+                javafx.application.Platform.runLater(() -> {
+                    current = screen;
+                    applyScene(root);
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        loadThread.setDaemon(true); // ← le thread s'arrête quand l'app se ferme
+        loadThread.start();
     }
 }
+

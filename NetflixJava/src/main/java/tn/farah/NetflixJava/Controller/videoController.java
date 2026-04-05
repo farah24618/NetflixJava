@@ -1,5 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
+import java.sql.Connection;
+
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -11,42 +13,64 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Entities.Episode;
+import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Service.EpisodeService;
+import tn.farah.NetflixJava.Service.SerieService;
+import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class videoController {
 
-    @FXML private MediaView mediaView;
-    @FXML private Button playButton;
-    @FXML private Button skipIntroButton;
-    @FXML private Button vitesseButton;
-    @FXML private Button lockButton;
-    @FXML private Slider progressBar;
-    @FXML private Label timeLabel;
-    @FXML private Label titleLabel;
+    // ─────────────────────────────────────────────
+    // INJECTION FXML
+    // ─────────────────────────────────────────────
+    @FXML private MediaView  mediaView;
+    @FXML private Button     playButton;
+    @FXML private Button     skipIntroButton;
+    @FXML private Button     vitesseButton;
+    @FXML private Button     lockButton;
+    @FXML private Button     fullscreenButton;
+    @FXML private Slider     progressBar;
+    @FXML private Label      timeLabel;
+    @FXML private Label      titleLabel;
     @FXML private BorderPane controlsPane;
 
-    private MediaPlayer mediaPlayer;
-    private final EpisodeService episodeService = new EpisodeService();
-    private Episode currentEpisode;
-    private double currentRate = 1.0;
-    private boolean locked = false;
+    // ─────────────────────────────────────────────
+    // ÉTAT INTERNE
+    // ─────────────────────────────────────────────
+    private MediaPlayer    mediaPlayer;
+    private EpisodeService episodeService;
+    private SerieService   serieService;
+    private Episode        currentEpisode;
+    private double         currentRate = 1.0;
+    private boolean        locked      = false;
 
     private ChangeListener<Duration> timeListener;
-    private ChangeListener<Boolean> valueChangingListener;
-    private PauseTransition hideTimer;
+    private ChangeListener<Boolean>  valueChangingListener;
+    private PauseTransition          hideTimer;
 
-    // ===================== INITIALISATION =====================
-
+    // ─────────────────────────────────────────────
+    // POINT D'ENTRÉE
+    // ─────────────────────────────────────────────
     public void initEpisode(int episodeId) {
-        chargerEpisode(episodeId);
+        Connection connection = ConxDB.getInstance();
+        episodeService = new EpisodeService(connection);
+        serieService   = new SerieService(connection);
         initialiserHideTimer();
+        chargerEpisode(episodeId);
     }
 
+    // ─────────────────────────────────────────────
+    // AUTO-MASQUAGE DES CONTRÔLES
+    // ─────────────────────────────────────────────
     private void initialiserHideTimer() {
+
+        controlsPane.setVisible(false);
+
         hideTimer = new PauseTransition(Duration.seconds(3));
         hideTimer.setOnFinished(e -> {
             if (!locked) controlsPane.setVisible(false);
@@ -58,28 +82,44 @@ public class videoController {
         });
 
         controlsPane.setOnMouseEntered(e -> hideTimer.stop());
-        controlsPane.setOnMouseExited(e -> hideTimer.playFromStart());
+
+        controlsPane.setOnMouseExited(e -> {
+            if (!locked) hideTimer.playFromStart();
+        });
     }
 
+    // ─────────────────────────────────────────────
+    // CHARGEMENT ÉPISODE
+    // ─────────────────────────────────────────────
     private void chargerEpisode(int episodeId) {
         this.currentEpisode = episodeService.findById(episodeId);
         		
 
         if (currentEpisode != null) {
             Platform.runLater(() -> {
-                titleLabel.setText("Saison " + currentEpisode.getSaisonId()
-                        + " - Ép " + currentEpisode.getNumeroEpisode()
+                titleLabel.setText(
+                        "Saison " + currentEpisode.getSaisonId()
+                        + " – Ép " + currentEpisode.getNumeroEpisode()
                         + " : " + currentEpisode.getTitre());
-                lancerVideo(currentEpisode.getVideoUrl());
+                String url = currentEpisode.getVideoUrl();
+                if (url != null && !url.isBlank()) {
+                    url = resoudreUrl(url);
+                    if (url != null) lancerVideo(url);
+                    else System.err.println("URL vidéo invalide pour épisode " + currentEpisode.getId());
+                } else {
+                    System.err.println("Pas d'URL vidéo pour l'épisode " + currentEpisode.getId());
+                }
             });
         } else {
             System.err.println("Erreur : Épisode " + episodeId + " introuvable.");
         }
     }
 
-    // ===================== GESTION DU LECTEUR =====================
-
+    // ─────────────────────────────────────────────
+    // LECTEUR VIDÉO
+    // ─────────────────────────────────────────────
     private void lancerVideo(String url) {
+
         if (mediaPlayer != null) {
             if (timeListener != null)
                 mediaPlayer.currentTimeProperty().removeListener(timeListener);
@@ -104,22 +144,21 @@ public class videoController {
 
             timeListener = (obs, oldTime, newTime) -> {
                 double currentSeconds = newTime.toSeconds();
-                double totalSeconds = mediaPlayer.getTotalDuration().toSeconds();
+                double totalSeconds   = mediaPlayer.getTotalDuration().toSeconds();
 
                 Platform.runLater(() -> {
                     if (!progressBar.isValueChanging()) {
-                        progressBar.setValue(totalSeconds > 0 ? (currentSeconds / totalSeconds) * 100 : 0);
+                        progressBar.setValue(
+                                totalSeconds > 0 ? (currentSeconds / totalSeconds) * 100 : 0);
                     }
                     timeLabel.setText(formatTime(currentSeconds) + " / " + formatTime(totalSeconds));
 
-                    // Afficher le bouton uniquement pendant l'intro et si non verrouillé
                     boolean dansIntro = currentSeconds >= 0
                             && currentSeconds < currentEpisode.getDurreeIntro()
                             && currentEpisode.getDurreeIntro() > 0;
-
                     boolean afficher = dansIntro && !locked;
                     skipIntroButton.setVisible(afficher);
-                    skipIntroButton.setManaged(afficher); // évite l'espace vide quand caché
+                    skipIntroButton.setManaged(afficher);
                 });
             };
             mediaPlayer.currentTimeProperty().addListener(timeListener);
@@ -140,14 +179,15 @@ public class videoController {
     }
 
     private void seekToPosition() {
-        if (mediaPlayer != null) {
-            double total = mediaPlayer.getTotalDuration().toSeconds();
-            double seekTo = (progressBar.getValue() / 100.0) * total;
-            mediaPlayer.seek(Duration.seconds(seekTo));
-        }
+        if (mediaPlayer == null) return;
+        double total  = mediaPlayer.getTotalDuration().toSeconds();
+        double seekTo = (progressBar.getValue() / 100.0) * total;
+        mediaPlayer.seek(Duration.seconds(seekTo));
     }
 
-    // ===================== ACTIONS FXML =====================
+    // ─────────────────────────────────────────────
+    // ACTIONS FXML
+    // ─────────────────────────────────────────────
 
     @FXML
     private void handlePlayPause() {
@@ -172,14 +212,18 @@ public class videoController {
 
     @FXML
     private void handleNextEpisode() {
+        if (currentEpisode == null) return;
         Episode next = episodeService.getNextEpisode(
                 currentEpisode.getSaisonId(),
-                currentEpisode.getNumeroEpisode()
-        );
+                currentEpisode.getNumeroEpisode());
         if (next != null) {
             chargerEpisode(next.getId());
         } else {
-            System.out.println("Fin de la saison !");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Fin de saison");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous avez terminé tous les épisodes de cette saison !");
+            alert.showAndWait();
         }
     }
 
@@ -208,7 +252,7 @@ public class videoController {
         }
         currentRate = vitesses[idx];
         mediaPlayer.setRate(currentRate);
-        vitesseButton.setText(currentRate == 1.0 ? "Vitesse" : "x" + currentRate);
+        vitesseButton.setText(currentRate == 1.0 ? "⚡ Vitesse" : "⚡ x" + currentRate);
     }
 
     @FXML
@@ -217,46 +261,122 @@ public class videoController {
         playButton.setDisable(locked);
         progressBar.setDisable(locked);
         skipIntroButton.setDisable(locked);
-        lockButton.setText(locked ? "🔒 Verrouillé" : "Verrouiller");
+        lockButton.setText(locked ? "🔒 Verrouillé" : "🔓 Verrouiller");
 
-        // Cacher le bouton skip intro si on verrouille
         if (locked) {
-            skipIntroButton.setVisible(false);
-            skipIntroButton.setManaged(false);
+            hideTimer.stop();
+            controlsPane.setVisible(true);
+        } else {
+            hideTimer.playFromStart();
+        }
+    }
+
+    /**
+     * ✅ FIX : Retourne à la fiche de la série (EpisodeViewController)
+     * en rechargeant la série correspondante à l'épisode courant.
+     */
+    @FXML
+    private void handleOpenEpisodes() {
+        shutdown();
+        retournerALaSerie();
+    }
+
+    /**
+     * ✅ FIX : Bouton retour — arrête la vidéo et retourne à la fiche série.
+     */
+    /**
+     * Convertit une URL en URI valide pour JavaFX Media.
+     */
+    private String resoudreUrl(String url) {
+        if (url == null || url.isBlank()) return null;
+        if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file:")) {
+            return url;
+        }
+        java.io.File f = new java.io.File(url);
+        if (!f.isAbsolute()) {
+            f = new java.io.File(System.getProperty("user.dir"), url);
+        }
+        if (f.exists()) {
+            return f.toURI().toString();
+        }
+        java.net.URL resource = getClass().getResource("/" + url);
+        if (resource != null) {
+            return resource.toExternalForm();
+        }
+        System.err.println("Fichier vidéo introuvable : " + url);
+        return null;
+    }
+
+    @FXML
+    private void handleRetour() {
+        shutdown();
+        retournerALaSerie();
+    }
+
+    /**
+     * Navigation vers EpisodeViewController avec la série de l'épisode courant.
+     */
+    private void retournerALaSerie() {
+        if (currentEpisode == null) {
+            ScreenManager.getInstance().navigateTo(Screen.series);
+            return;
+        }
+        // Récupérer la série via la saison de l'épisode
+        Serie serie = serieService != null
+            ? serieService.findByEpisodeId(currentEpisode.getId())
+            : null;
+
+        EpisodeViewController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.detail);
+
+        if (ctrl != null && serie != null) {
+            ctrl.setSerie(serie);
+        } else if (ctrl == null) {
+            // fallback si navigateAndGetController retourne null
+            ScreenManager.getInstance().navigateTo(Screen.detail);
         }
     }
 
     @FXML
-    private void handleOpenEpisodes() {
-        ScreenManager.getInstance().navigateTo(Screen.episodeView);
+    private void handleFullscreen() {
+        if (mediaView.getScene() == null) return;
+        Stage stage = (Stage) mediaView.getScene().getWindow();
+        boolean isFullscreen = stage.isFullScreen();
+        stage.setFullScreen(!isFullscreen);
+        fullscreenButton.setText(isFullscreen ? "⛶ Plein écran" : "⊡ Fenêtré");
     }
 
     @FXML
     private void handleAudioMenu(ActionEvent event) {
         ContextMenu menu = new ContextMenu();
 
-        MenuItem fr = new MenuItem("Français (Audio)");
-        MenuItem en = new MenuItem("Anglais (Audio)");
-        MenuItem subOff = new MenuItem("Désactiver les sous-titres");
+        MenuItem fr     = new MenuItem("🇫🇷  Français (Audio)");
+        MenuItem en     = new MenuItem("🇬🇧  Anglais (Audio)");
+        MenuItem subFr  = new MenuItem("📝  Sous-titres Français");
+        MenuItem subOff = new MenuItem("⊘  Désactiver les sous-titres");
 
-        fr.setOnAction(e -> System.out.println("Passage en Français"));
-        en.setOnAction(e -> System.out.println("Passage en Anglais"));
+        fr.setOnAction(e     -> System.out.println("Audio : Français"));
+        en.setOnAction(e     -> System.out.println("Audio : Anglais"));
+        subFr.setOnAction(e  -> System.out.println("Sous-titres : Français"));
         subOff.setOnAction(e -> System.out.println("Sous-titres désactivés"));
 
-        menu.getItems().addAll(fr, en, new SeparatorMenuItem(), subOff);
+        menu.getItems().addAll(fr, en, new SeparatorMenuItem(), subFr, subOff);
 
         Button btn = (Button) event.getSource();
         menu.show(btn, Side.TOP, 0, 0);
     }
 
-    // ===================== UTILITAIRES =====================
-
+    // ─────────────────────────────────────────────
+    // UTILITAIRES
+    // ─────────────────────────────────────────────
     private String formatTime(double seconds) {
         if (Double.isNaN(seconds) || Double.isInfinite(seconds)) return "00:00";
         int h = (int) seconds / 3600;
         int m = ((int) seconds % 3600) / 60;
         int s = (int) seconds % 60;
-        return h > 0 ? String.format("%02d:%02d:%02d", h, m, s) : String.format("%02d:%02d", m, s);
+        return h > 0
+                ? String.format("%02d:%02d:%02d", h, m, s)
+                : String.format("%02d:%02d", m, s);
     }
 
     public void shutdown() {
@@ -264,5 +384,10 @@ public class videoController {
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
+    }
+
+    public void seekToSeconds(int seconds) {
+        if (mediaPlayer == null || seconds <= 0) return;
+        mediaPlayer.setOnReady(() -> mediaPlayer.seek(Duration.seconds(seconds)));
     }
 }

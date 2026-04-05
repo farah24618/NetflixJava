@@ -9,21 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.farah.NetflixJava.Entities.Favori;
+import tn.farah.NetflixJava.utils.ConxDB;
+
 
 public class FavoriDAO {
 
-    private Connection conn;
+    private Connection connection;
 
-    public FavoriDAO(Connection conn) {
-        this.conn = conn;
+    public FavoriDAO(Connection connection) {
+        this.connection = connection;
     }
 
     public List<Favori> findAll() {
         List<Favori> favoris = new ArrayList<>();
         String sql = "SELECT * FROM favorite";
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs  = stm.executeQuery(sql);
+        
+        try (Statement stm = connection.createStatement();
+             ResultSet rs = stm.executeQuery(sql)) {
+            
             while (rs.next()) {
                 favoris.add(new Favori(
                     rs.getInt("id"),
@@ -40,13 +43,15 @@ public class FavoriDAO {
     public int save(Favori favori) {
         int favoriId = 0;
         String sql = "INSERT INTO favorite (user_id, media_id) VALUES(?, ?)";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
             ps.setInt(1, favori.getUserId());
             ps.setInt(2, favori.getMediaId());
             ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) favoriId = rs.getInt(1);
+            
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) favoriId = rs.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,9 +60,9 @@ public class FavoriDAO {
 
     public int delete(int id) {
         int rows = 0;
-        String sql = "DELETE FROM favori WHERE id = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "DELETE FROM favorite WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            
             ps.setInt(1, id);
             rows = ps.executeUpdate();
         } catch (SQLException e) {
@@ -68,12 +73,13 @@ public class FavoriDAO {
 
     public boolean existe(int userId, int mediaId) {
         String sql = "SELECT id FROM favorite WHERE user_id = ? AND media_id = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            
             ps.setInt(1, userId);
             ps.setInt(2, mediaId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -82,17 +88,18 @@ public class FavoriDAO {
 
     public Favori findByUserIdAndMediaId(int userId, int mediaId) {
         String sql = "SELECT * FROM favorite WHERE user_id = ? AND media_id = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            
             ps.setInt(1, userId);
             ps.setInt(2, mediaId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new Favori(
-                    rs.getInt("id"),
-                    rs.getInt("user_id"),
-                    rs.getInt("media_id")
-                );
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Favori(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getInt("media_id")
+                    );
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,16 +110,17 @@ public class FavoriDAO {
     public List<Favori> getFavorisByUser(int userId) {
         List<Favori> favoris = new ArrayList<>();
         String sql = "SELECT * FROM favorite WHERE user_id = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            
             ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                favoris.add(new Favori(
-                    rs.getInt("id"),
-                    rs.getInt("user_id"),
-                    rs.getInt("media_id")
-                ));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    favoris.add(new Favori(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getInt("media_id")
+                    ));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,8 +131,8 @@ public class FavoriDAO {
     public int supprimerFavori(int userId, int mediaId) {
         int rows = 0;
         String sql = "DELETE FROM favorite WHERE user_id = ? AND media_id = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            
             ps.setInt(1, userId);
             ps.setInt(2, mediaId);
             rows = ps.executeUpdate();
