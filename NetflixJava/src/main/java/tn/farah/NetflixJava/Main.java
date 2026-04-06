@@ -54,6 +54,7 @@ public class Main extends Application {
         nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
 
         nav.register(Screen.notificationAdmin, "/tn/farah/NetflixJava/notificationAdmin.fxml");
+        nav.register(Screen.parametresAdmin, "/tn/farah/NetflixJava/parametres.fxml");
 
 
 
@@ -70,7 +71,7 @@ public class Main extends Application {
 
        
 
-        nav.navigateTo(Screen.login);
+        nav.navigateTo(Screen.parametresAdmin);
 
 
 
