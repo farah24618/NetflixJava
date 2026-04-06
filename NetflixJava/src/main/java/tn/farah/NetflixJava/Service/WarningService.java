@@ -23,6 +23,9 @@ public class WarningService {
     public List<Warning> getAllWarnings() throws SQLException {
         return warningDao.findAll();
     }
+    public void save(Warning w) throws SQLException {
+    	warningDao.save(w);
+    }
 
     
    

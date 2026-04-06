@@ -30,6 +30,7 @@ import tn.farah.NetflixJava.Entities.Favori;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Entities.Rating;
+import tn.farah.NetflixJava.Entities.User;
 import tn.farah.NetflixJava.Entities.Warning;
 import tn.farah.NetflixJava.Service.CommentaireService;
 import tn.farah.NetflixJava.Service.FavoriService;
@@ -142,9 +143,15 @@ public class FilmViewController implements Initializable {
         favoriService      = new FavoriService(cnnx);
         userService        = new UserService(cnnx);
         ratingService      = new RatingService(cnnx);
-        String pseudo = userService.findUserById(userId).getPseudo();
-        chargerProfil(pseudo != null ? pseudo : "Inconnu");
-
+        
+        User currentUser = userService.findUserById(userId);
+        if (currentUser != null) {
+            String pseudo = currentUser.getPseudo();
+            // Set your UI elements here
+        } else {
+            System.out.println("User not found!");
+            // Handle the error gracefully (e.g., redirect to login)
+        }
         activerOnglet(tabApropos);
 
         if (panelCommentaires != null) {

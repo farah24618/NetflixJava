@@ -25,17 +25,17 @@ public class WarningDao {
 
 	    public List<Warning> findAll() throws SQLException {
 	        List<Warning> list = new ArrayList<>();
-	        String sql = "SELECT * FROM warnings";
+	        String sql = "SELECT * FROM content_warning";
 	        try (Statement st = connection.createStatement();
 	             ResultSet rs = st.executeQuery(sql)) {
 	            while (rs.next()) {
-	                list.add(new Warning(rs.getInt("id"), rs.getString("nom")));
+	                list.add(new Warning(rs.getInt("id"), rs.getString("label")));
 	            }
 	        }
 	        return list;
 	    }
 	    public void save(Warning warning) throws SQLException {
-	        String sql = "INSERT INTO warnings (nom) VALUES (?)";
+	        String sql = "INSERT INTO content_warning (label) VALUES (?)";
 	        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 	            ps.setString(1, warning.getNom());
 	            ps.executeUpdate();
@@ -51,12 +51,12 @@ public class WarningDao {
 
 	    // --- FIND BY ID ---
 	    public Warning findById(int id) throws SQLException {
-	        String sql = "SELECT * FROM warnings WHERE id = ?";
+	        String sql = "SELECT * FROM content_warning WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 	            ps.setInt(1, id);
 	            try (ResultSet rs = ps.executeQuery()) {
 	                if (rs.next()) {
-	                    return new Warning(rs.getInt("id"), rs.getString("nom"));
+	                    return new Warning(rs.getInt("id"), rs.getString("label"));
 	                }
 	            }
 	        }
@@ -65,7 +65,7 @@ public class WarningDao {
 
 	    // --- UPDATE ---
 	    public void update(Warning warning) throws SQLException {
-	        String sql = "UPDATE warnings SET nom = ? WHERE id = ?";
+	        String sql = "UPDATE content_warning SET label = ? WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 	            ps.setString(1, warning.getNom());
 	            ps.setInt(2, warning.getId());
@@ -75,7 +75,7 @@ public class WarningDao {
 
 	    // --- DELETE ---
 	    public void delete(int id) throws SQLException {
-	        String sql = "DELETE FROM warnings WHERE id = ?";
+	        String sql = "DELETE FROM content_warning WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 	            ps.setInt(1, id);
 	            ps.executeUpdate();

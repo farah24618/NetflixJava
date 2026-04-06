@@ -41,35 +41,41 @@ public class FilmService {
 	     * Transactionnel : Tout passe ou tout échoue.
 	     */
 	    public void enregistrerFilm(Film film) throws Exception {
+	        boolean previousAutoCommit = connection.getAutoCommit();
 	        try {
 	            connection.setAutoCommit(false);
 
-	            // 1. Sauvegarder le Film (et le Media via l'ID généré)
+	            // 1. Save the Film (and Media via the generated ID)
 	            filmDao.create(film);
-
 	            int idGenere = film.getId();
 
-	            // 2. On utilise la liste INTERNE du film !
+	            // 2. Link genres
 	            if (film.getGenres() != null) {
 	                for (Category cat : film.getGenres()) {
 	                    categoryDao.lierMedia(idGenere, cat.getId());
-	                    categoryDao.save(cat);
+	                   
 	                }
 	            }
 
-	            // On fait pareil pour les warnings s'ils sont aussi dans l'objet Film
+	            // 3. Link warnings
 	            if (film.getWarnings() != null) {
 	                for (Warning warn : film.getWarnings()) {
 	                    warningDao.lierMedia(idGenere, warn.getId());
-	                    warningDao.save(warn);
-
+	                    
 	                }
 	            }
 
 	            connection.commit();
+
 	        } catch (SQLException e) {
-	            connection.rollback();
+	            // Only rollback if autoCommit was actually disabled
+	            if (!connection.getAutoCommit()) {
+	                connection.rollback();
+	            }
 	            throw e;
+	        } finally {
+	            // Always restore the original autoCommit state
+	            connection.setAutoCommit(previousAutoCommit);
 	        }
 	    }
 	    /**

@@ -52,6 +52,8 @@ public class Main extends Application {
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
  
         nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
+        nav.register(Screen.editProfiles, "/tn/farah/NetflixJava/ManageProfiles.fxml");
+        nav.register(Screen.addFilm, "/tn/farah/NetflixJava/AddFilmView.fxml");
 
 
 
@@ -63,7 +65,7 @@ public class Main extends Application {
 
 
 
-        nav.navigateTo(Screen.login);
+        nav.navigateTo(Screen.addFilm);
 
 
 

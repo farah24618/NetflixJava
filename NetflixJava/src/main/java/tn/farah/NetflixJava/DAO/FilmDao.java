@@ -43,7 +43,7 @@ public class FilmDao {
 
     public void create(Film film) throws SQLException {
         // Suppression de 'producteur' dans l'insert si la colonne n'existe pas
-        String queryMedia = "INSERT INTO media (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String queryMedia = "INSERT INTO media (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id,producteur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryFilm  = "INSERT INTO film (id, url_video, duree_minutes, nbre_vues) VALUES (?, ?, ?, ?)";
 
         try {
@@ -58,10 +58,10 @@ public class FilmDao {
                 psM.setString(5, film.getUrlImageCover());
                 psM.setString(6, film.getUrlImageBanner());
                 psM.setString(7, film.getUrlTeaser());
-                // psM.setString(8, film.getProducteur()); // LIGNE COMMENTÉE
-                psM.setInt(8, film.getAgeRating().getId());
-                psM.setString(9, "FILM");
+                psM.setInt(8, film.getAgeRating() != null ? film.getAgeRating().getId() : 1);
+                psM.setString(9, film.getProducteur()); // ✅ now in correct order
                 psM.executeUpdate();
+                
 
                 ResultSet rs = psM.getGeneratedKeys();
                 if (rs.next()) generatedId = rs.getInt(1);

@@ -1,0 +1,19 @@
+/* ── TextArea ── */
+.dark-textarea .content {
+    -fx-background-color: #0f0f13;
+}
+.dark-textarea {
+    -fx-control-inner-background: #0f0f13;
+    -fx-background-color: #0f0f13;
+}
+
+/* ── DatePicker ── */
+.date-picker .text-field {
+    -fx-background-color: #0f0f13;
+    -fx-text-fill: #eeeeee;
+    -fx-prompt-text-fill: #444444;
+}
+.date-picker-popup {
+    -fx-background-color: #1a1a22;
+    -fx-border-color: #2a2a35;
+}
