@@ -1,9 +1,6 @@
 package tn.farah.NetflixJava;
 
 import javafx.application.Application;
-
-
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,6 +35,12 @@ public class Main extends Application {
         nav.register(Screen.detail,        "/tn/farah/NetflixJava/EpisodeView2.fxml");
         nav.register(Screen.myList,"/tn/farah/NetflixJava/MyListView.fxml");
         nav.register(Screen.addProfile, "/tn/farah/NetflixJava/addProfile.fxml");
+
+        nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
+
+        //nav.register(Screen.AdminDashboard, "/tn/farah/NetflixJava/AdminDashboard.fxml");
+
+
         nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
 
@@ -46,10 +49,13 @@ public class Main extends Application {
         nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
 
         nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+
+        nav.register(Screen.CommentaireAdmin,  "/tn/farah/NetflixJava/CommentaireAdmin.fxml");
+
         nav.register(Screen.filmPlayer,  "/tn/farah/NetflixJava/FilmPlayer.fxml");
 
 
-        nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+      
  
         nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
 
@@ -64,14 +70,29 @@ public class Main extends Application {
      
         //nav.navigateTo(Screen.addProfile);
         //nav.navigateTo(Screen.episodeComments);
+
+
+        //nav.navigateTo(Screen.login);
+       // nav.navigateTo(Screen.AdminDashboard);
+
+
+        //nav.navigateTo(Screen.video);
+
         
 
 
 
 
+        //nav.navigateTo(Screen.login);
+
+
        
 
+
         nav.navigateTo(Screen.parametresAdmin);
+
+
+        //nav.navigateTo(Screen.login);
 
 
 
