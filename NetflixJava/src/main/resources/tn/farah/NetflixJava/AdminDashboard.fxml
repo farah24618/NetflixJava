@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.farah.NetflixJava.Controller.AdminDashboardController"
+            prefWidth="1500.0"
+            prefHeight="900.0"
+            style="-fx-background-color: #141414;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="20.0"
+              prefHeight="70.0"
+              style="-fx-background-color: #0d0d0d;">
+            <padding>
+                <Insets top="15" right="25" bottom="15" left="25"/>
+            </padding>
+
+            <children>
+                <Label text="RAKSHANET ADMIN"
+                       style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="lblAdminName"
+                       text="Bienvenue Admin"
+                       style="-fx-text-fill: white; -fx-font-size: 15px;"/>
+
+                <Button text="Déconnexion"
+                        onAction="#handleLogout"
+                        style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+            </children>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="5.0" 
+              prefWidth="250.0" 
+              style="-fx-background-color: #000000;"> 
+            <padding>
+                <Insets top="30" right="15" bottom="30" left="15"/>
+            </padding>
+
+            <children>
+                <Label text="Navigation" 
+                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 15 10;"/>
+
+                <Button text="⊞   Dashboard" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-background-radius: 8; -fx-cursor: hand;"/>
+
+                <Button text="🎬   Films" 
+                        onAction="#goToFilmsAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="📺   Séries" 
+                        onAction="#goToSeriesAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="👤   Utilisateurs" 
+                        onAction="#goToUsersAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="🔔   Notifications" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="💬   Commentaires" 
+                        onAction="#goToCommentsAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="★   Favoris" 
+                        onAction="#goToFavoritesAdmin" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+
+                <Button text="⚙   Paramètres" 
+                        maxWidth="Infinity" prefHeight="45.0" 
+                        style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;"/>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20.0" style="-fx-background-color: #141414;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <children>
+
+                <Label text="Tableau de bord"
+                       style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;"/>
+
+                <GridPane hgap="15.0" vgap="15.0">
+                    <children>
+                        <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
+                              prefWidth="220.0" prefHeight="110.0"
+                              spacing="8.0"
+                              style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;">
+                            <children>
+                                <Label text="Films"
+                                       style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;"/>
+                                <Label fx:id="lblNbFilms"
+                                       text="0"
+                                       style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="0"
+                              prefWidth="220.0" prefHeight="110.0"
+                              spacing="8.0"
+                              style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;">
+                            <children>
+                                <Label text="Séries"
+                                       style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;"/>
+                                <Label fx:id="lblNbSeries"
+                                       text="0"
+                                       style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox GridPane.columnIndex="2" GridPane.rowIndex="0"
+                              prefWidth="220.0" prefHeight="110.0"
+                              spacing="8.0"
+                              style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;">
+                            <children>
+                                <Label text="Épisodes"
+                                       style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;"/>
+                                <Label fx:id="lblNbEpisodes"
+                                       text="0"
+                                       style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox GridPane.columnIndex="3" GridPane.rowIndex="0"
+                              prefWidth="220.0" prefHeight="110.0"
+                              spacing="8.0"
+                              style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;">
+                            <children>
+                                <Label text="Utilisateurs"
+                                       style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;"/>
+                                <Label fx:id="lblNbUsers"
+                                       text="0"
+                                       style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox GridPane.columnIndex="4" GridPane.rowIndex="0"
+                              prefWidth="220.0" prefHeight="110.0"
+                              spacing="8.0"
+                              style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;">
+                            <children>
+                                <Label text="Commentaires"
+                                       style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;"/>
+                                <Label fx:id="lblNbComments"
+                                       text="0"
+                                       style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </GridPane>
+
+                <HBox spacing="15.0">
+                    <children>
+                        <VBox prefWidth="480.0" prefHeight="320.0"
+                              spacing="10.0"
+                              style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                            <children>
+                                <Label text="Répartition du contenu"
+                                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <PieChart fx:id="contentPieChart"
+                                          prefHeight="260.0"
+                                          legendVisible="true"
+                                          labelsVisible="true"/>
+                            </children>
+                        </VBox>
+
+                        <VBox prefWidth="700.0" prefHeight="320.0"
+                              spacing="10.0"
+                              style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                            <children>
+                                <Label text="Évolution des inscriptions"
+                                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <LineChart fx:id="inscriptionsChart" prefHeight="260.0" animated="false">
+                                    <xAxis>
+                                        <CategoryAxis label="Date"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis label="Nouveaux inscrits"/>
+                                    </yAxis>
+                                </LineChart>
+                            </children>
+                        </VBox>
+                        </children>
+                </HBox>
+
+                <HBox spacing="15.0">
+                    <children>
+                        <VBox prefWidth="580.0" prefHeight="320.0"
+                              spacing="10.0"
+                              style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                            <children>
+                                <Label text="Commentaires par type"
+                                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                                <BarChart fx:id="commentsByTypeChart" prefHeight="260.0" animated="false">
+                                    <xAxis>
+                                        <CategoryAxis label="Type"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis label="Commentaires"/>
+                                    </yAxis>
+                                </BarChart>
+                            </children>
+                        </VBox>
+
+                        <VBox prefWidth="600.0" prefHeight="320.0"
+                              spacing="15.0"
+                              style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                            <children>
+                                <Label text="Accès rapide"
+                                       style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+                                <HBox spacing="12.0">
+                                    <children>
+                                        <Button text="Ajouter film"
+                                                onAction="#goToFilmsAdmin"
+                                                style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+                                        <Button text="Ajouter série"
+                                                onAction="#goToSeriesAdmin"
+                                                style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;"/>
+                                        <Button text="Utilisateurs"
+                                                onAction="#goToUsersAdmin"
+                                                style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;"/>
+                                    </children>
+                                </HBox>
+
+                                <VBox spacing="8.0"
+                                      style="-fx-background-color: #222222; -fx-background-radius: 10; -fx-padding: 12;">
+                                    <children>
+                                        <Label text="Résumé"
+                                               style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                        <Label fx:id="lblSummary"
+                                               text="Le dashboard affiche les statistiques principales de la plateforme."
+                                               wrapText="true"
+                                               style="-fx-text-fill: #cccccc; -fx-font-size: 14px;"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>

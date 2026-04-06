@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.farah.NetflixJava.Entities.Notification;
+import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.DatabaseConnection;
 
 public class NotificationDAO {
 
@@ -100,4 +102,20 @@ public class NotificationDAO {
             System.err.println("Erreur lors de l'ajout de la notification : " + e.getMessage());
         }
     }
-}
+
+ // Dans NotificationDAO.java
+    public int countAll(int userId) {
+        String query = "SELECT COUNT(*) FROM notifications WHERE user_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+}	
+
+
+

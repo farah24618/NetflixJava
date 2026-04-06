@@ -38,7 +38,7 @@ import tn.farah.NetflixJava.Service.FilmService;
 import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.RatingService;
 import tn.farah.NetflixJava.Service.UserService;
-import tn.farah.NetflixJava.utils.CardFactory;
+
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
