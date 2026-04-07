@@ -89,9 +89,9 @@ public class signup1Controller implements Initializable {
             return;
         }
 
-        // 3. Validation de l'Email (min 3 car. avant @gmail.com)
-        if (!email.matches("^[\\w.]{3,}@gmail\\.com$")) {
-            showAlert(Alert.AlertType.WARNING, "Email invalide", "L'email doit contenir au moins 3 caractères avant '@gmail.com'.");
+     // Validation de l'Email (min 3 car. avant @ + domaine + extension)
+        if (!email.matches("^[\\w.]{3,}@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+            showAlert(Alert.AlertType.WARNING, "Email invalide", "L'email doit contenir au moins 3 caractères avant l'arobase et avoir un domaine valide (ex: yahoo.fr).");
             return;
         }
 
@@ -102,8 +102,8 @@ public class signup1Controller implements Initializable {
         }
 
         // 5. Validation du Password (min 6 caractères)
-        if (!passwordRaw.isEmpty() && passwordRaw.length() < 6) {
-            showAlert(Alert.AlertType.WARNING, "Sécurité faible", "Le mot de passe doit contenir au moins 6 caractères.");
+        if (!passwordRaw.isEmpty() && passwordRaw.length() < 8) {
+            showAlert(Alert.AlertType.WARNING, "Sécurité faible", "Le mot de passe doit contenir au moins 8 caractères.");
             return;
         }
 

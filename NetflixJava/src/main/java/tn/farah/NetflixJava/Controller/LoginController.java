@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import tn.farah.NetflixJava.Entities.User;
+import tn.farah.NetflixJava.Entities.UserRole;
 import tn.farah.NetflixJava.Service.UserService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.PreferencesStore;
@@ -62,9 +63,8 @@ public class LoginController implements Initializable{
 	@FXML
 	private void handleSignIn(ActionEvent event) {
 	    String email = emailField.getText().trim();
-	    String passwordRaw = passwordField.getText(); // Mot de passe en clair (ex: "123456")
+	    String passwordRaw = passwordField.getText();
 
-	    // 1. Validations de base
 	    if (email.isEmpty() || passwordRaw.isEmpty()) {
 	        showAlert(Alert.AlertType.WARNING,
 	                  "Champs manquants",
@@ -79,54 +79,28 @@ public class LoginController implements Initializable{
 	        return;
 	    }
 
-	    // 2. Hachage du mot de passe saisi
-	    // On transforme le texte clair en SHA-256 pour comparer des chosess comparables en DB
 	    String passwordHashed = hashSHA256(passwordRaw);
-
-	    // 3. Appel au service avec le mot de passe HACHÉ
 	    User authenticated = userservice.loginUser(email, passwordHashed);
 
 	    if (authenticated != null) {
-	        // Succès : Enregistrement de la session
 	        SessionManager.getInstance().login(authenticated);
 
-	        // Gestion du "Remember me" (optionnel)
-	      /*  if (rememberMeCheckBox.isSelected()) {
-	            PreferencesStore.saveEmail(email);
+	        // ✅ Vérification du rôle pour la navigation
+	        if (authenticated.getRole() == UserRole.ADMIN) {
+	            ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
 	        } else {
-	            PreferencesStore.clearEmail();
-	        }*/
+	            ScreenManager.getInstance().navigateTo(Screen.home);
+	        }
 
-	        // Navigation vers l'accueil
-	        ScreenManager.getInstance().navigateTo(Screen.home);
-	        System.out.println("DEBUG: Login réussi pour " + email);
+	        System.out.println("DEBUG: Login réussi pour " + email + " | Rôle: " + authenticated.getRole());
 
-	      
-	        if (authenticated != null) {
-	            // 1. Enregistrer la session EN PREMIER
-	            SessionManager.getInstance().login(authenticated);
-
-	            // 2. Persister l'email si "Remember me" coché
-	            /*if (rememberMeCheckBox.isSelected()) {
-	                PreferencesStore.saveEmail(email);
-	            } else {
-	                PreferencesStore.clearEmail();
-	            }*/
-
-	            // 3. Naviguer vers les profils
-	            ScreenManager.getInstance().navigateWithSplash(Screen.home);
-
-	        
 	    } else {
-	        // Échec : Mot de passe ou Email incorrect
 	        showAlert(Alert.AlertType.ERROR,
 	                  "Échec de connexion",
 	                  "Email ou mot de passe incorrect. Veuillez réessayer.");
-	        
 	        passwordField.clear();
 	        passwordField.requestFocus();
-
-	    }}
+	    }
 	}
 	    // ── Forgot Password ──────────────────────────────────────────────────────
 	    @FXML

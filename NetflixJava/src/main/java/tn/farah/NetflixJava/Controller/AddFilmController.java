@@ -19,7 +19,8 @@ import tn.farah.NetflixJava.Service.CategoryService;
 import tn.farah.NetflixJava.Service.FilmService;
 import tn.farah.NetflixJava.Service.WarningService;
 import tn.farah.NetflixJava.utils.ConxDB;
-
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.io.File;
 import java.net.URL;
@@ -473,5 +474,10 @@ public class AddFilmController implements Initializable {
     private void showError(String message) {
         lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#e50914; -fx-padding:0 4 0 4;");
         lblStatus.setText(message);
+    }
+    @FXML
+    private void handleRetour() {
+        
+        ScreenManager.getInstance().navigateTo(Screen.admin_main);
     }
 }

@@ -13,6 +13,8 @@ import javafx.scene.input.KeyEvent;
 import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -138,13 +140,34 @@ public class NotificationsAdminController implements Initializable {
 
     // --- Actions de Navigation ---
 
-    @FXML void onDashboardClicked(ActionEvent event) { System.out.println("Aller au Dashboard"); }
-    @FXML void onFilmsClicked(ActionEvent event) { System.out.println("Aller aux Films"); }
-    @FXML void onSeriesClicked(ActionEvent event) { System.out.println("Aller aux Séries"); }
-    @FXML void onUsersClicked(ActionEvent event) { System.out.println("Aller aux Utilisateurs"); }
-    @FXML void onCommentsClicked(ActionEvent event) { System.out.println("Aller aux Commentaires"); }
-    @FXML void onFavoritesClicked(ActionEvent event) { System.out.println("Aller aux Favoris"); }
-    @FXML void onSettingsClicked(ActionEvent event) { System.out.println("Aller aux Paramètres"); }
+    @FXML void onDashboardClicked(ActionEvent event) { 
+    	System.out.println("Aller au Dashboard");
+    	  ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
+    }
+    @FXML void onFilmsClicked(ActionEvent event) {
+    	System.out.println("Aller aux Films"); 
+    	  ScreenManager.getInstance().navigateTo(Screen.admin_main);
+    	}
+    @FXML void onSeriesClicked(ActionEvent event) {
+    	System.out.println("Aller aux Séries");
+    	//ScreenManager.getInstance().navigateTo(Screen);
+    }
+    @FXML void onUsersClicked(ActionEvent event) { 
+    	System.out.println("Aller aux Utilisateurs");
+    	//ScreenManager.getInstance().navigateTo(Screen);
+    	
+    }
+    @FXML void onCommentsClicked(ActionEvent event) {
+    	System.out.println("Aller aux Commentaires"); 
+    	ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
+    	}
+    @FXML void onFavoritesClicked(ActionEvent event) {
+    	System.out.println("Aller aux Favoris"); 
+    	}
+    @FXML void onSettingsClicked(ActionEvent event) { 
+    	System.out.println("Aller aux Paramètres");
+    	ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+    	}
     
     @FXML
     void onLogoutClicked(ActionEvent event) {
