@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -41,10 +43,15 @@
     <Button onAction="#onNotifications" styleClass="icon-btn" text="🔔" />
     <Label fx:id="notifBadge" style="-fx-background-color: #E50914;                   -fx-text-fill: white;                   -fx-background-radius: 10;                   -fx-font-size: 10px;                   -fx-padding: 1 5 1 5;                   -fx-font-weight: bold;" visible="false" StackPane.alignment="TOP_RIGHT" />
 </StackPane>
-                <StackPane styleClass="avatar-box">
-                    <Label fx:id="avatarLabel" styleClass="avatar-label" text="U" />
-                </StackPane>
             </HBox>
+         <ImageView accessibleRole="BUTTON" fitHeight="40.0" fitWidth="30.0" onDragDetected="#onEditProfile" onMouseClicked="#onEditProfile" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@ImagesNet/log5.jpg" />
+            </image>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </ImageView>
 
         </HBox>
     </top>
@@ -63,8 +70,7 @@
                     <Pane mouseTransparent="true" styleClass="hero-gradient" />
 
                     <!-- Contenu texte -->
-                    <VBox fx:id="heroContent" alignment="BOTTOM_LEFT" maxWidth="550" spacing="12" styleClass="hero-content">
-
+<VBox fx:id="heroContent" alignment="BOTTOM_LEFT" maxWidth="550" minWidth="300" spacing="12" styleClass="hero-content">
                         <Label fx:id="heroTitle" styleClass="hero-title" wrapText="true" />
                         <Label fx:id="heroSynopsis" styleClass="hero-synopsis" wrapText="true" />
                   <Label fx:id="heroCategories" />
@@ -93,9 +99,11 @@
                     </VBox>
 
                     <!-- Badge âge (top-right) -->
-                    <HBox alignment="CENTER_RIGHT" styleClass="age-badge-box" StackPane.alignment="CENTER_RIGHT">
-                        <Label fx:id="heroWarning" styleClass="age-badge" text="19+" />
-                    </HBox>
+                    <HBox alignment="CENTER_RIGHT" styleClass="age-badge-box"
+      StackPane.alignment="CENTER_RIGHT"
+      mouseTransparent="true">
+    <Label fx:id="heroWarning" styleClass="age-badge" text="19+" />
+</HBox>
 
                 </StackPane>
 

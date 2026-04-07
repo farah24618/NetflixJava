@@ -6,6 +6,9 @@ import tn.farah.NetflixJava.DAO.UserDao;
 import tn.farah.NetflixJava.Entities.User;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -92,6 +95,12 @@ public class UserService {
 
     public User findUserById(int userId) {
     	return userDao.getUserById(userId);}
+    public boolean updatePseudo(final int userId, final String newPseudo) {
+        return userDao.updatePseudo(userId, newPseudo);
+    }
+    public boolean isPseudoTaken(final String pseudo, final int userId) {
+      
+        return userDao.isPseudoTaken(pseudo, userId);}
 
  // 5️⃣ UPDATE PASSWORD
     public boolean updatePassword(String email, String hashedPass) {

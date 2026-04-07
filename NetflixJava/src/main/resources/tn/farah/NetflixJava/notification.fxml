@@ -20,13 +20,21 @@
             </padding>
 
             <HBox spacing="15" alignment="CENTER_LEFT">
-                <Label text="NETFLIX"
-                       style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;"/>
-                <Label text="Notifications"
-                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Button text="← Retour"
+            onAction="#onBack"
+            style="-fx-background-color: transparent; -fx-text-fill: white; 
+                   -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: #555; 
+                   -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 12 5 12;"/>
+
+    <Label text="NETFLIX"
+           style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+    <Label text="Notifications"
+           style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label fx:id="badgeLabel" text="0" visible="false"
+           style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; 
+                  -fx-background-radius: 10; -fx-padding: 2 6 2 6; -fx-font-size: 12px; -fx-translate-y: -5;"/>
                 
-                <Label fx:id="badgeLabel" text="0" visible="false"
-                       style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 2 6 2 6; -fx-font-size: 12px; -fx-translate-y: -5;"/>
+                
             </HBox>
 
             <Label text="Retrouvez vos alertes de sorties, rappels d'abonnement et informations importantes."
