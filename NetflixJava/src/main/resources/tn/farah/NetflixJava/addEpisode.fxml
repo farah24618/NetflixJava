@@ -13,20 +13,12 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true"
-    style="-fx-background-color:#0f0f13; -fx-border-color:transparent;"
-    stylesheets="@dark.css"
-    xmlns="http://javafx.com/javafx/25"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="tn.farah.NetflixJava.Controller.AddEpisodeController">
+<ScrollPane fitToWidth="true" style="-fx-background-color:#0f0f13; -fx-border-color:transparent;" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AddEpisodeController">
 
     <VBox spacing="0" style="-fx-background-color:#0f0f13;">
 
         <!-- ══ HEADER ══ -->
-        <HBox alignment="CENTER_LEFT" spacing="12"
-              style="-fx-background-color:#1a1a22;
-                     -fx-border-color:#e50914; -fx-border-width:0 0 2 0;
-                     -fx-padding:14 24 14 24;">
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color:#1a1a22;                      -fx-border-color:#e50914; -fx-border-width:0 0 2 0;                      -fx-padding:14 24 14 24;">
             <ImageView fitHeight="51.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
                 <image><Image url="@ImagesNet/rakchanetLogo.png" /></image>
             </ImageView>
@@ -34,17 +26,10 @@
                 <Label style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#e50914;" text="RAKCHANET ADMIN" />
                 <Label style="-fx-font-size:11px; -fx-text-fill:#888888;" text="Ajouter un nouvel épisode" />
             </VBox>
-            <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnCancel" onAction="#handleCancel"
-                    style="-fx-background-color:transparent; -fx-border-color:#3a3a45;
-                           -fx-border-radius:8; -fx-border-width:1; -fx-text-fill:#888888;
-                           -fx-font-size:13px; -fx-padding:10 20 10 20; -fx-cursor:hand;"
-                    text="Annuler" />
-            <Button fx:id="btnSave" onAction="#handleSave"
-                    style="-fx-background-color:#e50914; -fx-background-radius:8;
-                           -fx-text-fill:white; -fx-font-size:13px; -fx-font-weight:bold;
-                           -fx-padding:10 24 10 24; -fx-cursor:hand;"
-                    text="✓  Enregistrer l'épisode" />
+            <Region prefHeight="51.0" prefWidth="224.0" HBox.hgrow="ALWAYS" />
+         <Button fx:id="btnRetour" onAction="#handleRetour" style="-fx-background-color:#e50914; -fx-background-radius:8;                            -fx-text-fill:white; -fx-font-size:13px; -fx-font-weight:bold;                            -fx-padding:10 24 10 24; -fx-cursor:hand;" text="Retour" />
+            <Button fx:id="btnCancel" onAction="#handleCancel" style="-fx-background-color:transparent; -fx-border-color:#3a3a45;                            -fx-border-radius:8; -fx-border-width:1; -fx-text-fill:#888888;                            -fx-font-size:13px; -fx-padding:10 20 10 20; -fx-cursor:hand;" text="Annuler" />
+            <Button fx:id="btnSave" onAction="#handleSave" style="-fx-background-color:#e50914; -fx-background-radius:8;                            -fx-text-fill:white; -fx-font-size:13px; -fx-font-weight:bold;                            -fx-padding:10 24 10 24; -fx-cursor:hand;" text="✓  Enregistrer l'épisode" />
         </HBox>
 
         <!-- ══ CONTENU PRINCIPAL ══ -->
@@ -54,67 +39,39 @@
             <VBox spacing="20" HBox.hgrow="ALWAYS">
 
                 <!-- CARD: Informations générales -->
-                <VBox spacing="16"
-                      style="-fx-background-color:#1a1a22; -fx-background-radius:10;
-                             -fx-border-color:#2a2a35; -fx-border-radius:10;
-                             -fx-border-width:1; -fx-padding:20;">
+                <VBox spacing="16" style="-fx-background-color:#1a1a22; -fx-background-radius:10;                              -fx-border-color:#2a2a35; -fx-border-radius:10;                              -fx-border-width:1; -fx-padding:20;">
 
-                    <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;"
-                           text="Informations générales" />
+                    <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;" text="Informations générales" />
 
                     <!-- Titre -->
                     <VBox spacing="6">
                         <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Titre *" />
-                        <TextField fx:id="txtTitre" promptText="Ex : Le Réveil"
-                                   style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;
-                                          -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;
-                                          -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;
-                                          -fx-padding:9 12 9 12; -fx-font-size:13px;" />
+                        <TextField fx:id="txtTitre" promptText="Ex : Le Réveil" style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;                                           -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;                                           -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;                                           -fx-padding:9 12 9 12; -fx-font-size:13px;" />
                     </VBox>
 
                     <!-- Résumé -->
                     <VBox spacing="6">
                         <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Résumé *" />
-                        <TextArea fx:id="txtResume" prefRowCount="4" promptText="Résumé de l'épisode…"
-                                  style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;
-                                         -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;
-                                         -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;
-                                         -fx-padding:4; -fx-font-size:13px;"
-                                  styleClass="dark-textarea" wrapText="true" />
+                        <TextArea fx:id="txtResume" prefRowCount="4" promptText="Résumé de l'épisode…" style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;                                          -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;                                          -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;                                          -fx-padding:4; -fx-font-size:13px;" styleClass="dark-textarea" wrapText="true" />
                     </VBox>
 
                     <!-- Saison + N° épisode + Durée + Durée intro -->
                     <HBox spacing="12">
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Saison *" />
-                            <ComboBox fx:id="cbSaison" maxWidth="Infinity" promptText="Choisir…"
-                                      style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;
-                                             -fx-border-radius:6; -fx-background-radius:6;
-                                             -fx-border-width:1; -fx-font-size:13px;" />
+                            <ComboBox fx:id="cbSaison" maxWidth="Infinity" promptText="Choisir…" style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;                                              -fx-border-radius:6; -fx-background-radius:6;                                              -fx-border-width:1; -fx-font-size:13px;" />
                         </VBox>
                         <VBox prefWidth="110" spacing="6">
                             <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Épisode n° *" />
-                            <TextField fx:id="txtNumeroEpisode" promptText="1"
-                                       style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;
-                                              -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;
-                                              -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;
-                                              -fx-padding:9 12 9 12; -fx-font-size:13px;" />
+                            <TextField fx:id="txtNumeroEpisode" promptText="1" style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;                                               -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;                                               -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;                                               -fx-padding:9 12 9 12; -fx-font-size:13px;" />
                         </VBox>
                         <VBox prefWidth="110" spacing="6">
                             <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Durée (min) *" />
-                            <TextField fx:id="txtDuree" promptText="45"
-                                       style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;
-                                              -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;
-                                              -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;
-                                              -fx-padding:9 12 9 12; -fx-font-size:13px;" />
+                            <TextField fx:id="txtDuree" promptText="45" style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;                                               -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;                                               -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;                                               -fx-padding:9 12 9 12; -fx-font-size:13px;" />
                         </VBox>
                         <VBox prefWidth="120" spacing="6">
                             <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Durée intro (sec)" />
-                            <TextField fx:id="txtDureeIntro" promptText="85"
-                                       style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;
-                                              -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;
-                                              -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;
-                                              -fx-padding:9 12 9 12; -fx-font-size:13px;" />
+                            <TextField fx:id="txtDureeIntro" promptText="85" style="-fx-background-color:#0f0f13; -fx-border-color:#2a2a35;                                               -fx-border-radius:6; -fx-background-radius:6; -fx-border-width:1;                                               -fx-text-fill:#eeeeee; -fx-prompt-text-fill:#444444;                                               -fx-padding:9 12 9 12; -fx-font-size:13px;" />
                         </VBox>
                     </HBox>
                 </VBox>
@@ -126,77 +83,42 @@
             <VBox minWidth="300" prefWidth="340" spacing="20">
 
                 <!-- CARD: Miniature -->
-                <VBox spacing="12"
-                      style="-fx-background-color:#1a1a22; -fx-background-radius:10;
-                             -fx-border-color:#2a2a35; -fx-border-radius:10;
-                             -fx-border-width:1; -fx-padding:20;">
-                    <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;"
-                           text="🖼  Miniature *" />
-                    <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;"
-                           text="Image horizontale (ex : 1280×720 px)" />
+                <VBox spacing="12" style="-fx-background-color:#1a1a22; -fx-background-radius:10;                              -fx-border-color:#2a2a35; -fx-border-radius:10;                              -fx-border-width:1; -fx-padding:20;">
+                    <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;" text="🖼  Miniature *" />
+                    <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Image horizontale (ex : 1280×720 px)" />
 
-                    <VBox fx:id="dropMiniature" alignment="CENTER" onMouseClicked="#handlePickMiniature"
-                          spacing="8"
-                          style="-fx-border-style:dashed; -fx-border-width:2; -fx-border-color:#2a2a35;
-                                 -fx-border-radius:8; -fx-background-radius:8; -fx-background-color:#0f0f13;
-                                 -fx-padding:18; -fx-cursor:hand; -fx-min-height:130;">
-                        <ImageView fx:id="previewMiniature" fitHeight="110" fitWidth="280"
-                                   preserveRatio="true" visible="false" />
-                        <Label fx:id="lblMiniaturePlaceholder"
-                               style="-fx-font-size:32px; -fx-text-fill:#444444;" text="🖼" />
+                    <VBox fx:id="dropMiniature" alignment="CENTER" onMouseClicked="#handlePickMiniature" spacing="8" style="-fx-border-style:dashed; -fx-border-width:2; -fx-border-color:#2a2a35;                                  -fx-border-radius:8; -fx-background-radius:8; -fx-background-color:#0f0f13;                                  -fx-padding:18; -fx-cursor:hand; -fx-min-height:130;">
+                        <ImageView fx:id="previewMiniature" fitHeight="110" fitWidth="280" preserveRatio="true" visible="false" />
+                        <Label fx:id="lblMiniaturePlaceholder" style="-fx-font-size:32px; -fx-text-fill:#444444;" text="🖼" />
                         <Label style="-fx-font-size:11px; -fx-text-fill:#555555;" text="Cliquez pour choisir" />
-                        <Label fx:id="lblMiniatureName"
-                               style="-fx-font-size:11px; -fx-text-fill:#e50914; -fx-font-weight:bold;" text="" />
+                        <Label fx:id="lblMiniatureName" style="-fx-font-size:11px; -fx-text-fill:#e50914; -fx-font-weight:bold;" text="" />
                     </VBox>
 
-                    <Button maxWidth="Infinity" onAction="#handlePickMiniature"
-                            style="-fx-background-color:#2a2a35; -fx-background-radius:6;
-                                   -fx-text-fill:#cccccc; -fx-font-size:12px;
-                                   -fx-padding:8 0 8 0; -fx-cursor:hand;"
-                            text="📁  Parcourir…" />
+                    <Button maxWidth="Infinity" onAction="#handlePickMiniature" style="-fx-background-color:#2a2a35; -fx-background-radius:6;                                    -fx-text-fill:#cccccc; -fx-font-size:12px;                                    -fx-padding:8 0 8 0; -fx-cursor:hand;" text="📁  Parcourir…" />
                 </VBox>
 
                 <!-- CARD: Vidéo principale -->
-                <VBox spacing="12"
-                      style="-fx-background-color:#1a1a22; -fx-background-radius:10;
-                             -fx-border-color:#e50914; -fx-border-radius:10;
-                             -fx-border-width:1; -fx-padding:20;">
+                <VBox spacing="12" style="-fx-background-color:#1a1a22; -fx-background-radius:10;                              -fx-border-color:#e50914; -fx-border-radius:10;                              -fx-border-width:1; -fx-padding:20;">
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Label style="-fx-font-size:20px; -fx-text-fill:#e50914;" text="▶" />
                         <VBox spacing="2">
-                            <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;"
-                                   text="Vidéo de l'épisode *" />
-                            <Label style="-fx-font-size:10px; -fx-text-fill:#e50914;"
-                                   text="Fichier complet (mp4, mkv, avi…)" />
+                            <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;" text="Vidéo de l'épisode *" />
+                            <Label style="-fx-font-size:10px; -fx-text-fill:#e50914;" text="Fichier complet (mp4, mkv, avi…)" />
                         </VBox>
                     </HBox>
 
-                    <VBox fx:id="dropVideo" alignment="CENTER" onMouseClicked="#handlePickVideo" spacing="8"
-                          style="-fx-border-style:dashed; -fx-border-width:2; -fx-border-color:#e5091466;
-                                 -fx-border-radius:8; -fx-background-radius:8; -fx-background-color:#0f0f13;
-                                 -fx-padding:18; -fx-cursor:hand; -fx-min-height:90;">
-                        <Label fx:id="lblVideoPlaceholder"
-                               style="-fx-font-size:36px; -fx-text-fill:#e50914;" text="▶" />
-                        <Label style="-fx-font-size:11px; -fx-text-fill:#555555;"
-                               text="Cliquez pour choisir la vidéo" />
-                        <Label fx:id="lblVideoName"
-                               style="-fx-font-size:11px; -fx-text-fill:#e50914; -fx-font-weight:bold;" text="" />
-                        <ProgressBar fx:id="pbVideo" maxWidth="Infinity" prefHeight="6" progress="0"
-                                     style="-fx-accent:#e50914; -fx-background-color:#2a2a35;
-                                            -fx-background-radius:4;" visible="false" />
+                    <VBox fx:id="dropVideo" alignment="CENTER" onMouseClicked="#handlePickVideo" spacing="8" style="-fx-border-style:dashed; -fx-border-width:2; -fx-border-color:#e5091466;                                  -fx-border-radius:8; -fx-background-radius:8; -fx-background-color:#0f0f13;                                  -fx-padding:18; -fx-cursor:hand; -fx-min-height:90;">
+                        <Label fx:id="lblVideoPlaceholder" style="-fx-font-size:36px; -fx-text-fill:#e50914;" text="▶" />
+                        <Label style="-fx-font-size:11px; -fx-text-fill:#555555;" text="Cliquez pour choisir la vidéo" />
+                        <Label fx:id="lblVideoName" style="-fx-font-size:11px; -fx-text-fill:#e50914; -fx-font-weight:bold;" text="" />
+                        <ProgressBar fx:id="pbVideo" maxWidth="Infinity" prefHeight="6" progress="0" style="-fx-accent:#e50914; -fx-background-color:#2a2a35;                                             -fx-background-radius:4;" visible="false" />
                     </VBox>
 
-                    <Button fx:id="btnPickVideo" maxWidth="Infinity" onAction="#handlePickVideo"
-                            style="-fx-background-color:#e50914; -fx-background-radius:6;
-                                   -fx-text-fill:white; -fx-font-size:12px; -fx-font-weight:bold;
-                                   -fx-padding:8 0 8 0; -fx-cursor:hand;"
-                            text="📁  Parcourir l'épisode…" />
+                    <Button fx:id="btnPickVideo" maxWidth="Infinity" onAction="#handlePickVideo" style="-fx-background-color:#e50914; -fx-background-radius:6;                                    -fx-text-fill:white; -fx-font-size:12px; -fx-font-weight:bold;                                    -fx-padding:8 0 8 0; -fx-cursor:hand;" text="📁  Parcourir l'épisode…" />
                 </VBox>
 
                 <!-- STATUS -->
-                <Label fx:id="lblStatus"
-                       style="-fx-font-size:12px; -fx-text-fill:#4caf50; -fx-padding:0 4 0 4;"
-                       text="" wrapText="true" />
+                <Label fx:id="lblStatus" style="-fx-font-size:12px; -fx-text-fill:#4caf50; -fx-padding:0 4 0 4;" text="" wrapText="true" />
 
             </VBox>
             <!-- FIN COLONNE DROITE -->

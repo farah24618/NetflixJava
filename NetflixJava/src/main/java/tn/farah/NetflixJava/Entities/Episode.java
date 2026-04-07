@@ -41,7 +41,7 @@ public class Episode {
 		this.duree = duree;
 		this.resume = resume;
 		this.miniatureUrl = miniatureUrl;
-		this.durreeIntro = durreeIntro;
+		this.durreeIntro = durreIntro;
 	}
 	public Episode(int id, int saisonId, String titre, int numeroEpisode, String videoUrl, int duree, String resume,
 			String miniatureUrl, int durreeIntro) {
@@ -90,7 +90,7 @@ public class Episode {
 	public int getDurreeIntro() {
 		return durreeIntro;
 	}
-	public void setDurrentro(int durreeIntro) {
+	public void setDurreeIntro(int durreeIntro) {
 		this.durreeIntro = durreeIntro;
 	}
 

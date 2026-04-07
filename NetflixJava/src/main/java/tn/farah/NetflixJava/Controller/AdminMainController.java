@@ -8,6 +8,9 @@ import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.DAO.FilmDao;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.utils.DatabaseConnection;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -78,6 +81,13 @@ public class AdminMainController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleDashboard() {
+        // On retourne au signup1, les données seront restaurées par son initialize()
+        ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
+    }
+
+    
     @FXML
     private void handleAddMovie() {
         // Cette méthode répare l'erreur de chargement FXML (LoadException)

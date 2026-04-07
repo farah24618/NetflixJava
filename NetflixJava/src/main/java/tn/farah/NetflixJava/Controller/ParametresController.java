@@ -79,10 +79,10 @@ public class ParametresController {
     	// ScreenManager.getInstance().navigateTo(Screen.mainView);
     }
     @FXML void onFilmsClicked(ActionEvent event) {
-    	 ScreenManager.getInstance().navigateTo(Screen.films);
+    	 ScreenManager.getInstance().navigateTo(Screen.admin_main);
     }
     @FXML void onSeriesClicked(ActionEvent event) {
-    	 ScreenManager.getInstance().navigateTo(Screen.series);
+    	 //ScreenManager.getInstance().navigateTo(Screen.series);
     }
     @FXML void onUsersClicked(ActionEvent event) { 
     	// ScreenManager.getInstance().navigateTo(Screen.);
@@ -91,11 +91,9 @@ public class ParametresController {
     	 ScreenManager.getInstance().navigateTo(Screen.notificationAdmin);
     }
     @FXML void onCommentsClicked(ActionEvent event) {
-    	// ScreenManager.getInstance().navigateTo(Screen.);
+    	ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
     }
-    @FXML void onFavoritesClicked(ActionEvent event) { 
-    	// ScreenManager.getInstance().navigateTo(Screen.favoris);
-    }
+    
     
     @FXML
     void onSettingsClicked(ActionEvent event) {

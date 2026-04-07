@@ -57,10 +57,6 @@
                         <Button fx:id="btnComments" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onCommentsClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="💬   Commentaires">
                             <font><Font size="14.0" /></font>
                         </Button>
-
-                        <Button fx:id="btnFavorites" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onFavoritesClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="⭐   Favoris">
-                            <font><Font size="14.0" /></font>
-                        </Button>
     
                         <Button fx:id="btnSettings" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onSettingsClicked" style="-fx-background-color: #cc2222; -fx-text-fill: white; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="⚙   Paramètres">
                             <font>

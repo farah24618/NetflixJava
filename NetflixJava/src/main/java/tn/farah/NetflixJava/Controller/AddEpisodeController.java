@@ -17,6 +17,8 @@ import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.Service.EpisodeService;
 import tn.farah.NetflixJava.Service.SaisonService;
 import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.io.File;
 import java.net.URL;
@@ -266,7 +268,11 @@ public class AddEpisodeController implements Initializable {
     private Stage getCurrentStage() {
         return (Stage) btnSave.getScene().getWindow();
     }
-
+    
+    @FXML
+    private void handleRetour() {
+        //ScreenManager.getInstance().navigateTo(Screen.);
+    }
     private void showSuccess(String message) {
         lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#4caf50; -fx-padding:0 4 0 4;");
         lblStatus.setText(message);
