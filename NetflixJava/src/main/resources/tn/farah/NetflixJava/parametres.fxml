@@ -134,7 +134,7 @@
                 <HBox spacing="15" style="-fx-padding: 20 0 0 0;">
                     <children>
                         <Button onAction="#onSaveSettings" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #cc2222; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Enregistrer les modifications" />
-                        <Button prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;" text="Annuler" />
+                        <Button onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;" text="Annuler" />
                     </children>
                 </HBox>
             </children>

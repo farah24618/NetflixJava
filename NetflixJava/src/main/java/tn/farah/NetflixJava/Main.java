@@ -79,13 +79,13 @@ public class Main extends Application {
         //nav.navigateTo(Screen.login);
 
        //nav.navigateTo(Screen.admin_main);
-        nav.navigateTo(Screen.login);
+       nav.navigateTo(Screen.mainView);
 
 
        
 
 
-      //  nav.navigateTo(Screen.parametresAdmin);
+       //nav.navigateTo(Screen.parametresAdmin);
 
       //nav.navigateTo(Screen.AdminDashboard);
 
