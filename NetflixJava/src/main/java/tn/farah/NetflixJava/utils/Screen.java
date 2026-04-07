@@ -8,11 +8,6 @@ public enum Screen {
 
 	,filmPlayer,admin_main,editProfiles,addFilm
 
-	,notificationAdmin,episodeComments,parametresAdmin,CommentaireAdmin
-
-
-	
-
-
+	,notificationAdmin,episodeComments,parametresAdmin,CommentaireAdmin 
 
 }

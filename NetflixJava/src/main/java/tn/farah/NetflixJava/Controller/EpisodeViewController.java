@@ -842,6 +842,26 @@ public class EpisodeViewController implements Initializable {
                         "-fx-font-size: 12px; -fx-padding: 5 14 5 14;" +
                         "-fx-background-radius: 4; -fx-cursor: hand;");
                 btnReport.setDisable(true);
+                if (cnnx != null) {
+                    NotificationService notifService = new NotificationService(cnnx);
+                    Serie serieActuelle = serieService.findById(serieId);
+                    String titreSerie = (serieActuelle != null) ? serieActuelle.getTitre() : "Inconnue";
+
+                    // Note : Ici on suppose que l'ID 1 est l'Admin, ou on laisse 0 si le système le gère.
+                    // On informe l'Admin qu'un utilisateur (userId) a signalé quelque chose.
+                    Notification n = new Notification(
+                        0,                                  // ID auto-incrémenté
+                        1,                                  // ID du destinataire (Admin)
+                        "SIGNALEMENT",                      // Type ou Expéditeur (ex: pseudo de l'utilisateur actuel)
+                        "Le commentaire #" + comment.getId(), 
+                        "a été signalé sur la série : " + titreSerie,
+                        java.time.LocalDate.now().toString(),
+                        false,                              // Lu
+                        false                               // Supprimé
+                    );
+
+                    notifService.addNotification(n);
+                }
             } else {
                 System.err.println("Impossible de signaler le commentaire.");
             }

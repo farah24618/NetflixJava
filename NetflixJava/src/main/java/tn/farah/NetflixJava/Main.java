@@ -83,7 +83,7 @@ public class Main extends Application {
         
 
 
-        nav.navigateTo(Screen.addFilm);
+        nav.navigateTo(Screen.login);
 
 
         //nav.navigateTo(Screen.login);
