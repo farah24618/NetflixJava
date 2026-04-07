@@ -1,7 +1,6 @@
 package tn.farah.NetflixJava.DAO;
 
 import java.sql.Connection;
-
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,15 +19,13 @@ import tn.farah.NetflixJava.Entities.Warning;
 import tn.farah.NetflixJava.Entities.Film;
 
 public class FilmDao {
+
     private Connection connection;
 
-    public FilmDao(Connection connection) {
-        this.connection = connection;
-    }
-
+    // ✅ FIX 1 : On ajoute m.producteur dans le SELECT de base
     private static final String BASE_SELECT =
             "SELECT m.id AS media_id, m.titre, m.synopsis, m.casting, m.date_sortie, " +
-            "m.url_image_cover, m.url_image_banner, m.url_teaser, " + 
+            "m.url_image_cover, m.url_image_banner, m.url_teaser, m.producteur, " +
             "f.url_video, f.duree_minutes, f.nbre_vues, m.rating_moyen, " +
             "ac.label AS age_category_name, " +
             "c.id AS category_id, c.nom AS category_nom, " +
@@ -41,13 +38,16 @@ public class FilmDao {
             "LEFT JOIN media_warning mw ON m.id = mw.media_id " +
             "LEFT JOIN content_warning w ON mw.warning_id = w.id ";
 
+    public FilmDao(Connection connection) {
+        this.connection = connection;
+    }
+
     public void create(Film film) throws SQLException {
-        // Suppression de 'producteur' dans l'insert si la colonne n'existe pas
-        String queryMedia = "INSERT INTO media (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id,producteur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String queryMedia = "INSERT INTO media (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, producteur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String queryFilm  = "INSERT INTO film (id, url_video, duree_minutes, nbre_vues) VALUES (?, ?, ?, ?)";
 
         try {
-            connection.setAutoCommit(false);
+            
             int generatedId = 0;
 
             try (PreparedStatement psM = connection.prepareStatement(queryMedia, Statement.RETURN_GENERATED_KEYS)) {
@@ -59,9 +59,8 @@ public class FilmDao {
                 psM.setString(6, film.getUrlImageBanner());
                 psM.setString(7, film.getUrlTeaser());
                 psM.setInt(8, film.getAgeRating() != null ? film.getAgeRating().getId() : 1);
-                psM.setString(9, film.getProducteur()); // ✅ now in correct order
+                psM.setString(9, film.getProducteur());
                 psM.executeUpdate();
-                
 
                 ResultSet rs = psM.getGeneratedKeys();
                 if (rs.next()) generatedId = rs.getInt(1);
@@ -75,12 +74,15 @@ public class FilmDao {
                 psF.setInt(4, film.getNbreVue());
                 psF.executeUpdate();
             }
-            connection.commit();
+
+          
+
+            // ✅ FIX 2 : Lier les catégories dans media_category
+           
+            
         } catch (SQLException e) {
             connection.rollback();
             throw e;
-        } finally {
-            connection.setAutoCommit(true);
         }
     }
 
@@ -90,11 +92,12 @@ public class FilmDao {
     }
 
     public void update(Film film) throws SQLException {
-        String updateMedia = "UPDATE media SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=? WHERE id=?";
+        String updateMedia = "UPDATE media SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=?, producteur=? WHERE id=?";
         String updateFilm  = "UPDATE film SET url_video=?, duree_minutes=?, nbre_vues=? WHERE id=?";
 
         try {
             connection.setAutoCommit(false);
+
             try (PreparedStatement psM = connection.prepareStatement(updateMedia)) {
                 psM.setString(1, film.getTitre());
                 psM.setString(2, film.getSynopsis());
@@ -104,9 +107,11 @@ public class FilmDao {
                 psM.setString(6, film.getUrlImageBanner());
                 psM.setString(7, film.getUrlTeaser());
                 psM.setInt(8, film.getAgeRating().getId());
-                psM.setInt(9, film.getId());
+                psM.setString(9, film.getProducteur()); // ✅ producteur dans update aussi
+                psM.setInt(10, film.getId());
                 psM.executeUpdate();
             }
+
             try (PreparedStatement psF = connection.prepareStatement(updateFilm)) {
                 psF.setString(1, film.getUrlVedio());
                 psF.setInt(2, film.getDuree());
@@ -114,7 +119,33 @@ public class FilmDao {
                 psF.setInt(4, film.getId());
                 psF.executeUpdate();
             }
+
             connection.commit();
+
+            // ✅ Mettre à jour les catégories : supprimer les anciennes, réinsérer les nouvelles
+            try (PreparedStatement psDel = connection.prepareStatement("DELETE FROM media_category WHERE media_id = ?")) {
+                psDel.setInt(1, film.getId());
+                psDel.executeUpdate();
+            }
+            if (film.getGenres() != null) {
+                CategoryDAO categoryDAO = new CategoryDAO(connection);
+                for (Category cat : film.getGenres()) {
+                    categoryDAO.lierMedia(film.getId(), cat.getId());
+                }
+            }
+
+            // ✅ Mettre à jour les warnings : supprimer les anciens, réinsérer les nouveaux
+            try (PreparedStatement psDel = connection.prepareStatement("DELETE FROM media_warning WHERE media_id = ?")) {
+                psDel.setInt(1, film.getId());
+                psDel.executeUpdate();
+            }
+            if (film.getWarnings() != null) {
+                WarningDao warningDao = new WarningDao(connection);
+                for (Warning w : film.getWarnings()) {
+                    warningDao.lierMedia(film.getId(), w.getId());
+                }
+            }
+
         } catch (SQLException e) {
             connection.rollback();
             throw e;
@@ -162,13 +193,13 @@ public class FilmDao {
                             newFilm.setUrlImageCover(rs.getString("url_image_cover"));
                             newFilm.setUrlImageBanner(rs.getString("url_image_banner"));
                             newFilm.setUrlTeaser(rs.getString("url_teaser"));
-                            
-                            // newFilm.setProducteur(rs.getString("producteur")); // LIGNE QUI CAUSAIT L'ERREUR COMMENTÉE
-                            
                             newFilm.setRatingMoyen(rs.getDouble("rating_moyen"));
                             newFilm.setUrlVedio(rs.getString("url_video"));
                             newFilm.setDuree(rs.getInt("duree_minutes"));
                             newFilm.setNbreVue(rs.getInt("nbre_vues"));
+
+                            // ✅ FIX 4 : producteur maintenant lu correctement depuis la DB
+                            newFilm.setProducteur(rs.getString("producteur"));
 
                             String ageRatingStr = rs.getString("age_category_name");
                             if (ageRatingStr != null) {
@@ -212,12 +243,9 @@ public class FilmDao {
         }
         return new ArrayList<>(filmMap.values());
     }
-    public Map<String, List<Film>> findAllGroupedByCategory() throws SQLException {
-        // On récupère d'abord TOUS les films avec leurs catégories
-        List<Film> allFilms = findAll();
 
-        // On transforme la liste plate en Map groupée par le nom de la catégorie
-        // Un film peut apparaître dans plusieurs catégories s'il a plusieurs genres
+    public Map<String, List<Film>> findAllGroupedByCategory() throws SQLException {
+        List<Film> allFilms = findAll();
         return allFilms.stream()
             .flatMap(film -> film.getGenres().stream()
                 .map(category -> new java.util.AbstractMap.SimpleEntry<>(category.getName(), film)))
@@ -226,13 +254,12 @@ public class FilmDao {
                 Collectors.mapping(java.util.Map.Entry::getValue, Collectors.toList())
             ));
     }
+
     public List<Film> findByManyCategories(List<Integer> categoryIds) throws SQLException {
         if (categoryIds == null || categoryIds.isEmpty()) return findAll();
 
-        // On crée dynamiquement les "?" pour la clause IN
         String placeholders = categoryIds.stream().map(id -> "?").collect(Collectors.joining(","));
-        
-        String query = BASE_SELECT + 
+        String query = BASE_SELECT +
                        "WHERE c.id IN (" + placeholders + ") " +
                        "ORDER BY m.date_sortie DESC";
 
@@ -242,6 +269,7 @@ public class FilmDao {
             }
         });
     }
+
     @FunctionalInterface
     private interface ParamSetter {
         void set(PreparedStatement ps) throws SQLException;
