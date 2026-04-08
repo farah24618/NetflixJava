@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Controller;
 
 import java.sql.Connection;
 
+
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Service.FilmService;
+import tn.farah.NetflixJava.Service.HistoryService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -50,13 +52,19 @@ public class FilmPlayerController {
     private ChangeListener<Duration> timeListener;
     private ChangeListener<Boolean>  valueChangingListener;
     private PauseTransition          hideTimer;
+    private HistoryService historyService;
+    private int userId;
+    private javafx.animation.Timeline autoSaveTimeline;
+
 
     // ─────────────────────────────────────────────
     // POINT D'ENTRÉE
     // ─────────────────────────────────────────────
-    public void initFilm(Film film) {
+    public void initFilm(Film film,int userId) {
         Connection connection = ConxDB.getInstance();
         filmService = new FilmService(connection);
+        historyService = new HistoryService(connection);  // ← AJOUT
+        this.userId    = userId; 
 
         this.filmActuel = film;
         initialiserHideTimer();
@@ -91,7 +99,42 @@ public class FilmPlayerController {
             if (!locked) hideTimer.playFromStart();
         });
     }
+    private void demarrerAutoSave() {
+        if (autoSaveTimeline != null) autoSaveTimeline.stop();
 
+        autoSaveTimeline = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(
+                Duration.seconds(10),  // sauvegarde toutes les 10 secondes
+                e -> sauvegarderProgression(false)
+            )
+        );
+        autoSaveTimeline.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        autoSaveTimeline.play();
+    }
+    private void sauvegarderProgression(boolean forcer) {
+        if (mediaPlayer == null || filmActuel == null || userId <= 0) return;
+
+        MediaPlayer.Status status = mediaPlayer.getStatus();
+
+        // Ne sauvegarde pas si la vidéo n'a pas encore démarré
+        if (!forcer && status == MediaPlayer.Status.UNKNOWN) return;
+
+        int secondesActuelles = (int) mediaPlayer.getCurrentTime().toSeconds();
+        int secondesTotales   = (int) mediaPlayer.getTotalDuration().toSeconds();
+
+        // Considéré comme terminé si on est à 95%+
+        boolean estTermine = secondesTotales > 0
+                && secondesActuelles >= secondesTotales * 0.95;
+
+        historyService.saveProgressionFilm(
+                userId,
+                filmActuel.getId(),
+                secondesActuelles,
+                estTermine
+        );
+
+        System.out.println("✅ Progression sauvegardée : " + secondesActuelles + "s / " + secondesTotales + "s");
+    }
     // ─────────────────────────────────────────────
     // CHARGEMENT DU FILM
     // ─────────────────────────────────────────────
@@ -167,6 +210,7 @@ public class FilmPlayerController {
             mediaPlayer.setRate(currentRate);
             mediaPlayer.play();
             playButton.setText("⏸");
+            demarrerAutoSave(); 
 
         } catch (Exception e) {
             System.err.println("Erreur de lecture : " + e.getMessage());
@@ -303,6 +347,7 @@ public class FilmPlayerController {
 
     @FXML
     private void handleRetour() {
+    	 sauvegarderProgression(true);
         shutdown();
         // ✅ Navigation vers la fiche du film (FilmViewController)
         FilmViewController ctrl = ScreenManager.getInstance()
@@ -326,6 +371,7 @@ public class FilmPlayerController {
     }
 
     public void shutdown() {
+    	if (autoSaveTimeline != null) autoSaveTimeline.stop();
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();

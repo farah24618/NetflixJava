@@ -16,7 +16,7 @@ public class HistoryDAO {
 
     public List<History> findAll() {
         List<History> list = new ArrayList<>();
-        String sql = "SELECT * FROM visionnage";
+        String sql = "SELECT * FROM history";
         try {
             ResultSet rs = conn.createStatement().executeQuery(sql);
             while (rs.next()) list.add(map(rs));
@@ -25,7 +25,7 @@ public class HistoryDAO {
     }
 
     public int save(History h) {
-        String sql = "INSERT INTO visionnage(user_id, film_id, episode_id, date_visionnage, temps_arret_sec, est_termine) VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO history(user_id, film_id, episode_id, date_visionnage, temps_arret_sec, est_termine) VALUES(?,?,?,?,?,?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, h.getIdUser());
@@ -46,7 +46,7 @@ public class HistoryDAO {
     }
 
     public int update(History h) {
-        String sql = "UPDATE visionnage SET date_visionnage=?, temps_arret_sec=?, est_termine=? WHERE id=?";
+        String sql = "UPDATE history SET date_visionnage=?, temps_arret_sec=?, est_termine=? WHERE id=?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(h.getDateVisionnage()));

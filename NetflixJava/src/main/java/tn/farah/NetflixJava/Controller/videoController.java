@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Service.EpisodeService;
+import tn.farah.NetflixJava.Service.HistoryService;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
@@ -52,14 +53,20 @@ public class videoController {
     private ChangeListener<Duration> timeListener;
     private ChangeListener<Boolean>  valueChangingListener;
     private PauseTransition          hideTimer;
+    private HistoryService historyService;
+    private int userId;
+    private javafx.animation.Timeline autoSaveTimeline;
+
 
     // ─────────────────────────────────────────────
     // POINT D'ENTRÉE
     // ─────────────────────────────────────────────
-    public void initEpisode(int episodeId) {
+    public void initEpisode(int episodeId,int userId) {
         Connection connection = ConxDB.getInstance();
         episodeService = new EpisodeService(connection);
         serieService   = new SerieService(connection);
+        historyService = new HistoryService(connection);  // ← AJOUT
+        this.userId    = userId;     
         initialiserHideTimer();
         chargerEpisode(episodeId);
     }
@@ -113,6 +120,7 @@ public class videoController {
         } else {
             System.err.println("Erreur : Épisode " + episodeId + " introuvable.");
         }
+        
     }
 
     // ─────────────────────────────────────────────
@@ -172,6 +180,7 @@ public class videoController {
             mediaPlayer.setRate(currentRate);
             mediaPlayer.play();
             playButton.setText("⏸");
+            demarrerAutoSave();  
 
         } catch (Exception e) {
             System.err.println("Erreur de lecture : " + e.getMessage());
@@ -183,6 +192,40 @@ public class videoController {
         double total  = mediaPlayer.getTotalDuration().toSeconds();
         double seekTo = (progressBar.getValue() / 100.0) * total;
         mediaPlayer.seek(Duration.seconds(seekTo));
+    }
+    private void demarrerAutoSave() {
+        if (autoSaveTimeline != null) autoSaveTimeline.stop();
+
+        autoSaveTimeline = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(
+                Duration.seconds(10),  // sauvegarde toutes les 10 secondes
+                e -> sauvegarderProgression(false)
+            )
+        );
+        autoSaveTimeline.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        autoSaveTimeline.play();
+    }
+    private void sauvegarderProgression(boolean forcer) {
+        if (mediaPlayer == null || currentEpisode == null || userId <= 0) return;
+
+        MediaPlayer.Status status = mediaPlayer.getStatus();
+        if (!forcer && status == MediaPlayer.Status.UNKNOWN) return;
+
+        int secondesActuelles = (int) mediaPlayer.getCurrentTime().toSeconds();
+        int secondesTotales   = (int) mediaPlayer.getTotalDuration().toSeconds();
+
+        // Terminé si 95%+ regardé
+        boolean estTermine = secondesTotales > 0
+                && secondesActuelles >= secondesTotales * 0.95;
+
+        historyService.saveProgressionEpisode(
+                userId,
+                currentEpisode.getId(),
+                secondesActuelles,
+                estTermine
+        );
+
+        System.out.println("✅ Épisode sauvegardé : " + secondesActuelles + "s / " + secondesTotales + "s");
     }
 
     // ─────────────────────────────────────────────
@@ -213,6 +256,8 @@ public class videoController {
     @FXML
     private void handleNextEpisode() {
         if (currentEpisode == null) return;
+        
+        sauvegarderProgression(true);
         Episode next = episodeService.getNextEpisode(
                 currentEpisode.getSaisonId(),
                 currentEpisode.getNumeroEpisode());
@@ -277,6 +322,7 @@ public class videoController {
      */
     @FXML
     private void handleOpenEpisodes() {
+    	sauvegarderProgression(true);
         shutdown();
         retournerALaSerie();
     }
@@ -309,6 +355,7 @@ public class videoController {
 
     @FXML
     private void handleRetour() {
+    	sauvegarderProgression(true);
         shutdown();
         retournerALaSerie();
     }
@@ -380,6 +427,7 @@ public class videoController {
     }
 
     public void shutdown() {
+    	if (autoSaveTimeline != null) autoSaveTimeline.stop(); 
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();

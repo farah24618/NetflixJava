@@ -75,7 +75,7 @@ public class FilmsController implements Initializable {
 
     private Consumer<Film> goToDetail() {
         return film -> {
-            DetailMediaController ctrl = ScreenManager.getInstance()
+            FilmViewController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.detail);
             if (ctrl != null) ctrl.setFilm(film);
         };
@@ -214,6 +214,10 @@ public class FilmsController implements Initializable {
                 .navigateAndGetController(Screen.detailFilm);
             if (ctrl != null) ctrl.setFilm(film);
         };
+    }
+    @FXML
+    private void onEditProfile() {
+        ScreenManager.getInstance().navigateTo(Screen.editProfiles);
     }
     
 }

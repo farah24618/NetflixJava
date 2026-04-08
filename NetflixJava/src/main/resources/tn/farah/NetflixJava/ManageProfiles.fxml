@@ -49,7 +49,7 @@
             </padding>
             <children>
 
-                <Label style="-fx-text-fill: white; -fx-font-size: 44px;" text="Edit Profile" />
+                <Label style="-fx-text-fill: white; -fx-font-size: 44px;" text="Editer votre Profile" />
 
                 <Separator style="-fx-background-color: #333333;" />
 
@@ -90,11 +90,11 @@
                 <HBox alignment="CENTER_LEFT" spacing="18.0">
                     <children>
 
-                        <Button fx:id="saveBtn" onAction="#onSave" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: white;                                        -fx-text-fill: black;                                        -fx-font-size: 18px;                                        -fx-font-weight: bold;                                        -fx-cursor: hand;" text="Save" />
+                        <Button fx:id="saveBtn" onAction="#onSave" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: white;                                        -fx-text-fill: black;                                        -fx-font-size: 18px;                                        -fx-font-weight: bold;                                        -fx-cursor: hand;" text="Enregistrer" />
 
-                        <Button onAction="#onCancel" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="Cancel" />
+                        <Button onAction="#onCancel" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="retour" />
 
-                        <Button onAction="#onDeleteProfile" prefHeight="42.0" prefWidth="180.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="Delete Profile" />
+                        <Button onAction="#onDeleteProfile" prefHeight="42.0" prefWidth="180.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="Supprimer Profile" />
 
                     </children>
                 </HBox>

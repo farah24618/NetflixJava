@@ -218,5 +218,8 @@ public class SeriesController implements Initializable {
         };
     }
 
-    
+    @FXML
+    private void onEditProfile() {
+        ScreenManager.getInstance().navigateTo(Screen.editProfiles);
+    }
 }

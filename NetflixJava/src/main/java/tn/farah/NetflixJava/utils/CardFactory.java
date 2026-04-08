@@ -579,6 +579,7 @@ public class CardFactory {
         return 60 + (Math.abs(titre != null ? titre.hashCode() : 0) % 35);
     }
     private static void lancerPremierEpisode(Serie serie) {
+    	int userId = SessionManager.getInstance().getCurrentUserId();
         // 1. Récupère la connexion et les services
         java.sql.Connection conn = ConxDB.getInstance();
         SaisonService saisonService = new SaisonService(conn);
@@ -597,14 +598,15 @@ public class CardFactory {
         // 3. Navigate vers le lecteur
         videoController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.video); // adapte au nom de ton Screen
-        if (ctrl != null) ctrl.initEpisode(episodeId);
+        if (ctrl != null) ctrl.initEpisode(episodeId,userId);
     }
     public static void setNotificationService(NotificationService service) {
         notificationService = service;
     }
     private static void lancerFilm(Film film) {
+    	int userId = SessionManager.getInstance().getCurrentUserId();
         FilmPlayerController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.filmPlayer); // adapte au nom de ton Screen
-        if (ctrl != null) ctrl.initFilm(film);
+        if (ctrl != null) ctrl.initFilm(film,userId);
     }
 }

@@ -28,43 +28,42 @@ public class SerieService {
         this.warningDao = new WarningDao(connection);
     }
 
-    public void enregistrerSerie(Serie serie) {
-        serieDao.create(serie);
-
-        int idGenere = serie.getId();
+    public void enregistrerSerie(Serie serie) throws SQLException {
+    	 boolean previousAutoCommit = connection.getAutoCommit();
+        try {
+        
+	            connection.setAutoCommit(false);
+			serieDao.create(serie);
+			  int idGenere = serie.getId();
+		
+			
 
         if (serie.getGenres() != null) {
             for (Category cat : serie.getGenres()) {
-                try {
+                
 					categoryDao.lierMedia(idGenere, cat.getId());
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                try {
-					categoryDao.save(cat);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
             }
         }
 
         if (serie.getWarnings() != null) {
             for (Warning warn : serie.getWarnings()) {
-                try {
+                
 					warningDao.lierMedia(idGenere, warn.getId());
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                try {
-					warningDao.save(warn);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
             }
+        }
+        connection.commit();
+
+        } catch (SQLException e) {
+            // Only rollback if autoCommit was actually disabled
+            if (!connection.getAutoCommit()) {
+                connection.rollback();
+            }
+            throw e;
+        } finally {
+            // Always restore the original autoCommit state
+            connection.setAutoCommit(previousAutoCommit);
         }
     }
 

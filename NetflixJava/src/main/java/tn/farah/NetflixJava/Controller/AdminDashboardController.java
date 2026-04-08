@@ -87,8 +87,8 @@ public class AdminDashboardController implements Initializable {
         series.setName("Nouveaux inscrits");
 
         // Requête SQL directe
-        String query = "SELECT DATE(date_inscription) as jour, COUNT(*) as total " +
-                       "FROM user GROUP BY DATE(date_inscription) ORDER BY jour ASC LIMIT 7";
+        String query = "SELECT DATE(created_at) as jour, COUNT(*) as total " +
+                       "FROM users GROUP BY DATE(created_at) ORDER BY jour ASC LIMIT 7";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query);
