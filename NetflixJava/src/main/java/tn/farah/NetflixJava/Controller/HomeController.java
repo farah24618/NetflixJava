@@ -376,12 +376,12 @@ public class HomeController implements Initializable {
         // 2. Capturer le film IMMÉDIATEMENT
         final Film film = heroFilms.get(heroIndex);
         
-        // 3. Naviguer
+        int userId = SessionManager.getInstance().getCurrentUserId();        // 3. Naviguer
         FilmPlayerController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.filmPlayer); 
             
         if (ctrl != null) {
-            ctrl.initFilm(film);
+            ctrl.initFilm(film,userId);
         } else {
             System.err.println("FilmPlayerController null — vérifie Screen.filmPlayer");
         }

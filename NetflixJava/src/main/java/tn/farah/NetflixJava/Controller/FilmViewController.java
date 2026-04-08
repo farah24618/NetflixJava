@@ -30,6 +30,7 @@ import tn.farah.NetflixJava.Entities.Favori;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Entities.Rating;
+import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.User;
 import tn.farah.NetflixJava.Entities.Warning;
 import tn.farah.NetflixJava.Service.CommentaireService;
@@ -144,14 +145,8 @@ public class FilmViewController implements Initializable {
         userService        = new UserService(cnnx);
         ratingService      = new RatingService(cnnx);
         
-        User currentUser = userService.findUserById(userId);
-        if (currentUser != null) {
-            String pseudo = currentUser.getPseudo();
-            // Set your UI elements here
-        } else {
-            System.out.println("User not found!");
-            // Handle the error gracefully (e.g., redirect to login)
-        }
+        String pseudoUser = userService.findUserById(userId).getPseudo();
+        chargerProfil((pseudoUser != null) ? pseudoUser : "Inconnu");
         activerOnglet(tabApropos);
 
         if (panelCommentaires != null) {
@@ -220,9 +215,9 @@ public class FilmViewController implements Initializable {
             String syn = film.getSynopsis();
             posterDesc.setText(syn.length() > 160 ? syn.substring(0, 157) + "..." : syn);
         }
-        if (posterImage != null && film.getUrlImageCover() != null && !film.getUrlImageCover().isBlank()) {
+        if (posterImage != null && film.getUrlImageBanner() != null && !film.getUrlImageBanner().isBlank()) {
             try {
-                Image img = new Image(film.getUrlImageCover(), true);
+                Image img = new Image(film.getUrlImageBanner(), true);
                 posterImage.setImage(img);
             } catch (Exception ignored) {}
         }
@@ -330,9 +325,9 @@ public class FilmViewController implements Initializable {
         imgPane.setMaxSize(160, 90);
         imgPane.setStyle("-fx-background-color: #2a2a2a; -fx-background-radius: 4;");
 
-        if (f.getUrlImageCover() != null && !f.getUrlImageCover().isEmpty()) {
+        if (f.getUrlImageBanner() != null && !f.getUrlImageBanner().isEmpty()) {
             try {
-                Image img = new Image(f.getUrlImageCover(), true);
+                Image img = new Image(f.getUrlImageBanner(), true);
                 ImageView iv = new ImageView(img);
                 iv.setFitWidth(160); iv.setFitHeight(90); iv.setPreserveRatio(false);
                 imgPane.getChildren().add(iv);
@@ -597,7 +592,26 @@ public class FilmViewController implements Initializable {
                         "-fx-font-size: 12px; -fx-padding: 5 14 5 14;" +
                         "-fx-background-radius: 4; -fx-cursor: hand;");
                 btnReport.setDisable(true);
-            } else {
+                if (cnnx != null) {
+                    NotificationService notifService = new NotificationService(cnnx);
+                    Film filmActuelle = filmService.findById(filmId);
+                    String titreSerie = (filmActuelle != null) ? filmActuelle.getTitre() : "Inconnue";
+
+                    // Note : Ici on suppose que l'ID 1 est l'Admin, ou on laisse 0 si le système le gère.
+                    // On informe l'Admin qu'un utilisateur (userId) a signalé quelque chose.
+                    Notification n = new Notification(
+                        0,                                  // ID auto-incrémenté
+                        1,                                  // ID du destinataire (Admin)
+                        "SIGNALEMENT",                      // Type ou Expéditeur (ex: pseudo de l'utilisateur actuel)
+                        "Le commentaire #" + comment.getId(), 
+                        "a été signalé sur la série : " + titreSerie,
+                        java.time.LocalDate.now().toString(),
+                        false,                              // Lu
+                        false                               // Supprimé
+                    );
+
+                    notifService.addNotification(n);
+            } }else {
                 System.err.println("Impossible de signaler le commentaire.");
             }
         });
@@ -614,7 +628,7 @@ public class FilmViewController implements Initializable {
         if (filmActuel == null) return;
         FilmPlayerController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.filmPlayer);
-        if (ctrl != null) ctrl.initFilm(filmActuel);
+        if (ctrl != null) ctrl.initFilm(filmActuel,userId);
     }
 
     @FXML private void onFavoris() {

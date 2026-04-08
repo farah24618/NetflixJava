@@ -277,9 +277,9 @@ public class EpisodeViewController implements Initializable {
         if (labelNbEpisodes != null)
             labelNbEpisodes.setText(nb + " episode" + (nb > 1 ? "s" : ""));
 
-        if (posterImage != null && serieAct.getUrlImageCover() != null && !serieAct.getUrlImageCover().isBlank()) {
+        if (posterImage != null && serieAct.getUrlImageBanner() != null && !serieAct.getUrlImageBanner().isBlank()) {
             try {
-                Image img = new Image(serieAct.getUrlImageCover(), true);
+                Image img = new Image(serieAct.getUrlImageBanner(), true);
                 posterImage.setImage(img);
             } catch (Exception ignored) {}
         }
@@ -565,9 +565,9 @@ public class EpisodeViewController implements Initializable {
         imgPane.setMaxSize(160, 90);
         imgPane.setStyle("-fx-background-color: #2a2a2a; -fx-background-radius: 4;");
 
-        if (s.getUrlImageCover() != null && !s.getUrlImageCover().isEmpty()) {
+        if (s.getUrlImageBanner() != null && !s.getUrlImageBanner().isEmpty()) {
             try {
-                Image img = new Image(s.getUrlImageCover(), true);
+                Image img = new Image(s.getUrlImageBanner(), true);
                 ImageView iv = new ImageView(img);
                 iv.setFitWidth(160); iv.setFitHeight(90); iv.setPreserveRatio(false);
                 imgPane.getChildren().add(iv);
@@ -878,7 +878,7 @@ public class EpisodeViewController implements Initializable {
         if (episodeActuel == null) return;
         videoController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.video);
-        if (ctrl != null) ctrl.initEpisode(episodeActuel.getId());
+        if (ctrl != null) ctrl.initEpisode(episodeActuel.getId(),userId);
     }
 
     @FXML

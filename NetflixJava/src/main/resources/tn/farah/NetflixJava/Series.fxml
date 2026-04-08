@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane style="-fx-background-color: #141414;" stylesheets="@home.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesAdminController">
 
     <!-- ═══ NAVBAR ═══ -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="0" styleClass="navbar">
+        <HBox alignment="CENTER_LEFT" onMouseClicked="#onEditProfile" spacing="0" styleClass="navbar">
             <Label styleClass="logo" text="RAKCHANET" />
             <HBox alignment="CENTER_LEFT" spacing="20" styleClass="nav-links">
                 <Button onAction="#onHome" styleClass="nav-btn" text="Acceuil" />
@@ -28,11 +30,15 @@
                 <HBox alignment="CENTER" spacing="6">
                     <TextField fx:id="searchField" onKeyReleased="#onSearch" prefWidth="200" promptText="Titles, genres, years..." styleClass="search-field" />
                     <Button onAction="#onSearchBtn" styleClass="icon-btn" text="🔍" />
+               <ImageView accessibleRole="BUTTON" fitHeight="42.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@ImagesNet/log5.jpg" />
+                  </image>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </ImageView>
                 </HBox>
-                <Label styleClass="icon-btn" text="🔔" />
-                <StackPane styleClass="avatar-box">
-                    <Label fx:id="avatarLabel" styleClass="avatar-label" text="U" />
-                </StackPane>
             </HBox>
         </HBox>
     </top>

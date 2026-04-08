@@ -632,6 +632,7 @@ public class MyListController implements Initializable {
         return serie != null ? serie.getTitre() : "";
     }
     private void ouvrirHistoryDetail(History history) {
+    	int userId = SessionManager.getInstance().getCurrentUserId();
         if (history == null) return;
 
         if (history.isFilm()) {
@@ -643,7 +644,7 @@ public class MyListController implements Initializable {
             FilmPlayerController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.filmPlayer);
             if (ctrl != null) {
-                ctrl.initFilm(film);
+                ctrl.initFilm(film,userId);
                 ctrl.seekToSeconds(history.getTempsArret());
             }
         } else {
@@ -653,7 +654,7 @@ public class MyListController implements Initializable {
             videoController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.video);
             if (ctrl != null) {
-                ctrl.initEpisode(episodeId);
+                ctrl.initEpisode(episodeId,userId);
                 ctrl.seekToSeconds(history.getTempsArret());
             }
         }

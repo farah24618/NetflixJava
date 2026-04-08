@@ -6,10 +6,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import tn.farah.NetflixJava.Entities.Category;
-import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Service.FavoriService;
-import tn.farah.NetflixJava.Service.FilmService;
 import tn.farah.NetflixJava.Service.NotificationService;
+import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -22,22 +22,22 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class FilmsController implements Initializable {
+public class SeriesController implements Initializable {
 
     @FXML private TextField searchField;
     @FXML private Label     avatarLabel;
     @FXML private VBox      carouselContainer;
     @FXML private FlowPane  filterBar;
 
-    private FilmService filmService;
+    private SerieService serieService;
     private FavoriService favoriService;
 
     // ✅ FIX : tableau à 1 élément — capturé par référence dans les lambdas
     private final Pane[] overlayRef = new Pane[1];
 
-    private List<Film>              allFilms        = new ArrayList<>();
-    private Map<String, List<Film>> filmsByCategory = new LinkedHashMap<>();
-    private final Set<String>       activeFilters   = new LinkedHashSet<>();
+    private List<Serie>              allSeries     = new ArrayList<>();
+    private Map<String, List<Serie>> seriesByGenre = new LinkedHashMap<>();
+    private final Set<String>        activeFilters = new LinkedHashSet<>();
 
     // ═══════════════════════════════════════════════════════════════
     //  INIT
@@ -48,18 +48,16 @@ public class FilmsController implements Initializable {
         Connection connection = ConxDB.getInstance();
         if (connection == null) return;
 
-        filmService = new FilmService(connection);
+        serieService = new SerieService(connection);
         favoriService=new FavoriService(connection);
         CardFactory.setNotificationService(new NotificationService(connection));
         CardFactory.setFavoriService(favoriService);
 
-        try {
-            allFilms        = filmService.getAllFilmsSorted();
-            filmsByCategory = filmService.getAllFilmsByCategory();
-        } catch (SQLException e) { e.printStackTrace(); }
-        CardFactory.setFavoriService(favoriService);
+        allSeries     = serieService.getAllSeries();
+		seriesByGenre = serieService.getAllSeriesByCategory();
+
         buildFilterBar();
-        renderSections(allFilms);
+        renderSections(allSeries);
 
         if (avatarLabel != null) avatarLabel.setText("U");
 
@@ -73,11 +71,11 @@ public class FilmsController implements Initializable {
     //  NAVIGATION HELPER
     // ═══════════════════════════════════════════════════════════════
 
-    private Consumer<Film> goToDetail() {
-        return film -> {
-            FilmViewController ctrl = ScreenManager.getInstance()
+    private Consumer<Serie> goToDetail() {
+        return serie -> {
+            DetailMediaController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.detail);
-            if (ctrl != null) ctrl.setFilm(film);
+            if (ctrl != null) ctrl.setSerie(serie);
         };
     }
 
@@ -95,26 +93,26 @@ public class FilmsController implements Initializable {
                 .filter(n -> n instanceof ToggleButton && n != allBtn)
                 .forEach(n -> ((ToggleButton) n).setSelected(false));
             allBtn.setSelected(true);
-            renderSections(allFilms);
+            renderSections(allSeries);
         });
         filterBar.getChildren().add(allBtn);
 
-        filmsByCategory.keySet().stream().sorted().forEach(cat -> {
-            ToggleButton btn = new ToggleButton(cat);
+        seriesByGenre.keySet().stream().sorted().forEach(genre -> {
+            ToggleButton btn = new ToggleButton(genre);
             btn.getStyleClass().add("filter-chip");
             btn.setOnAction(e -> {
                 allBtn.setSelected(false);
-                if (btn.isSelected()) activeFilters.add(cat);
-                else                  activeFilters.remove(cat);
+                if (btn.isSelected()) activeFilters.add(genre);
+                else                  activeFilters.remove(genre);
 
                 if (activeFilters.isEmpty()) {
                     allBtn.setSelected(true);
-                    renderSections(allFilms);
+                    renderSections(allSeries);
                 } else {
-                    List<Film> filtered = allFilms.stream()
-                        .filter(f -> f.getGenres() != null &&
+                    List<Serie> filtered = allSeries.stream()
+                        .filter(s -> s.getGenres() != null &&
                             activeFilters.stream().allMatch(filter ->
-                                f.getGenres().stream().anyMatch(c -> c.getName().equals(filter))))
+                                s.getGenres().stream().anyMatch(c -> c.getName().equals(filter))))
                         .collect(Collectors.toList());
                     renderSections(filtered);
                 }
@@ -127,47 +125,48 @@ public class FilmsController implements Initializable {
     //  3 SECTIONS
     // ═══════════════════════════════════════════════════════════════
 
-    private void renderSections(List<Film> source) {
+    private void renderSections(List<Serie> source) {
         carouselContainer.getChildren().clear();
 
         if (source.isEmpty()) {
-            Label empty = new Label("Aucun film trouvé.");
+            Label empty = new Label("Aucune série trouvée.");
             empty.getStyleClass().add("empty-label");
             carouselContainer.getChildren().add(empty);
             return;
         }
 
-        // 1. Récemment ajoutés
-        List<Film> recent = source.stream()
-            .filter(f -> f.getDateSortie() != null)
-            .sorted(Comparator.comparing(Film::getDateSortie).reversed())
+        // 1. Récemment ajoutées
+        List<Serie> recent = source.stream()
+            .filter(s -> s.getDateSortie() != null)
+            .sorted(Comparator.comparing(Serie::getDateSortie).reversed())
             .limit(20).collect(Collectors.toList());
         if (!recent.isEmpty())
             carouselContainer.getChildren().add(
-            		CardFactory.buildFilmCarousel("🆕  Récemment ajoutés", recent, overlayRef, goToFilmDetail()));
+                CardFactory.buildSerieCarousel("🆕  Récemment ajoutées", recent,
+                    overlayRef, goToSerieDetail()));
 
         // 2. Top Rated
-        List<Film> topRated = source.stream()
-            .filter(f -> f.getRatingMoyen() > 0)
-            .sorted(Comparator.comparingDouble(Film::getRatingMoyen).reversed())
+        List<Serie> topRated = source.stream()
+            .filter(s -> s.getRatingMoyen() > 0)
+            .sorted(Comparator.comparingDouble(Serie::getRatingMoyen).reversed())
             .limit(20).collect(Collectors.toList());
         if (!topRated.isEmpty())
             carouselContainer.getChildren().add(
-                CardFactory.buildFilmCarousel("⭐  Top Rated", topRated,
-                    overlayRef, goToDetail()));
+                CardFactory.buildSerieCarousel("⭐  Top Rated", topRated,
+                    overlayRef, goToSerieDetail()));
 
-        // 3. Par catégorie
-        Map<String, List<Film>> bycat = new LinkedHashMap<>();
-        for (Film f : source) {
-            if (f.getGenres() == null) continue;
-            for (Category c : f.getGenres())
-                bycat.computeIfAbsent(c.getName(), k -> new ArrayList<>()).add(f);
+        // 3. Par genre
+        Map<String, List<Serie>> byGenre = new LinkedHashMap<>();
+        for (Serie s : source) {
+            if (s.getGenres() == null) continue;
+            for (Category c : s.getGenres())
+                byGenre.computeIfAbsent(c.getName(), k -> new ArrayList<>()).add(s);
         }
-        new TreeMap<>(bycat).forEach((cat, films) -> {
-            if (!films.isEmpty())
+        new TreeMap<>(byGenre).forEach((genre, series) -> {
+            if (!series.isEmpty())
                 carouselContainer.getChildren().add(
-                    CardFactory.buildFilmCarousel("🎬  " + cat, films,
-                        overlayRef, goToDetail()));
+                    CardFactory.buildSerieCarousel("📺  " + genre, series,
+                        overlayRef, goToSerieDetail()));
         });
     }
 
@@ -176,19 +175,19 @@ public class FilmsController implements Initializable {
     // ═══════════════════════════════════════════════════════════════
 
     private void applySearch(String query) {
-        if (query == null || query.isBlank()) { renderSections(allFilms); return; }
+        if (query == null || query.isBlank()) { renderSections(allSeries); return; }
         String q = query.toLowerCase();
-        List<Film> results = allFilms.stream()
-            .filter(f -> f.getTitre() != null && f.getTitre().toLowerCase().contains(q))
+        List<Serie> results = allSeries.stream()
+            .filter(s -> s.getTitre() != null && s.getTitre().toLowerCase().contains(q))
             .collect(Collectors.toList());
 
         carouselContainer.getChildren().clear();
         if (!results.isEmpty())
             carouselContainer.getChildren().add(
-                CardFactory.buildFilmCarousel("🔍  \"" + query + "\"", results,
+                CardFactory.buildSerieCarousel("🔍  \"" + query + "\"", results,
                     overlayRef, goToDetail()));
         else {
-            Label empty = new Label("Aucun film trouvé pour \"" + query + "\"");
+            Label empty = new Label("Aucune série trouvée pour \"" + query + "\"");
             empty.getStyleClass().add("empty-label");
             carouselContainer.getChildren().add(empty);
         }
@@ -199,25 +198,28 @@ public class FilmsController implements Initializable {
     // ═══════════════════════════════════════════════════════════════
 
     @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.home); }
-    @FXML private void onMovies()    { /* déjà ici */ }
-    @FXML private void onSeries()    { ScreenManager.getInstance().navigateTo(Screen.series); }
-    @FXML private void onMyList()    { ScreenManager.getInstance().navigateTo(Screen.myList); }
+    @FXML private void onMovies()    { ScreenManager.getInstance().navigateTo(Screen.films); }
+    @FXML private void onSeries()    { /* déjà ici */ }
+    @FXML private void onMyList()    {  ScreenManager.getInstance().navigateTo(Screen.myList); }
     @FXML private void onSearchBtn() { onSearch(); }
 
     @FXML
     private void onSearch() {
         applySearch(searchField != null ? searchField.getText().trim() : "");
     }
-    private Consumer<Film> goToFilmDetail() {
-        return film -> {
-            final FilmViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detailFilm);
-            if (ctrl != null) ctrl.setFilm(film);
+    private Consumer<Serie> goToSerieDetail() {
+        return serie -> {
+            EpisodeViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.detail);
+            if (ctrl != null) {
+                ctrl.setSerie(serie);
+                // setSerie charge déjà le premier épisode automatiquement
+            }
         };
     }
+
     @FXML
     private void onEditProfile() {
         ScreenManager.getInstance().navigateTo(Screen.editProfiles);
     }
-    
 }

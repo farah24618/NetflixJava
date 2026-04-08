@@ -54,13 +54,20 @@ public class SerieDAO {
         "LEFT JOIN liaison_serie_category sc ON m.id = sc.id_serie " +
         "LEFT JOIN category_serie cs ON cs.id = sc.id_category ";
 
+<<<<<<< HEAD
     public void create(Serie serie) {
         // ✅ CORRIGÉ : Retrait de producteur
         String queryMedia = "INSERT INTO `media` (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String querySerie = "INSERT INTO serie (id, est_complet) VALUES (?, ?)";
+=======
+    public void create(Serie serie) throws SQLException {
+        String queryMedia = "INSERT INTO media (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, producteur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    	String querySerie = "INSERT INTO serie (id, est_complet) VALUES (?, ?)";
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
         try {
-            connection.setAutoCommit(false);
+           
             int generatedId = 0;
 
             try (PreparedStatement psM = connection.prepareStatement(queryMedia, Statement.RETURN_GENERATED_KEYS)) {
@@ -71,8 +78,14 @@ public class SerieDAO {
                 psM.setString(5, serie.getUrlImageCover());
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
+<<<<<<< HEAD
                 psM.setInt(8, serie.getAgeRating().getId());
                 psM.setString(9, "SERIE");
+=======
+                psM.setString(8, serie.getProducteur());
+                psM.setInt(9, serie.getAgeRating() != null ? serie.getAgeRating().getId() : 1);
+              
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
                 psM.executeUpdate();
 
                 ResultSet rs = psM.getGeneratedKeys();
@@ -85,14 +98,14 @@ public class SerieDAO {
                 psF.setBoolean(2, serie.isTerminee());
                 psF.executeUpdate();
             }
-            connection.commit();
+          
         } catch (SQLException e) {
-            try { connection.rollback(); } catch (SQLException ex) { throw new RuntimeException("Erreur rollback", ex); }
-            throw new RuntimeException("Erreur create série", e);
-        } finally {
-            try { connection.setAutoCommit(true); } catch (SQLException e) { throw new RuntimeException("Erreur autoCommit", e); }
-        }
-    }
+           connection.rollback();  
+           e.printStackTrace(); 
+           // Log the error or throw a custom RuntimeException
+           throw new RuntimeException("Database error while saving Serie", e);
+       
+    }}
 
     public List<Serie> findAll() {
         String query = BASE_SELECT + "ORDER BY m.id";
