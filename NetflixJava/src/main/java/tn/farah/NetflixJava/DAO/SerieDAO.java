@@ -75,11 +75,10 @@ public class SerieDAO {
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
 
-                psM.setInt(8, serie.getAgeRating().getId());
-                psM.setString(9, "SERIE");
+              
 
-                psM.setString(8, serie.getProducteur());
-                psM.setInt(9, serie.getAgeRating() != null ? serie.getAgeRating().getId() : 1);
+                psM.setInt(8, serie.getAgeRating() != null ? serie.getAgeRating().getId() : 1);
+                psM.setString(9, serie.getProducteur());
 
                 psM.executeUpdate();
 
