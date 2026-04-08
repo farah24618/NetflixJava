@@ -54,4 +54,7 @@ public class CommentaireService {
     	return commentaireDAO.deleteById(commentId);
     	
     }
+    public List<Commentaire> findAll () {
+    	return commentaireDAO.findAll();
+    }
 }

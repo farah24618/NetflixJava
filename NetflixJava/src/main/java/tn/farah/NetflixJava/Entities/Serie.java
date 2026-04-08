@@ -15,15 +15,7 @@ public class Serie extends Media {
    
    
     
-	public Serie(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
-			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
-			String producteur,  Set<Warning> warnings, LocalDateTime dateAjout,
-			Set<Category> genres, String genre, boolean terminee) {
-		super(id, titre, synopsis, casting, dateSortie, urlImageCover, urlImageBanner, urlTeaser, ratingMoyen,
-				ageRating, type, producteur, warnings, dateAjout, genres);
-		this.genre = genre;
-		this.terminee = terminee;
-	}
+
 
 
 
