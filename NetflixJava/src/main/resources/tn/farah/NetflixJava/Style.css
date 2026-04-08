@@ -135,6 +135,162 @@
     
     
     
+    .context-menu {
+    -fx-background-color: #141414;
+    -fx-border-color: #333333;
+}
+
+.menu-item:focused {
+    -fx-background-color: #2b2b2b;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+
+
+
+
+
+/* application.css */
+
+/* --- CORRECTION DU POPUP BLANC --- */
+
+/* Applique un fond sombre (gris très foncé/noir) à tous les menus contextuels */
+.context-menu {
+    -fx-background-color: #141414; /* Gris très foncé comme sur ta photo */
+    -fx-border-color: #333333; /* Bordure discrète */
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 5;
+}
+
+/* Force la couleur du texte en blanc pour les éléments de menu */
+.menu-item .label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 5 10;
+}
+
+/* Change la couleur de fond lors du survol d'un élément (gris légèrement plus clair) */
+.menu-item:focused {
+    -fx-background-color: #2b2b2b;
+}
+
+/* Style spécifique pour le bouton 'Ajouter saison' à l'intérieur du menu */
+.menu-item .label:contains("+ Ajouter") {
+    -fx-text-fill: #e50914; /* Rouge pour l'action d'ajout */
+    -fx-font-weight: bold;
+}
+
+
+
+
+/* Style du conteneur du Pop-up */
+.context-menu {
+    -fx-background-color: #1a1a1a; /* Gris très foncé */
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+/* Style des items du menu */
+.menu-item .label {
+    -fx-text-fill: #ffffff; /* Texte blanc */
+    -fx-padding: 5 10 5 10;
+}
+
+/* Survol des items */
+.menu-item:focused {
+    -fx-background-color: #e50914; /* Rouge Netflix au survol */
+}
+
+/* Couleur spécifique pour les boutons "Ajouter" */
+.add-action-item .label {
+    -fx-text-fill: #ff4d4d !important; /* Rouge clair pour se démarquer */
+    -fx-font-weight: bold;
+}
+
+/* Séparateur sombre */
+.separator-menu-item .separator {
+    -fx-background-color: #333333;
+}
+/* Le fond du pop-up (gris anthracite) */
+.context-menu {
+    -fx-background-color: #1a1a1a; 
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 5px;
+}
+
+/* Les textes des saisons et épisodes */
+.menu-item .label {
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 5 15 5 15;
+}
+
+/* L'élément survolé (rouge Netflix) */
+.menu-item:focused {
+    -fx-background-color: #e50914;
+}
+
+/* Style spécifique pour les boutons "+ Ajouter" */
+.add-action-item .label {
+    -fx-text-fill: #e50914 !important; /* Rouge */
+    -fx-font-weight: bold;
+}
+
+
+.context-menu {
+    -fx-background-color: #1a1a1a; /* Gris anthracite */
+    -fx-border-color: #333333;
+}
+.menu-item .label {
+    -fx-text-fill: white;
+}
+/* Style pour tous les ContextMenu (Saisons et Épisodes) */
+.context-menu {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #333333;
+    -fx-border-width: 1;
+    -fx-padding: 5;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+/* Couleur de sélection/survol */
+.menu-item:focused, .menu-item:hover {
+    -fx-background-color: #333333;
+}
+
+/* Séparateur sombre */
+.separator-menu-item .separator .line {
+    -fx-border-color: #333333;
+}
+    /* Appliquer le thème sombre à tous les menus contextuels et sous-menus */
+.context-menu {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+}
+
+/* Couleur du texte */
+.menu-item .label, .menu .label {
+    -fx-text-fill: white;
+}
+
+/* Effet au survol (Gris foncé Netflix) */
+.menu-item:focused, .menu:focused {
+    -fx-background-color: #333333;
+}
+    
     
     
     

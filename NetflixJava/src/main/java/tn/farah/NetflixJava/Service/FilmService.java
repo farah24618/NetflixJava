@@ -122,6 +122,9 @@ public class FilmService {
 	    public Map<String, List<Film>> getAllFilmsByCategory() throws SQLException {
 	        return filmDao.findAllGroupedByCategory();
 	    }
+	    public Film getFilmById(int id) throws SQLException {
+	        return filmDao.findById(id);
+	    }
 
 	    public Film findById(int mediaId) {
 	        try {

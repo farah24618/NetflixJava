@@ -75,7 +75,7 @@ public class SerieController {
 
     @FXML
     private void handleNavDashboard() {
-        ScreenManager.getInstance().navigateTo(Screen.dashboard);
+        ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
     }
 
     @FXML

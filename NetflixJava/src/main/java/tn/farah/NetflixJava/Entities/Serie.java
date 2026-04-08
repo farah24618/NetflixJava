@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -81,4 +82,55 @@ public class Serie extends Media {
                
                 '}';
     }
-}
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ // Dans ta classe Serie.java
+    private List<Saison> saisons = new ArrayList<>();
+
+    public List<Saison> getSaisons() {
+        return saisons;
+    }
+
+    public void setSaisons(List<Saison> saisons) {
+        this.saisons = saisons;
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+   //douaa 
+    
+   
+        private String urlImageCover; // Doit correspondre au nom utilisé dans le DAO
+
+        // CETTE MÉTHODE EST CELLE APPELÉE PAR LE CONTROLLER
+        public String getImageUrl() {
+            return urlImageCover; 
+        }
+
+        // CETTE MÉTHODE EST CELLE APPELÉE PAR LE DAO
+        public void setUrlImageCover(String urlImageCover) {
+            this.urlImageCover = urlImageCover;
+        }
+        
+        
+        
+        
+        
+        
+        
+    }
+	

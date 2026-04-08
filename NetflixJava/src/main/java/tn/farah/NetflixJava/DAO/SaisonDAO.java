@@ -8,6 +8,10 @@ import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.utils.ConxDB;
 
 public class SaisonDAO {
+	
+	
+	
+	
 
     private Connection connection;
 
@@ -235,5 +239,70 @@ public class SaisonDAO {
         
         return firstSeasonId;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ // Dans SaisonDAO.java
+    public List<Saison> findBySerieId(int serieId) {
+        List<Saison> saisons = new ArrayList<>();
+        // Utilise le nom de table correct (season ou saison)
+        String sql = "SELECT * FROM season WHERE serie_id = ? ORDER BY numero ASC"; 
+        
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, serieId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                // Assure-toi que les noms de colonnes correspondent à ta DB
+                saisons.add(new Saison(
+                    rs.getInt("id"), 
+                    rs.getInt("serie_id"), 
+                    rs.getInt("numero")
+                ));
+            }
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        }
+        return saisons;
+    }
+
+    // Pour le compteur
+    public int countBySerieId(int serieId) {
+        String sql = "SELECT COUNT(*) FROM saison WHERE serie_id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, serieId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+    
+    
+    public boolean deleteLastSaison(int serieId, int numeroSaison) {
+        String query = "DELETE FROM saison WHERE id_serie = ? AND numero_saison = ?";
+        try (PreparedStatement ps = this.connection.prepareStatement(query)) {
+            ps.setInt(1, serieId);
+            ps.setInt(2, numeroSaison);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    // Dans EpisodeDAO.java
+   
+    
+    
+    
+    
     
 }

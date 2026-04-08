@@ -3,14 +3,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #0a0a0c; -fx-padding: 15 30; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesItemController">
+<HBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="950.0" spacing="20.0" style="-fx-background-color: #0a0a0c; -fx-padding: 15 30; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesItemController">
     <children>
-        <VBox alignment="CENTER" minHeight="65.0" minWidth="110.0" prefHeight="65.0" prefWidth="110.0" style="-fx-background-color: #1a1a1a; -fx-background-radius: 5; -fx-border-color: #333; -fx-border-radius: 5;">
+        <StackPane fx:id="imageContainer" minHeight="65.0" minWidth="110.0" prefHeight="65.0" prefWidth="110.0" style="-fx-background-color: #1a1a1a; -fx-background-radius: 5; -fx-border-color: #333; -fx-border-radius: 5;">
             <children>
                 <Label text="TV" textFill="#444444">
                     <font>
@@ -18,9 +20,9 @@
                     </font>
                 </Label>
             </children>
-        </VBox>
+        </StackPane>
 
-        <VBox alignment="CENTER_LEFT" spacing="5.0">
+        <VBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="5.0">
             <children>
                 <Label fx:id="titleLabel" text="Titre de la Série" textFill="WHITE">
                     <font>
@@ -37,12 +39,12 @@
 
         <Region HBox.hgrow="ALWAYS" />
 
-        <HBox alignment="CENTER_RIGHT" spacing="40.0">
+        <HBox alignment="CENTER_RIGHT" spacing="30.0">
             <children>
                 <VBox alignment="CENTER" spacing="5.0">
                     <children>
-                        <Label text="STATUS" textFill="#555555" style="-fx-font-size: 10px; -fx-font-weight: bold;" />
-                        <Label fx:id="seasonsLabel" text="En cours" textFill="#808080">
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold;" text="STATUS" textFill="#555555" />
+                        <Label fx:id="statusLabel" text="En cours" textFill="#808080">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -52,8 +54,8 @@
                 
                 <VBox alignment="CENTER" spacing="5.0">
                     <children>
-                        <Label text="RATING" textFill="#555555" style="-fx-font-size: 10px; -fx-font-weight: bold;" />
-                        <Label fx:id="viewsLabel" text="4.5/5 ⭐" textFill="#e50914">
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold;" text="RATING" textFill="#555555" />
+                        <Label fx:id="ratingLabel" text="N/A ★" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -63,8 +65,8 @@
 
                 <VBox alignment="CENTER" spacing="5.0">
                     <children>
-                        <Label text="GENRE" textFill="#555555" style="-fx-font-size: 10px; -fx-font-weight: bold;" />
-                        <Label fx:id="commentsLabel" text="Action" textFill="#808080">
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold;" text="GENRE" textFill="#555555" />
+                        <Label fx:id="genreLabel" text="Action" textFill="#808080">
                             <font>
                                 <Font size="12.0" />
                             </font>
@@ -79,7 +81,8 @@
 
         <HBox alignment="CENTER" spacing="12.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleManageEpisodes" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-font-weight: bold;" text="ÉPISODES" />
+                <MenuButton fx:id="saisonBtn" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" text="SAISONS" />
+                
                 <Button mnemonicParsing="false" onAction="#handleDelete" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-font-weight: bold;" text="SUPPRIMER" />
             </children>
         </HBox>

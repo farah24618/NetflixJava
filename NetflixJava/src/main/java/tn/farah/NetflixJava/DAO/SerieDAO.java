@@ -16,22 +16,30 @@ import java.util.stream.Collectors;
 import tn.farah.NetflixJava.Entities.AgeRating;
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Episode;
+import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Warning;
-import tn.farah.NetflixJava.utils.ConxDB;
 
 public class SerieDAO {
+	
+	
+	
+	
+	
+	
+	
+	
 
     private final Connection connection;
 
-    // Le constructeur reçoit désormais la connexion
     public SerieDAO(Connection connection) {
         this.connection = connection;
     }
 
+    // ✅ CORRIGÉ : "m.producteur" supprimé car absent de la DB
     private static final String BASE_SELECT =
         "SELECT m.id AS media_id, m.titre, m.synopsis, m.casting, m.date_sortie, " +
-        "m.url_image_cover, m.url_image_banner, m.url_teaser, m.producteur, " +
+        "m.url_image_cover, m.url_image_banner, m.url_teaser, " +
         "s.est_complet, m.rating_moyen, " +
         "ac.label AS age_category_name, " +
         "c.id AS category_id, c.nom AS category_nom, " +
@@ -47,7 +55,8 @@ public class SerieDAO {
         "LEFT JOIN category_serie cs ON cs.id = sc.id_category ";
 
     public void create(Serie serie) {
-        String queryMedia = "INSERT INTO `media` (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, producteur, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // ✅ CORRIGÉ : Retrait de producteur
+        String queryMedia = "INSERT INTO `media` (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String querySerie = "INSERT INTO serie (id, est_complet) VALUES (?, ?)";
 
         try {
@@ -62,9 +71,8 @@ public class SerieDAO {
                 psM.setString(5, serie.getUrlImageCover());
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
-                psM.setString(8, serie.getProducteur());
-                psM.setInt(9, serie.getAgeRating().getId());
-                psM.setString(10, "SERIE");
+                psM.setInt(8, serie.getAgeRating().getId());
+                psM.setString(9, "SERIE");
                 psM.executeUpdate();
 
                 ResultSet rs = psM.getGeneratedKeys();
@@ -92,7 +100,8 @@ public class SerieDAO {
     }
 
     public void update(Serie serie) {
-        String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, producteur=?, age_rating_id=? WHERE id=?";
+        // ✅ CORRIGÉ : Retrait de producteur
+        String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=? WHERE id=?";
         String updateSerie = "UPDATE serie SET est_complet=? WHERE id=?";
 
         try {
@@ -105,9 +114,8 @@ public class SerieDAO {
                 psM.setString(5, serie.getUrlImageCover());
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
-                psM.setString(8, serie.getProducteur());
-                psM.setInt(9, serie.getAgeRating().getId());
-                psM.setInt(10, serie.getId());
+                psM.setInt(8, serie.getAgeRating().getId());
+                psM.setInt(9, serie.getId());
                 psM.executeUpdate();
             }
             try (PreparedStatement psF = connection.prepareStatement(updateSerie)) {
@@ -200,8 +208,6 @@ public class SerieDAO {
         return 0;
     }
 
-    // --- Private helpers ---
-
     @FunctionalInterface
     private interface ParamSetter {
         void set(PreparedStatement ps) throws SQLException;
@@ -227,7 +233,7 @@ public class SerieDAO {
                             newFilm.setUrlImageCover(rs.getString("url_image_cover"));
                             newFilm.setUrlImageBanner(rs.getString("url_image_banner"));
                             newFilm.setUrlTeaser(rs.getString("url_teaser"));
-                            newFilm.setProducteur(rs.getString("producteur"));
+                            // ✅ CORRIGÉ : Retrait de rs.getString("producteur")
                             newFilm.setRatingMoyen(rs.getDouble("rating_moyen"));
                             newFilm.setTerminee(rs.getBoolean("est_complet"));
 

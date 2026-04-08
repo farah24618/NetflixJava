@@ -1,5 +1,8 @@
 package tn.farah.NetflixJava.Entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Saison {
 	private int id;
     private int idSerie;
@@ -41,4 +44,14 @@ public class Saison {
         return "Saison " + numeroSaison + " (ID: " + id + ")";
     }
 
+    private List<Episode> episodes = new ArrayList<>();
+
+ // La méthode doit retourner une List<Episode> et non <Serie>
+ public List<Episode> getEpisodes() {
+     return episodes;
+ }
+
+ public void setEpisodes(List<Episode> episodes) {
+     this.episodes = episodes;
+ }
 }

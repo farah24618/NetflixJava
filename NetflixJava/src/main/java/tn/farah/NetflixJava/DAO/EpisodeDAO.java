@@ -231,4 +231,55 @@ public class EpisodeDAO {
         }
         return 0;
     }
+    public int countBySerieId(int serieId) {
+        String sql = "SELECT COUNT(e.id) FROM episode e " +
+                     "JOIN saison s ON e.season_id = s.id " +
+                     "WHERE s.serie_id = ?";
+        try (PreparedStatement pstml = connection.prepareStatement(sql)) {
+            pstml.setInt(1, serieId);
+            ResultSet rs = pstml.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    
+    
+    public List<Episode> findBySaisonId(int saisonId) {
+        List<Episode> list = new ArrayList<>();
+        String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero_episode ASC";
+        // ... exécution JDBC classique ...
+        return list;
+    }
+    
+    
+    public boolean deleteLastEpisode(int saisonId, int numeroEpisode) {
+        String query = "DELETE FROM episode WHERE id_saison = ? AND numero_episode = ?";
+        try (PreparedStatement ps = this.connection.prepareStatement(query)) {
+            ps.setInt(1, saisonId);
+            ps.setInt(2, numeroEpisode);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
