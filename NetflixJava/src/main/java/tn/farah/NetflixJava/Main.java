@@ -12,7 +12,7 @@ public class Main extends Application {
 
 	@Override
     public void start(Stage primaryStage) {
-		
+		//..
 		
 		
 
@@ -80,13 +80,14 @@ public class Main extends Application {
         //nav.navigateTo(Screen.login);
 
        //nav.navigateTo(Screen.admin_main);
-        nav.navigateTo(Screen.addSerie);
+
+       nav.navigateTo(Screen.mainView);
 
 
        
 
 
-      //  nav.navigateTo(Screen.parametresAdmin);
+       //nav.navigateTo(Screen.parametresAdmin);
 
       //nav.navigateTo(Screen.AdminDashboard);
 
