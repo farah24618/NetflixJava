@@ -213,5 +213,15 @@ public class CommentaireDAO {
 
         return false;
     }
+    public void incrementLike(int commentaireId) {
+        String sql = "UPDATE comment SET likes = likes + 1 WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, commentaireId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
 }

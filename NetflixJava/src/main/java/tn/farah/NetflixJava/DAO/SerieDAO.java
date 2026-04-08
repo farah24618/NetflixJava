@@ -54,17 +54,13 @@ public class SerieDAO {
         "LEFT JOIN liaison_serie_category sc ON m.id = sc.id_serie " +
         "LEFT JOIN category_serie cs ON cs.id = sc.id_category ";
 
-<<<<<<< HEAD
-    public void create(Serie serie) {
-        // ✅ CORRIGÉ : Retrait de producteur
-        String queryMedia = "INSERT INTO `media` (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, type_media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String querySerie = "INSERT INTO serie (id, est_complet) VALUES (?, ?)";
-=======
+    
+
     public void create(Serie serie) throws SQLException {
         String queryMedia = "INSERT INTO media (titre, synopsis, casting, date_sortie, url_image_cover, url_image_banner, url_teaser, age_rating_id, producteur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     	String querySerie = "INSERT INTO serie (id, est_complet) VALUES (?, ?)";
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
+
 
         try {
            
@@ -78,14 +74,13 @@ public class SerieDAO {
                 psM.setString(5, serie.getUrlImageCover());
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
-<<<<<<< HEAD
+
                 psM.setInt(8, serie.getAgeRating().getId());
                 psM.setString(9, "SERIE");
-=======
+
                 psM.setString(8, serie.getProducteur());
                 psM.setInt(9, serie.getAgeRating() != null ? serie.getAgeRating().getId() : 1);
-              
->>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
+
                 psM.executeUpdate();
 
                 ResultSet rs = psM.getGeneratedKeys();

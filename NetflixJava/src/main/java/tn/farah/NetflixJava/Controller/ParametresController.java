@@ -147,7 +147,7 @@ public class ParametresController {
     @FXML
     void onSeriesClicked(ActionEvent event) {
         // Utilise VOTRE ScreenManager pour aller vers Séries
-       // ScreenManager.getInstance().navigateTo(Screen.);
+       ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
     }
 
     @FXML
@@ -162,7 +162,7 @@ public class ParametresController {
    }
     @FXML
     void onUsersClicked(ActionEvent event) {
-        System.out.println("Page Utilisateurs non définie dans l'enum Screen pour le moment");
+   	 ScreenManager.getInstance().navigateTo(Screen.manageUsers);
     }
     @FXML
     void onSettingsClicked(ActionEvent event) {

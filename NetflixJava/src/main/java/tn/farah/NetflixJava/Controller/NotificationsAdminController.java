@@ -363,9 +363,14 @@ public class NotificationsAdminController implements Initializable {
 
     @FXML void onDashboardClicked(ActionEvent e) { ScreenManager.getInstance().navigateTo(Screen.AdminDashboard); }
     @FXML void onFilmsClicked(ActionEvent e)     { ScreenManager.getInstance().navigateTo(Screen.admin_main); }
-    @FXML void onSeriesClicked(ActionEvent e)    { System.out.println("Séries"); }
-    @FXML void onUsersClicked(ActionEvent e)     { System.out.println("Utilisateurs"); }
-    @FXML void onCommentsClicked(ActionEvent e)  { ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin); }
+    @FXML void onSeriesClicked(ActionEvent e)    { 
+    	ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
+    }
+    @FXML void onUsersClicked(ActionEvent e)     {
+    	ScreenManager.getInstance().navigateTo(Screen.manageUsers);}
+    @FXML void onCommentsClicked(ActionEvent e)  {
+    	
+    	ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin); }
     @FXML void onSettingsClicked(ActionEvent e)  { ScreenManager.getInstance().navigateTo(Screen.parametresAdmin); }
 
     @FXML

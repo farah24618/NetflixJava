@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="950.0" spacing="20.0" style="-fx-background-color: #0a0a0c; -fx-padding: 15 30; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesItemController">
+<HBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="950.0" spacing="20.0" style="-fx-background-color: #0a0a0c; -fx-padding: 15 30; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesItemController">
     <children>
         <StackPane fx:id="imageContainer" minHeight="65.0" minWidth="110.0" prefHeight="65.0" prefWidth="110.0" style="-fx-background-color: #1a1a1a; -fx-background-radius: 5; -fx-border-color: #333; -fx-border-radius: 5;">
             <children>
