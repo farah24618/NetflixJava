@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="900" prefWidth="1340" style="-fx-background-color: #0d0d0d;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.ParametresController">
+
+    <left>
+        <VBox prefWidth="240.0" spacing="0" style="-fx-background-color: #111111;">
+            <children>
+                <HBox alignment="CENTER_LEFT" style="-fx-padding: 25 15 25 15;">
+                    <children>
+                        <Label text="RAKSHANET ADMIN" textFill="#cc2222">
+                            <font>
+                                <Font name="System Bold" size="20.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+    
+                <Label style="-fx-text-fill: white; -fx-padding: 0 0 10 25;" text="Navigation">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+    
+                <VBox spacing="8" style="-fx-padding: 0 12 0 12;">
+                    <children>
+                        <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onDashboardClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="⊞   Dashboard">
+                            <font><Font size="14.0" /></font>
+                        </Button>
+    
+                        <Button fx:id="btnFilms" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onFilmsClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="🎬   Films">
+                            <font><Font size="14.0" /></font>
+                        </Button>
+
+                        <Button fx:id="btnSeries" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onSeriesClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="📺   Séries">
+                            <font><Font size="14.0" /></font>
+                        </Button>
+    
+                        <Button fx:id="btnUsers" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onUsersClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="👤   Utilisateurs">
+                            <font><Font size="14.0" /></font>
+                        </Button>
+    
+                        <Button fx:id="btnNotifications" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onNotificationsClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="🔔   Notifications">
+                            <font><Font size="14.0" /></font>
+                        </Button>
+    
+                        <Button fx:id="btnComments" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onCommentsClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="💬   Commentaires">
+                            <font><Font size="14.0" /></font>
+                        </Button>
+    
+                        <Button fx:id="btnSettings" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#onSettingsClicked" style="-fx-background-color: #cc2222; -fx-text-fill: white; -fx-cursor: HAND; -fx-background-radius: 10; -fx-padding: 12 15;" text="⚙   Paramètres">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </VBox>
+                <Region VBox.vgrow="ALWAYS" />
+                <Button onAction="#onLogoutClicked" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-padding: 20 25;" text="⏻   Logout" />
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="30" style="-fx-padding: 40 60 40 60;">
+            <children>
+                <VBox spacing="5">
+                    <children>
+                        <Label text="Paramètres du compte" textFill="WHITE">
+                            <font><Font name="System Bold" size="32.0" /></font>
+                        </Label>
+                        <Label text="Gérez vos informations personnelles et la sécurité de votre compte." textFill="#888888" />
+                    </children>
+                </VBox>
+
+                <Separator prefWidth="200.0" style="-fx-opacity: 0.1;" />
+
+                <VBox maxWidth="600" spacing="20">
+                    <children>
+                        <Label text="Informations de profil" textFill="WHITE">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        
+                        <HBox spacing="20">
+                            <children>
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Nom" textFill="#888888" />
+                                        <TextField fx:id="nomField" prefHeight="45.0" promptText="Nom" style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-background-radius: 8; -fx-border-color: #333333; -fx-border-radius: 8;" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Prénom" textFill="#888888" />
+                                        <TextField fx:id="prenomField" prefHeight="45.0" promptText="Prénom" style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-background-radius: 8; -fx-border-color: #333333; -fx-border-radius: 8;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="10">
+                            <children>
+                                <Label text="Adresse Email" textFill="#888888" />
+                                <TextField fx:id="emailField" prefHeight="45.0" promptText="admin@netflix.tn" style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-background-radius: 8; -fx-border-color: #333333; -fx-border-radius: 8;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox maxWidth="600" spacing="20">
+                    <children>
+                        <Label text="Sécurité" textFill="WHITE">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        <VBox spacing="10">
+                            <children>
+                                <Label text="Nouveau mot de passe" textFill="#888888" />
+                                <PasswordField fx:id="passwordField" prefHeight="45.0" promptText="Laissez vide pour ne pas changer" style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-background-radius: 8; -fx-border-color: #333333; -fx-border-radius: 8;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <HBox spacing="15" style="-fx-padding: 20 0 0 0;">
+                    <children>
+                        <Button onAction="#onSaveSettings" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #cc2222; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Enregistrer les modifications" />
+                        <Button onAction="#handleCancel" prefHeight="45.0" prefWidth="120.0" style="-fx-background-color: #333333; -fx-text-fill: white; -fx-background-radius: 8; -fx-cursor: hand;" text="Annuler" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

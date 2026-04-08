@@ -9,6 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+<<<<<<< HEAD
         try {
             ScreenManager nav = ScreenManager.getInstance();
             
@@ -17,6 +18,11 @@ public class Main extends Application {
             primaryStage.setTitle("RakchaNet");
             primaryStage.setWidth(1280);
             primaryStage.setHeight(720);
+=======
+		//..
+		
+		
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 
             // 2. Authentification et Profils
             nav.register(Screen.login,           "/tn/farah/NetflixJava/login.fxml");
@@ -42,6 +48,7 @@ public class Main extends Application {
             nav.register(Screen.myList,          "/tn/farah/NetflixJava/MyListView.fxml");
             nav.register(Screen.notification,    "/tn/farah/NetflixJava/notification.fxml");
 
+<<<<<<< HEAD
             // 5. Lecture et Détails du contenu
             nav.register(Screen.detail,          "/tn/farah/NetflixJava/EpisodeView2.fxml");
             nav.register(Screen.episodeView,     "/tn/farah/NetflixJava/EpisodeView.fxml");
@@ -66,11 +73,84 @@ public class Main extends Application {
             
             primaryStage.show();
             System.out.println("✅ Application RakchaNet lancée avec succès.");
+=======
 
+        nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
+        nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
+
+        nav.register(Screen.detailFilm,        "/tn/farah/NetflixJava/FilmView.fxml");
+
+        nav.register(Screen.oublie,  "/tn/farah/NetflixJava/oublie.fxml");
+
+        nav.register(Screen.ResetPassword,  "/tn/farah/NetflixJava/ResetPassword.fxml");
+
+        nav.register(Screen.CommentaireAdmin,  "/tn/farah/NetflixJava/CommentaireAdmin.fxml");
+
+        nav.register(Screen.filmPlayer,  "/tn/farah/NetflixJava/FilmPlayer.fxml");
+
+
+      
+ 
+        nav.register(Screen.admin_main, "/tn/farah/NetflixJava/admin_main.fxml");
+        nav.register(Screen.editProfiles, "/tn/farah/NetflixJava/ManageProfiles.fxml");
+        nav.register(Screen.addFilm, "/tn/farah/NetflixJava/AddFilmView.fxml");
+
+        nav.register(Screen.notificationAdmin, "/tn/farah/NetflixJava/notificationAdmin.fxml");
+        nav.register(Screen.parametresAdmin, "/tn/farah/NetflixJava/parametres.fxml");
+        nav.register(Screen.addEpisode, "/tn/farah/NetflixJava/addEpisode.fxml");
+        
+
+
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
+
+<<<<<<< HEAD
         } catch (Exception e) {
             System.err.println("❌ Erreur lors de l'initialisation du ScreenManager :");
             e.printStackTrace();
         }
+=======
+
+        primaryStage.setTitle("RakchaNet");
+     
+        //nav.navigateTo(Screen.addProfile);
+        //nav.navigateTo(Screen.episodeComments);
+
+
+        //nav.navigateTo(Screen.login);
+
+       //nav.navigateTo(Screen.admin_main);
+       nav.navigateTo(Screen.mainView);
+
+
+       
+
+
+       //nav.navigateTo(Screen.parametresAdmin);
+
+      //nav.navigateTo(Screen.AdminDashboard);
+
+
+        //nav.navigateTo(Screen.video);
+
+        
+
+
+
+        nav.navigateTo(Screen.login);
+
+
+       // nav.navigateTo(Screen.notificationAdmin);
+
+
+
+   
+
+        primaryStage.setWidth(1280);   // ← largeur que tu veux
+        primaryStage.setHeight(720);   // ← hauteur que tu veux
+        primaryStage.centerOnScreen();
+
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
     }
 
     public static void main(String[] args) {

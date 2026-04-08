@@ -79,6 +79,7 @@ public class HomeController implements Initializable {
         CardFactory.setNotificationService(new NotificationService(connection));
         loadData();
         initHero();
+        chargerBadgeNotif();
         buildCarousels(allFilms, allSeries, filmsByCategory, seriesByCategory);
         initSearch();
 
@@ -419,7 +420,7 @@ public class HomeController implements Initializable {
         applySearch(searchField.getText() == null ? ""
                 : searchField.getText().trim().toLowerCase());
     }
-   /* private void chargerBadgeNotif() {
+    private void chargerBadgeNotif() {
         int userId = SessionManager.getInstance().getCurrentUserId();
         NotificationService service = new NotificationService(connection);
         int count = service.countUnread(userId);
@@ -428,9 +429,13 @@ public class HomeController implements Initializable {
             notifBadge.setVisible(count > 0);
         }
     }
-*/
+
     @FXML private void onNotifications() {
         ScreenManager.getInstance().navigateTo(Screen.notification); // adapte le nom exact
+    }
+    @FXML
+    private void onEditProfile() {
+        ScreenManager.getInstance().navigateTo(Screen.editProfiles);
     }
 
 }

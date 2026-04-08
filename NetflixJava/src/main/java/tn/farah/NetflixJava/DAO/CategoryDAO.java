@@ -21,10 +21,10 @@ public class CategoryDAO {
 
 	    // CREATE : Ajouter une nouvelle catégorie
 	    public void save(Category category) throws SQLException {
-	        String query = "INSERT INTO category (id, name) VALUES (?, ?)";
+	        String query = "INSERT INTO category ( nom) VALUES ( ?)";
 	        try (PreparedStatement ps = connection.prepareStatement(query)) {
-	            ps.setInt(1, category.getId());
-	            ps.setString(2, category.getName());
+	           
+	            ps.setString(1, category.getName());
 	            ps.executeUpdate();
 	        }
 	    }
@@ -36,7 +36,7 @@ public class CategoryDAO {
 	            ps.setInt(1, id);
 	            try (ResultSet rs = ps.executeQuery()) {
 	                if (rs.next()) {
-	                    return new Category(rs.getInt("id"), rs.getString("name"));
+	                    return new Category(rs.getInt("id"), rs.getString("nom"));
 	                }
 	            }
 	        }
@@ -46,11 +46,11 @@ public class CategoryDAO {
 	    // READ ALL : Très utile pour remplir tes menus de navigation Netflix
 	    public List<Category> findAll() throws SQLException {
 	        List<Category> categories = new ArrayList<>();
-	        String query = "SELECT * FROM category ORDER BY name ASC";
+	        String query = "SELECT * FROM category ORDER BY nom ASC";
 	        try (Statement st = connection.createStatement();
 	             ResultSet rs = st.executeQuery(query)) {
 	            while (rs.next()) {
-	                categories.add(new Category(rs.getInt("id"), rs.getString("name")));
+	                categories.add(new Category(rs.getInt("id"), rs.getString("nom")));
 	            }
 	        }
 	        return categories;
@@ -58,7 +58,7 @@ public class CategoryDAO {
 
 	    // UPDATE : Modifier le nom d'une catégorie
 	    public void update(Category category) throws SQLException {
-	        String query = "UPDATE category SET name = ? WHERE id = ?";
+	        String query = "UPDATE category SET nom = ? WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(query)) {
 	            ps.setString(1, category.getName());
 	            ps.setInt(2, category.getId());
@@ -77,7 +77,7 @@ public class CategoryDAO {
 	     * enregistrer dans tableau media_category
 	     */
 	    public void lierMedia(int mediaId, int categoryId) throws SQLException {
-	        String sql = "INSERT INTO media_category (film_id, category_id) VALUES (?, ?)";
+	        String sql = "INSERT INTO media_category (media_id, category_id) VALUES (?, ?)";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 	            ps.setInt(1, mediaId);
 	            ps.setInt(2, categoryId);

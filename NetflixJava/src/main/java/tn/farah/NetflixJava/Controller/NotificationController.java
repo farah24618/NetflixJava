@@ -1,9 +1,13 @@
 package tn.farah.NetflixJava.Controller;
 
+import java.sql.Connection;
 import java.util.List;
 import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Service.NotificationService;
-
+import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -25,19 +29,25 @@ public class NotificationController {
 
     @FXML
     private Label badgeLabel;
-
-    private NotificationService service = new NotificationService();
+    private Connection conx;
+    private NotificationService service ;
     private ObservableList<Notification> notifications = FXCollections.observableArrayList();
-    private int currentUserId = 1;
-
+    private int currentUserId;
     @FXML
     public void initialize() {
+    	this.currentUserId = SessionManager.getInstance().getCurrentUserId();
+    	this.conx=ConxDB.getInstance();
+    	this.service=new NotificationService(conx);
         // Appliquer le design Netflix à la ListView
         setupListViewDesign();
         
         loadNotifications();
         setupClickListener();
         startAutoRefresh();
+    }
+    @FXML
+    private void onBack() {
+        ScreenManager.getInstance().navigateTo(Screen.home); // adapte si ton Screen enum est différent
     }
 
     // ✨ DESIGN NETFLIX PRO : Transforme chaque ligne en "Carte"

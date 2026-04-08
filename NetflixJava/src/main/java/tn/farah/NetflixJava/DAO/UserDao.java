@@ -78,6 +78,31 @@ public class UserDao {
         } catch (SQLException e) { e.printStackTrace(); }
         return users;
     }
+    public boolean isPseudoTaken(final String pseudo, final int userId) {
+        final String sql =
+            "SELECT COUNT(*) FROM users WHERE pseudo = ? AND id != ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, pseudo);
+            ps.setInt(2, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1) > 0;
+            }
+        } catch (final SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean updatePseudo(final int userId, final String newPseudo) {
+        final String sql = "UPDATE users SET pseudo = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPseudo);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() == 1;
+        } catch (final SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";

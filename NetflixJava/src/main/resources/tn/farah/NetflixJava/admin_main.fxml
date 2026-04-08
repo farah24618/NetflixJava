@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
@@ -60,3 +61,96 @@
         </VBox>
     </center>
 </BorderPane>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="0.0" style="-fx-background-color: #0b0b0b;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AdminMainController">
+      
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="20.0" style="-fx-padding: 0 25 0 25;">
+         <children>
+            <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="My Titles (30)" textFill="WHITE" />
+            <Button fx:id="DashboardButton" onAction="#handleDashboard" style="-fx-background-color: #3d4454; -fx-text-fill: #a2a9b8; -fx-background-radius: 4;" text="Dashboard">
+               <padding>
+                  <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+               </padding>
+            </Button>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Label style="-fx-font-size: 18px;" text="⚙" textFill="#b3b3b3" />
+                  <Label style="-fx-font-size: 18px;" text="🔔" textFill="#b3b3b3" />
+                  <Label style="-fx-background-color: #4f4f4f; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 5 8;" text="DT" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+
+      <VBox style="-fx-padding: 0 25 15 25;">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="45.0" spacing="10.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #333333; -fx-border-radius: 4; -fx-background-radius: 4;">
+               <padding>
+                  <Insets left="15.0" right="15.0" />
+               </padding>
+               <children>
+                  <HBox alignment="CENTER" spacing="12.0">
+                     <children>
+                        <Label style="-fx-font-size: 18px; -fx-cursor: hand;" text="≡" textFill="WHITE" />
+                        <Label style="-fx-font-size: 20px; -fx-cursor: hand;" text="+" textFill="#808080" />
+                     </children>
+                  </HBox>
+                  
+                  <Separator orientation="VERTICAL" prefHeight="20.0" />
+                  
+                  <TextField fx:id="searchField" promptText="Filter titles..." style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: #555555;" HBox.hgrow="ALWAYS" />
+                  
+                  <Label style="-fx-cursor: hand;" text="Reset" textFill="#808080" />
+                  <Separator orientation="VERTICAL" prefHeight="20.0" />
+                  
+                  <HBox alignment="CENTER" spacing="8.0" style="-fx-cursor: hand;">
+                     <children>
+                        <Label text="🔖" textFill="WHITE" />
+                        <Label text="Saved Filters" textFill="WHITE" />
+                     </children>
+                  </HBox>
+                  
+                  <Region prefWidth="20.0" />
+                  
+                  <HBox alignment="CENTER" spacing="0.0" style="-fx-border-color: #333333; -fx-border-radius: 4;">
+                     <children>
+                        <Label style="-fx-background-color: #3d4454; -fx-padding: 5 10; -fx-background-radius: 4 0 0 4;" text="🗂" textFill="WHITE" />
+                        <Label style="-fx-padding: 5 10;" text="≡" textFill="#808080" />
+                     </children>
+                  </HBox>
+                  
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-padding: 0 10;">
+                     <children>
+                        <Label text="|||" textFill="#808080" />
+                        <Label text="Columns" textFill="WHITE" />
+                     </children>
+                  </HBox>
+                  
+                  <Button onAction="#handleAddMovie" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;" text="+ Add Title" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0 25 0 25;" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="movieListContainer" spacing="2.0" style="-fx-background-color: #0b0b0b;" />
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git

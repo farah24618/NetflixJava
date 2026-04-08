@@ -125,6 +125,13 @@ public class AdminMainController {
     }
 
     @FXML
+    private void handleDashboard() {
+        // On retourne au signup1, les données seront restaurées par son initialize()
+        ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
+    }
+
+    
+    @FXML
     private void handleAddMovie() {
         System.out.println("➕ Ajout d'un nouveau film");
     }

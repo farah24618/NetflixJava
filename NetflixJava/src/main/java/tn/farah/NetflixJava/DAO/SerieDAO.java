@@ -299,7 +299,7 @@ public class SerieDAO {
                     ep.setResume(rs.getString("resume"));
                     ep.setVideoUrl(rs.getString("url_video"));
                     ep.setMiniatureUrl(rs.getString("url_image"));
-                    ep.setDurrentro(rs.getInt("duree_intro_sec"));
+                    ep.setDurreeIntro(rs.getInt("duree_intro_sec"));
                     
                     episodes.add(ep);
                 }
