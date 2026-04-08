@@ -3,24 +3,27 @@ package tn.farah.NetflixJava.Entities;
 public class Subtitle {
 	private int id;
 	private String langage;
-	private int idMedia;
+	private int filmId;
+	private int episodeId;
 	 private String url;       // chemin vers le fichier .srt
      // ex: "subtitles/film1_fr.srt"
 
 
-	public Subtitle(int id, String langage, int idMedia, String url) {
+
+	
+	public Subtitle(String langage, int filmId, int episodeId, String url) {
+		this.langage = langage;
+		this.filmId = filmId;
+		this.episodeId = episodeId;
+		this.url = url;
+	}
+	public Subtitle(int id, String langage, int filmId, int episodeId, String url) {
 		this.id = id;
 		this.langage = langage;
-		this.idMedia = idMedia;
+		this.filmId = filmId;
+		this.episodeId = episodeId;
 		this.url = url;
 	}
-
-	public Subtitle(String langage, int idMedia, String url) {
-		this.langage = langage;
-		this.idMedia = idMedia;
-		this.url = url;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -37,13 +40,7 @@ public class Subtitle {
 		this.langage = langage;
 	}
 
-	public int getIdMedia() {
-		return idMedia;
-	}
-
-	public void setIdMedia(int idMedia) {
-		this.idMedia = idMedia;
-	}
+	
 
 	public String getUrl() {
 		return url;
@@ -52,11 +49,25 @@ public class Subtitle {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
+	public int getFilmId() {
+		return filmId;
+	}
+	public void setFilmId(int filmId) {
+		this.filmId = filmId;
+	}
+	public int getEpisodeId() {
+		return episodeId;
+	}
+	public void setEpisodeId(int episodeId) {
+		this.episodeId = episodeId;
+	}
 	@Override
 	public String toString() {
-		return "Subtitle [id=" + id + ", langage=" + langage + ", idMedia=" + idMedia + ", url=" + url + "]";
+		return "Subtitle [id=" + id + ", langage=" + langage + ", filmId=" + filmId + ", episodeId=" + episodeId
+				+ ", url=" + url + "]";
 	}
+
+	
 
 
 }

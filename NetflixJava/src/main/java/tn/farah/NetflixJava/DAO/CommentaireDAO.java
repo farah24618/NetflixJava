@@ -37,11 +37,11 @@ public class CommentaireDAO {
                 c.setMediaId(rs.getInt("media_id"));
                 c.setUserId(rs.getInt("user_id"));
                 // On utilise la colonne username de la table comment
-                c.setUsername(rs.getString("username")); 
+                //c.setUsername(rs.getString("username")); 
                 c.setContenu(rs.getString("contenu"));
                 
                 // On vérifie les deux colonnes possibles pour le flag signalement
-                boolean isSpoiler = rs.getBoolean("contient_spoils") || rs.getBoolean("is_spoiler");
+                boolean isSpoiler = rs.getBoolean("contient_spoils") ;
                 c.setSpoiler(isSpoiler);
 
                 Timestamp ts = rs.getTimestamp("date_publication");

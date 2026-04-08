@@ -64,9 +64,7 @@ public class Main extends Application {
             
             primaryStage.show();
             System.out.println("✅ Application RakchaNet lancée avec succès.");
-
-
-        nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
+nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.video,  "/tn/farah/NetflixJava/video.fxml");
 
         nav.register(Screen.detailFilm,        "/tn/farah/NetflixJava/FilmView.fxml");
@@ -105,7 +103,7 @@ public class Main extends Application {
 
        //nav.navigateTo(Screen.admin_main);
 
-       //nav.navigateTo(Screen.mainView);
+       nav.navigateTo(Screen.home);
 
 
        
@@ -113,7 +111,7 @@ public class Main extends Application {
 
        //nav.navigateTo(Screen.parametresAdmin);
 
-      nav.navigateTo(Screen.login);
+      //nav.navigateTo(Screen.admin_main);
 
 
         //nav.navigateTo(Screen.video);

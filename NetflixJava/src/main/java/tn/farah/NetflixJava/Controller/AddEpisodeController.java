@@ -4,9 +4,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -14,35 +17,41 @@ import javafx.util.Duration;
 
 import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Saison;
+import tn.farah.NetflixJava.Entities.Subtitle;
 import tn.farah.NetflixJava.Service.EpisodeService;
 import tn.farah.NetflixJava.Service.SaisonService;
+import tn.farah.NetflixJava.Service.SubtitleService;
+import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.utils.ConxDB;
-import tn.farah.NetflixJava.utils.Screen;
-import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class AddEpisodeController implements Initializable {
 
-    // ─── Services ────────────────────────────────────────────────────────────
-    private EpisodeService episodeService;
-    private SaisonService  saisonService;   // pour remplir le ComboBox des saisons
+    // ─── Services ─────────────────────────────────────────────────────────────
+    private EpisodeService  episodeService;
+    private SaisonService   saisonService;
+    private SubtitleService subtitleService;
 
     // ─── Fichiers sélectionnés ────────────────────────────────────────────────
     private File fileMiniature;
     private File fileVideo;
 
+    // ─── Sous-titres (lignes dynamiques) ─────────────────────────────────────
+    private final List<SubtitleRow> subtitleRows = new ArrayList<>();
+
     // ─── Champs formulaire ────────────────────────────────────────────────────
-    @FXML private TextField           txtTitre;
-    @FXML private TextArea            txtResume;
-    @FXML private ComboBox<Saison>    cbSaison;          // lié à saisonId
-    @FXML private TextField           txtNumeroEpisode;
-    @FXML private TextField           txtDuree;
-    @FXML private TextField           txtDureeIntro;     // durreeIntro
+    @FXML private TextField        txtTitre;
+    @FXML private TextArea         txtResume;
+    @FXML private ComboBox<Saison> cbSaison;
+    @FXML private TextField        txtNumeroEpisode;
+    @FXML private TextField        txtDuree;
+    @FXML private TextField        txtDureeIntro;
 
     // ─── Upload – Miniature ───────────────────────────────────────────────────
     @FXML private VBox      dropMiniature;
@@ -56,10 +65,21 @@ public class AddEpisodeController implements Initializable {
     @FXML private Label       lblVideoName;
     @FXML private ProgressBar pbVideo;
 
+    // ─── Sous-titres container ────────────────────────────────────────────────
+    @FXML private VBox subtitlesContainer;
+
     // ─── Status & actions ────────────────────────────────────────────────────
     @FXML private Label  lblStatus;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  CLASSE INTERNE — une ligne sous-titre
+    // ═════════════════════════════════════════════════════════════════════════
+    private static class SubtitleRow {
+        String langage  = "";
+        String filePath = "";
+    }
 
     // ═════════════════════════════════════════════════════════════════════════
     //  INITIALIZE
@@ -67,30 +87,133 @@ public class AddEpisodeController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Connection connection = ConxDB.getInstance();
-        episodeService = new EpisodeService(connection);
-        saisonService  = new SaisonService(connection);
+        episodeService  = new EpisodeService(connection);
+        saisonService   = new SaisonService(connection);
+        // Initialisation du service avec le nouveau DAO
+        subtitleService = new SubtitleService(new SubtitleDAO(connection));
 
         loadSaisons();
     }
 
-    // ─── Chargement des saisons ───────────────────────────────────────────────
     private void loadSaisons() {
         try {
             List<Saison> saisons = saisonService.findAll();
             cbSaison.getItems().addAll(saisons);
-            System.out.println("Saisons chargées : " + saisons.size());
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Impossible de charger les saisons : " + e.getMessage());
+            showError("Impossible de charger les saisons.");
         }
     }
 
     // ═════════════════════════════════════════════════════════════════════════
-    //  UPLOAD – MINIATURE
+    //  SOUS-TITRES — Gestion Dynamique
+    // ═════════════════════════════════════════════════════════════════════════
+    @FXML
+    private void handleAddSubtitle() {
+        SubtitleRow sRow = new SubtitleRow();
+        subtitleRows.add(sRow);
+
+        ComboBox<String> cbLang = new ComboBox<>();
+        cbLang.getItems().addAll("FR", "EN", "AR", "ES", "DE", "IT");
+        cbLang.setPromptText("Langue");
+        cbLang.setPrefWidth(90);
+        cbLang.setStyle("-fx-background-color:#0f0f13; -fx-border-color:#2a2a35; -fx-border-radius:6;");
+        cbLang.setOnAction(e -> sRow.langage = cbLang.getValue() != null ? cbLang.getValue() : "");
+
+        Label lblFile = new Label("Aucun fichier");
+        lblFile.setStyle("-fx-text-fill:#888888; -fx-font-size:11px;");
+        HBox.setHgrow(lblFile, Priority.ALWAYS);
+
+        Button btnBrowse = new Button("📁 Parcourir");
+        btnBrowse.setStyle("-fx-background-color:#2a2a35; -fx-text-fill:#cccccc; -fx-cursor:hand;");
+        btnBrowse.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sous-titres", "*.srt", "*.vtt"));
+            File f = fc.showOpenDialog(getCurrentStage());
+            if (f != null) {
+                sRow.filePath = f.getAbsolutePath();
+                lblFile.setText(f.getName());
+                lblFile.setStyle("-fx-text-fill:#e50914; -fx-font-weight:bold;");
+            }
+        });
+
+        Button btnRemove = new Button("✕");
+        btnRemove.setStyle("-fx-background-color:transparent; -fx-text-fill:#888888; -fx-cursor:hand;");
+        
+        HBox row = new HBox(8, cbLang, lblFile, btnBrowse, btnRemove);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color:#0f0f13; -fx-padding:8; -fx-border-color:#2a2a35; -fx-border-radius:6;");
+
+        btnRemove.setOnAction(e -> {
+            subtitlesContainer.getChildren().remove(row);
+            subtitleRows.remove(sRow);
+        });
+
+        subtitlesContainer.getChildren().add(row);
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  SAVE LOGIC
+    // ═════════════════════════════════════════════════════════════════════════
+    @FXML
+    private void handleSave() {
+        if (!validateForm()) return;
+        try {
+            // 1. Sauvegarder l'épisode
+            Episode episode = buildEpisodeFromForm();
+            int episodeId = episodeService.save(episode);
+
+            if (episodeId > 0) {
+                // 2. Sauvegarder les sous-titres avec le nouvel ID Episode
+                saveSubtitles(episodeId);
+
+                showSuccess("✓ Épisode « " + episode.getTitre() + " » enregistré !");
+                clearForm();
+            } else {
+                showError("Erreur lors de l'enregistrement de l'épisode.");
+            }
+        } catch (Exception e) {
+            showError("Erreur : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void saveSubtitles(int episodeId) {
+        for (SubtitleRow sr : subtitleRows) {
+            if (sr.langage != null && !sr.langage.isEmpty() && !sr.filePath.isEmpty()) {
+                // Utilisation du nouveau constructeur compatible avec votre structure
+                // Subtitle(String langage, int filmId, int episodeId, String url)
+                // filmId est mis à 0 car c'est un épisode
+                Subtitle sub = new Subtitle(sr.langage, 0, episodeId, sr.filePath);
+                
+                int result = subtitleService.addSubtitle(sub);
+                if (result == 0) {
+                    System.err.println("Échec enregistrement sous-titre : " + sr.langage);
+                }
+            }
+        }
+    }
+
+    private Episode buildEpisodeFromForm() {
+        int saisonId = cbSaison.getValue() != null ? cbSaison.getValue().getId() : 0;
+        return new Episode(
+            saisonId,
+            txtTitre.getText().trim(),
+            parseIntSafe(txtNumeroEpisode.getText()),
+            fileVideo != null ? fileVideo.getAbsolutePath() : "",
+            parseIntSafe(txtDuree.getText()),
+            txtResume.getText().trim(),
+            fileMiniature != null ? fileMiniature.getAbsolutePath() : "",
+            parseIntSafe(txtDureeIntro.getText())
+        );
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  UI HANDLERS & HELPERS
     // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handlePickMiniature() {
-        File file = pickImageFile("Sélectionner la miniature de l'épisode");
+        File file = pickImageFile("Miniature de l'épisode");
         if (file != null) {
             fileMiniature = file;
             lblMiniatureName.setText(file.getName());
@@ -101,105 +224,29 @@ public class AddEpisodeController implements Initializable {
         }
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  UPLOAD – VIDÉO
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handlePickVideo() {
-        File file = pickVideoFile("Sélectionner la vidéo de l'épisode");
+        File file = pickVideoFile("Vidéo de l'épisode");
         if (file != null) {
             fileVideo = file;
             lblVideoName.setText(file.getName());
             lblVideoPlaceholder.setText("✅");
             activateDropZone(dropVideo);
-            simulateProgress(pbVideo, "Vidéo prête : " + file.getName());
+            simulateProgress(pbVideo, "Vidéo sélectionnée");
         }
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  SAVE
-    // ═════════════════════════════════════════════════════════════════════════
-    @FXML
-    private void handleSave() {
-        if (!validateForm()) return;
-        try {
-            Episode episode = buildEpisodeFromForm();
-            int result = episodeService.save(episode);
-            if (result > 0) {
-                showSuccess("✓  Épisode « " + episode.getTitre() + " » enregistré !");
-                clearForm();
-            } else {
-                showError("Enregistrement refusé — vérifiez les règles métier.");
-            }
-        } catch (Exception e) {
-            showError("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private Episode buildEpisodeFromForm() {
-        // Récupération des valeurs saisies
-        int saisonId     = cbSaison.getValue() != null ? cbSaison.getValue().getId() : 0;
-        int numero       = parseIntSafe(txtNumeroEpisode.getText());
-        int duree        = parseIntSafe(txtDuree.getText());
-        int dureeIntro   = parseIntSafe(txtDureeIntro.getText());
-
-        String miniatureUrl = fileMiniature != null ? fileMiniature.toURI().toString() : "";
-        String videoUrl     = fileVideo     != null ? fileVideo.toURI().toString()     : "";
-
-        // Constructeur sans id (nouvel épisode)
-        Episode episode = new Episode(
-            saisonId,
-            txtTitre.getText().trim(),
-            numero,
-            videoUrl,
-            duree,
-            txtResume.getText().trim(),
-            miniatureUrl,
-            dureeIntro
-        );
-        return episode;
-    }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  VALIDATION
-    // ═════════════════════════════════════════════════════════════════════════
     private boolean validateForm() {
-        StringBuilder errors = new StringBuilder();
-
-        if (txtTitre.getText().trim().isEmpty())
-            errors.append("• Titre obligatoire.\n");
-        if (txtResume.getText().trim().isEmpty())
-            errors.append("• Résumé obligatoire.\n");
-        if (cbSaison.getValue() == null)
-            errors.append("• Veuillez sélectionner une saison.\n");
-        if (txtNumeroEpisode.getText().trim().isEmpty() || parseIntSafe(txtNumeroEpisode.getText()) <= 0)
-            errors.append("• Numéro d'épisode invalide (doit être > 0).\n");
-        if (txtDuree.getText().trim().isEmpty() || parseIntSafe(txtDuree.getText()) <= 0)
-            errors.append("• Durée invalide (doit être > 0).\n");
-        if (fileMiniature == null)
-            errors.append("• Miniature obligatoire.\n");
-        if (fileVideo == null)
-            errors.append("• Vidéo obligatoire.\n");
-
-        if (errors.length() > 0) {
-            showError(errors.toString().trim());
+        if (txtTitre.getText().isEmpty() || cbSaison.getValue() == null || fileVideo == null) {
+            showError("Veuillez remplir les champs obligatoires (Titre, Saison, Vidéo).");
             return false;
         }
         return true;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  ANNULER / RÉINITIALISER
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handleCancel() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                "Annuler ? Les données non sauvegardées seront perdues.",
-                ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText(null);
-        alert.showAndWait().ifPresent(btn -> { if (btn == ButtonType.YES) clearForm(); });
+        clearForm();
     }
 
     private void clearForm() {
@@ -209,77 +256,63 @@ public class AddEpisodeController implements Initializable {
         txtDuree.clear();
         txtDureeIntro.clear();
         cbSaison.getSelectionModel().clearSelection();
-
         fileMiniature = null;
-        fileVideo     = null;
-
+        fileVideo = null;
         previewMiniature.setVisible(false);
         lblMiniaturePlaceholder.setVisible(true);
-        lblMiniatureName.setText("");
-        lblVideoName.setText("");
-        lblVideoPlaceholder.setText("▶");
-
-        pbVideo.setVisible(false);
-        pbVideo.setProgress(0);
-
+        subtitlesContainer.getChildren().clear();
+        subtitleRows.clear();
         lblStatus.setText("");
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  HELPERS
-    // ═════════════════════════════════════════════════════════════════════════
     private File pickImageFile(String title) {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle(title);
-        chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.webp", "*.gif"));
-        return chooser.showOpenDialog(getCurrentStage());
+        FileChooser fc = new FileChooser();
+        fc.setTitle(title);
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
+        return fc.showOpenDialog(getCurrentStage());
     }
-
+    @FXML
+    private void handleRetour() {
+        // Cette méthode doit exister car elle est appelée par le bouton "Retour" dans votre FXML.
+        // Vous pouvez y ajouter la logique de navigation, par exemple :
+        System.out.println("Clic sur le bouton retour");
+        // ScreenManager.getInstance().navigateTo(Screen.HOME); 
+    }
     private File pickVideoFile(String title) {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle(title);
-        chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Vidéos", "*.mp4", "*.mkv", "*.avi", "*.mov", "*.webm"));
-        return chooser.showOpenDialog(getCurrentStage());
+        FileChooser fc = new FileChooser();
+        fc.setTitle(title);
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Vidéos", "*.mp4", "*.mkv"));
+        return fc.showOpenDialog(getCurrentStage());
     }
 
-    private void simulateProgress(ProgressBar pb, String successMessage) {
+    private void simulateProgress(ProgressBar pb, String msg) {
         pb.setVisible(true);
         pb.setProgress(0);
-        Timeline tl = new Timeline(
-                new KeyFrame(Duration.millis(30), e ->
-                        pb.setProgress(Math.min(pb.getProgress() + 0.02, 1.0))));
-        tl.setCycleCount(50);
-        tl.setOnFinished(e -> showSuccess(successMessage));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(20), e -> pb.setProgress(pb.getProgress() + 0.05)));
+        tl.setCycleCount(20);
+        tl.setOnFinished(e -> showSuccess(msg));
         tl.play();
     }
 
     private void activateDropZone(VBox zone) {
-        zone.setStyle(zone.getStyle()
-                + "-fx-border-color:#e50914; -fx-background-color:#e509140a;");
+        zone.setStyle("-fx-border-color:#e50914; -fx-background-color:#e509140a; -fx-border-style: dashed;");
     }
 
-    private int parseIntSafe(String value) {
-        try { return Integer.parseInt(value.trim()); }
-        catch (NumberFormatException e) { return 0; }
+    private int parseIntSafe(String val) {
+        try { return Integer.parseInt(val.trim()); } catch (Exception e) { return 0; }
     }
 
     private Stage getCurrentStage() {
         return (Stage) btnSave.getScene().getWindow();
     }
-    
-    @FXML
-    private void handleRetour() {
-        //ScreenManager.getInstance().navigateTo(Screen.);
-    }
+
     private void showSuccess(String message) {
-        lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#4caf50; -fx-padding:0 4 0 4;");
+        lblStatus.setStyle("-fx-text-fill:#4caf50;");
         lblStatus.setText(message);
     }
 
     private void showError(String message) {
-        lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#e50914; -fx-padding:0 4 0 4;");
+        lblStatus.setStyle("-fx-text-fill:#e50914;");
         lblStatus.setText(message);
     }
 }

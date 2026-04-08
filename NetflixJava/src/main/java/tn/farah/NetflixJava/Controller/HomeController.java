@@ -437,5 +437,6 @@ public class HomeController implements Initializable {
     private void onEditProfile() {
         ScreenManager.getInstance().navigateTo(Screen.editProfiles);
     }
-
+   
+    
 }
