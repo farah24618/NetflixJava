@@ -103,7 +103,8 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
        //nav.navigateTo(Screen.admin_main);
 
-       nav.navigateTo(Screen.home);
+       //nav.navigateTo(Screen.home);
+       nav.navigateTo(Screen.AdminDashboard);
 
 
        
@@ -114,7 +115,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
       //nav.navigateTo(Screen.admin_main);
 
-      nav.navigateTo(Screen.admin_main);
+      //nav.navigateTo(Screen.admin_main);
 
 
 

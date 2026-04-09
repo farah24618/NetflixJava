@@ -14,7 +14,7 @@ public class AdminDashboardService {
     public int getTotalFilms() { return dashboardDAO.getCount("film"); }
     public int getTotalSeries() { return dashboardDAO.getCount("serie"); }
     public int getTotalEpisodes() { return dashboardDAO.getCount("episode"); }
-    public int getTotalUsers() { return dashboardDAO.getCount("user"); }
+    public int getTotalUsers() { return dashboardDAO.getCount("users"); }
     public int getTotalComments() { return dashboardDAO.getCount("comment"); }
 
     public Map<String, Integer> getContentByYearData() {
@@ -23,5 +23,9 @@ public class AdminDashboardService {
 
     public Map<String, Integer> getCommentsByTypeData() {
         return dashboardDAO.getCommentsByType();
+    }
+    public Map<String, Integer> getInscriptionsData() {
+        // adminDashboardDAO est votre instance de AdminDashboardDAO
+    	return dashboardDAO.getInscriptionsData(); 
     }
 }

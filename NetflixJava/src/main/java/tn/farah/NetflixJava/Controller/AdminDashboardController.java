@@ -8,12 +8,8 @@ import javafx.scene.control.Label;
 import tn.farah.NetflixJava.Service.AdminDashboardService;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
-import tn.farah.NetflixJava.utils.DatabaseConnection; // Import ajouté pour la BD
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -30,7 +26,7 @@ public class AdminDashboardController implements Initializable {
 
     // --- Charts ---
     @FXML private PieChart contentPieChart;
-    @FXML private LineChart<String, Number> inscriptionsChart; // <-- L'ancien contentByYearChart a été remplacé
+    @FXML private LineChart<String, Number> inscriptionsChart;
     @FXML private BarChart<String, Number> commentsByTypeChart;
 
     // Service
@@ -80,33 +76,20 @@ public class AdminDashboardController implements Initializable {
         commentsByTypeChart.getData().add(commentSeries);
     }
 
-    // --- NOUVELLE MÉTHODE POUR LE GRAPHIQUE DES INSCRIPTIONS ---
+    // --- GRAPHIQUE DES INSCRIPTIONS (Utilise le Service) ---
     private void chargerGraphiqueInscriptions() {
         inscriptionsChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Nouveaux inscrits");
 
-        // Requête SQL directe
+        // Appel propre au Service ! Plus de SQL ici.
+        Map<String, Integer> inscriptionsData = dashboardService.getInscriptionsData();
 
-        String query = "SELECT DATE(date_inscription) as jour, COUNT(*) as total " +
-                       "FROM users GROUP BY DATE(date_inscription) ORDER BY jour ASC LIMIT 7";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query);
-             ResultSet rs = pstmt.executeQuery()) {
-
-            while (rs.next()) {
-                String jour = rs.getString("jour");
-                int total = rs.getInt("total");
-                series.getData().add(new XYChart.Data<>(jour, total));
-            }
-
-            inscriptionsChart.getData().add(series);
-
-        } catch (Exception e) {
-            System.err.println("Erreur lors du chargement du graphique des inscriptions :");
-            e.printStackTrace();
+        for (Map.Entry<String, Integer> entry : inscriptionsData.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         }
+
+        inscriptionsChart.getData().add(series);
     }
 
     // ==========================================
@@ -115,43 +98,38 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     void goToFilmsAdmin(ActionEvent event) {
-        // Utilise VOTRE ScreenManager pour aller vers Films
         ScreenManager.getInstance().navigateTo(Screen.admin_main);
-        
-        // Note: Vous pouvez aussi utiliser navigateWithSplash(Screen.films) 
-        // si la page des films met du temps à charger.
     }
 
     @FXML
     void goToSeriesAdmin(ActionEvent event) {
-        // Utilise VOTRE ScreenManager pour aller vers Séries
-       // ScreenManager.getInstance().navigateTo(Screen.);
+        // ScreenManager.getInstance().navigateTo(Screen.);
     }
 
     @FXML
     void goToCommentsAdmin(ActionEvent event) {
-        // Utilise VOTRE ScreenManager pour aller vers Commentaires
         ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
     }
 
-    // --- Les autres boutons pour plus tard ---
-    @FXML void onNotificationsClicked(ActionEvent event) {
-   	 ScreenManager.getInstance().navigateTo(Screen.notificationAdmin);
-   }
+    @FXML 
+    void onNotificationsClicked(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.notificationAdmin);
+    }
+
     @FXML
     void goToUsersAdmin(ActionEvent event) {
         System.out.println("Page Utilisateurs non définie dans l'enum Screen pour le moment");
     }
-    @FXML void onSettingsClicked(ActionEvent event) { 
-    	System.out.println("Aller aux Paramètres");
-    	ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
-    	}
-   
+
+    @FXML 
+    void onSettingsClicked(ActionEvent event) { 
+        System.out.println("Aller aux Paramètres");
+        ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+    }
     
     @FXML
     void handleLogout(ActionEvent event) {
         System.out.println("Déconnexion en cours...");
-        // On retourne sur la page de Login et on efface l'historique
-        tn.farah.NetflixJava.utils.ScreenManager.getInstance().navigateAndReplace(tn.farah.NetflixJava.utils.Screen.login);
+        ScreenManager.getInstance().navigateAndReplace(Screen.login);
     }
 }
