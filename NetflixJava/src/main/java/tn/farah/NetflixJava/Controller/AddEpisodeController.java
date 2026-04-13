@@ -74,7 +74,7 @@ public class AddEpisodeController implements Initializable {
     @FXML private Label  lblStatus;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
-
+    private int editingEpisodeId = -1;
     // ═════════════════════════════════════════════════════════════════════════
     //  CLASSE INTERNE — une ligne sous-titre
     // ═════════════════════════════════════════════════════════════════════════
@@ -86,15 +86,51 @@ public class AddEpisodeController implements Initializable {
     // ═════════════════════════════════════════════════════════════════════════
     //  INITIALIZE
     // ═════════════════════════════════════════════════════════════════════════
+    private void populateForm(Episode ep) {
+        txtTitre.setText(ep.getTitre());
+        txtResume.setText(ep.getResume());
+        txtNumeroEpisode.setText(String.valueOf(ep.getNumeroEpisode()));
+        txtDuree.setText(String.valueOf(ep.getDuree()));
+        txtDureeIntro.setText(String.valueOf(ep.getDurreeIntro()));
+
+        // Sélectionner la bonne saison dans le ComboBox
+        for (Saison s : cbSaison.getItems()) {
+            if (s.getId() == ep.getSaisonId()) {
+                cbSaison.setValue(s);
+                break;
+            }
+        }
+
+        // Afficher miniature si elle existe
+        if (ep.getMiniatureUrl() != null && !ep.getMiniatureUrl().isEmpty()) {
+            try {
+                String url = ep.getMiniatureUrl().startsWith("http") || ep.getMiniatureUrl().startsWith("file:")
+                    ? ep.getMiniatureUrl() : "file:" + ep.getMiniatureUrl();
+                previewMiniature.setImage(new Image(url));
+                previewMiniature.setVisible(true);
+                lblMiniaturePlaceholder.setVisible(false);
+                lblMiniatureName.setText("Image existante");
+            } catch (Exception ignored) {}
+        }
+
+        // Mémoriser l'ID pour le update
+        this.editingEpisodeId = ep.getId();
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Connection connection = ConxDB.getInstance();
         episodeService  = new EpisodeService(connection);
         saisonService   = new SaisonService(connection);
-        // Initialisation du service avec le nouveau DAO
         subtitleService = new SubtitleService(connection);
 
         loadSaisons();
+
+        // ✅ Détecter mode édition
+        Episode ep = ScreenManager.getInstance().getEditingEpisode();
+        if (ep != null) {
+            populateForm(ep);
+            btnSave.setText("💾 Modifier");
+        }
     }
 
     private void loadSaisons() {
@@ -161,19 +197,30 @@ public class AddEpisodeController implements Initializable {
     private void handleSave() {
         if (!validateForm()) return;
         try {
-            // 1. Sauvegarder l'épisode
             Episode episode = buildEpisodeFromForm();
-            int episodeId = episodeService.save(episode);
 
-            if (episodeId > 0) {
-                // 2. Sauvegarder les sous-titres avec le nouvel ID Episode
-                saveSubtitles(episodeId);
-
-                showSuccess("✓ Épisode « " + episode.getTitre() + " » enregistré !");
-                clearForm();
+            if (editingEpisodeId > 0) {
+                // ── MODE ÉDITION ──
+                episode.setId(editingEpisodeId);
+                episodeService.update(episode);
+                showSuccess("✓ Épisode « " + episode.getTitre() + " » modifié !");
             } else {
-                showError("Erreur lors de l'enregistrement de l'épisode.");
+                // ── MODE CRÉATION ──
+                int episodeId = episodeService.save(episode);
+                if (episodeId > 0) {
+                    saveSubtitles(episodeId);
+                    showSuccess("✓ Épisode « " + episode.getTitre() + " » enregistré !");
+                } else {
+                    showError("Erreur lors de l'enregistrement.");
+                    return;
+                }
             }
+
+            // Réinitialiser après sauvegarde
+            ScreenManager.getInstance().setEditingEpisode(null);
+            editingEpisodeId = -1;
+            clearForm();
+
         } catch (Exception e) {
             showError("Erreur : " + e.getMessage());
             e.printStackTrace();
@@ -256,7 +303,16 @@ public class AddEpisodeController implements Initializable {
 
     @FXML
     private void handleCancel() {
+        ScreenManager.getInstance().setEditingEpisode(null);
+        editingEpisodeId = -1;
         clearForm();
+    }
+
+    @FXML
+    private void handleRetour() {
+        ScreenManager.getInstance().setEditingEpisode(null);
+        editingEpisodeId = -1;
+        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
     }
 
     private void clearForm() {
@@ -281,11 +337,7 @@ public class AddEpisodeController implements Initializable {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
         return fc.showOpenDialog(getCurrentStage());
     }
-    @FXML
-    private void handleRetour() {
-        
-         ScreenManager.getInstance().navigateTo(Screen.ManageSeries); 
-    }
+    
     private File pickVideoFile(String title) {
         FileChooser fc = new FileChooser();
         fc.setTitle(title);

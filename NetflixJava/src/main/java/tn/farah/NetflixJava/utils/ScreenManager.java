@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Film;
 import tn.farah.NetflixJava.Entities.Serie;
 import javafx.scene.image.Image;
@@ -36,6 +37,9 @@ public class ScreenManager {
     private final Map<Screen, String> routes = new HashMap<>();
     private final Stack<Screen> history = new Stack<>();
     private Screen current;
+    private Episode editingEpisode = null;
+
+    
     // ★ Film being edited — null means "Add new film" mode
     private Film editingFilm = null;
  
@@ -71,6 +75,8 @@ public class ScreenManager {
     public void clearEditingSerie() {
         this.editingSerie = null;
     }
+    public Episode getEditingEpisode() { return editingEpisode; }
+    public void setEditingEpisode(Episode episode) { this.editingEpisode = episode; }
     //*******
     private ScreenManager() {
     }

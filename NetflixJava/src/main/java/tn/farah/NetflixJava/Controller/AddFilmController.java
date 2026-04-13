@@ -119,7 +119,8 @@ public class AddFilmController implements Initializable {
         filmService     = new FilmService(connection);
         categoryService = new CategoryService(connection);
         warningService  = new WarningService(connection);
-        subtitleService = new SubtitleService(new SubtitleDAO(connection));
+        //subtitleService = new SubtitleService(new SubtitleDAO(connection));
+        subtitleService = new SubtitleService(connection);
 
         cbAgeRating.getItems().addAll(AgeRating.values());
         cbAgeRating.getSelectionModel().selectFirst();

@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -132,8 +133,13 @@ public class SeriesAdminController implements Initializable {
                 saisonMenu.getItems().add(empty);
             } else {
                 for (Episode ep : episodes) {
-                    MenuItem epItem = new MenuItem("Ep " + ep.getNumeroEpisode() + " : " + ep.getTitre());
-                    saisonMenu.getItems().add(epItem);
+                	// APRÈS
+                	MenuItem epItem = new MenuItem("Ep " + ep.getNumeroEpisode() + " : " + ep.getTitre());
+                	epItem.setOnAction(e -> {
+                	    ScreenManager.getInstance().setEditingEpisode(ep);
+                	    ScreenManager.getInstance().navigateTo(Screen.addEpisode);
+                	});
+                	saisonMenu.getItems().add(epItem);
                 }
 
                 saisonMenu.getItems().add(new SeparatorMenuItem());

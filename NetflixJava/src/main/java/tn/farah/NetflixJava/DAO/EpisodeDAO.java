@@ -249,8 +249,29 @@ public class EpisodeDAO {
     
     public List<Episode> findBySaisonId(int saisonId) {
         List<Episode> list = new ArrayList<>();
-        String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero_episode ASC";
-        // ... exécution JDBC classique ...
+        // ✅ Colonne correcte : "numero" (pas "numero_episode")
+        String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
+
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, saisonId);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Episode(
+                    rs.getInt(1),       // id
+                    rs.getInt(2),       // season_id
+                    rs.getString(3),    // titre
+                    rs.getInt(4),       // numero
+                    rs.getString(7),    // url_video
+                    rs.getInt(5),       // duree_minutes
+                    rs.getString(6),    // resume
+                    rs.getString(8),    // url_image
+                    rs.getInt(9)        // duree_intro_sec
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
     
