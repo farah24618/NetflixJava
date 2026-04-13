@@ -11,6 +11,8 @@ import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.DAO.SaisonDAO;
 import tn.farah.NetflixJava.DAO.SerieDAO; // Importé pour utiliser findEpisodeBySaison
 import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.util.List;
 
@@ -121,4 +123,11 @@ public class SeriesItemController {
     private void handleAddSaisonToSerie() { System.out.println("Ajout Saison dans: " + currentSerie.getTitre()); }
     
     @FXML private void handleDelete() { System.out.println("Supprimer : " + currentSerie.getTitre()); }
+   //**neww
+    @FXML
+    private void handleUpdate() {
+        ScreenManager sm = ScreenManager.getInstance();
+        sm.setEditingSerie(currentSerie);
+        sm.navigateTo(Screen.addSerie);
+    }
 }

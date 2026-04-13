@@ -140,5 +140,11 @@ public class FilmService {
 	            return null;
 	        }
 	    }
+	    public void delete(int id) throws SQLException {
+	    	filmDao.delete(id);
+	    }
+	    public void updateFilm(Film film) throws SQLException {
+	    	filmDao.update(film);
+	    }
 
 }

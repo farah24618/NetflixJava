@@ -3,45 +3,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="750.0" prefWidth="1100.0" style="-fx-background-color: #050505;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesAdminController">
-    
-    <top>
-        <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: #000000; -fx-padding: 0 30; -fx-border-color: #1a1a1a; -fx-border-width: 0 0 1 0;">
-            <Label style="-fx-text-fill: #e50914; -fx-font-size: 24px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" text="RAKSHANET ADMIN" />
-        </HBox>
-    </top>
-
+<BorderPane prefHeight="750.0" prefWidth="1200.0" style="-fx-background-color: #050505;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SeriesAdminController">
     <left>
-        <VBox prefWidth="230" spacing="10" style="-fx-background-color: #000000; -fx-border-color: #1a1a1a; -fx-border-width: 0 1 0 0; -fx-padding: 20 15;">
-            <Label style="-fx-text-fill: #555; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 0 0 10 10;" text="NAVIGATION" />
-            
-            <Button alignment="BASELINE_LEFT" graphicTextGap="15" onAction="#handleNavDashboard" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-font-size: 14px;" text="⊞  Tableau de bord" />
-            <Button alignment="BASELINE_LEFT" graphicTextGap="15" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-font-size: 14px;" text="🎬  Films" />
-            <Button alignment="BASELINE_LEFT" graphicTextGap="15" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 14px;" text="📺  Séries" />
-            <Button alignment="BASELINE_LEFT" graphicTextGap="15" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: #808080; -fx-font-size: 14px;" text="👤  Utilisateurs" />
+        <VBox prefWidth="280.0" spacing="0" style="-fx-background-color: #000000; -fx-border-color: #1a1a1a; -fx-border-width: 0 1 0 0;">
+            <children>
+                <HBox alignment="CENTER_LEFT" style="-fx-padding: 30 10 30 25;">
+                    <children>
+                        <Label style="-fx-text-fill: #E50914; -fx-font-size: 22px; -fx-font-weight: bold; -fx-font-family: 'Arial Black';" text="RAKSHANET ADMIN" />
+                    </children>
+                </HBox>
+    
+                <Label style="-fx-text-fill: white; -fx-padding: 10 0 15 25; -fx-font-size: 16px; -fx-font-weight: bold;" text="Navigation" />
+    
+                <VBox spacing="5" style="-fx-padding: 0 15 0 15;">
+                    <children>
+                        <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#handleNavDashboard" styleClass="nav-button" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-padding: 12 15; -fx-font-size: 14px;" text="⊞   Dashboard" />
+                        <Button fx:id="btnFilms" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#handleNavFilms" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-padding: 12 15; -fx-font-size: 14px;" text="🎬  Films" />
+                        <Button fx:id="btnSeries" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-cursor: HAND; -fx-background-radius: 8; -fx-padding: 12 15; -fx-font-weight: bold; -fx-font-size: 14px;" text="📺  Séries" />
+                        <Button fx:id="btnUsers" alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#handleNavUsers" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-padding: 12 15; -fx-font-size: 14px;" text="👤  Utilisateurs" />
+                        <Button alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#handleNavNotif" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-padding: 12 15; -fx-font-size: 14px;" text="🔔  Notifications" />
+                        <Button alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#handleNavComments" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-padding: 12 15; -fx-font-size: 14px;" text="💬  Commentaires" />
+                        <Button alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" onAction="#handleNavSettings" style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-cursor: HAND; -fx-padding: 12 15; -fx-font-size: 14px;" text="⚙  Paramètres" />
+                    </children>
+                </VBox>
+            </children>
         </VBox>
     </left>
-
     <center>
-        <VBox spacing="0">
-            <HBox alignment="CENTER_LEFT" style="-fx-padding: 30 40 10 40;">
-                <Label fx:id="seriesCountLabel" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;" text="Mes Séries (30)" />
+        <VBox spacing="20" style="-fx-padding: 30 40 10 40;">
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="seriesCountLabel" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;" text="Mes Séries" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button onAction="#handleNavDashboard" style="-fx-background-color: #333; -fx-text-fill: white; -fx-background-radius: 25; -fx-padding: 10 25; -fx-font-weight: bold;" text="Retour Dashboard" />
+                <TextField fx:id="searchField" onKeyReleased="#onSearch" prefWidth="250.0" promptText="Rechercher une série..." style="-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8;" />
             </HBox>
-
-            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20 40;">
-                <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: #1a1a1a; -fx-background-radius: 8; -fx-padding: 12 20; -fx-border-color: #333; -fx-border-radius: 8;" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-text-fill: #666; -fx-font-size: 16px;" text="🔍" />
-                    <TextField fx:id="searchField" onKeyReleased="#onSearch" promptText="Rechercher une série..." style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" HBox.hgrow="ALWAYS" />
-                </HBox>
-                <Button prefHeight="48.0" prefWidth="180.0" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 14px;" text="+ Ajouter une série" />
-            </HBox>
-
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                <content>
-                    <VBox fx:id="seriesListContainer" spacing="10.0" style="-fx-background-color: transparent; -fx-padding: 10 40 30 40;" />
-                </content>
+            
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+                <VBox fx:id="seriesListContainer" spacing="15" />
             </ScrollPane>
         </VBox>
     </center>

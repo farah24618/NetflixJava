@@ -23,6 +23,8 @@ import tn.farah.NetflixJava.Service.SaisonService;
 import tn.farah.NetflixJava.Service.SubtitleService;
 import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.io.File;
 import java.net.URL;
@@ -180,16 +182,11 @@ public class AddEpisodeController implements Initializable {
 
     private void saveSubtitles(int episodeId) {
         for (SubtitleRow sr : subtitleRows) {
-            if (sr.langage != null && !sr.langage.isEmpty() && !sr.filePath.isEmpty()) {
-                // Utilisation du nouveau constructeur compatible avec votre structure
-                // Subtitle(String langage, int filmId, int episodeId, String url)
-                // filmId est mis à 0 car c'est un épisode
-                Subtitle sub = new Subtitle(sr.langage, 0, episodeId, sr.filePath);
-                
-                int result = subtitleService.addSubtitle(sub);
-                if (result == 0) {
-                    System.err.println("Échec enregistrement sous-titre : " + sr.langage);
-                }
+            // Plus besoin du if — validateForm() garantit que tout est rempli
+            Subtitle sub = new Subtitle(sr.langage, 0, episodeId, sr.filePath);
+            int result = subtitleService.addSubtitle(sub);
+            if (result == 0) {
+                System.err.println("❌ Échec enregistrement sous-titre : " + sr.langage);
             }
         }
     }
@@ -241,6 +238,19 @@ public class AddEpisodeController implements Initializable {
             showError("Veuillez remplir les champs obligatoires (Titre, Saison, Vidéo).");
             return false;
         }
+
+        // ✅ Validation des sous-titres
+        for (SubtitleRow sr : subtitleRows) {
+            if (sr.langage == null || sr.langage.isEmpty()) {
+                showError("⚠️ Veuillez sélectionner une langue pour chaque sous-titre.");
+                return false;
+            }
+            if (sr.filePath == null || sr.filePath.isEmpty()) {
+                showError("⚠️ Veuillez choisir un fichier pour chaque sous-titre.");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -273,10 +283,8 @@ public class AddEpisodeController implements Initializable {
     }
     @FXML
     private void handleRetour() {
-        // Cette méthode doit exister car elle est appelée par le bouton "Retour" dans votre FXML.
-        // Vous pouvez y ajouter la logique de navigation, par exemple :
-        System.out.println("Clic sur le bouton retour");
-        // ScreenManager.getInstance().navigateTo(Screen.HOME); 
+        
+         ScreenManager.getInstance().navigateTo(Screen.ManageSeries); 
     }
     private File pickVideoFile(String title) {
         FileChooser fc = new FileChooser();
@@ -315,4 +323,5 @@ public class AddEpisodeController implements Initializable {
         lblStatus.setStyle("-fx-text-fill:#e50914;");
         lblStatus.setText(message);
     }
+   
 }

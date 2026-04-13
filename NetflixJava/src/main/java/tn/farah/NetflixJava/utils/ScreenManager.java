@@ -21,6 +21,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Entities.Serie;
 import javafx.scene.image.Image;
 
 /**
@@ -34,7 +36,42 @@ public class ScreenManager {
     private final Map<Screen, String> routes = new HashMap<>();
     private final Stack<Screen> history = new Stack<>();
     private Screen current;
-
+    // ★ Film being edited — null means "Add new film" mode
+    private Film editingFilm = null;
+ 
+    /** Call this BEFORE navigating to add_film to enter Edit mode. */
+    public void setEditingFilm(Film film) {
+        this.editingFilm = film;
+    }
+ 
+    /** Called by AddFilmController in initialize() to check the mode. */
+    public Film getEditingFilm() {
+        return editingFilm;
+    }
+ 
+    /** Call this after the edit is saved / cancelled to reset the mode. */
+    public void clearEditingFilm() {
+        this.editingFilm = null;
+    }
+    //*****Serie
+    // ★ Film being edited — null means "Add new film" mode
+    private Serie editingSerie = null;
+ 
+    /** Call this BEFORE navigating to add_film to enter Edit mode. */
+    public void setEditingSerie(Serie serie) {
+        this.editingSerie = serie;
+    }
+ 
+    /** Called by AddFilmController in initialize() to check the mode. */
+    public Serie getEditingSerie() {
+        return editingSerie;
+    }
+ 
+    /** Call this after the edit is saved / cancelled to reset the mode. */
+    public void clearEditingSerie() {
+        this.editingSerie = null;
+    }
+    //*******
     private ScreenManager() {
     }
 

@@ -101,10 +101,8 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
         //nav.navigateTo(Screen.login);
 
-       //nav.navigateTo(Screen.admin_main);
-
-       nav.navigateTo(Screen.home);
-
+     //  nav.navigateTo(Screen.admin_main);
+      // nav.navigateTo(Screen.addEpisode);
 
        
 
@@ -114,7 +112,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
       //nav.navigateTo(Screen.admin_main);
 
-      nav.navigateTo(Screen.admin_main);
+     // nav.navigateTo(Screen.admin_main);
 
 
 
@@ -124,7 +122,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
 
 
-       // nav.navigateTo(Screen.login);
+        nav.navigateTo(Screen.ManageSeries);
 
 
        // nav.navigateTo(Screen.notificationAdmin);
