@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap; // <--- Import très important pour garder l'ordre des dates
 import java.util.Map;
 
 public class AdminDashboardDAO {
@@ -62,6 +63,29 @@ public class AdminDashboardDAO {
         data.put("Sur les Films", getCount("comment")); // À adapter selon la structure de votre table 'comment'
         data.put("Sur les Séries", 0); 
         
+        return data;
+    }
+
+    // 4. --- NOUVELLE MÉTHODE --- Requête pour le graphique des Inscriptions
+    public Map<String, Integer> getInscriptionsData() {
+        // LinkedHashMap préserve l'ordre des dates récupérées depuis la base
+        Map<String, Integer> data = new LinkedHashMap<>(); 
+        
+        // On utilise la table 'user' (selon votre capture phpMyAdmin)
+        String query = "SELECT DATE(created_at) as jour, COUNT(*) as total " +
+                       "FROM users GROUP BY DATE(created_at) ORDER BY jour ASC LIMIT 7";
+
+        try (PreparedStatement pst = cnx.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String jour = rs.getString("jour");
+                int total = rs.getInt("total");
+                data.put(jour, total);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur chargement graph inscriptions : " + e.getMessage());
+        }
         return data;
     }
 }

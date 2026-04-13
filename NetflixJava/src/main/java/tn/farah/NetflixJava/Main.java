@@ -107,18 +107,6 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
        //nav.navigateTo(Screen.home);
 
 
-       
-
-
-       //nav.navigateTo(Screen.parametresAdmin);
-
-
-      //nav.navigateTo(Screen.admin_main);
-
-      nav.navigateTo(Screen.login);
-
-
-
         //nav.navigateTo(Screen.video);
 
         
