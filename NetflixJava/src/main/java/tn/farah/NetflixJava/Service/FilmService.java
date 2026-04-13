@@ -139,6 +139,7 @@ public class FilmService {
 	            e.printStackTrace();
 	            return null;
 	        }
-	    }
-
-}
+	    }	
+	    public void incrementVues (int filmId) {
+	filmDao.incrementerVues(filmId);}
+	}

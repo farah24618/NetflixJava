@@ -264,7 +264,9 @@ public class EpisodeDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
+        }}
+    
+      
     }
     
     
@@ -282,4 +284,3 @@ public class EpisodeDAO {
     
     
     
-}

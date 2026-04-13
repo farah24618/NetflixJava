@@ -87,6 +87,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.parametresAdmin, "/tn/farah/NetflixJava/parametres.fxml");
         nav.register(Screen.addEpisode, "/tn/farah/NetflixJava/addEpisode.fxml");
         nav.register(Screen.addSerie, "/tn/farah/NetflixJava/addSerie.fxml");
+        nav.register(Screen.Player, "/tn/farah/NetflixJava/UniversalPlayer.fxml");
         
 
 
@@ -103,7 +104,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
        //nav.navigateTo(Screen.admin_main);
 
-       nav.navigateTo(Screen.home);
+       //nav.navigateTo(Screen.home);
 
 
        
@@ -114,7 +115,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
       //nav.navigateTo(Screen.admin_main);
 
-      nav.navigateTo(Screen.admin_main);
+      nav.navigateTo(Screen.login);
 
 
 

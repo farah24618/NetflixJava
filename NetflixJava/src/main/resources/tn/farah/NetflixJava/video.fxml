@@ -13,6 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 <StackPane
+ fx:id="rootPane" 
     prefHeight="450.0"
     prefWidth="800.0"
     style="-fx-background-color: black;"
@@ -259,6 +260,18 @@
          </bottom>
 
       </BorderPane>
+      <Label
+    fx:id="subtitleLabel"
+    alignment="CENTER"
+    maxWidth="700"
+    wrapText="true"
+    textFill="WHITE"
+    style="-fx-font-size:18px; -fx-font-weight:bold;
+           -fx-background-color:rgba(0,0,0,0.6);
+           -fx-padding:6 12 6 12; -fx-background-radius:6;"
+    StackPane.alignment="BOTTOM_CENTER"
+    translateY="-60"
+    visible="false"/>
 
    </children>
 </StackPane>

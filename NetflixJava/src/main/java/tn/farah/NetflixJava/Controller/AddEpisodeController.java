@@ -90,7 +90,7 @@ public class AddEpisodeController implements Initializable {
         episodeService  = new EpisodeService(connection);
         saisonService   = new SaisonService(connection);
         // Initialisation du service avec le nouveau DAO
-        subtitleService = new SubtitleService(new SubtitleDAO(connection));
+        subtitleService = new SubtitleService(connection);
 
         loadSaisons();
     }

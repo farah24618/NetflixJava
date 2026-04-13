@@ -279,6 +279,15 @@ public class FilmDao {
             }
         });
     }
+    public void incrementerVues(int filmId) {
+        String sql = "UPDATE film SET nbre_vues = nbre_vues + 1 WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, filmId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.err.println("Erreur incrementerVues : " + e.getMessage());
+        }
+    }
 
     @FunctionalInterface
     private interface ParamSetter {

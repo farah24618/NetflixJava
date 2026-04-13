@@ -11,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Controller.EpisodeViewController;
 import tn.farah.NetflixJava.Controller.FilmPlayerController;
+import tn.farah.NetflixJava.Controller.UniversalPlayerController;
 import tn.farah.NetflixJava.Controller.videoController;
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Favori;
@@ -596,8 +597,8 @@ public class CardFactory {
         int episodeId = episodes.get(0).getId();
 
         // 3. Navigate vers le lecteur
-        videoController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.video); // adapte au nom de ton Screen
+        UniversalPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.Player); // adapte au nom de ton Screen
         if (ctrl != null) ctrl.initEpisode(episodeId,userId);
     }
     public static void setNotificationService(NotificationService service) {
@@ -605,8 +606,8 @@ public class CardFactory {
     }
     private static void lancerFilm(Film film) {
     	int userId = SessionManager.getInstance().getCurrentUserId();
-        FilmPlayerController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.filmPlayer); // adapte au nom de ton Screen
+        UniversalPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.Player); // adapte au nom de ton Screen
         if (ctrl != null) ctrl.initFilm(film,userId);
     }
 }
