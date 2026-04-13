@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
@@ -141,6 +142,7 @@ public class EpisodeViewController implements Initializable {
     private List<Episode> episodesDB;
     private int           currentSaisonId = 1;
     private Episode       episodeActuel   = null;
+    private Serie serieActuelle; 
     private final int userId = SessionManager.getInstance().getCurrentUserId();
 
     private VBox     commentListContainer;
@@ -201,6 +203,7 @@ public class EpisodeViewController implements Initializable {
     }
 
     public void setSerie(Serie serie) {
+    	this.serieActuelle=serie;
         this.serieId = serie.getId();
         chargerInfosSerie(this.serieId);
 
@@ -424,9 +427,17 @@ public class EpisodeViewController implements Initializable {
 
         if (ep.getMiniatureUrl() != null && !ep.getMiniatureUrl().isEmpty()) {
             try {
-                InputStream imgStream = getClass().getResourceAsStream(ep.getMiniatureUrl());
-                if (imgStream != null) {
-                    ImageView miniImg = new ImageView(new Image(imgStream));
+                File imgFile = new File(ep.getMiniatureUrl());
+                Image img;
+                if (imgFile.exists()) {
+                    img = new Image(imgFile.toURI().toString()); // chemin disque
+                } else {
+                    InputStream imgStream = getClass().getResourceAsStream(ep.getMiniatureUrl());
+                    img = (imgStream != null) ? new Image(imgStream) : null;
+                }
+
+                if (img != null && !img.isError()) {
+                    ImageView miniImg = new ImageView(img);
                     miniImg.setFitWidth(180);
                     miniImg.setFitHeight(100);
                     miniImg.setPreserveRatio(false);
@@ -437,8 +448,6 @@ public class EpisodeViewController implements Initializable {
             } catch (Exception e) {
                 miniature.setStyle("-fx-background-color: #2e2e2e; -fx-background-radius: 4;");
             }
-        } else {
-            miniature.setStyle("-fx-background-color: #2e2e2e; -fx-background-radius: 4;");
         }
 
         Label numLabel = new Label(numero);
@@ -503,9 +512,19 @@ public class EpisodeViewController implements Initializable {
                 "-fx-background-color: " + (estActuel ? "#E50914" : "#333333") + ";" +
                 "-fx-text-fill: white; -fx-font-weight: bold;" +
                 "-fx-padding: 8 16 8 16; -fx-background-radius: 4; -fx-cursor: hand;");
-        btnLireLocal.setOnAction(e -> { mettreAJourInfosEpisode(ep); rafraichirListeEpisodes(ep); });
-        carte.setOnMouseClicked(e -> { mettreAJourInfosEpisode(ep); rafraichirListeEpisodes(ep); });
+        btnLireLocal.setOnAction(e -> {
+            e.consume(); // stoppe la propagation vers la carte
+            mettreAJourInfosEpisode(ep);
+            rafraichirListeEpisodes(ep);
+            ouvrirEpisode(ep); // ← ouvre la vidéo
+        });
 
+        carte.setOnMouseClicked(e -> {
+            if (e.getTarget() instanceof Button) return; // ignore si clic sur le bouton
+            mettreAJourInfosEpisode(ep);
+            rafraichirListeEpisodes(ep);
+            
+        });
         carte.getChildren().addAll(miniature, infos, btnLireLocal);
         return carte;
     }
@@ -876,9 +895,7 @@ public class EpisodeViewController implements Initializable {
     // =============================================
     @FXML private void onLire() {
         if (episodeActuel == null) return;
-        videoController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.video);
-        if (ctrl != null) ctrl.initEpisode(episodeActuel.getId(),userId);
+        ouvrirEpisode(episodeActuel);
     }
 
     @FXML
@@ -931,7 +948,7 @@ public class EpisodeViewController implements Initializable {
     // =============================================
     @FXML private void onTabApropos()      { activerOnglet(tabApropos); }
     @FXML private void onTabEpisodes()     { activerOnglet(tabEpisodes); }
-    @FXML private void onTabBandes()       { activerOnglet(tabBandes); }
+    @FXML private void onTabBandes() { activerOnglet(tabBandes); chargerBandesAnnonces(); }
     @FXML private void onTabCommentaires() { activerOnglet(tabCommentaires); }
     @FXML private void onTabSimilaires()   { activerOnglet(tabSimilaires); }
 
@@ -1075,7 +1092,56 @@ public class EpisodeViewController implements Initializable {
         popup.setScene(scene);
         popup.showAndWait();
     }
+    private void ouvrirEpisode(Episode ep) {
+        UniversalPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.Player);
+        if (ctrl != null) ctrl.initEpisode(ep.getId(), userId);
+    }
+    private void chargerBandesAnnonces() {
+        if (panelBandes == null || serieActuelle == null) return;
+        panelBandes.getChildren().clear();
 
+        Label titre = new Label("Bandes-annonces & Teasers");
+        titre.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+
+        String urlTeaser = serieActuelle.getUrlTeaser();
+
+        if (urlTeaser == null || urlTeaser.isBlank()) {
+            Label vide = new Label("Aucune bande-annonce disponible pour ce film.");
+            vide.setStyle("-fx-text-fill: #555555; -fx-font-size: 13px;");
+            panelBandes.getChildren().addAll(titre, vide);
+            return;
+        }
+
+        // Carte cliquable
+        StackPane carte = new StackPane();
+        carte.setPrefSize(280, 158);
+        carte.setStyle("-fx-background-color: #1a1a1a; -fx-background-radius: 6; -fx-cursor: hand;");
+
+        Label playIcon = new Label("▶");
+        playIcon.setStyle("-fx-text-fill: white; -fx-font-size: 36px;");
+
+        Label labelTitre = new Label("Teaser — " + serieActuelle.getTitre());
+        labelTitre.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 0 0 10 12;");
+        StackPane.setAlignment(labelTitre, javafx.geometry.Pos.BOTTOM_LEFT);
+
+        carte.getChildren().addAll(playIcon, labelTitre);
+
+        carte.setOnMouseEntered(e -> carte.setStyle(
+            "-fx-background-color: #2a2a2a; -fx-background-radius: 6; -fx-cursor: hand;" +
+            "-fx-effect: dropshadow(gaussian, rgba(229,9,20,0.4), 12, 0, 0, 0);"));
+        carte.setOnMouseExited(e -> carte.setStyle(
+            "-fx-background-color: #1a1a1a; -fx-background-radius: 6; -fx-cursor: hand;"));
+
+        // ✅ Clic → UniversalPlayerController en mode TEASER
+        carte.setOnMouseClicked(e -> {
+            UniversalPlayerController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.Player);
+            if (ctrl != null) ctrl.initTeaser(urlTeaser, serieActuelle.getTitre());
+        });
+
+        panelBandes.getChildren().addAll(titre, carte);
+    }
     // =============================================
     // NAVIGATION
     // =============================================

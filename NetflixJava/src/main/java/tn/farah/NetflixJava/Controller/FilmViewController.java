@@ -626,8 +626,8 @@ public class FilmViewController implements Initializable {
     // =============================================
     @FXML private void onLire() {
         if (filmActuel == null) return;
-        FilmPlayerController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.filmPlayer);
+        UniversalPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.Player);
         if (ctrl != null) ctrl.initFilm(filmActuel,userId);
     }
 
@@ -678,7 +678,7 @@ public class FilmViewController implements Initializable {
     // HANDLERS ONGLETS
     // =============================================
     @FXML private void onTabApropos()      { activerOnglet(tabApropos); }
-    @FXML private void onTabBandes()       { activerOnglet(tabBandes); }
+    @FXML private void onTabBandes() { activerOnglet(tabBandes); chargerBandesAnnonces(); }
     @FXML private void onTabCommentaires() { activerOnglet(tabCommentaires); }
     @FXML private void onTabSimilaires()   { activerOnglet(tabSimilaires); chargerSimilaires(); }
 
@@ -825,7 +825,51 @@ public class FilmViewController implements Initializable {
         popup.setScene(scene);
         popup.showAndWait();
     }
+    private void chargerBandesAnnonces() {
+        if (panelBandes == null || filmActuel == null) return;
+        panelBandes.getChildren().clear();
 
+        Label titre = new Label("Bandes-annonces & Teasers");
+        titre.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+
+        String urlTeaser = filmActuel.getUrlTeaser();
+
+        if (urlTeaser == null || urlTeaser.isBlank()) {
+            Label vide = new Label("Aucune bande-annonce disponible pour ce film.");
+            vide.setStyle("-fx-text-fill: #555555; -fx-font-size: 13px;");
+            panelBandes.getChildren().addAll(titre, vide);
+            return;
+        }
+
+        // Carte cliquable
+        StackPane carte = new StackPane();
+        carte.setPrefSize(280, 158);
+        carte.setStyle("-fx-background-color: #1a1a1a; -fx-background-radius: 6; -fx-cursor: hand;");
+
+        Label playIcon = new Label("▶");
+        playIcon.setStyle("-fx-text-fill: white; -fx-font-size: 36px;");
+
+        Label labelTitre = new Label("Teaser — " + filmActuel.getTitre());
+        labelTitre.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 0 0 10 12;");
+        StackPane.setAlignment(labelTitre, javafx.geometry.Pos.BOTTOM_LEFT);
+
+        carte.getChildren().addAll(playIcon, labelTitre);
+
+        carte.setOnMouseEntered(e -> carte.setStyle(
+            "-fx-background-color: #2a2a2a; -fx-background-radius: 6; -fx-cursor: hand;" +
+            "-fx-effect: dropshadow(gaussian, rgba(229,9,20,0.4), 12, 0, 0, 0);"));
+        carte.setOnMouseExited(e -> carte.setStyle(
+            "-fx-background-color: #1a1a1a; -fx-background-radius: 6; -fx-cursor: hand;"));
+
+        // ✅ Clic → UniversalPlayerController en mode TEASER
+        carte.setOnMouseClicked(e -> {
+            UniversalPlayerController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.Player);
+            if (ctrl != null) ctrl.initTeaser(urlTeaser, filmActuel.getTitre());
+        });
+
+        panelBandes.getChildren().addAll(titre, carte);
+    }
     // =============================================
     // NAVIGATION
     // =============================================

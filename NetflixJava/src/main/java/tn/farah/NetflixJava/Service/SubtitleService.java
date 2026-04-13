@@ -1,5 +1,6 @@
 package tn.farah.NetflixJava.Service;
 
+import java.sql.Connection;
 import java.util.List;
 import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.Entities.Subtitle;
@@ -8,8 +9,8 @@ public class SubtitleService {
 
     private final SubtitleDAO subtitleDAO;
 
-    public SubtitleService(SubtitleDAO subtitleDAO) {
-        this.subtitleDAO = subtitleDAO;
+    public SubtitleService(Connection connection) {
+        this.subtitleDAO = new SubtitleDAO(connection);
     }
 
     public int addSubtitle(Subtitle subtitle) {

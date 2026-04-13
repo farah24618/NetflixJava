@@ -641,8 +641,8 @@ public class MyListController implements Initializable {
             if (filmId == null) return;
             Film film = filmService.findById(filmId);
             if (film == null) return;
-            FilmPlayerController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.filmPlayer);
+            UniversalPlayerController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.Player);
             if (ctrl != null) {
                 ctrl.initFilm(film,userId);
                 ctrl.seekToSeconds(history.getTempsArret());
@@ -651,8 +651,8 @@ public class MyListController implements Initializable {
             // ── Épisode / Série : ouvrir le lecteur épisode ───────────────
             Integer episodeId = history.getEpisodeId();
             if (episodeId == null) return;
-            videoController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.video);
+            UniversalPlayerController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.Player);
             if (ctrl != null) {
                 ctrl.initEpisode(episodeId,userId);
                 ctrl.seekToSeconds(history.getTempsArret());

@@ -48,7 +48,7 @@ public class CommentaireDAO {
                 // On vérifie les deux colonnes possibles pour le flag signalement
                 boolean isSpoiler = rs.getBoolean("contient_spoils") ;
                 c.setSpoiler(isSpoiler);
-
+                c.setLikes(rs.getInt("likes"));
                 Timestamp ts = rs.getTimestamp("date_publication");
                 if (ts != null) {
                     c.setDateCommentaire(ts.toLocalDateTime());

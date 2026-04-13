@@ -377,8 +377,8 @@ public class HomeController implements Initializable {
         final Film film = heroFilms.get(heroIndex);
         
         int userId = SessionManager.getInstance().getCurrentUserId();        // 3. Naviguer
-        FilmPlayerController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.filmPlayer); 
+       UniversalPlayerController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.Player); 
             
         if (ctrl != null) {
             ctrl.initFilm(film,userId);

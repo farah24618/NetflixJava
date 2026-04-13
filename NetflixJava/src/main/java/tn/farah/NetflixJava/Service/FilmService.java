@@ -139,6 +139,7 @@ public class FilmService {
 	            e.printStackTrace();
 	            return null;
 	        }
+
 	    }
 	    public void delete(int id) throws SQLException {
 	    	filmDao.delete(id);
@@ -147,4 +148,8 @@ public class FilmService {
 	    	filmDao.update(film);
 	    }
 
-}
+
+	    public void incrementVues (int filmId) {
+	filmDao.incrementerVues(filmId);}
+	}
+
