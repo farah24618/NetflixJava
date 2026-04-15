@@ -303,7 +303,7 @@ public class HomeController implements Initializable {
 
         heroTitle   .setText(film.getTitre()    != null ? film.getTitre().toUpperCase() : "");
         heroSynopsis.setText(film.getSynopsis() != null ? film.getSynopsis() : "");
-        heroRating  .setText(String.format("%.0f%% Match", film.getRatingMoyen() * 10));
+        heroRating  .setText(String.format("%.0f%% Match", film.getRatingMoyen() * 20));
         heroDuration.setText(film.getDuree() + "m");
         heroType    .setText("FILM");
 
@@ -436,6 +436,10 @@ public class HomeController implements Initializable {
     @FXML
     private void onEditProfile() {
         ScreenManager.getInstance().navigateTo(Screen.editProfiles);
+    }
+    @FXML
+    private void onDecouvrir() {
+    	ScreenManager.getInstance().navigateTo(Screen.find);
     }
    
     

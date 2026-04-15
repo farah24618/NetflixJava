@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.utils;
 
 import javafx.animation.*;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,7 +13,7 @@ import javafx.util.Duration;
 import tn.farah.NetflixJava.Controller.EpisodeViewController;
 import tn.farah.NetflixJava.Controller.FilmPlayerController;
 import tn.farah.NetflixJava.Controller.UniversalPlayerController;
-import tn.farah.NetflixJava.Controller.videoController;
+
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Favori;
 import tn.farah.NetflixJava.Entities.Film;
@@ -47,7 +48,7 @@ public class CardFactory {
     public static final double SCROLL_H    = CARD_H + 24.0;
 
     // ── Pour HomeController (responsive) ─────────────────────────
-    public static final double CARDS_VISIBLE = 3.0;
+    public static final double CARDS_VISIBLE = 4.0;
     public static final double ASPECT        = 9.0 / 16.0;
 
     // ── FavoriService (set once at app startup) ───────────────────
@@ -275,7 +276,7 @@ public class CardFactory {
         double thumbH = popupW * ASPECT;
         Pane bigThumb = createThumbnail(film.getUrlImageCover(), popupW, thumbH);
 
-        int matchPct = computeMatch(film.getTitre());
+        double matchPct = film.getRatingMoyen()*20;
         String age   = film.getAgeRating() != null ? film.getAgeRating().name() : "PG";
 
         Label titleLbl = new Label(film.getTitre() != null ? film.getTitre() : "");
@@ -318,7 +319,7 @@ public class CardFactory {
         double thumbH = popupW * ASPECT;
         Pane bigThumb = createThumbnail(serie.getUrlImageCover(), popupW, thumbH);
 
-        int matchPct = computeMatch(serie.getTitre());
+        double matchPct = serie.getRatingMoyen()*20;
 
         Label titleLbl = new Label(serie.getTitre() != null ? serie.getTitre() : "");
         titleLbl.getStyleClass().add("popup-title");
@@ -438,7 +439,6 @@ public class CardFactory {
             FavoriService favoriService,
             int mediaId) {
         Button playBtn = new Button("▶"); playBtn.getStyleClass().add("btn-round-white");
-        Button likeBtn = new Button("♥"); likeBtn.getStyleClass().add("btn-round-outline");
         Button infoBtn = new Button("ℹ"); infoBtn.getStyleClass().add("btn-round-outline");
         Region spacer  = new Region();    HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -493,18 +493,9 @@ public class CardFactory {
         } else {
         }
     
-        final boolean[] liked = { false };
-        likeBtn.setOnAction(e -> {
-            liked[0] = !liked[0];
-            if (liked[0]) {
-                likeBtn.setStyle("-fx-background-color: #E50914; -fx-text-fill: white; -fx-background-radius: 50%; -fx-cursor: hand;");
-            } else {
-                likeBtn.getStyleClass().setAll("btn-round-outline");
-                likeBtn.setStyle("-fx-cursor: hand;");
-            }
-        });
-
-        HBox actions = new HBox(8, playBtn, addBtn, likeBtn, spacer, infoBtn);
+       
+       
+        HBox actions = new HBox(8, playBtn, addBtn,  spacer, infoBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
 
         VBox info = new VBox(10, actions, titleLbl, meta, genreLbl);
@@ -576,9 +567,9 @@ public class CardFactory {
         return (available - GAP * (CARDS_VISIBLE - 1)) / CARDS_VISIBLE;
     }
 
-    public static int computeMatch(String titre) {
+    /*public static int computeMatch(String titre) {
         return 60 + (Math.abs(titre != null ? titre.hashCode() : 0) % 35);
-    }
+    }*/
     private static void lancerPremierEpisode(Serie serie) {
     	int userId = SessionManager.getInstance().getCurrentUserId();
         // 1. Récupère la connexion et les services

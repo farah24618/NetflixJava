@@ -94,6 +94,12 @@ public class signup1Controller implements Initializable {
             showAlert(Alert.AlertType.WARNING, "Email invalide", "L'email doit contenir au moins 3 caractères avant l'arobase et avoir un domaine valide (ex: yahoo.fr).");
             return;
         }
+        User existingUserWithEmail = userService.findByEmail(email);
+        if (existingUserWithEmail != null) {
+            showAlert(Alert.AlertType.WARNING, "Email déjà utilisé", 
+                      "Cet email est déjà associé à un compte existant.");
+            return;
+        }
 
         // 4. Validation du Téléphone (Exactement 8 chiffres)
         if (!phone.matches("^\\d{8}$")) {

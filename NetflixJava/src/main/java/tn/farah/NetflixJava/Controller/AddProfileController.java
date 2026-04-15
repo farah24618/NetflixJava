@@ -11,6 +11,7 @@ import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionData;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,17 +44,26 @@ public class AddProfileController implements Initializable {
         String newPseudo = nameField.getText().trim();
         User currentUser = SessionData.getCurrentUser();
 
-        if (currentUser != null && !newPseudo.isEmpty()) {
-            currentUser.setPseudo(newPseudo); // On met à jour le pseudo dans l'objet
-            
-            // On enregistre en BD
-            boolean success = userService.updateUser(currentUser); 
-            
-            if (success) {
-                ScreenManager.getInstance().navigateTo(Screen.home);
-            } else {
-                // Afficher une alerte d'erreur
-            }
+        if (currentUser == null || newPseudo.isEmpty()) {
+            showAlert("Champ requis", "Veuillez saisir un pseudo.");
+            return;
+        }
+
+        // ✅ Vérifier si le pseudo est déjà pris par un autre utilisateur
+        if (userService.isPseudoTaken(newPseudo, currentUser.getId())) {
+            showAlert("Pseudo déjà utilisé", "Le pseudo \"" + newPseudo + "\" est déjà pris. Veuillez en choisir un autre.");
+            return;
+        }
+
+        currentUser.setPseudo(newPseudo);
+
+        boolean success = userService.updateUser(currentUser);
+
+        if (success) {
+            SessionManager.getInstance().login(currentUser);
+            ScreenManager.getInstance().navigateTo(Screen.home);
+        } else {
+            showAlert("Erreur", "Une erreur est survenue lors de la mise à jour du profil.");
         }
     }
 

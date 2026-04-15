@@ -20,6 +20,7 @@ import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -144,8 +145,9 @@ public class FilmViewController implements Initializable {
         favoriService      = new FavoriService(cnnx);
         userService        = new UserService(cnnx);
         ratingService      = new RatingService(cnnx);
-        
-        String pseudoUser = userService.findUserById(userId).getPseudo();
+        String pseudoUser="Inconnu";
+        if(userService.findUserById(userId) !=null) {
+        pseudoUser = userService.findUserById(userId).getPseudo();}
         chargerProfil((pseudoUser != null) ? pseudoUser : "Inconnu");
         activerOnglet(tabApropos);
 
@@ -184,7 +186,7 @@ public class FilmViewController implements Initializable {
 
     /**
      * ✅ FIX : Met à jour le texte et le style du bouton favoris
-     * selon que le film est déjà dans la liste ou non.
+     * selon que la série est déjà dans la liste ou non.
      */
     private void mettreAJourBtnFavoris() {
         if (btnFavoris == null || filmId == -1) return;
@@ -193,17 +195,19 @@ public class FilmViewController implements Initializable {
             btnFavoris.setText("✔  Dans ma liste");
             btnFavoris.setStyle(
                 "-fx-background-color: #46d369; -fx-text-fill: white;" +
-                "-fx-font-weight: bold; -fx-background-radius: 4;" +
-                "-fx-padding: 8 18 8 18; -fx-cursor: hand;");
+                "-fx-font-weight: bold; -fx-font-size: 15px;" +        // ← ajout font-size
+                "-fx-padding: 11 28 11 28;" +                          // ← même padding que les autres
+                "-fx-background-radius: 4; -fx-cursor: hand;");
         } else {
             btnFavoris.setText("＋  Ajouter aux favoris");
             btnFavoris.setStyle(
-                "-fx-background-color: #333333; -fx-text-fill: white;" +
-                "-fx-font-weight: bold; -fx-background-radius: 4;" +
-                "-fx-padding: 8 18 8 18; -fx-cursor: hand;");
+                "-fx-background-color: rgba(60,60,60,0.85); -fx-text-fill: white;" +
+                "-fx-font-weight: bold; -fx-font-size: 15px;" +        // ← ajout font-size
+                "-fx-padding: 11 28 11 28;" +                          // ← même padding que les autres
+                "-fx-background-radius: 4; -fx-cursor: hand;" +
+                "-fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 4;");
         }
     }
-
     // =============================================
     // CHARGEMENT INFOS FILM
     // =============================================
@@ -646,33 +650,7 @@ public class FilmViewController implements Initializable {
         mettreAJourBtnFavoris();
     }
 
-    // =============================================
-    // HANDLERS BOUTONS
-    // =============================================
-    @FXML private void onLike() {
-        likeCount++;
-        btnLike.setText("J'aime (" + likeCount + ")");
-        btnLike.setStyle("-fx-background-color: #E50914; -fx-text-fill: white;" +
-                "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
-    }
-
-    @FXML private void onDislike() {
-        btnDislike.setStyle("-fx-background-color: #555555; -fx-text-fill: white;" +
-                "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
-    }
-
-    @FXML private void onShare() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Partager");
-        alert.setHeaderText(null);
-        alert.setContentText("Lien copié dans le presse-papiers !");
-        alert.showAndWait();
-    }
-
-    @FXML private void onDownload() {
-        btnDownload.setText("Téléchargement...");
-        btnDownload.setDisable(true);
-    }
+   
 
     // =============================================
     // HANDLERS ONGLETS
@@ -787,6 +765,13 @@ public class FilmViewController implements Initializable {
 
             if (ok) {
                 double moyenne = ratingService.getFilmAverage(filmId);
+                filmActuel.setRatingMoyen(moyenne);
+                try {
+					filmService.update(filmActuel);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
                 btnNoter.setText("⭐ " + moyenne + "/5");
                 btnNoter.setDisable(true);
             }
@@ -869,6 +854,12 @@ public class FilmViewController implements Initializable {
         });
 
         panelBandes.getChildren().addAll(titre, carte);
+    }
+    @FXML
+    private void onRetour() {
+    	
+      ScreenManager.getInstance().goBack();
+          
     }
     // =============================================
     // NAVIGATION

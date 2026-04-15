@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="720" prefWidth="1280" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SearchResultsController">
+
+    <!-- ══ TOP NAVBAR ══════════════════════════════════════════════════════ -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #000000;                      -fx-padding: 14 40 14 40;                      -fx-border-color: #1f1f1f; -fx-border-width: 0 0 1 0;">
+
+            <Label onMouseClicked="#goHome" style="-fx-font-size: 26px; -fx-font-weight: bold;                           -fx-text-fill: #E50914; -fx-font-family: 'Georgia'; -fx-cursor: hand;" text="RAKCHANET" />
+
+            <HBox alignment="CENTER" prefHeight="34.0" prefWidth="702.0" spacing="0" style="-fx-background-color: rgba(0,0,0,0.6);                          -fx-border-color: white; -fx-border-width: 1;                          -fx-padding: 6 12 6 12;">
+                <Label style="-fx-font-size: 13px; -fx-text-fill: white;" text="🔍" />
+                <TextField fx:id="searchField" onAction="#onSearchEnter" prefWidth="220.0" promptText="Titres, personnes, genres" style="-fx-background-color: transparent; -fx-text-fill: white;                                   -fx-prompt-text-fill: #888888; -fx-font-size: 14px;                                   -fx-border-width: 0; -fx-padding: 0 0 0 8;" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+         <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="135.0" style="-fx-background-color: red;" text="&gt; RETOUR">
+            <textFill>
+               <LinearGradient endX="1.0" endY="1.0">
+                  <stops>
+                     <Stop>
+                        <color>
+                           <Color red="0.9368420839309692" green="0.8917348980903625" blue="0.8917348980903625" />
+                        </color>
+                     </Stop>
+                     <Stop offset="1.0">
+                        <color>
+                           <Color red="1.0" green="1.0" blue="1.0" />
+                        </color>
+                     </Stop>
+                  </stops>
+               </LinearGradient>
+            </textFill>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
+         </Button>
+        </HBox>
+    </top>
+
+    <!-- ══ MAIN ════════════════════════════════════════════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #141414; -fx-background-color: #141414;                            -fx-border-width: 0;" vbarPolicy="AS_NEEDED">
+            <VBox spacing="0" style="-fx-background-color: #141414;">
+
+                   <!-- Search header -->
+                <VBox spacing="4" style="-fx-padding: 28 40 8 40;">
+                    <Label fx:id="searchQueryLabel" style="-fx-font-size: 22px; -fx-text-fill: white;                                   -fx-font-family: 'Georgia';" text="Résultats pour « … »" />
+                    <Label fx:id="resultCountLabel" style="-fx-font-size: 13px; -fx-text-fill: #888888;" text="" />
+                </VBox>
+
+                <!-- ── Filter panel ─────────────────────────────────────── -->
+                <VBox spacing="18" style="-fx-background-color: #1a1a1a; -fx-padding: 20 40 20 40;                              -fx-border-color: #2a2a2a; -fx-border-width: 0 0 1 0;">
+
+                    <HBox alignment="CENTER_LEFT" spacing="40">
+
+                        <!-- Date de sortie -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="DATE DE SORTIE" />
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label style="-fx-text-fill: #999; -fx-font-size: 12px;" text="De :" />
+                                <ComboBox fx:id="yearFromCombo" onAction="#applyFilters" prefWidth="95" promptText="Année" style="-fx-background-color:#252525; -fx-text-fill:white;                                                  -fx-border-color:#3a3a3a; -fx-border-radius:4;                                                  -fx-background-radius:4; -fx-font-size:12px;" />
+                                <Label style="-fx-text-fill: #999; -fx-font-size: 12px;" text="À :" />
+                                <ComboBox fx:id="yearToCombo" onAction="#applyFilters" prefWidth="95" promptText="Année" style="-fx-background-color:#252525; -fx-text-fill:white;                                                  -fx-border-color:#3a3a3a; -fx-border-radius:4;                                                  -fx-background-radius:4; -fx-font-size:12px;" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- Note minimum -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="NOTE MINIMUM" />
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Slider fx:id="ratingSlider" majorTickUnit="5" max="5.0" min="0" prefWidth="150" showTickLabels="true" value="0" />
+                                <Label fx:id="ratingValueLabel" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-min-width: 38;" text="0.0+" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- Trier par -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="TRIER PAR" />
+                            <ComboBox fx:id="sortCombo" onAction="#applyFilters" prefWidth="180" style="-fx-background-color:#252525; -fx-text-fill:white;                                              -fx-border-color:#3a3a3a; -fx-border-radius:4;                                              -fx-background-radius:4; -fx-font-size:12px;" />
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- Genres multi-select -->
+                    <VBox spacing="8">
+                        <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="GENRES  (sélection multiple)" />
+                        <FlowPane fx:id="genreChipPane" hgap="8" prefWrapLength="1100" vgap="8" />
+                    </VBox>
+
+                    <HBox alignment="CENTER_RIGHT">
+                        <Button onAction="#resetFilters" style="-fx-background-color: transparent; -fx-text-fill: #aaa;                                        -fx-border-color: #555; -fx-border-radius: 4;                                        -fx-background-radius: 4; -fx-font-size: 12px;                                        -fx-padding: 5 16 5 16; -fx-cursor: hand;" text="Réinitialiser les filtres" />
+                    </HBox>
+
+                </VBox>
+
+                <!-- No results -->
+                <VBox fx:id="noResultsPane" alignment="CENTER" managed="false" spacing="12" style="-fx-padding: 80 40;" visible="false">
+                    <Label style="-fx-font-size: 46px;" text="🔍" />
+                    <Label fx:id="noResultsLabel" style="-fx-font-size: 20px; -fx-text-fill: #888;" text="Aucun résultat" />
+                    <Label style="-fx-font-size: 13px; -fx-text-fill: #555;" text="Essayez d'autres mots-clés ou ajustez les filtres" />
+                </VBox>
+
+                <!-- ── Films section ────────────────────────────────────── -->
+                <VBox fx:id="filmsSection" managed="false" spacing="0" style="-fx-padding: 30 0 10 0;" visible="false">
+                    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 6 40;">
+                        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;                                       -fx-text-fill: white; -fx-font-family: 'Georgia';" text="🎬  Films" />
+                        <Label fx:id="filmsCountLabel" style="-fx-font-size: 14px; -fx-text-fill: #E50914; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Region prefHeight="3" prefWidth="40" style="-fx-background-color: #E50914; -fx-background-radius: 2;                                    -fx-translate-x: 40;" />
+                    <ScrollPane fx:id="filmsScroll" fitToHeight="true" hbarPolicy="AS_NEEDED" pannable="true" style="-fx-background: transparent; -fx-background-color: transparent;                                        -fx-border-width: 0;" vbarPolicy="NEVER">
+                        <HBox fx:id="filmsRow" spacing="12" style="-fx-padding: 16 40 16 40; -fx-background-color: transparent;" />
+                    </ScrollPane>
+                </VBox>
+
+                <!-- ── Series section ───────────────────────────────────── -->
+                <VBox fx:id="seriesSection" managed="false" spacing="0" style="-fx-padding: 10 0 50 0;" visible="false">
+                    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 6 40;">
+                        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;                                       -fx-text-fill: white; -fx-font-family: 'Georgia';" text="📺  Séries" />
+                        <Label fx:id="seriesCountLabel" style="-fx-font-size: 14px; -fx-text-fill: #E50914; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Region prefHeight="3" prefWidth="40" style="-fx-background-color: #E50914; -fx-background-radius: 2;                                    -fx-translate-x: 40;" />
+                    <ScrollPane fx:id="seriesScroll" fitToHeight="true" hbarPolicy="AS_NEEDED" pannable="true" style="-fx-background: transparent; -fx-background-color: transparent;                                        -fx-border-width: 0;" vbarPolicy="NEVER">
+                        <HBox fx:id="seriesRow" spacing="12" style="-fx-padding: 16 40 16 40; -fx-background-color: transparent;" />
+                    </ScrollPane>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

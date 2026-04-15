@@ -32,8 +32,7 @@ public class UserService {
         
         return userDao.addUser(user);
     }
-
-    
+  
     
      // 1️⃣ INSCRIPTION
     public boolean registerUser2(User user) {
@@ -118,5 +117,8 @@ public class UserService {
         // Tu peux ajouter ici une validation pour vérifier si le pseudo est déjà pris
         return userDao.updateUser(user);
 
+    }
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
     }
 }

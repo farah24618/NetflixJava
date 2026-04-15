@@ -36,6 +36,7 @@
 
             <HBox alignment="CENTER" spacing="18">
                 <HBox alignment="CENTER" spacing="6">
+               <Button fx:id="btnDecouvrir" mnemonicParsing="false" onAction="#onDecouvrir" style="-fx-background-color: red;" text="Découvrir" textFill="#faf1f1" />
                     <TextField fx:id="searchField" onKeyReleased="#onSearch" prefWidth="200" promptText="titres" styleClass="search-field" />
                     <Button onAction="#onSearchBtn" styleClass="icon-btn" text="🔍" />
                 </HBox>
@@ -99,9 +100,7 @@
                     </VBox>
 
                     <!-- Badge âge (top-right) -->
-                    <HBox alignment="CENTER_RIGHT" styleClass="age-badge-box"
-      StackPane.alignment="CENTER_RIGHT"
-      mouseTransparent="true">
+                    <HBox alignment="CENTER_RIGHT" mouseTransparent="true" styleClass="age-badge-box" StackPane.alignment="CENTER_RIGHT">
     <Label fx:id="heroWarning" styleClass="age-badge" text="19+" />
 </HBox>
 

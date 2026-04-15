@@ -142,4 +142,7 @@ public class FilmService {
 	    }	
 	    public void incrementVues (int filmId) {
 	filmDao.incrementerVues(filmId);}
+	    public void update (Film film) throws SQLException {
+	    	filmDao.update(film);
+	    }
 	}

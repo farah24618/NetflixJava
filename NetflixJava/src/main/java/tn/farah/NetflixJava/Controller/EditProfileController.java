@@ -56,7 +56,7 @@ public class EditProfileController implements Initializable {
 
         // Load language options
         languageCombo.setItems(FXCollections.observableArrayList(
-                "Français", "English", "العربية", "Deutsch", "Español"));
+                "Français"));
 
         // Load current user from session
         int userId = SessionManager.getInstance().getCurrentUserId();
@@ -173,7 +173,7 @@ public class EditProfileController implements Initializable {
     // ════════════════════════════════════════════════════════════════════════
 
     private void goHome() {
-        ScreenManager.getInstance().navigateTo(Screen.home);
+        ScreenManager.getInstance().goBack();
     }
 
     // ════════════════════════════════════════════════════════════════════════

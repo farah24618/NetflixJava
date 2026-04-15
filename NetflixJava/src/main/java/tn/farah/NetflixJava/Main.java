@@ -44,7 +44,7 @@ public class Main extends Application {
 
             // 5. Lecture et Détails du contenu
             nav.register(Screen.detail,          "/tn/farah/NetflixJava/EpisodeView2.fxml");
-            nav.register(Screen.episodeView,     "/tn/farah/NetflixJava/EpisodeView.fxml");
+          
             nav.register(Screen.detailFilm,      "/tn/farah/NetflixJava/FilmView.fxml");
             nav.register(Screen.episodeComments, "/tn/farah/NetflixJava/Commentaire.fxml");
             nav.register(Screen.video,           "/tn/farah/NetflixJava/video.fxml");
@@ -76,7 +76,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.CommentaireAdmin,  "/tn/farah/NetflixJava/CommentaireAdmin.fxml");
 
         nav.register(Screen.filmPlayer,  "/tn/farah/NetflixJava/FilmPlayer.fxml");
-
+        nav.register(Screen.find,  "/tn/farah/NetflixJava/SearchResults.fxml");
 
       
  
@@ -104,7 +104,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
        //nav.navigateTo(Screen.admin_main);
 
-       //nav.navigateTo(Screen.home);
+       nav.navigateTo(Screen.mainView);
 
 
         //nav.navigateTo(Screen.video);

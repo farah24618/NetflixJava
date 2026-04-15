@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
@@ -19,6 +19,10 @@
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="30" style="-fx-background-color: #141414; -fx-padding: 15 30 15 30;">
+         <Button fx:id="btnRetour" mnemonicParsing="false" onAction="#onRetour" opacity="0.7" prefHeight="39.0" prefWidth="40.0" style="-fx-background-color: grey;" text="&lt;" textFill="WHITE">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
 
             <Label style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;" text="RAKCHANET" />
 
@@ -94,14 +98,7 @@
                                 <Button fx:id="btnLire" onAction="#onLire" style="-fx-background-color: white; -fx-text-fill: black;                                                -fx-font-weight: bold; -fx-font-size: 15px;                                                -fx-padding: 11 28 11 28; -fx-background-radius: 4;                                                -fx-cursor: hand;" text="▶  Lire" />
                                
                               	 <Button fx:id="btnFavoris" onAction="#onFavoris" style="-fx-background-color: rgba(60,60,60,0.85); -fx-text-fill: white;                                                -fx-font-weight: bold; -fx-font-size: 15px;                                                -fx-padding: 11 28 11 28; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-border-color: white;                                                -fx-border-width: 1; -fx-border-radius: 4;" text="＋  Ajouter aux favoris" />
-                       			 <Button fx:id="btnNoter" 
-    									mnemonicParsing="false" 
-   														 onAction="#onNoter" 
-    															style="-fx-background-color: Red; -fx-text-fill: white; -fx-font-weight: bold; 
-          											 -fx-font-size: 15px; -fx-padding: 11 28 11 28; -fx-background-radius: 4; 
-           										-fx-cursor: hand; -fx-border-color: white; -fx-border-width: 1; 
-         										  -fx-border-radius: 4;" 
-   															 text="Noter" />
+                       			 <Button fx:id="btnNoter" mnemonicParsing="false" onAction="#onNoter" style="-fx-background-color: Red; -fx-text-fill: white; -fx-font-weight: bold;                        -fx-font-size: 15px; -fx-padding: 11 28 11 28; -fx-background-radius: 4;                       -fx-cursor: hand; -fx-border-color: white; -fx-border-width: 1;                       -fx-border-radius: 4;" text="Noter" />
                             </HBox>
 
                         </VBox>
@@ -132,12 +129,7 @@
 
                             <Label fx:id="episodeDesc" maxWidth="620" style="-fx-text-fill: #cccccc; -fx-font-size: 14px;" text="" wrapText="true" />
 
-                            <HBox spacing="12" style="-fx-padding: 8 0 0 0;">
-                                <Button fx:id="btnLike" onAction="#onLike" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="J'aime" />
-                                <Button fx:id="btnDislike" onAction="#onDislike" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="Je n'aime pas" />
-                                <Button fx:id="btnShare" onAction="#onShare" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="Partager" />
-                                <Button fx:id="btnDownload" onAction="#onDownload" style="-fx-background-color: #333333; -fx-text-fill: white;                                                -fx-padding: 8 18 8 18; -fx-background-radius: 4;                                                -fx-cursor: hand; -fx-font-size: 13px;" text="Telecharger" />
-                            </HBox>
+                            <HBox spacing="12" style="-fx-padding: 8 0 0 0;" />
                         </VBox>
 
                         <VBox prefWidth="260" spacing="10" style="-fx-background-color: #1f1f1f; -fx-padding: 16;                                      -fx-background-radius: 6;">
@@ -188,7 +180,9 @@
 
                         <VBox fx:id="panelEpisodes" managed="true" spacing="16" visible="true">
                             <HBox alignment="CENTER_LEFT" spacing="16">
-                                <Label style="-fx-text-fill: white; -fx-font-size: 18px;                                               -fx-font-weight: bold;" text="Saison 1" />
+                                <HBox alignment="CENTER_LEFT" spacing="16">
+    <ComboBox fx:id="saisonComboBox" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-border-color: #444444; -fx-border-radius: 4;" />
+</HBox>
                                 <Label fx:id="labelNbEpisodes" style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px;" text="0 épisodes" />
                             </HBox>
                             <VBox fx:id="listeEpisodes" spacing="12" />
