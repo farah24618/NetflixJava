@@ -1,14 +1,17 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import tn.farah.NetflixJava.DAO.FilmDao;
+
 import tn.farah.NetflixJava.Entities.Film;
-import tn.farah.NetflixJava.utils.DatabaseConnection;
+import tn.farah.NetflixJava.Service.FilmService;
+import tn.farah.NetflixJava.utils.ConxDB;
+
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
@@ -23,14 +26,14 @@ public class AdminMainController {
     @FXML private TextField searchField;
     @FXML private Label titleCountLabel; // ✅ lié au fx:id dans le FXML
 
-    private FilmDao filmDao;
+    private FilmService filmSer;
 
     @FXML
     public void initialize() {
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = ConxDB.getInstance();
 
         if (conn != null) {
-            filmDao = new FilmDao(conn);
+        	filmSer = new FilmService(conn);
             System.out.println("✅ Connexion base de données réussie.");
 
             loadMovies("");
@@ -51,9 +54,9 @@ public class AdminMainController {
             List<Film> films;
 
             if (query == null || query.isEmpty()) {
-                films = filmDao.findAll();
+                films = filmSer.findAll();
             } else {
-                films = filmDao.findByTitle(query);
+                films = filmSer.findByTitle(query);
             }
 
             // ✅ Mise à jour dynamique du nombre de films

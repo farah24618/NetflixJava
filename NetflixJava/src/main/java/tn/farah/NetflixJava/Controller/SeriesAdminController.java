@@ -16,6 +16,7 @@ import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.DAO.SaisonDAO;
 import tn.farah.NetflixJava.DAO.EpisodeDAO;
+import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.DatabaseConnection;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -36,12 +37,7 @@ public class SeriesAdminController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) {
-            System.err.println("Erreur : Connexion BDD impossible !");
-            return;
-        }
-
+        Connection connection = ConxDB.getInstance();
         serieService = new SerieService(connection);
         loadData(connection);
     }

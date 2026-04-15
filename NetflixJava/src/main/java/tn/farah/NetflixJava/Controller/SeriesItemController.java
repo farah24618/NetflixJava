@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.SaisonService;
+import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.DAO.SaisonDAO;
@@ -27,8 +29,8 @@ public class SeriesItemController {
     @FXML private MenuButton episodesMenuBtn; 
 
     private Serie currentSerie;
-    private final SaisonDAO saisonDAO = new SaisonDAO(ConxDB.getInstance());
-    private final SerieDAO serieDAO = new SerieDAO(ConxDB.getInstance()); // Pour récupérer les épisodes
+    private final SaisonService saisonSer = new SaisonService(ConxDB.getInstance());
+    private final SerieService serieSer = new SerieService(ConxDB.getInstance()); // Pour récupérer les épisodes
 
     public void setSeriesData(Serie serie) {
         this.currentSerie = serie;
@@ -84,7 +86,7 @@ public class SeriesItemController {
         episodesMenuBtn.getItems().clear();
         
         // Récupération des saisons via SaisonDAO
-        List<Saison> saisons = saisonDAO.findBySerieId(currentSerie.getId());
+        List<Saison> saisons = saisonSer.findBySerieId(currentSerie.getId());
         episodesMenuBtn.setText(saisons.size() + " SAISONS");
 
         for (Saison s : saisons) {
@@ -92,7 +94,7 @@ public class SeriesItemController {
             Menu saisonSubMenu = new Menu("Saison " + s.getNumeroSaison());
             
             // Correction : On utilise la méthode de ton SerieDAO
-            List<Episode> episodes = serieDAO.findEpisodeBySaison(s.getId());
+            List<Episode> episodes = serieSer.findEpisodeBySaison(s.getId());
             
             for (Episode e : episodes) {
                 MenuItem epItem = new MenuItem("Épisode " + e.getNumeroEpisode() + " : " + e.getTitre());

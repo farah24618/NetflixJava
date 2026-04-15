@@ -317,4 +317,15 @@ public class SerieDAO {
         
         return episodes;
     }
+    public boolean deleteSerie(int id) {
+        String query = "DELETE FROM serie WHERE id = ?";
+        // Utilise maintenant 'this.connection'
+        try (PreparedStatement ps = this.connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

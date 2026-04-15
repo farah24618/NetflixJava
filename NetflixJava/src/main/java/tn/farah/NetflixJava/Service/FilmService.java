@@ -151,5 +151,16 @@ public class FilmService {
 
 	    public void incrementVues (int filmId) {
 	filmDao.incrementerVues(filmId);}
+
+		public List<Film> findAll() throws SQLException {
+			
+
+			return filmDao.findAll();
+		}
+
+		public List<Film> findByTitle(String query) throws SQLException {
+			
+			return filmDao.findByTitle(query);
+		}
 	}
 

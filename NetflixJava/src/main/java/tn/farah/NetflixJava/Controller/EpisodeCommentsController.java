@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.collections.FXCollections;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -10,6 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.Entities.Commentaire;
 import tn.farah.NetflixJava.Service.CommentaireService;
+import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.time.format.DateTimeFormatter;

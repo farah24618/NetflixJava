@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -16,9 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import tn.farah.NetflixJava.DAO.UserDao;
 import tn.farah.NetflixJava.Entities.User;
-import tn.farah.NetflixJava.utils.DatabaseConnection;
+import tn.farah.NetflixJava.Service.UserService;
+import tn.farah.NetflixJava.utils.ConxDB;
+
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
@@ -31,15 +33,15 @@ public class ManageUsersController {
     @FXML private Label showingLabel;
     @FXML private ComboBox<Integer> rowsPerPageCombo;
 
-    private UserDao dao;
+    private UserService userSer;
     private List<User> allUsers = new ArrayList<>(); 
 
     @FXML
     public void initialize() {
-        dao = new UserDao(DatabaseConnection.getConnection());
+    	userSer = new UserService(ConxDB.getInstance());
         
         // 1. Charger les données
-        allUsers = dao.getAllUsers();
+        allUsers = userSer.getAllUsers();
         
         // 2. Initialiser le tri
         if (sortCombo != null) {
@@ -211,8 +213,8 @@ public class ManageUsersController {
             updateBlockButtonStyle(blockBtn, u.isActive());
             blockBtn.setOnAction(event -> {
                 u.setActive(!u.isActive());
-                if (dao.updateUser(u)) {
-                    dao.addAuditLog(1, (u.isActive() ? "Déblocage" : "Blocage") + " de : " + u.getUsername());
+                if (userSer.updateUser(u)) {
+                	userSer.addAuditLog(1, (u.isActive() ? "Déblocage" : "Blocage") + " de : " + u.getUsername());
                     renderUsers(allUsers);
                 }
             });
@@ -222,7 +224,7 @@ public class ManageUsersController {
         Button deleteBtn = new Button("🗑");
         deleteBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #555; -fx-cursor: hand; -fx-font-size: 14px;");
         deleteBtn.setOnAction(e -> {
-            if (dao.deleteUser(u.getId())) {
+            if (userSer.deleteUser(u.getId())) {
                 allUsers.remove(u);
                 renderUsers(allUsers);
                 updateTabCounts();
@@ -247,7 +249,7 @@ public class ManageUsersController {
         logArea.setEditable(false);
         logArea.setStyle("-fx-control-inner-background: #111; -fx-text-fill: #888;");
         
-        List<String> logs = dao.getAdminLogs(u.getId());
+        List<String> logs = userSer.getAdminLogs(u.getId());
         logArea.setText(logs.isEmpty() ? "Aucune activité." : String.join("\n", logs));
 
         Button closeBtn = new Button("Fermer");
