@@ -47,7 +47,7 @@
                     <StackPane prefHeight="680.0" prefWidth="1280.0">
 
                         <!-- Couche 1 : Background image via CSS style inline (dégradé cinématique Netflix) -->
-                        <Region style="-fx-background-image: url('@/ImagesNet\images.jpeg'); -fx-background-size: cover; -fx-background-position: center center; -fx-background-repeat: no-repeat;" />
+                        <Region fx:id="heroBackground" style="-fx-background-image: url('/ImagesNet/images.jpeg'); -fx-background-size: cover; -fx-background-position: center center; -fx-background-repeat: no-repeat;" styleClass="my-custom-region" stylesheets="@mainView.css" />
 
                         <!-- Couche 2 : Superposition dégradé sombre style Netflix (haut + bas + global) -->
                         <Region style="-fx-background-color: linear-gradient(                                            from 0% 0% to 0% 100%,                                            rgba(0,0,0,0.6) 0%,                                            rgba(0,0,0,0.1) 40%,                                            rgba(0,0,0,0.1) 60%,                                            rgba(0,0,0,0.8) 100%                                        );" />

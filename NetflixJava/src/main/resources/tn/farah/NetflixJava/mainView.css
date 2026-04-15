@@ -1,7 +1,12 @@
 /* mainView.css */
-.hero-section {
-    -fx-background-image: url("/ImageNet/images.jpeg");
+.my-custom-region {
+    /* Path must be relative to the CSS file or the classpath root */
+    
+    -fx-min-width: 300px;
+    -fx-min-height: 200px;
+    -fx-background-image:url("/NetflixJava/src/main/resources/tn/farah/NetflixJava/ImagesNet/images.jpeg");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
-    -fx-background-position: center center;
+    -fx-background-position: center;
+    -fx-background-size: cover;
 }
