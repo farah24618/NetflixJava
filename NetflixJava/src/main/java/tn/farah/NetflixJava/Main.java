@@ -127,7 +127,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
 
 
-        nav.navigateTo(Screen.ManageSeries);
+        nav.navigateTo(Screen.login);
 
 
        // nav.navigateTo(Screen.notificationAdmin);

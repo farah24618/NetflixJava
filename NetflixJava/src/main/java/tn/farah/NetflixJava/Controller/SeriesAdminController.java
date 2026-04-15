@@ -244,7 +244,7 @@ public class SeriesAdminController implements Initializable {
     private void handleNavFilms(ActionEvent event) {
         // J'ai gardé parametresAdmin comme tu l'avais écrit, 
         // mais vérifie si tu n'as pas un Screen.manageFilms à la place.
-        ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+        ScreenManager.getInstance().navigateTo(Screen.admin_main);
         
     }  
         
