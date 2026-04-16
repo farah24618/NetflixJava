@@ -13,14 +13,12 @@ import javafx.scene.layout.*;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.Entities.Episode;
+import tn.farah.NetflixJava.Service.EpisodeService;
+import tn.farah.NetflixJava.Service.SaisonService;
 import tn.farah.NetflixJava.Service.SerieService;
-import tn.farah.NetflixJava.DAO.SaisonDAO;
-import tn.farah.NetflixJava.DAO.EpisodeDAO;
 import tn.farah.NetflixJava.utils.ConxDB;
-import tn.farah.NetflixJava.utils.DatabaseConnection;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
-
 import java.net.URL;
 import java.sql.Connection;
 import java.util.*;
@@ -45,15 +43,15 @@ public class SeriesAdminController implements Initializable {
     private void loadData(Connection conn) {
         allSeries = serieService.getAllSeries();
         
-        SaisonDAO saisonDAO = new SaisonDAO(conn);
-        EpisodeDAO episodeDAO = new EpisodeDAO(conn);
+        SaisonService saisonSer = new SaisonService(conn);
+        EpisodeService episodeSer = new EpisodeService(conn);
 
         for (Serie s : allSeries) {
-            List<Saison> saisons = saisonDAO.findBySerieId(s.getId());
+            List<Saison> saisons = saisonSer.findBySerieId(s.getId());
             saisons.sort(Comparator.comparingInt(Saison::getNumeroSaison));
             
             for (Saison sa : saisons) {
-                List<Episode> episodes = episodeDAO.findBySaisonId(sa.getId());
+                List<Episode> episodes = episodeSer.findBySaisonId(sa.getId());
                 episodes.sort(Comparator.comparingInt(Episode::getNumeroEpisode));
                 sa.setEpisodes(episodes);
             }
@@ -98,7 +96,7 @@ public class SeriesAdminController implements Initializable {
         Button deleteBtn = new Button("SUPPRIMER SÉRIE");
         deleteBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
         deleteBtn.setOnAction(e -> handleSupprimerSerie(s));
-        //******newww
+        
         Button UpdateBtn = new Button("Modifier SÉRIE");
         UpdateBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
         UpdateBtn.setOnAction(e -> handleUpdateSerie(s)); 
@@ -122,6 +120,17 @@ public class SeriesAdminController implements Initializable {
 
             Menu saisonMenu = new Menu("Saison " + saison.getNumeroSaison());
 
+            // ✅ NOUVEAU : Modifier la saison (clic sur "✏️ Modifier Saison X")
+            MenuItem editSaisonItem = new MenuItem("✏️ Modifier Saison " + saison.getNumeroSaison());
+            editSaisonItem.setStyle("-fx-text-fill: #00aaff;");
+            editSaisonItem.setOnAction(e -> {
+                ScreenManager.getInstance().setEditingSaison(saison);
+                ScreenManager.getInstance().navigateTo(Screen.addSaison);
+            });
+            saisonMenu.getItems().add(editSaisonItem);
+            saisonMenu.getItems().add(new SeparatorMenuItem()); // séparateur visuel
+
+            // ─── Épisodes ───────────────────────────────────────────
             List<Episode> episodes = saison.getEpisodes();
             if (episodes.isEmpty()) {
                 MenuItem empty = new MenuItem("Aucun épisode");
@@ -129,13 +138,12 @@ public class SeriesAdminController implements Initializable {
                 saisonMenu.getItems().add(empty);
             } else {
                 for (Episode ep : episodes) {
-                	// APRÈS
-                	MenuItem epItem = new MenuItem("Ep " + ep.getNumeroEpisode() + " : " + ep.getTitre());
-                	epItem.setOnAction(e -> {
-                	    ScreenManager.getInstance().setEditingEpisode(ep);
-                	    ScreenManager.getInstance().navigateTo(Screen.addEpisode);
-                	});
-                	saisonMenu.getItems().add(epItem);
+                    MenuItem epItem = new MenuItem("Ep " + ep.getNumeroEpisode() + " : " + ep.getTitre());
+                    epItem.setOnAction(e -> {
+                        ScreenManager.getInstance().setEditingEpisode(ep);
+                        ScreenManager.getInstance().navigateTo(Screen.addEpisode);
+                    });
+                    saisonMenu.getItems().add(epItem);
                 }
 
                 saisonMenu.getItems().add(new SeparatorMenuItem());
@@ -150,6 +158,7 @@ public class SeriesAdminController implements Initializable {
             addEp.setOnAction(e -> handleAddEpisode(saison));
             saisonMenu.getItems().add(addEp);
 
+            // ─── Supprimer saison (dernière uniquement) ──────────────
             if (isLastSaison) {
                 saisonMenu.getItems().add(new SeparatorMenuItem());
                 MenuItem delSaison = new MenuItem("❌ Supprimer Saison " + saison.getNumeroSaison());
@@ -161,13 +170,13 @@ public class SeriesAdminController implements Initializable {
             btn.getItems().add(saisonMenu);
         }
 
+        // ✅ NOUVEAU : Ajouter saison avec numéro automatique pré-rempli
         btn.getItems().add(new SeparatorMenuItem());
         MenuItem addSaison = new MenuItem("+ Ajouter Saison " + (totalSaisons + 1));
         addSaison.setStyle("-fx-text-fill: #e50914;");
         addSaison.setOnAction(a -> handleAddSaison(s));
         btn.getItems().add(addSaison);
     }
-
     private void handleSupprimerDerniereSaison(Serie s, Saison saison) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer définitivement la saison " + saison.getNumeroSaison() + " ?", ButtonType.YES, ButtonType.NO);
         if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
@@ -214,7 +223,17 @@ public class SeriesAdminController implements Initializable {
         }
     }
 
-    private void handleAddSaison(Serie s) { System.out.println("Lien vers addSaison"); }
+    private void handleAddSaison(Serie s) {
+        // Calculer le prochain numéro automatiquement
+        int nextNum = s.getSaisons().size() + 1;
+        
+        Saison newSaison = new Saison();
+        newSaison.setIdSerie(s.getId());
+        newSaison.setNumeroSaison(nextNum); // ✅ Pré-rempli automatiquement
+        
+        ScreenManager.getInstance().setEditingSaison(newSaison);
+        ScreenManager.getInstance().navigateTo(Screen.addSaison);
+    }
     private void handleAddEpisode(Saison s) { ScreenManager.getInstance().navigateTo(Screen.addEpisode);}
 
     @FXML 

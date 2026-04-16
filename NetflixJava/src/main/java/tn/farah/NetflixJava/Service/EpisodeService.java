@@ -162,4 +162,9 @@ public class EpisodeService {
 
         return total;
     }
+
+	public List<Episode> findBySaisonId(int id) {
+	
+		return episodeDAO.findBySaisonId(id);
+	}
 }
