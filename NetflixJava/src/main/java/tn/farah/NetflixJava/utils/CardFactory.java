@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.utils;
 
 import javafx.animation.*;
 
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -11,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Controller.EpisodeViewController;
-import tn.farah.NetflixJava.Controller.FilmPlayerController;
+
 import tn.farah.NetflixJava.Controller.UniversalPlayerController;
 
 import tn.farah.NetflixJava.Entities.Category;

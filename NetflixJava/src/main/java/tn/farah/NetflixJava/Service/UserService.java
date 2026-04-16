@@ -118,7 +118,20 @@ public class UserService {
         return userDao.updateUser(user);
 
     }
+
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
     }
+
+
+	public void addAuditLog(int i, String string) {
+		userDao.addAuditLog(i, string);
+		
+	}
+
+	public List<String> getAdminLogs(int id) {
+		
+		return userDao.getAdminLogs(id);
+	}
+
 }

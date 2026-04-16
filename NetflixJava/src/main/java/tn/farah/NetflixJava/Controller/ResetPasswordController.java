@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.animation.KeyFrame;
+
 import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -10,13 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Service.UserService;
+import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
 import java.security.MessageDigest;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
 
 public class ResetPasswordController {
 
@@ -32,19 +33,9 @@ public class ResetPasswordController {
 
     @FXML
     public void initialize() {
-        // --- INITIALISATION DU SERVICE ---
-        try {
-            // Connexion à la base de données
-            String url = "jdbc:mysql://localhost:3306/netflix";
-            Connection conn = DriverManager.getConnection(url, "root", "");
-            
-            // Création de l'instance UserService avec la connexion
+            Connection conn =ConxDB.getInstance();
             this.userService = new UserService(conn);
-        } catch (SQLException e) {
-            System.err.println("ERREUR : Impossible de se connecter à la DB dans ResetPasswordController");
-            e.printStackTrace();
-        }
-
+       
         // --- CONFIGURATION UI ---
         statusLabel.setVisible(false);
         progressIndicator.setVisible(false);

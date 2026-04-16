@@ -30,18 +30,14 @@ public class NotificationDAO {
         }
         return list;
     }
+  
     public List<Notification> getUserNotificationsAdmin() {
         List<Notification> list = new ArrayList<>();
-        String sql = "SELECT * FROM notifications ORDER BY date DESC"; // ✅ Toutes les notifs
+        String sql = "SELECT * FROM notifications WHERE type = 'SIGNALEMENT' ORDER BY date DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-          
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(mapRow(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
 
@@ -65,22 +61,16 @@ public class NotificationDAO {
     // ─────────────────────────────────────────────
     // Notifications non lues
     // ─────────────────────────────────────────────
+  
     public List<Notification> getUnreadNotifications(int userId) {
         List<Notification> list = new ArrayList<>();
-        // userId = 1 signifie l'admin, on filtre is_read = 0
-        String sql = "SELECT * FROM notifications WHERE user_id = ? AND is_read = 0 ORDER BY date DESC";
+        String sql = "SELECT * FROM notifications WHERE type = 'SIGNALEMENT' AND is_read = 0 ORDER BY date DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(mapRow(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
-
     // ─────────────────────────────────────────────
     // Notifications "envoyées" (type = SENT ou is_sent = 1)
     // Adaptez selon votre schéma DB
@@ -113,19 +103,17 @@ public class NotificationDAO {
         }
         return 0;
     }
-
+    
     // ─────────────────────────────────────────────
     // Compter les non lues
     // ─────────────────────────────────────────────
+  
     public int countUnread(int userId) {
-        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0";
+        String sql = "SELECT COUNT(*) FROM notifications WHERE type = 'SIGNALEMENT' AND is_read = 0";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
 
@@ -220,13 +208,15 @@ public class NotificationDAO {
     }
  // ✅ Compter TOUTES les notifications (admin voit tout)
     public int countAllAdmin() {
-        String sql = "SELECT COUNT(*) FROM notifications";
+        String sql = "SELECT COUNT(*) FROM notifications WHERE type = 'SIGNALEMENT'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
+    
+
  // Dans NotificationService
     public List<Notification> getSentByAdmin(int adminId) {
         String sql = "SELECT * FROM notifications WHERE type = 'INFO' ORDER BY date DESC";

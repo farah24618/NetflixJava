@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import tn.farah.NetflixJava.DAO.SerieDAO;
 import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.SerieService;
+import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.DatabaseConnection;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -21,13 +23,13 @@ public class SerieController {
     @FXML private TextField searchField;
     @FXML private Label seriesCountLabel;
 
-    private SerieDAO serieDAO;
+    private SerieService serieSer;
 
     @FXML
     public void initialize() {
-        Connection conn = DatabaseConnection.getConnection();
+        Connection conn = ConxDB.getInstance();
         if (conn != null) {
-            serieDAO = new SerieDAO(conn);
+        	serieSer = new SerieService(conn);
             
             // Premier chargement des données
             refreshList(""); 
@@ -47,9 +49,9 @@ public class SerieController {
             List<Serie> seriesList;
 
             if (query == null || query.isEmpty()) {
-                seriesList = serieDAO.findAll();
+                seriesList = serieSer.findAll();
             } else {
-                seriesList = serieDAO.findByTitle(query);
+                seriesList = serieSer.findByTitle(query);
             }
 
             if (seriesCountLabel != null) {

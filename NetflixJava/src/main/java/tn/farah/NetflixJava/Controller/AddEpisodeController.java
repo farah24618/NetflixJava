@@ -16,13 +16,20 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import tn.farah.NetflixJava.Entities.Episode;
+import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Entities.Saison;
+import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Subtitle;
 import tn.farah.NetflixJava.Service.EpisodeService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SaisonService;
+import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.Service.SubtitleService;
 import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.io.File;
 import java.net.URL;
@@ -37,6 +44,7 @@ public class AddEpisodeController implements Initializable {
     private EpisodeService  episodeService;
     private SaisonService   saisonService;
     private SubtitleService subtitleService;
+    private NotificationService notificationService;
 
     // ─── Fichiers sélectionnés ────────────────────────────────────────────────
     private File fileMiniature;
@@ -72,7 +80,7 @@ public class AddEpisodeController implements Initializable {
     @FXML private Label  lblStatus;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
-
+    private int editingEpisodeId = -1;
     // ═════════════════════════════════════════════════════════════════════════
     //  CLASSE INTERNE — une ligne sous-titre
     // ═════════════════════════════════════════════════════════════════════════
@@ -84,15 +92,52 @@ public class AddEpisodeController implements Initializable {
     // ═════════════════════════════════════════════════════════════════════════
     //  INITIALIZE
     // ═════════════════════════════════════════════════════════════════════════
+    private void populateForm(Episode ep) {
+        txtTitre.setText(ep.getTitre());
+        txtResume.setText(ep.getResume());
+        txtNumeroEpisode.setText(String.valueOf(ep.getNumeroEpisode()));
+        txtDuree.setText(String.valueOf(ep.getDuree()));
+        txtDureeIntro.setText(String.valueOf(ep.getDurreeIntro()));
+
+        // Sélectionner la bonne saison dans le ComboBox
+        for (Saison s : cbSaison.getItems()) {
+            if (s.getId() == ep.getSaisonId()) {
+                cbSaison.setValue(s);
+                break;
+            }
+        }
+
+        // Afficher miniature si elle existe
+        if (ep.getMiniatureUrl() != null && !ep.getMiniatureUrl().isEmpty()) {
+            try {
+                String url = ep.getMiniatureUrl().startsWith("http") || ep.getMiniatureUrl().startsWith("file:")
+                    ? ep.getMiniatureUrl() : "file:" + ep.getMiniatureUrl();
+                previewMiniature.setImage(new Image(url));
+                previewMiniature.setVisible(true);
+                lblMiniaturePlaceholder.setVisible(false);
+                lblMiniatureName.setText("Image existante");
+            } catch (Exception ignored) {}
+        }
+
+        // Mémoriser l'ID pour le update
+        this.editingEpisodeId = ep.getId();
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Connection connection = ConxDB.getInstance();
         episodeService  = new EpisodeService(connection);
         saisonService   = new SaisonService(connection);
-        // Initialisation du service avec le nouveau DAO
         subtitleService = new SubtitleService(connection);
+        notificationService=new NotificationService(connection);
 
         loadSaisons();
+
+        // ✅ Détecter mode édition
+        Episode ep = ScreenManager.getInstance().getEditingEpisode();
+        if (ep != null) {
+            populateForm(ep);
+            btnSave.setText("💾 Modifier");
+        }
     }
 
     private void loadSaisons() {
@@ -155,41 +200,81 @@ public class AddEpisodeController implements Initializable {
     // ═════════════════════════════════════════════════════════════════════════
     //  SAVE LOGIC
     // ═════════════════════════════════════════════════════════════════════════
+    
     @FXML
     private void handleSave() {
         if (!validateForm()) return;
         try {
-            // 1. Sauvegarder l'épisode
             Episode episode = buildEpisodeFromForm();
-            int episodeId = episodeService.save(episode);
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
 
-            if (episodeId > 0) {
-                // 2. Sauvegarder les sous-titres avec le nouvel ID Episode
-                saveSubtitles(episodeId);
+            // ── Récupérer le titre de la série ──
+            SerieService serieService = new SerieService(ConxDB.getInstance());
+            int serieId = saisonService.getSerieIdBySaison(episode.getSaisonId());
+            Serie serie = serieService.findById(serieId);
+            String serieTitle = (serie != null) ? serie.getTitre() : "Inconnue";
 
-                showSuccess("✓ Épisode « " + episode.getTitre() + " » enregistré !");
-                clearForm();
+            if (editingEpisodeId > 0) {
+                // ── MODE ÉDITION ──
+                episode.setId(editingEpisodeId);
+                episode.setNbreVue(episodeService.findById(editingEpisodeId).getNbreVue());
+                episodeService.update(episode);
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Épisode modifié",
+                    "L'épisode \"" + episode.getTitre() + "\" de la série \"" + serieTitle + "\" a été mis à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Épisode « " + episode.getTitre() + " » modifié !");
+
             } else {
-                showError("Erreur lors de l'enregistrement de l'épisode.");
+                // ── MODE CRÉATION ──
+                int episodeId = episodeService.save(episode);
+                if (episodeId > 0) {
+                    saveSubtitles(episodeId);
+
+                    Notification n = new Notification(
+                        0,
+                        userId,
+                        "NOUVEAUTE",
+                        "Nouvel épisode ajouté",
+                        "Un nouvel épisode \"" + episode.getTitre() + "\" a été ajouté à la série \"" + serieTitle + "\".",
+                        java.time.LocalDate.now().toString(),
+                        false,
+                        false
+                    );
+                    notificationService.addNotification(n);
+
+                    showSuccess("✓ Épisode « " + episode.getTitre() + " » enregistré !");
+                } else {
+                    showError("Erreur lors de l'enregistrement.");
+                    return;
+                }
             }
+
+            ScreenManager.getInstance().setEditingEpisode(null);
+            editingEpisodeId = -1;
+            clearForm();
+
         } catch (Exception e) {
             showError("Erreur : " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     private void saveSubtitles(int episodeId) {
         for (SubtitleRow sr : subtitleRows) {
-            if (sr.langage != null && !sr.langage.isEmpty() && !sr.filePath.isEmpty()) {
-                // Utilisation du nouveau constructeur compatible avec votre structure
-                // Subtitle(String langage, int filmId, int episodeId, String url)
-                // filmId est mis à 0 car c'est un épisode
-                Subtitle sub = new Subtitle(sr.langage, 0, episodeId, sr.filePath);
-                
-                int result = subtitleService.addSubtitle(sub);
-                if (result == 0) {
-                    System.err.println("Échec enregistrement sous-titre : " + sr.langage);
-                }
+            // Plus besoin du if — validateForm() garantit que tout est rempli
+            Subtitle sub = new Subtitle(sr.langage, 0, episodeId, sr.filePath);
+            int result = subtitleService.addSubtitle(sub);
+            if (result == 0) {
+                System.err.println("❌ Échec enregistrement sous-titre : " + sr.langage);
             }
         }
     }
@@ -204,7 +289,8 @@ public class AddEpisodeController implements Initializable {
             parseIntSafe(txtDuree.getText()),
             txtResume.getText().trim(),
             fileMiniature != null ? fileMiniature.getAbsolutePath() : "",
-            parseIntSafe(txtDureeIntro.getText())
+            parseIntSafe(txtDureeIntro.getText()),
+            0
         );
     }
 
@@ -241,12 +327,34 @@ public class AddEpisodeController implements Initializable {
             showError("Veuillez remplir les champs obligatoires (Titre, Saison, Vidéo).");
             return false;
         }
+
+        // ✅ Validation des sous-titres
+        for (SubtitleRow sr : subtitleRows) {
+            if (sr.langage == null || sr.langage.isEmpty()) {
+                showError("⚠️ Veuillez sélectionner une langue pour chaque sous-titre.");
+                return false;
+            }
+            if (sr.filePath == null || sr.filePath.isEmpty()) {
+                showError("⚠️ Veuillez choisir un fichier pour chaque sous-titre.");
+                return false;
+            }
+        }
+
         return true;
     }
 
     @FXML
     private void handleCancel() {
+        ScreenManager.getInstance().setEditingEpisode(null);
+        editingEpisodeId = -1;
         clearForm();
+    }
+
+    @FXML
+    private void handleRetour() {
+        ScreenManager.getInstance().setEditingEpisode(null);
+        editingEpisodeId = -1;
+        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
     }
 
     private void clearForm() {
@@ -271,13 +379,7 @@ public class AddEpisodeController implements Initializable {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
         return fc.showOpenDialog(getCurrentStage());
     }
-    @FXML
-    private void handleRetour() {
-        // Cette méthode doit exister car elle est appelée par le bouton "Retour" dans votre FXML.
-        // Vous pouvez y ajouter la logique de navigation, par exemple :
-        System.out.println("Clic sur le bouton retour");
-        // ScreenManager.getInstance().navigateTo(Screen.HOME); 
-    }
+    
     private File pickVideoFile(String title) {
         FileChooser fc = new FileChooser();
         fc.setTitle(title);
@@ -315,4 +417,5 @@ public class AddEpisodeController implements Initializable {
         lblStatus.setStyle("-fx-text-fill:#e50914;");
         lblStatus.setText(message);
     }
+   
 }

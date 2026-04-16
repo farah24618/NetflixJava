@@ -1,5 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
+import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -14,7 +16,8 @@ import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.DAO.SaisonDAO;
 import tn.farah.NetflixJava.DAO.EpisodeDAO;
-import tn.farah.NetflixJava.utils.DatabaseConnection; 
+import tn.farah.NetflixJava.utils.ConxDB;
+import tn.farah.NetflixJava.utils.DatabaseConnection;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
@@ -34,28 +37,23 @@ public class SeriesAdminController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Connection connection = DatabaseConnection.getConnection(); 
-        if (connection == null) return;
-
+        Connection connection = ConxDB.getInstance();
         serieService = new SerieService(connection);
-        loadData();
+        loadData(connection);
     }
 
-    private void loadData() {
-        Connection conn = DatabaseConnection.getConnection();
-        allSeries = serieService.getAllSeries(); 
+    private void loadData(Connection conn) {
+        allSeries = serieService.getAllSeries();
         
         SaisonDAO saisonDAO = new SaisonDAO(conn);
         EpisodeDAO episodeDAO = new EpisodeDAO(conn);
 
         for (Serie s : allSeries) {
             List<Saison> saisons = saisonDAO.findBySerieId(s.getId());
-            // Trier les saisons par numéro
             saisons.sort(Comparator.comparingInt(Saison::getNumeroSaison));
             
             for (Saison sa : saisons) {
                 List<Episode> episodes = episodeDAO.findBySaisonId(sa.getId());
-                // Trier les épisodes par numéro
                 episodes.sort(Comparator.comparingInt(Episode::getNumeroEpisode));
                 sa.setEpisodes(episodes);
             }
@@ -82,7 +80,7 @@ public class SeriesAdminController implements Initializable {
 
         StackPane imgCont = new StackPane();
         imgCont.setPrefSize(110, 65);
-        imgCont.setStyle("-fx-background-color: #222;"); 
+        imgCont.setStyle("-fx-background-color: #222;");
         loadImageIntoContainer(imgCont, s.getUrlImageCover());
 
         VBox infos = new VBox(2);
@@ -100,9 +98,17 @@ public class SeriesAdminController implements Initializable {
         Button deleteBtn = new Button("SUPPRIMER SÉRIE");
         deleteBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
         deleteBtn.setOnAction(e -> handleSupprimerSerie(s));
-
-        row.getChildren().addAll(imgCont, infos, spacer, saisonBtn, deleteBtn);
+        //******newww
+        Button UpdateBtn = new Button("Modifier SÉRIE");
+        UpdateBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        UpdateBtn.setOnAction(e -> handleUpdateSerie(s)); 
+        row.getChildren().addAll(imgCont, infos, spacer, saisonBtn,UpdateBtn, deleteBtn);
         return row;
+    }
+    private void handleUpdateSerie(Serie s) {
+        ScreenManager sm = ScreenManager.getInstance();
+        sm.setEditingSerie(s);
+        sm.navigateTo(Screen.addSerie);
     }
 
     private void refreshSaisonMenu(MenuButton btn, Serie s) {
@@ -115,9 +121,7 @@ public class SeriesAdminController implements Initializable {
             boolean isLastSaison = (i == totalSaisons - 1);
 
             Menu saisonMenu = new Menu("Saison " + saison.getNumeroSaison());
-            saisonMenu.getStyleClass().add("dark-menu");
 
-            // --- Liste des épisodes ---
             List<Episode> episodes = saison.getEpisodes();
             if (episodes.isEmpty()) {
                 MenuItem empty = new MenuItem("Aucun épisode");
@@ -125,30 +129,31 @@ public class SeriesAdminController implements Initializable {
                 saisonMenu.getItems().add(empty);
             } else {
                 for (Episode ep : episodes) {
-                    MenuItem epItem = new MenuItem("Ep " + ep.getNumeroEpisode() + " : " + ep.getTitre());
-                    epItem.setStyle("-fx-text-fill: white;");
-                    saisonMenu.getItems().add(epItem);
+                	// APRÈS
+                	MenuItem epItem = new MenuItem("Ep " + ep.getNumeroEpisode() + " : " + ep.getTitre());
+                	epItem.setOnAction(e -> {
+                	    ScreenManager.getInstance().setEditingEpisode(ep);
+                	    ScreenManager.getInstance().navigateTo(Screen.addEpisode);
+                	});
+                	saisonMenu.getItems().add(epItem);
                 }
 
-                // Bouton : Supprimer DERNIER épisode de cette saison
                 saisonMenu.getItems().add(new SeparatorMenuItem());
                 MenuItem delLastEp = new MenuItem("🗑 Supprimer dernier épisode");
-                delLastEp.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+                delLastEp.setStyle("-fx-text-fill: orange;");
                 delLastEp.setOnAction(e -> handleSupprimerDernierEpisode(saison));
                 saisonMenu.getItems().add(delLastEp);
             }
 
-            // Bouton : Ajouter épisode
             MenuItem addEp = new MenuItem("+ Ajouter épisode");
             addEp.setStyle("-fx-text-fill: #e50914;");
             addEp.setOnAction(e -> handleAddEpisode(saison));
             saisonMenu.getItems().add(addEp);
 
-            // --- Bouton : Supprimer LA SAISON (Uniquement si c'est la dernière) ---
             if (isLastSaison) {
                 saisonMenu.getItems().add(new SeparatorMenuItem());
                 MenuItem delSaison = new MenuItem("❌ Supprimer Saison " + saison.getNumeroSaison());
-                delSaison.setStyle("-fx-text-fill: #ff4444; -fx-font-weight: bold;");
+                delSaison.setStyle("-fx-text-fill: #ff4444;");
                 delSaison.setOnAction(e -> handleSupprimerDerniereSaison(s, saison));
                 saisonMenu.getItems().add(delSaison);
             }
@@ -158,16 +163,14 @@ public class SeriesAdminController implements Initializable {
 
         btn.getItems().add(new SeparatorMenuItem());
         MenuItem addSaison = new MenuItem("+ Ajouter Saison " + (totalSaisons + 1));
-        addSaison.setStyle("-fx-text-fill: #e50914; -fx-font-weight: bold;");
+        addSaison.setStyle("-fx-text-fill: #e50914;");
         addSaison.setOnAction(a -> handleAddSaison(s));
         btn.getItems().add(addSaison);
     }
 
     private void handleSupprimerDerniereSaison(Serie s, Saison saison) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer définitivement la dernière saison ?", ButtonType.YES, ButtonType.NO);
-        if (alert.showAndWait().get() == ButtonType.YES) {
-            // Appeler votre service de suppression ici
-            // serieService.deleteSaison(saison.getId()); 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer définitivement la saison " + saison.getNumeroSaison() + " ?", ButtonType.YES, ButtonType.NO);
+        if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
             s.getSaisons().remove(saison);
             renderAdminList(allSeries);
         }
@@ -177,9 +180,7 @@ public class SeriesAdminController implements Initializable {
         if (!saison.getEpisodes().isEmpty()) {
             Episode dernier = saison.getEpisodes().get(saison.getEpisodes().size() - 1);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer l'épisode " + dernier.getNumeroEpisode() + " ?", ButtonType.YES, ButtonType.NO);
-            if (alert.showAndWait().get() == ButtonType.YES) {
-                // Appeler votre service de suppression ici
-                // episodeDAO.delete(dernier.getId());
+            if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
                 saison.getEpisodes().remove(dernier);
                 renderAdminList(allSeries);
             }
@@ -191,11 +192,7 @@ public class SeriesAdminController implements Initializable {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Supprimer TOUTE la série : " + s.getTitre() + " ?");
         
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: #1a1a1a;");
-        dialogPane.lookupAll(".label").forEach(node -> node.setStyle("-fx-text-fill: white;"));
-
-        if (alert.showAndWait().get() == ButtonType.OK) {
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             if (serieService.deleteSerie(s.getId())) {
                 allSeries.remove(s);
                 renderAdminList(allSeries);
@@ -207,7 +204,7 @@ public class SeriesAdminController implements Initializable {
         if (url == null || url.trim().isEmpty()) return;
         try {
             String finalUrl = (url.startsWith("http") || url.startsWith("file:")) ? url : "file:" + url;
-            Image img = new Image(finalUrl, true); 
+            Image img = new Image(finalUrl, true);
             ImageView imgView = new ImageView(img);
             imgView.setFitWidth(110); imgView.setFitHeight(65);
             imgView.setPreserveRatio(false);
@@ -217,13 +214,89 @@ public class SeriesAdminController implements Initializable {
         }
     }
 
-    private void handleAddSaison(Serie s) { System.out.println("Ajout Saison"); }
-    private void handleAddEpisode(Saison s) { System.out.println("Ajout Episode"); }
-    
-    @FXML private void onSearch() {
+    private void handleAddSaison(Serie s) { System.out.println("Lien vers addSaison"); }
+    private void handleAddEpisode(Saison s) { ScreenManager.getInstance().navigateTo(Screen.addEpisode);}
+
+    @FXML 
+    private void onSearch() {
         String q = searchField.getText().toLowerCase();
-        renderAdminList(allSeries.stream().filter(s -> s.getTitre().toLowerCase().contains(q)).collect(Collectors.toList()));
+        renderAdminList(allSeries.stream()
+                .filter(s -> s.getTitre().toLowerCase().contains(q))
+                .collect(Collectors.toList()));
     }
 
-    @FXML private void handleNavDashboard() { ScreenManager.getInstance().navigateTo(Screen.home); }
-}
+    // --- NAVIGATION ---
+    @FXML
+    private void handleNavDashboard(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
+    }
+
+    @FXML
+    private void handleNavUsers(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.manageUsers);
+    }
+
+    @FXML
+    private void handleNavFilms(ActionEvent event) {
+        // J'ai gardé parametresAdmin comme tu l'avais écrit, 
+        // mais vérifie si tu n'as pas un Screen.manageFilms à la place.
+        ScreenManager.getInstance().navigateTo(Screen.admin_main);
+        
+    }  
+        
+     // --- NAVIGATION DYNAMIQUE ---
+
+        
+
+       
+       
+        @FXML
+        private void handleNavNotif(ActionEvent event) {
+            System.out.println("Aller vers Notifications");
+             ScreenManager.getInstance().navigateTo(Screen.notificationAdmin); 
+        }
+
+        @FXML
+        private void handleNavComments(ActionEvent event) {
+            System.out.println("Aller vers Commentaires");
+             ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
+        }
+
+        @FXML
+        private void handleNavSettings(ActionEvent event) {
+            System.out.println("Aller vers Paramètres");
+            ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+        }    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }

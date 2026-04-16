@@ -135,4 +135,14 @@ public class SaisonService {
     public int findFirstSeasonIdBySerie(int serieId) {
     	return saisonDAO.findFirstSeasonIdBySerie(serieId);
     }
+
+	public List<Saison> findBySerieId(int id) {
+		
+		return saisonDAO.findBySerieId(id);
+	}
+
+	public int getSerieIdBySaison(int saisonId) {
+		
+		return saisonDAO.getSerieIdBySaison(saisonId);
+	}
 }

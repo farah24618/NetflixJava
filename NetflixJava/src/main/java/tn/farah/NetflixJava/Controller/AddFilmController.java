@@ -4,30 +4,33 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.Entities.*;
 import tn.farah.NetflixJava.Service.CategoryService;
 import tn.farah.NetflixJava.Service.FilmService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SubtitleService;
 import tn.farah.NetflixJava.Service.WarningService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -37,14 +40,24 @@ public class AddFilmController implements Initializable {
     private FilmService     filmService;
     private CategoryService categoryService;
     private WarningService  warningService;
+    private SubtitleService subtitleService;
+
+    // ─── Edit-mode state ─────────────────────────────────────────────────────
+    private Film filmToEdit = null;
 
     // ─── State ───────────────────────────────────────────────────────────────
     private final Set<Category> selectedCategories = new HashSet<>();
     private final Set<Warning>  selectedWarnings   = new HashSet<>();
     private File filePoster;
     private File fileBanner;
-    private File fileTeaser;   // urlTeaser  — bande-annonce
-    private File fileVideo;    // urlVedio   — film complet
+    private File fileTeaser;
+    private File fileVideo;
+
+    private static class SubtitleRow {
+        String langage  = "";
+        String filePath = "";
+    }
+    private final List<SubtitleRow> subtitleRows = new ArrayList<>();
 
     // ─── Form fields ─────────────────────────────────────────────────────────
     @FXML private TextField  txtTitre;
@@ -56,13 +69,13 @@ public class AddFilmController implements Initializable {
     @FXML private ComboBox<AgeRating> cbAgeRating;
 
     // ─── Categories ──────────────────────────────────────────────────────────
-    @FXML private FlowPane categoriesPane;
-    @FXML private HBox     addCategoryBox;
+    @FXML private FlowPane  categoriesPane;
+    @FXML private HBox      addCategoryBox;
     @FXML private TextField txtNewCategory;
 
     // ─── Warnings ────────────────────────────────────────────────────────────
-    @FXML private FlowPane warningsPane;
-    @FXML private HBox     addWarningBox;
+    @FXML private FlowPane  warningsPane;
+    @FXML private HBox      addWarningBox;
     @FXML private TextField txtNewWarning;
 
     // ─── Upload – Poster ─────────────────────────────────────────────────────
@@ -77,7 +90,7 @@ public class AddFilmController implements Initializable {
     @FXML private Label     lblBannerPlaceholder;
     @FXML private Label     lblBannerName;
 
-    // ─── Upload – Teaser (bande-annonce) ─────────────────────────────────────
+    // ─── Upload – Teaser ─────────────────────────────────────────────────────
     @FXML private VBox        dropTeaser;
     @FXML private Label       lblTeaserPlaceholder;
     @FXML private Label       lblTeaserName;
@@ -89,69 +102,116 @@ public class AddFilmController implements Initializable {
     @FXML private Label       lblVideoName;
     @FXML private ProgressBar pbVideo;
 
-    // ─── Status & actions ────────────────────────────────────────────────────
+    // ─── Subtitles ───────────────────────────────────────────────────────────
+    @FXML private VBox   subtitlesContainer;
+    @FXML private Button btnAddSubtitle;
+
+    // ─── Header / Status ─────────────────────────────────────────────────────
+    @FXML private Label  lblFormTitle;
     @FXML private Label  lblStatus;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
- // ─── State ───────────────────────────
-    private SubtitleService subtitleService;
-    private final List<Subtitle> subtitleList = new ArrayList<>();
-
-    // ─── FXML ────────────────────────────
-    @FXML private VBox      subtitlesContainer;  // holds the rows dynamically
-    @FXML private Button    btnAddSubtitle;
 
     // ═════════════════════════════════════════════════════════════════════════
     //  INITIALIZE
     // ═════════════════════════════════════════════════════════════════════════
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Connection connection = ConxDB.getInstance();
+        filmService     = new FilmService(connection);
+        categoryService = new CategoryService(connection);
+        warningService  = new WarningService(connection);
         
-            Connection connection = ConxDB.getInstance();
-            filmService     = new FilmService(connection);
-            categoryService = new CategoryService(connection);
-            warningService  = new WarningService(connection);
+        subtitleService = new SubtitleService(connection);
 
-            cbAgeRating.getItems().addAll(AgeRating.values());
-            cbAgeRating.getSelectionModel().selectFirst();
+        cbAgeRating.getItems().addAll(AgeRating.values());
+        cbAgeRating.getSelectionModel().selectFirst();
 
-            loadCategoryChips();
-            loadWarningChips();
+        filmToEdit = ScreenManager.getInstance().getEditingFilm();
+        ScreenManager.getInstance().clearEditingFilm();
 
-      
+        loadCategoryChips();
+        loadWarningChips();
+
+        if (filmToEdit != null) {
+            enterEditMode(filmToEdit);
+        }
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  EDIT MODE
+    // ═════════════════════════════════════════════════════════════════════════
+    private void enterEditMode(Film film) {
+        if (lblFormTitle != null) lblFormTitle.setText("Modifier le film");
+        if (btnSave != null)      btnSave.setText("✓ Enregistrer les modifications");
+
+        txtTitre.setText(nullSafe(film.getTitre()));
+        txtSynopsis.setText(nullSafe(film.getSynopsis()));
+        txtCasting.setText(nullSafe(film.getCasting()));
+        txtProducteur.setText(nullSafe(film.getProducteur()));
+        txtDuree.setText(film.getDuree() > 0 ? String.valueOf(film.getDuree()) : "");
+        dpDateSortie.setValue(film.getDateSortie());
+
+        if (film.getAgeRating() != null) cbAgeRating.getSelectionModel().select(film.getAgeRating());
+
+        if (film.getGenres() != null)   { selectedCategories.addAll(film.getGenres());  loadCategoryChips(); }
+        if (film.getWarnings() != null) { selectedWarnings.addAll(film.getWarnings());  loadWarningChips();  }
+
+        String cover = film.getUrlImageCover();
+        if (notEmpty(cover)) {
+            try {
+                previewPoster.setImage(new Image(cover, true));
+                previewPoster.setVisible(true);
+                lblPosterPlaceholder.setVisible(false);
+                lblPosterName.setText("(image actuelle)");
+                activateDropZone(dropPoster);
+            } catch (Exception ignored) {}
+        }
+
+        String banner = film.getUrlImageBanner();
+        if (notEmpty(banner)) {
+            try {
+                previewBanner.setImage(new Image(banner, true));
+                previewBanner.setVisible(true);
+                lblBannerPlaceholder.setVisible(false);
+                lblBannerName.setText("(bannière actuelle)");
+                activateDropZone(dropBanner);
+            } catch (Exception ignored) {}
+        }
+
+        if (notEmpty(film.getUrlTeaser())) {
+            lblTeaserPlaceholder.setText("✅");
+            lblTeaserName.setText("(teaser actuel)");
+            activateDropZone(dropTeaser);
+        }
+
+        if (notEmpty(film.getUrlVedio())) {
+            lblVideoPlaceholder.setText("✅");
+            lblVideoName.setText("(vidéo actuelle)");
+            activateDropZone(dropVideo);
+        }
     }
 
     // ═════════════════════════════════════════════════════════════════════════
     //  CATEGORIES
     // ═════════════════════════════════════════════════════════════════════════
-
     private void loadCategoryChips() {
         categoriesPane.getChildren().clear();
         try {
-            List<Category> categories = categoryService.getAllCategoriesSorted();
-            
-            // Ajout d'un test pour voir combien d'éléments sont récupérés
-            System.out.println("Nombre de catégories récupérées : " + categories.size()); 
-            
-            for (Category cat : categories) {
-                System.out.println("Catégorie trouvée : " + cat.getName());
+            for (Category cat : categoryService.getAllCategoriesSorted())
                 categoriesPane.getChildren().add(buildCategoryChip(cat));
-            }
-        } catch (Exception e) {
-            // C'EST ICI LE SECRET : Affiche l'erreur dans la console !
-            e.printStackTrace(); 
-            showError("Impossible de charger les catégories.");
-        }
+        } catch (Exception e) { showError("Impossible de charger les catégories."); }
     }
 
     private Button buildCategoryChip(Category cat) {
+        boolean isSelected = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
         Button chip = new Button(cat.getName());
-        applyChipStyle(chip, selectedCategories.contains(cat));
+        applyChipStyle(chip, isSelected);
         chip.setOnAction(e -> {
-            boolean selected = selectedCategories.contains(cat);
-            if (selected) selectedCategories.remove(cat);
-            else          selectedCategories.add(cat);
-            applyChipStyle(chip, !selected);
+            boolean sel = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
+            if (sel) selectedCategories.removeIf(c -> c.getId() == cat.getId());
+            else     selectedCategories.add(cat);
+            applyChipStyle(chip, !sel);
         });
         return chip;
     }
@@ -162,37 +222,20 @@ public class AddFilmController implements Initializable {
         txtNewCategory.requestFocus();
     }
 
-    @FXML 
+    @FXML
     private void handleConfirmAddCategory() {
-        System.out.println("DEBUG: Button was clicked!"); // See if the method even fires
-        
         try {
-            // If txtNewCategory is null, it will crash here, but now we will catch it!
             String name = txtNewCategory.getText().trim();
-            
-            if (name.isEmpty()) { 
-                showError("Le nom ne peut pas être vide."); 
-                return; 
-            }
-            
+            if (name.isEmpty()) { showError("Le nom ne peut pas être vide."); return; }
             categoryService.saveCategory(name);
-            
             categoryService.getAllCategoriesSorted().stream()
                     .filter(c -> c.getName().equalsIgnoreCase(name))
-                    .findFirst()
-                    .ifPresent(selectedCategories::add);
-                    
+                    .findFirst().ifPresent(selectedCategories::add);
             loadCategoryChips();
             showSuccess("Catégorie « " + name + " » ajoutée !");
             txtNewCategory.clear();
             handleCancelAddCategory();
-            
-        } catch (Exception ex) { 
-            // This will now catch NPEs from the text field or service
-            System.out.println("CRASH REASON: " + ex.toString());
-            ex.printStackTrace(); // Print full error to console
-            showError("Erreur fatale: " + ex.getMessage()); 
-        }
+        } catch (Exception ex) { showError("Erreur: " + ex.getMessage()); }
     }
 
     @FXML private void handleCancelAddCategory() {
@@ -207,26 +250,20 @@ public class AddFilmController implements Initializable {
     private void loadWarningChips() {
         warningsPane.getChildren().clear();
         try {
-            List<Warning> warnings = warningService.getAllWarnings();
-            System.out.println("Nombre de warnings récupérés : " + warnings.size());
-            
-            for (Warning w : warnings) {
+            for (Warning w : warningService.getAllWarnings())
                 warningsPane.getChildren().add(buildWarningChip(w));
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // <--- AJOUTE CECI
-            showError("Impossible de charger les warnings.");
-        }
+        } catch (Exception e) { showError("Impossible de charger les warnings."); }
     }
 
     private Button buildWarningChip(Warning w) {
+        boolean isSelected = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
         Button chip = new Button(w.getNom());
-        applyChipStyle(chip, selectedWarnings.contains(w));
+        applyChipStyle(chip, isSelected);
         chip.setOnAction(e -> {
-            boolean selected = selectedWarnings.contains(w);
-            if (selected) selectedWarnings.remove(w);
-            else          selectedWarnings.add(w);
-            applyChipStyle(chip, !selected);
+            boolean sel = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
+            if (sel) selectedWarnings.removeIf(sw -> sw.getId() == w.getId());
+            else     selectedWarnings.add(w);
+            applyChipStyle(chip, !sel);
         });
         return chip;
     }
@@ -237,18 +274,18 @@ public class AddFilmController implements Initializable {
         txtNewWarning.requestFocus();
     }
 
-    @FXML private void handleConfirmAddWarning() {
+    @FXML
+    private void handleConfirmAddWarning() {
         String name = txtNewWarning.getText().trim();
         if (name.isEmpty()) { showError("Le nom ne peut pas être vide."); return; }
         try {
             Warning newWarn = new Warning(0, name);
-            warningService.save(newWarn); // uncomment when save() exists
+            warningService.save(newWarn);
             selectedWarnings.add(newWarn);
             loadWarningChips();
             showSuccess("Warning « " + name + " » ajouté !");
             txtNewWarning.clear();
             handleCancelAddWarning();
-            
         } catch (Exception ex) { showError(ex.getMessage()); }
     }
 
@@ -257,61 +294,72 @@ public class AddFilmController implements Initializable {
         addWarningBox.setManaged(false);
         txtNewWarning.clear();
     }
-    //-------------------------------------------------------------
-    //subtitels:
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  SUBTITLES
+    // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handleAddSubtitle() {
-        // Language input
-        TextField txtLang = new TextField();
-        txtLang.setPromptText("Langue (ex: Français)");
-        txtLang.setStyle("/* same dark style as other fields */");
+        SubtitleRow sRow = new SubtitleRow();
+        subtitleRows.add(sRow);
 
-        // File label
+        ComboBox<String> cbLang = new ComboBox<>();
+        cbLang.getItems().addAll("FR", "EN", "AR", "ES", "DE", "IT");
+        cbLang.setPromptText("Langue");
+        cbLang.setPrefWidth(90);
+        cbLang.setStyle("-fx-background-color:#0f0f13; -fx-border-color:#2a2a35; -fx-border-radius:6;");
+        cbLang.setOnAction(e -> sRow.langage = cbLang.getValue() != null ? cbLang.getValue() : "");
+
         Label lblFile = new Label("Aucun fichier");
         lblFile.setStyle("-fx-text-fill:#888888; -fx-font-size:11px;");
+        HBox.setHgrow(lblFile, Priority.ALWAYS);
 
-        // Pick file button
-        Button btnPick = new Button("📁 .srt / .vtt");
-        btnPick.setStyle("-fx-background-color:#2a2a35; -fx-text-fill:#cccccc;");
-
-        // Store the chosen file
-        final File[] chosenFile = {null};
-
-        btnPick.setOnAction(e -> {
-            FileChooser chooser = new FileChooser();
-            chooser.setTitle("Choisir un fichier de sous-titres");
-            chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Sous-titres", "*.srt", "*.vtt", "*.ass")
-            );
-            File f = chooser.showOpenDialog(getCurrentStage());
+        Button btnBrowse = new Button("📁 Parcourir");
+        btnBrowse.setStyle("-fx-background-color:#2a2a35; -fx-text-fill:#cccccc; -fx-cursor:hand;");
+        btnBrowse.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Choisir un fichier de sous-titres");
+            fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Sous-titres", "*.srt", "*.vtt", "*.ass"));
+            File f = fc.showOpenDialog(getCurrentStage());
             if (f != null) {
-                chosenFile[0] = f;
+                sRow.filePath = f.getAbsolutePath();
                 lblFile.setText(f.getName());
                 lblFile.setStyle("-fx-text-fill:#e50914; -fx-font-weight:bold;");
             }
         });
 
-        // Remove row button
         Button btnRemove = new Button("✕");
-        btnRemove.setStyle("-fx-background-color:#2a2a35; -fx-text-fill:#888888;");
+        btnRemove.setStyle("-fx-background-color:transparent; -fx-text-fill:#888888; -fx-cursor:hand;");
 
-        HBox row = new HBox(8, txtLang, btnPick, lblFile, btnRemove);
-        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox row = new HBox(8, cbLang, lblFile, btnBrowse, btnRemove);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color:#0f0f13; -fx-padding:8; " +
+                     "-fx-border-color:#2a2a35; -fx-border-radius:6;");
 
-        btnRemove.setOnAction(e -> subtitlesContainer.getChildren().remove(row));
-
-        // Register the subtitle in the list when language is typed
-        txtLang.textProperty().addListener((obs, oldVal, newVal) -> {
-            // Update or add entry
+        btnRemove.setOnAction(e -> {
+            subtitlesContainer.getChildren().remove(row);
+            subtitleRows.remove(sRow);
         });
 
         subtitlesContainer.getChildren().add(row);
     }
 
+    private void saveSubtitles(int filmId) {
+        for (SubtitleRow sr : subtitleRows) {
+            if (sr.langage != null && !sr.langage.isEmpty() && !sr.filePath.isEmpty()) {
+                Subtitle sub = new Subtitle(sr.langage, filmId, 0, sr.filePath);
+                int result = subtitleService.addSubtitle(sub);
+                if (result == 0) {
+                    System.err.println("❌ Échec enregistrement sous-titre : " + sr.langage);
+                }
+            }
+        }
+    }
+
     // ═════════════════════════════════════════════════════════════════════════
     //  FILE UPLOADS
     // ═════════════════════════════════════════════════════════════════════════
-
     @FXML
     private void handlePickPoster() {
         File file = pickImageFile("Sélectionner l'affiche (poster)");
@@ -338,7 +386,6 @@ public class AddFilmController implements Initializable {
         }
     }
 
-    /** Teaser = urlTeaser in Media (short promo clip) */
     @FXML
     private void handlePickTeaser() {
         File file = pickVideoFile("Sélectionner le teaser / bande-annonce");
@@ -351,7 +398,6 @@ public class AddFilmController implements Initializable {
         }
     }
 
-    /** Video = urlVedio in Film (full movie file) */
     @FXML
     private void handlePickVideo() {
         File file = pickVideoFile("Sélectionner la vidéo principale du film");
@@ -364,7 +410,200 @@ public class AddFilmController implements Initializable {
         }
     }
 
-    // ─── Helpers ─────────────────────────────────────────────────────────────
+    // ═════════════════════════════════════════════════════════════════════════
+    //  SAVE
+    // ═════════════════════════════════════════════════════════════════════════
+    @FXML
+    private void handleSave() {
+        if (!validateForm()) return;
+        try {
+            NotificationService notificationService = new NotificationService(ConxDB.getInstance());
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
+
+            if (filmToEdit == null) {
+                // ── MODE CRÉATION ──
+                Film film = buildFilmFromForm(0);
+                filmService.enregistrerFilm(film);
+                saveSubtitles(film.getId());
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "NOUVEAUTE",
+                    "Nouveau film ajouté",
+                    "Le film \"" + film.getTitre() + "\" vient d'être ajouté à la plateforme.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Film « " + film.getTitre() + " » enregistré !");
+
+            } else {
+                // ── MODE ÉDITION ──
+                Film film = buildFilmFromForm(filmToEdit.getId());
+                filmService.updateFilm(film);
+                saveSubtitles(filmToEdit.getId());
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Film mis à jour",
+                    "Le film \"" + film.getTitre() + "\" a été mis à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Film « " + film.getTitre() + " » mis à jour !");
+                filmToEdit = null;
+            }
+
+            clearForm();
+
+        } catch (Exception e) {
+            showError("Erreur : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    private Film buildFilmFromForm(int id) {
+        int duree = 0;
+        try { duree = Integer.parseInt(txtDuree.getText().trim()); } catch (NumberFormatException ignored) {}
+
+        String urlCover  = filePoster != null ? filePoster.toURI().toString()
+                         : (filmToEdit != null ? nullSafe(filmToEdit.getUrlImageCover())  : "");
+        String urlBanner = fileBanner != null ? fileBanner.toURI().toString()
+                         : (filmToEdit != null ? nullSafe(filmToEdit.getUrlImageBanner()) : "");
+        String urlTeaser = fileTeaser != null ? fileTeaser.toURI().toString()
+                         : (filmToEdit != null ? nullSafe(filmToEdit.getUrlTeaser())      : "");
+        String urlVedio  = fileVideo  != null ? fileVideo.toURI().toString()
+                         : (filmToEdit != null ? nullSafe(filmToEdit.getUrlVedio())       : "");
+
+        Film film = new Film(
+                id,
+                txtTitre.getText().trim(),
+                txtSynopsis.getText().trim(),
+                txtCasting.getText().trim(),
+                dpDateSortie.getValue(),
+                urlCover, urlBanner, urlTeaser,
+                filmToEdit != null ? filmToEdit.getRatingMoyen() : 0.0,
+                cbAgeRating.getValue(),
+                TypeMedia.Film,
+                LocalDateTime.now(),
+                new HashSet<>(selectedCategories),
+                new HashSet<>(selectedWarnings),
+                urlVedio,
+                duree,
+                filmToEdit != null ? filmToEdit.getNbreVue() : 0
+        );
+        film.setProducteur(txtProducteur.getText().trim());
+        return film;
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  VALIDATION  ← ✅ MODIFICATION ICI
+    // ═════════════════════════════════════════════════════════════════════════
+    private boolean validateForm() {
+        StringBuilder errors = new StringBuilder();
+        if (txtTitre.getText().trim().isEmpty())      errors.append("• Titre obligatoire.\n");
+        if (txtSynopsis.getText().trim().isEmpty())   errors.append("• Synopsis obligatoire.\n");
+        if (txtCasting.getText().trim().isEmpty())    errors.append("• Casting obligatoire.\n");
+        if (txtProducteur.getText().trim().isEmpty()) errors.append("• Producteur obligatoire.\n");
+        if (txtDuree.getText().trim().isEmpty())      errors.append("• Durée obligatoire.\n");
+        if (dpDateSortie.getValue() == null)          errors.append("• Date de sortie obligatoire.\n");
+        if (cbAgeRating.getValue() == null)           errors.append("• Age Rating obligatoire.\n");
+        if (selectedCategories.isEmpty())             errors.append("• Au moins une catégorie requise.\n");
+
+        boolean hasPoster = filePoster != null || (filmToEdit != null && notEmpty(filmToEdit.getUrlImageCover()));
+        boolean hasBanner = fileBanner != null || (filmToEdit != null && notEmpty(filmToEdit.getUrlImageBanner()));
+        boolean hasVideo  = fileVideo  != null || (filmToEdit != null && notEmpty(filmToEdit.getUrlVedio()));
+
+        if (!hasPoster) errors.append("• Affiche (poster) obligatoire.\n");
+        if (!hasBanner) errors.append("• Bannière obligatoire.\n");
+        if (!hasVideo)  errors.append("• Vidéo principale obligatoire.\n");
+
+        // ✅ Validation des sous-titres : langue ET fichier obligatoires ensemble
+        for (int i = 0; i < subtitleRows.size(); i++) {
+            SubtitleRow sr = subtitleRows.get(i);
+            boolean hasLang = sr.langage != null && !sr.langage.isEmpty();
+            boolean hasFile = sr.filePath != null && !sr.filePath.isEmpty();
+
+            if (!hasLang && !hasFile) {
+                errors.append("• Sous-titre #").append(i + 1)
+                      .append(" : veuillez sélectionner une langue et un fichier.\n");
+            } else if (!hasLang) {
+                errors.append("• Sous-titre #").append(i + 1)
+                      .append(" : veuillez sélectionner une langue.\n");
+            } else if (!hasFile) {
+                errors.append("• Sous-titre #").append(i + 1)
+                      .append(" : veuillez choisir un fichier (.srt / .vtt / .ass).\n");
+            }
+        }
+
+        if (errors.length() > 0) { showError(errors.toString().trim()); return false; }
+        return true;
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  CANCEL / RESET
+    // ═════════════════════════════════════════════════════════════════════════
+    @FXML
+    private void handleCancel() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Annuler ? Les modifications non sauvegardées seront perdues.",
+                ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.YES) { filmToEdit = null; clearForm(); }
+        });
+    }
+
+    private void clearForm() {
+        txtTitre.clear(); txtSynopsis.clear();
+        txtCasting.clear(); txtProducteur.clear(); txtDuree.clear();
+        dpDateSortie.setValue(null);
+        cbAgeRating.getSelectionModel().selectFirst();
+
+        selectedCategories.clear(); selectedWarnings.clear();
+        loadCategoryChips(); loadWarningChips();
+
+        filePoster = null; fileBanner = null; fileTeaser = null; fileVideo = null;
+
+        previewPoster.setVisible(false); previewBanner.setVisible(false);
+        lblPosterPlaceholder.setVisible(true); lblBannerPlaceholder.setVisible(true);
+        lblPosterName.setText(""); lblBannerName.setText("");
+        lblTeaserName.setText(""); lblVideoName.setText("");
+        lblTeaserPlaceholder.setText("🎞"); lblVideoPlaceholder.setText("▶");
+
+        pbTeaser.setVisible(false); pbTeaser.setProgress(0);
+        pbVideo.setVisible(false);  pbVideo.setProgress(0);
+
+        subtitlesContainer.getChildren().clear();
+        subtitleRows.clear();
+
+        lblStatus.setText("");
+        if (lblFormTitle != null) lblFormTitle.setText("Ajouter un nouveau film");
+        if (btnSave      != null) btnSave.setText("✓ Enregistrer le film");
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    //  HELPERS
+    // ═════════════════════════════════════════════════════════════════════════
+    private void applyChipStyle(Button chip, boolean selected) {
+        if (selected) {
+            chip.setStyle("-fx-background-color:#e50914; -fx-background-radius:20; " +
+                          "-fx-text-fill:white; -fx-font-size:12px; -fx-font-weight:bold; " +
+                          "-fx-padding:5 14 5 14; -fx-cursor:hand;");
+        } else {
+            chip.setStyle("-fx-background-color:#2a2a35; -fx-background-radius:20; " +
+                          "-fx-text-fill:#cccccc; -fx-font-size:12px; " +
+                          "-fx-padding:5 14 5 14; -fx-cursor:hand;");
+        }
+    }
 
     private File pickImageFile(String title) {
         FileChooser chooser = new FileChooser();
@@ -394,150 +633,10 @@ public class AddFilmController implements Initializable {
     }
 
     private void activateDropZone(VBox zone) {
-        zone.setStyle(zone.getStyle()
-                + "-fx-border-color:#e50914; -fx-background-color:#e509140a;");
+        zone.setStyle(zone.getStyle() + "-fx-border-color:#e50914; -fx-background-color:#e509140a;");
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  SAVE
-    // ═════════════════════════════════════════════════════════════════════════
-
-    @FXML
-    private void handleSave() {
-        if (!validateForm()) return;
-        try {
-            Film film = buildFilmFromForm();
-             filmService.enregistrerFilm(film); // make sure this returns the generated ID
-
-            // Save each subtitle row
-            for (Node node : subtitlesContainer.getChildren()) {
-                if (node instanceof HBox row) {
-                    TextField langField = (TextField) row.getChildren().get(0);
-                    String lang = langField.getText().trim();
-                    // Retrieve file from your stored state
-                    // subtitleService.save(filmId, lang, fileUrl);
-                }
-            }
-
-            showSuccess("✓ Film enregistré avec sous-titres !");
-            clearForm();
-        } catch (Exception e) {
-            showError("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private Film buildFilmFromForm() {
-        int duree = 0;
-        try { duree = Integer.parseInt(txtDuree.getText().trim()); } catch (NumberFormatException ignored) {}
-
-        // urlTeaser = teaser clip   |   urlVedio = full movie
-        String urlCover   = filePoster != null ? filePoster.toURI().toString() : "";
-        String urlBanner  = fileBanner != null ? fileBanner.toURI().toString() : "";
-        String urlTeaser  = fileTeaser != null ? fileTeaser.toURI().toString() : "";
-        String urlVedio   = fileVideo  != null ? fileVideo.toURI().toString()  : "";
-
-        Film film = new Film(
-        	    0,
-        	    txtTitre.getText().trim(),
-        	    txtSynopsis.getText().trim(),
-        	    txtCasting.getText().trim(),
-        	    dpDateSortie.getValue(),
-        	    urlCover,
-        	    urlBanner,
-        	    urlTeaser,
-        	    0.0,
-        	    cbAgeRating.getValue(),
-        	    TypeMedia.Film,
-        	    LocalDateTime.now(),
-        	    new HashSet<>(selectedCategories),
-        	    new HashSet<>(selectedWarnings),
-        	    urlVedio,
-        	    duree,
-        	    0
-        	);
-        	film.setProducteur(txtProducteur.getText().trim()); // ✅ setter séparé
-        	return film;
-    }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  VALIDATION
-    // ═════════════════════════════════════════════════════════════════════════
-
-    private boolean validateForm() {
-        StringBuilder errors = new StringBuilder();
-        if (txtTitre.getText().trim().isEmpty())       errors.append("• Titre obligatoire.\n");
-        if (txtSynopsis.getText().trim().isEmpty())    errors.append("• Synopsis obligatoire.\n");
-        if (txtCasting.getText().trim().isEmpty())     errors.append("• Casting obligatoire.\n");
-        if (txtProducteur.getText().trim().isEmpty())  errors.append("• Producteur obligatoire.\n");
-        if (txtDuree.getText().trim().isEmpty())       errors.append("• Durée obligatoire.\n");
-        if (dpDateSortie.getValue() == null)           errors.append("• Date de sortie obligatoire.\n");
-        if (cbAgeRating.getValue() == null)            errors.append("• Age Rating obligatoire.\n");
-        if (filePoster == null)                        errors.append("• Affiche (poster) obligatoire.\n");
-        if (fileBanner == null)                        errors.append("• Bannière obligatoire.\n");
-        if (fileVideo  == null)                        errors.append("• Vidéo principale obligatoire.\n");
-        if (selectedCategories.isEmpty())              errors.append("• Au moins une catégorie requise.\n");
-        if (errors.length() > 0) { showError(errors.toString().trim()); return false; }
-        return true;
-    }
-    // ═════════════════════════════════════════════════════════════════════════
-    //  CANCEL / RESET
-    // ═════════════════════════════════════════════════════════════════════════
-
-    @FXML
-    private void handleCancel() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                "Annuler ? Les données non sauvegardées seront perdues.",
-                ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText(null);
-        alert.showAndWait().ifPresent(btn -> { if (btn == ButtonType.YES) clearForm(); });
-    }
-
-    private void clearForm() {
-        txtTitre.clear(); txtSynopsis.clear();
-        txtCasting.clear(); txtProducteur.clear(); txtDuree.clear();
-        dpDateSortie.setValue(null);
-        cbAgeRating.getSelectionModel().selectFirst();
-
-        selectedCategories.clear(); selectedWarnings.clear();
-        loadCategoryChips(); loadWarningChips();
-
-        filePoster = null; fileBanner = null; fileTeaser = null; fileVideo = null;
-
-        previewPoster.setVisible(false); previewBanner.setVisible(false);
-        lblPosterPlaceholder.setVisible(true); lblBannerPlaceholder.setVisible(true);
-        lblPosterName.setText(""); lblBannerName.setText("");
-        lblTeaserName.setText(""); lblVideoName.setText("");
-        lblTeaserPlaceholder.setText("🎞"); lblVideoPlaceholder.setText("▶");
-
-        pbTeaser.setVisible(false); pbTeaser.setProgress(0);
-        pbVideo.setVisible(false);  pbVideo.setProgress(0);
-
-        lblStatus.setText("");
-        lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#4caf50; -fx-padding:0 4 0 4;");
-    }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  HELPERS
-    // ═════════════════════════════════════════════════════════════════════════
-
-    /** Applies chip style depending on selected state */
-    private void applyChipStyle(Button chip, boolean selected) {
-        if (selected) {
-            chip.setStyle("-fx-background-color:#e50914; -fx-background-radius:20; " +
-                          "-fx-text-fill:white; -fx-font-size:12px; -fx-font-weight:bold; " +
-                          "-fx-padding:5 14 5 14; -fx-cursor:hand;");
-        } else {
-            chip.setStyle("-fx-background-color:#2a2a35; -fx-background-radius:20; " +
-                          "-fx-text-fill:#cccccc; -fx-font-size:12px; " +
-                          "-fx-padding:5 14 5 14; -fx-cursor:hand;");
-        }
-    }
-
-    private Stage getCurrentStage() {
-        return (Stage) btnSave.getScene().getWindow();
-    }
+    private Stage getCurrentStage() { return (Stage) btnSave.getScene().getWindow(); }
 
     private void showSuccess(String message) {
         lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#4caf50; -fx-padding:0 4 0 4;");
@@ -548,9 +647,14 @@ public class AddFilmController implements Initializable {
         lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#e50914; -fx-padding:0 4 0 4;");
         lblStatus.setText(message);
     }
+
+    private String nullSafe(String s) { return s != null ? s : ""; }
+    private boolean notEmpty(String s) { return s != null && !s.isEmpty(); }
+
     @FXML
     private void handleRetour() {
-        
+        filmToEdit = null;
+        ScreenManager.getInstance().clearEditingFilm();
         ScreenManager.getInstance().navigateTo(Screen.admin_main);
     }
 }

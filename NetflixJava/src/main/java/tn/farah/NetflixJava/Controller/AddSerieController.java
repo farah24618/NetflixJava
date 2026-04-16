@@ -16,11 +16,13 @@ import javafx.util.Duration;
 
 import tn.farah.NetflixJava.Entities.*;
 import tn.farah.NetflixJava.Service.CategoryService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.Service.WarningService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.io.File;
 import java.net.URL;
@@ -29,7 +31,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class AddSerieController implements Initializable {
-
+	// ─── Edit-mode state ─────────────────────────────────────────────────────
+	private Serie serieToEdit = null;
     // ─── Services ────────────────────────────────────────────────────────────
     private SerieService    serieService;
     private CategoryService categoryService;
@@ -97,8 +100,74 @@ public class AddSerieController implements Initializable {
         cbAgeRating.getItems().addAll(AgeRating.values());
         cbAgeRating.getSelectionModel().selectFirst();
 
+        // ← Récupérer la série à éditer depuis ScreenManager
+        serieToEdit = ScreenManager.getInstance().getEditingSerie();
+        ScreenManager.getInstance().clearEditingSerie();
+
         loadCategoryChips();
         loadWarningChips();
+
+        if (serieToEdit != null) {
+            enterEditMode(serieToEdit);
+        }
+    }
+    private void enterEditMode(Serie serie) {
+        // Changer le titre du formulaire et le bouton
+        if (lblStatus != null) lblStatus.setText("Mode modification");
+        if (btnSave != null)   btnSave.setText("✓ Enregistrer les modifications");
+
+        // Remplir les champs texte
+        txtTitre.setText(serie.getTitre() != null ? serie.getTitre() : "");
+        txtSynopsis.setText(serie.getSynopsis() != null ? serie.getSynopsis() : "");
+        txtCasting.setText(serie.getCasting() != null ? serie.getCasting() : "");
+        txtProducteur.setText(serie.getProducteur() != null ? serie.getProducteur() : "");
+        dpDateSortie.setValue(serie.getDateSortie());
+        cbTerminee.setSelected(serie.isTerminee());
+
+        if (serie.getAgeRating() != null)
+            cbAgeRating.getSelectionModel().select(serie.getAgeRating());
+
+        // Pré-sélectionner catégories et warnings
+        if (serie.getGenres() != null) {
+            selectedCategories.addAll(serie.getGenres());
+            loadCategoryChips(); // recharger pour afficher les chips sélectionnés
+        }
+        if (serie.getWarnings() != null) {
+            selectedWarnings.addAll(serie.getWarnings());
+            loadWarningChips();
+        }
+
+        // Afficher le poster actuel
+        String cover = serie.getUrlImageCover();
+        if (cover != null && !cover.isEmpty()) {
+            try {
+                previewPoster.setImage(new Image(cover, true));
+                previewPoster.setVisible(true);
+                lblPosterPlaceholder.setVisible(false);
+                lblPosterName.setText("(image actuelle)");
+                activateDropZone(dropPoster);
+            } catch (Exception ignored) {}
+        }
+
+        // Afficher la bannière actuelle
+        String banner = serie.getUrlImageBanner();
+        if (banner != null && !banner.isEmpty()) {
+            try {
+                previewBanner.setImage(new Image(banner, true));
+                previewBanner.setVisible(true);
+                lblBannerPlaceholder.setVisible(false);
+                lblBannerName.setText("(bannière actuelle)");
+                activateDropZone(dropBanner);
+            } catch (Exception ignored) {}
+        }
+
+        // Afficher teaser actuel
+        String teaser = serie.getUrlTeaser();
+        if (teaser != null && !teaser.isEmpty()) {
+            lblTeaserPlaceholder.setText("✅");
+            lblTeaserName.setText("(teaser actuel)");
+            activateDropZone(dropTeaser);
+        }
     }
 
     // ═════════════════════════════════════════════════════════════════════════
@@ -285,17 +354,89 @@ public class AddSerieController implements Initializable {
     // ═════════════════════════════════════════════════════════════════════════
     //  SAVE
     // ═════════════════════════════════════════════════════════════════════════
-    @FXML private void handleSave() {
+    @FXML
+    private void handleSave() {
         if (!validateForm()) return;
         try {
-            Serie serie = buildSerieFromForm();
-            serieService.enregistrerSerie(serie);
-            showSuccess("✓  Série « " + serie.getTitre() + " » enregistrée avec succès !");
-            clearForm();
+            NotificationService notificationService = new NotificationService(ConxDB.getInstance());
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
+
+            if (serieToEdit == null) {
+                // ── MODE CRÉATION ──
+                Serie serie = buildSerieFromForm(0);
+                serieService.enregistrerSerie(serie);
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "NOUVEAUTE",
+                    "Nouvelle série ajoutée",
+                    "La série \"" + serie.getTitre() + "\" vient d'être ajoutée à la plateforme.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Série « " + serie.getTitre() + " » enregistrée !");
+                clearForm();
+
+            } else {
+                // ── MODE MODIFICATION ──
+                Serie serie = buildSerieFromForm(serieToEdit.getId());
+                serieService.updateSerie(serie);
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Série mise à jour",
+                    "La série \"" + serie.getTitre() + "\" a été mise à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Série « " + serie.getTitre() + " » mise à jour !");
+                serieToEdit = null;
+                clearForm();
+            }
+
         } catch (Exception e) {
-            showError("Erreur lors de l'enregistrement : " + e.getMessage());
+            showError("Erreur : " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    private String nullSafe(String s) { return s != null ? s : ""; }
+    private Serie buildSerieFromForm(int id) {
+        String urlCover  = filePoster != null ? filePoster.toURI().toString()
+                         : (serieToEdit != null ? nullSafe(serieToEdit.getUrlImageCover()) : "");
+        String urlBanner = fileBanner != null ? fileBanner.toURI().toString()
+                         : (serieToEdit != null ? nullSafe(serieToEdit.getUrlImageBanner()) : "");
+        String urlTeaser = fileTeaser != null ? fileTeaser.toURI().toString()
+                         : (serieToEdit != null ? nullSafe(serieToEdit.getUrlTeaser()) : "");
+
+        Serie serie = new Serie(
+                id,  // ← id passé en paramètre
+                txtTitre.getText().trim(),
+                txtSynopsis.getText().trim(),
+                txtCasting.getText().trim(),
+                dpDateSortie.getValue(),
+                urlCover,
+                urlBanner,
+                urlTeaser,
+                serieToEdit != null ? serieToEdit.getRatingMoyen() : 0.0,
+                cbAgeRating.getValue(),
+                TypeMedia.Serie,
+                LocalDateTime.now(),
+                new HashSet<>(selectedCategories),
+                new HashSet<>(selectedWarnings),
+                
+                cbTerminee.isSelected()
+        );
+        serie.setProducteur(txtProducteur.getText().trim());
+        return serie;
     }
 
     private Serie buildSerieFromForm() {
@@ -318,7 +459,7 @@ public class AddSerieController implements Initializable {
                 LocalDateTime.now(),
                 new HashSet<>(selectedCategories),
                 new HashSet<>(selectedWarnings),
-                "",           // genre field (legacy) — categories cover this
+                
                 cbTerminee.isSelected()
         );
         serie.setProducteur(txtProducteur.getText().trim());
@@ -336,9 +477,15 @@ public class AddSerieController implements Initializable {
         if (txtProducteur.getText().trim().isEmpty()) errors.append("• Producteur obligatoire.\n");
         if (dpDateSortie.getValue() == null)          errors.append("• Date de sortie obligatoire.\n");
         if (cbAgeRating.getValue() == null)           errors.append("• Age Rating obligatoire.\n");
-        if (filePoster == null)                       errors.append("• Affiche (poster) obligatoire.\n");
-        if (fileBanner == null)                       errors.append("• Bannière obligatoire.\n");
         if (selectedCategories.isEmpty())             errors.append("• Au moins une catégorie requise.\n");
+
+        // ← En mode édition, accepter l'image existante
+        boolean hasPoster = filePoster != null || (serieToEdit != null && !nullSafe(serieToEdit.getUrlImageCover()).isEmpty());
+        boolean hasBanner = fileBanner != null || (serieToEdit != null && !nullSafe(serieToEdit.getUrlImageBanner()).isEmpty());
+
+        if (!hasPoster) errors.append("• Affiche (poster) obligatoire.\n");
+        if (!hasBanner) errors.append("• Bannière obligatoire.\n");
+
         if (errors.length() > 0) { showError(errors.toString().trim()); return false; }
         return true;
     }
@@ -407,6 +554,6 @@ public class AddSerieController implements Initializable {
     }
 
     @FXML private void handleRetour() {
-        ScreenManager.getInstance().navigateTo(Screen.admin_main);
+        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
     }
 }

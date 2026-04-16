@@ -24,15 +24,14 @@ public abstract class  Media {
     private LocalDateTime dateAjout = LocalDateTime.now();
     private Set<Category> genres = new HashSet<>();
 
-    // ─── Constructeur vide ────────────────────────────────────────────────────
-    // obligatoire pour pouvoir faire new Film() et new Serie() dans les DAO
+    
     public Media() {
         this.genres   = new HashSet<>();
         this.warnings = new HashSet<>();
        
     }
 
-    // ─── Constructeur sans detail de acteurs et prod ─────────────────────────────────────────────────
+  
     public Media(int id, String titre, String synopsis, String casting,
                  LocalDate dateSortie, String urlImageCover, String urlImageBanner,
                  String urlTeaser, Double ratingMoyen, AgeRating ageRating,
@@ -55,7 +54,7 @@ public abstract class  Media {
         this.warnings       = warnings;
     }
     
-    public Media(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
+   /* public Media(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
 			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
 			String producteur, Set<Warning> warnings, LocalDateTime dateAjout,
 			Set<Category> genres) {
@@ -76,7 +75,7 @@ public abstract class  Media {
 		this.dateAjout = dateAjout;
 		this.genres = genres;
 	}
-
+*/
 	public String getProducteur() {
 		return producteur;
 	}

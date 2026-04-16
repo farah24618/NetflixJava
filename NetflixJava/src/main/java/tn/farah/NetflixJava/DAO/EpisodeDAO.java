@@ -35,7 +35,8 @@ public class EpisodeDAO {
                     rs.getInt(5),
                     rs.getString(6),
                     rs.getString(8),
-                    rs.getInt(9)
+                    rs.getInt(9),
+                    rs.getInt(10)
                 ));
             }
 
@@ -51,7 +52,7 @@ public class EpisodeDAO {
     public int save(Episode episode) {
         int episodeId = 0;
         String sql = "INSERT INTO episode(season_id, titre, numero, duree_minutes, " +
-                     "resume, url_video, url_image, duree_intro_sec) VALUES (?,?,?,?,?,?,?,?)";
+                     "resume, url_video, url_image, duree_intro_sec,nbre_vues) VALUES (?,?,?,?,?,?,?,?,0)";
 
         try (PreparedStatement pstml = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -96,7 +97,8 @@ public class EpisodeDAO {
                     rs.getInt(5),
                     rs.getString(6),
                     rs.getString(8),
-                    rs.getInt(9)
+                    rs.getInt(9),
+                    rs.getInt(10)
                 );
             }
 
@@ -128,7 +130,8 @@ public class EpisodeDAO {
                     rs.getInt(5),
                     rs.getString(6),
                     rs.getString(8),
-                    rs.getInt(9)
+                    rs.getInt(9),
+                    rs.getInt(10)
                 ));
             }
 
@@ -161,7 +164,8 @@ public class EpisodeDAO {
                     rs.getInt(5),
                     rs.getString(6),
                     rs.getString(8),
-                    rs.getInt(9)
+                    rs.getInt(9),
+                    rs.getInt(10)
                 );
             }
 
@@ -249,8 +253,30 @@ public class EpisodeDAO {
     
     public List<Episode> findBySaisonId(int saisonId) {
         List<Episode> list = new ArrayList<>();
-        String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero_episode ASC";
-        // ... exécution JDBC classique ...
+        // ✅ Colonne correcte : "numero" (pas "numero_episode")
+        String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
+
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, saisonId);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Episode(
+                    rs.getInt(1),       // id
+                    rs.getInt(2),       // season_id
+                    rs.getString(3),    // titre
+                    rs.getInt(4),       // numero
+                    rs.getString(7),    // url_video
+                    rs.getInt(5),       // duree_minutes
+                    rs.getString(6),    // resume
+                    rs.getString(8),    // url_image
+                    rs.getInt(9)  ,
+                    rs.getInt(10)// duree_intro_sec
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
     
@@ -265,6 +291,16 @@ public class EpisodeDAO {
             e.printStackTrace();
             return false;
         }}
+    public void incrementerVues(int EpisodeId) {
+        String sql = "UPDATE episode SET nbre_vues = nbre_vues + 1 WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, EpisodeId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.err.println("Erreur incrementerVues : " + e.getMessage());
+        }
+    }
+
     
       
     }

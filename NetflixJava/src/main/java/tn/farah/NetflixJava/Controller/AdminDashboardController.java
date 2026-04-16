@@ -103,7 +103,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     void goToSeriesAdmin(ActionEvent event) {
-        // ScreenManager.getInstance().navigateTo(Screen.);
+         ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
     }
 
     @FXML
@@ -119,6 +119,7 @@ public class AdminDashboardController implements Initializable {
     @FXML
     void goToUsersAdmin(ActionEvent event) {
         System.out.println("Page Utilisateurs non définie dans l'enum Screen pour le moment");
+        ScreenManager.getInstance().navigateTo(Screen.manageUsers);
     }
 
     @FXML 
@@ -126,6 +127,7 @@ public class AdminDashboardController implements Initializable {
         System.out.println("Aller aux Paramètres");
         ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
     }
+    
     
     @FXML
     void handleLogout(ActionEvent event) {

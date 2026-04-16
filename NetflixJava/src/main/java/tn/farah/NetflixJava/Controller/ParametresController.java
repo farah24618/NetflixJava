@@ -176,10 +176,20 @@ public class ParametresController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    
+    /*
     @FXML
     void onLogoutClicked(ActionEvent event) {
         // Fermeture propre de l'application
         System.exit(0);
+    }*/
+    @FXML
+    private void onLogout() {
+        logout();
+    	
+    }
+
+    private void logout() {
+
+        ScreenManager.getInstance().navigateTo(Screen.mainView);
     }
 }

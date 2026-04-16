@@ -82,6 +82,7 @@
         <HBox alignment="CENTER" spacing="12.0">
             <children>
                 <MenuButton fx:id="saisonBtn" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" text="SAISONS" />
+            <Button mnemonicParsing="false" onAction="#handleUpdate" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-font-weight: bold;" text="Modifier" />
                 
                 <Button mnemonicParsing="false" onAction="#handleDelete" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-font-weight: bold;" text="SUPPRIMER" />
             </children>

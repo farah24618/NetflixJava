@@ -1,30 +1,28 @@
 package tn.farah.NetflixJava.Controller;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import tn.farah.NetflixJava.DAO.UserDao;
+import javafx.scene.Scene;
 import tn.farah.NetflixJava.Entities.User;
-import tn.farah.NetflixJava.utils.DatabaseConnection;
+import tn.farah.NetflixJava.Service.UserService;
+import tn.farah.NetflixJava.utils.ConxDB;
+
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class ManageUsersController {
 
@@ -35,21 +33,21 @@ public class ManageUsersController {
     @FXML private Label showingLabel;
     @FXML private ComboBox<Integer> rowsPerPageCombo;
 
-    private UserDao dao;
+    private UserService userSer;
     private List<User> allUsers = new ArrayList<>(); 
 
     @FXML
     public void initialize() {
-        dao = new UserDao(DatabaseConnection.getConnection());
+    	userSer = new UserService(ConxDB.getInstance());
         
         // 1. Charger les données
-        allUsers = dao.getAllUsers();
+        allUsers = userSer.getAllUsers();
         
-        // 2. Initialiser le tri (Français)
+        // 2. Initialiser le tri
         if (sortCombo != null) {
             sortCombo.getItems().clear();
             sortCombo.getItems().addAll("Nom (A-Z)", "Nom (Z-A)", "Email");
-            sortCombo.setPromptText("Trier par");
+            sortCombo.setOnAction(e -> handleSort());
         }
         
         // 3. Initialiser lignes par page
@@ -59,35 +57,72 @@ public class ManageUsersController {
         }
 
         // 4. Recherche en temps réel
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
-            filterUsers(newVal);
-        });
+        if (searchField != null) {
+            searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+                filterUsers(newVal);
+            });
+        }
 
         // 5. Affichage initial
         renderUsers(allUsers);
         
-        // 6. Mise à jour des textes des onglets (Français)
-        tabAll.setText("Tous " + allUsers.size());
-        tabAdmins.setText("Administrateurs");
-        tabBlocked.setText("Bloqués");
+        // 6. Mise à jour des textes des onglets
+        updateTabCounts();
         
-        resetTabStyles();
-        tabAll.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;");
+        // Style par défaut
+        handleTabAll();
     }
 
-    // --- NAVIGATION ---
+    private void updateTabCounts() {
+        if (tabAll != null) tabAll.setText("Tous " + allUsers.size());
+    }
+
+    // --- NAVIGATION CORRIGÉE (Correspond au FXML) ---
+
     @FXML
     private void handleNavDashboard() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/tn/farah/NetflixJava/View/Dashboard.fxml"));
-            Stage stage = (Stage) usersContainer.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            System.err.println("Erreur de redirection : " + e.getMessage());
-        }
+        System.out.println("🏠 Vers Dashboard");
+        ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
     }
 
-    // --- LOGIQUE DE TRI ---
+    @FXML
+    private void handleNavFilms() {
+        System.out.println("🎬 Vers Films");
+        ScreenManager.getInstance().navigateTo(Screen.admin_main);
+    }
+
+    @FXML
+    private void handleNavSeries() {
+        System.out.println("📺 Vers Séries");
+        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
+    }
+
+    @FXML
+    private void handleNavNotifications() {
+        System.out.println("🔔 Vers Notifications");
+        ScreenManager.getInstance().navigateTo(Screen.notificationAdmin);
+    }
+
+    @FXML
+    private void handleNavComments() {
+        System.out.println("💬 Vers Commentaires");
+        ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
+    }
+
+    @FXML
+    private void handleNavSettings() {
+        System.out.println("⚙ Vers Paramètres");
+        ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+    }
+
+    @FXML
+    private void handleLogout() {
+        System.out.println("🚪 Déconnexion");
+        System.exit(0);
+    }
+
+    // --- LOGIQUE MÉTIER ---
+
     @FXML
     private void handleSort() {
         String selected = sortCombo.getValue();
@@ -108,7 +143,6 @@ public class ManageUsersController {
         renderUsers(listToSort);
     }
 
-    // --- LOGIQUE DE FILTRAGE ---
     private void filterUsers(String query) {
         if (query == null || query.isEmpty()) {
             renderUsers(allUsers);
@@ -125,6 +159,7 @@ public class ManageUsersController {
     }
 
     private void renderUsers(List<User> list) {
+        if (usersContainer == null) return;
         usersContainer.getChildren().clear();
         for (User u : list) {
             usersContainer.getChildren().add(createUserRow(u));
@@ -132,7 +167,6 @@ public class ManageUsersController {
         updatePaginationLabel(list.size());
     }
 
-    // --- CRÉATION DES LIGNES (UI FRANÇAIS) ---
     private HBox createUserRow(User u) {
         HBox row = new HBox(0); 
         row.setAlignment(Pos.CENTER_LEFT);
@@ -145,7 +179,7 @@ public class ManageUsersController {
         userBox.setAlignment(Pos.CENTER_LEFT);
         userBox.setMinWidth(180);
         
-        boolean isAdmin = "ADMIN".equalsIgnoreCase(u.getRole().name());
+        boolean isAdmin = u.getRole() != null && "ADMIN".equalsIgnoreCase(u.getRole().name());
         Circle avatarCircle = new Circle(15, Color.web(isAdmin ? "#e50914" : "#2a2a2a"));
         
         Label initial = new Label(u.getInitial());
@@ -160,7 +194,6 @@ public class ManageUsersController {
         emailLabel.setTextFill(Color.web("#808080"));
         emailLabel.setMinWidth(220);
 
-        // Badge Statut (Français)
         Label statusBadge = new Label(u.isActive() ? "ACTIF" : "BLOQUÉ");
         statusBadge.setMinWidth(120);
         statusBadge.setAlignment(Pos.CENTER);
@@ -179,14 +212,10 @@ public class ManageUsersController {
             Button blockBtn = new Button();
             updateBlockButtonStyle(blockBtn, u.isActive());
             blockBtn.setOnAction(event -> {
-                boolean newStatus = !u.isActive();
-                u.setActive(newStatus);
-                if (dao.updateUser(u)) {
-                    // Log en Français
-                    String actionMsg = (newStatus ? "Déblocage" : "Blocage") + " de l'utilisateur: " + u.getUsername();
-                    dao.addAuditLog(1, actionMsg); 
-                    
-                    renderUsers(allUsers); // Rafraîchir
+                u.setActive(!u.isActive());
+                if (userSer.updateUser(u)) {
+                	userSer.addAuditLog(1, (u.isActive() ? "Déblocage" : "Blocage") + " de : " + u.getUsername());
+                    renderUsers(allUsers);
                 }
             });
             actions.getChildren().add(blockBtn);
@@ -195,10 +224,10 @@ public class ManageUsersController {
         Button deleteBtn = new Button("🗑");
         deleteBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #555; -fx-cursor: hand; -fx-font-size: 14px;");
         deleteBtn.setOnAction(e -> {
-            if (dao.deleteUser(u.getId())) {
+            if (userSer.deleteUser(u.getId())) {
                 allUsers.remove(u);
                 renderUsers(allUsers);
-                tabAll.setText("Tous " + allUsers.size());
+                updateTabCounts();
             }
         });
 
@@ -207,54 +236,48 @@ public class ManageUsersController {
         return row;
     }
 
-    // --- FENÊTRE DE LOGS (FRANÇAIS) ---
     private void handleViewLogs(User u) {
         Stage logStage = new Stage();
-        logStage.setTitle("Historique d'audit - " + u.getUsername());
-
+        logStage.setTitle("Historique - " + u.getUsername());
         VBox root = new VBox(15);
         root.setStyle("-fx-background-color: #0a0a0c; -fx-padding: 25;");
         
-        Label title = new Label("Historique d'activité : " + u.getUsername());
+        Label title = new Label("Activité : " + u.getUsername());
         title.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         TextArea logArea = new TextArea();
         logArea.setEditable(false);
-        logArea.setStyle("-fx-control-inner-background: #111; -fx-text-fill: #888; -fx-border-color: #222;");
-
-        List<String> logs = dao.getAdminLogs(u.getId());
-        logArea.setText(logs.isEmpty() ? "Aucune activité récente enregistrée." : String.join("\n", logs));
+        logArea.setStyle("-fx-control-inner-background: #111; -fx-text-fill: #888;");
+        
+        List<String> logs = userSer.getAdminLogs(u.getId());
+        logArea.setText(logs.isEmpty() ? "Aucune activité." : String.join("\n", logs));
 
         Button closeBtn = new Button("Fermer");
-        closeBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-cursor: hand;");
+        closeBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white;");
         closeBtn.setOnAction(e -> logStage.close());
 
         root.getChildren().addAll(title, logArea, closeBtn);
-        logStage.setScene(new Scene(root, 450, 350));
+        logStage.setScene(new Scene(root, 400, 300));
         logStage.show();
     }
 
     private void updateBlockButtonStyle(Button btn, boolean isActive) {
         btn.setText(isActive ? "Bloquer" : "Débloquer");
-        if (isActive) {
-            btn.setStyle("-fx-background-color: #222; -fx-text-fill: #e50914; -fx-border-color: #333; -fx-cursor: hand; -fx-background-radius: 6;");
-        } else {
-            btn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 6;");
-        }
+        btn.setStyle(isActive ? 
+            "-fx-background-color: #222; -fx-text-fill: #e50914; -fx-border-color: #333; -fx-cursor: hand; -fx-background-radius: 6;" :
+            "-fx-background-color: #e50914; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 6;");
         btn.setMinWidth(100);
     }
 
     private void updateStatusBadgeStyle(Label badge, boolean isActive) {
-        if (isActive) {
-            badge.setStyle("-fx-background-color: #1b3320; -fx-text-fill: #4ade80; -fx-padding: 3 12; -fx-background-radius: 12; -fx-font-size: 10px;");
-        } else {
-            badge.setStyle("-fx-background-color: #331b1b; -fx-text-fill: #f87171; -fx-padding: 3 12; -fx-background-radius: 12; -fx-font-size: 10px;");
-        }
+        badge.setStyle(isActive ? 
+            "-fx-background-color: #1b3320; -fx-text-fill: #4ade80; -fx-padding: 3 12; -fx-background-radius: 12;" :
+            "-fx-background-color: #331b1b; -fx-text-fill: #f87171; -fx-padding: 3 12; -fx-background-radius: 12;");
     }
 
     private void updatePaginationLabel(int count) {
         if (showingLabel != null) {
-            showingLabel.setText("Affichage 1-" + Math.min(count, 10) + " sur " + count);
+            showingLabel.setText("Total : " + count + " utilisateurs");
         }
     }
 
@@ -262,36 +285,27 @@ public class ManageUsersController {
     @FXML private void handleTabAll() {
         renderUsers(allUsers);
         resetTabStyles();
-        tabAll.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;");
+        if(tabAll != null) tabAll.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-background-radius: 6;");
     }
 
     @FXML private void handleTabAdmins() {
         List<User> admins = allUsers.stream().filter(u -> "ADMIN".equalsIgnoreCase(u.getRole().name())).collect(Collectors.toList());
         renderUsers(admins);
         resetTabStyles();
-        tabAdmins.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;");
+        if(tabAdmins != null) tabAdmins.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-background-radius: 6;");
     }
 
     @FXML private void handleTabBlocked() {
         List<User> blocked = allUsers.stream().filter(u -> !u.isActive()).collect(Collectors.toList());
         renderUsers(blocked);
         resetTabStyles();
-        tabBlocked.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;");
+        if(tabBlocked != null) tabBlocked.setStyle("-fx-background-color: #e50914; -fx-text-fill: white; -fx-background-radius: 6;");
     }
 
     private void resetTabStyles() {
-        String idle = "-fx-background-color: transparent; -fx-text-fill: #808080; -fx-border-color: #2a2a2a; -fx-border-radius: 6; -fx-background-radius: 6;";
-        tabAll.setStyle(idle); tabAdmins.setStyle(idle); tabBlocked.setStyle(idle);
+        String idle = "-fx-background-color: transparent; -fx-text-fill: #808080; -fx-border-color: #2a2a2a; -fx-border-radius: 6;";
+        if(tabAll != null) tabAll.setStyle(idle); 
+        if(tabAdmins != null) tabAdmins.setStyle(idle); 
+        if(tabBlocked != null) tabBlocked.setStyle(idle);
     }
-
-    // --- AUTRES HANDLERS ---
-    @FXML private void handleLogout() { System.exit(0); }
-    @FXML private void handleNavFilms() {}
-    @FXML private void handleNavSeries() {}
-    @FXML private void handleNavComments() {}
-    @FXML private void handleNavNotifications() {}
-    @FXML private void handleNavSettings() {}
-    @FXML private void handleSelectAll() {}
-    @FXML private void handleRowsPerPage() {}
-    @FXML private void handleDeleteSelected() {}
 }

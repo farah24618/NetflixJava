@@ -311,8 +311,18 @@ public class EpisodeViewController implements Initializable {
         if (labelTitreSerie != null) labelTitreSerie.setText(serieAct.getTitre());
         if (labelSynopsis   != null) labelSynopsis.setText(
                 serieAct.getSynopsis() != null ? serieAct.getSynopsis() : "");
-        if (labelGenre      != null) labelGenre.setText(
-                serieAct.getGenre() != null ? serieAct.getGenre() : "Inconnu");
+
+        String genreText = "-";
+        if (serieAct.getGenres() != null && !serieAct.getGenres().isEmpty()) {
+            genreText = serieAct.getGenres().stream()
+                    .map(Category::getName).limit(3)
+                    .reduce((a, b) -> a + " - " + b).orElse("-");
+        }
+        if (categories != null) {
+            categories.setText(genreText);
+            categories.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");
+        }
+        if (labelGenre != null) labelGenre.setText(genreText);
         if (labelAnnee      != null) labelAnnee.setText(
                 String.valueOf(serieAct.getDateSortie().getYear()));
         if (labelProducteur != null) labelProducteur.setText(
@@ -343,12 +353,7 @@ public class EpisodeViewController implements Initializable {
             castings.setWrapText(true);
         }
 
-        String genreText = "-";
-        if (serieAct.getGenres() != null && !serieAct.getGenres().isEmpty()) {
-            genreText = serieAct.getGenres().stream()
-                    .map(Category::getName).limit(2)
-                    .reduce((a, b) -> a + " - " + b).orElse("-");
-        }
+       
         if (categories != null) {
             categories.setText(genreText);
             categories.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");

@@ -130,16 +130,18 @@ public class SerieService {
     
     
     public boolean deleteSerie(int id) {
-        String query = "DELETE FROM serie WHERE id = ?";
-        // Utilise maintenant 'this.connection'
-        try (PreparedStatement ps = this.connection.prepareStatement(query)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+       return serieDao.deleteSerie(id);
     }
+
+	public List<Serie> findAll() {
+		
+		return serieDao.findAll() ;
+	}
+
+	public List<Serie> findByTitle(String query) {
+		
+		return serieDao.findByTitle(query);
+	}
 }
     
     

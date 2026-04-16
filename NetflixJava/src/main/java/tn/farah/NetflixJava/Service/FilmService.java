@@ -139,10 +139,33 @@ public class FilmService {
 	            e.printStackTrace();
 	            return null;
 	        }
-	    }	
+
+	    }
+	    public void delete(int id) throws SQLException {
+	    	filmDao.delete(id);
+	    }
+	    public void updateFilm(Film film) throws SQLException {
+	    	filmDao.update(film);
+	    }
+
+
 	    public void incrementVues (int filmId) {
 	filmDao.incrementerVues(filmId);}
+
 	    public void update (Film film) throws SQLException {
 	    	filmDao.update(film);
 	    }
-	}
+
+
+		public List<Film> findAll() throws SQLException {
+			
+
+			return filmDao.findAll();
+		}
+
+		public List<Film> findByTitle(String query) throws SQLException {
+			
+			return filmDao.findByTitle(query);
+		}
+}
+

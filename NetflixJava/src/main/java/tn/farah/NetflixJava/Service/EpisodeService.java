@@ -162,4 +162,7 @@ public class EpisodeService {
 
         return total;
     }
+    public void incrementerVues (int idEpisode) {
+    	episodeDAO.incrementerVues(idEpisode);
+    }
 }

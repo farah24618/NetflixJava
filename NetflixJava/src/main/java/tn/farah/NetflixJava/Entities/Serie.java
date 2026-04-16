@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Serie extends Media {
 
-    private String genre;
+   
     private boolean terminee;
    
 
@@ -21,37 +21,29 @@ public class Serie extends Media {
 
 	public Serie(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
 			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
-			LocalDateTime dateAjout, Set<Category> genres, Set<Warning> warnings, String genre, boolean terminee) {
+			LocalDateTime dateAjout, Set<Category> genres, Set<Warning> warnings,  boolean terminee) {
 		super(id, titre, synopsis, casting, dateSortie, urlImageCover, urlImageBanner, urlTeaser, ratingMoyen,
 				ageRating, type, dateAjout, genres, warnings);
-		this.genre = genre;
+		
 		this.terminee = terminee;
 	}
 
 
 
-	public Serie(int id, String titre, String synopsis, String genre, boolean termine) {
+	public Serie(int id, String titre, String synopsis , boolean termine) {
 		super(id,titre,synopsis);
-		this.genre=genre;
+		
 		this.terminee=termine;
-		// TODO Auto-generated constructor stub
+		
 	}
 
 
 
 	public Serie() {
-		// TODO Auto-generated constructor stub
 	}
 
 
 
-	public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
 
     public boolean isTerminee() {
         return terminee;
@@ -69,7 +61,7 @@ public class Serie extends Media {
                 "id=" + getId() +
                 ", titre='" + getTitre() + '\'' +
                 ", synopsis='" + getSynopsis() + '\'' +
-                ", genre='" + genre + '\'' +
+                
                 ", terminee=" + terminee +
                
                 '}';
@@ -84,17 +76,7 @@ public class Serie extends Media {
     
     
     
- // Dans ta classe Serie.java
-    private List<Saison> saisons = new ArrayList<>();
-
-    public List<Saison> getSaisons() {
-        return saisons;
-    }
-
-    public void setSaisons(List<Saison> saisons) {
-        this.saisons = saisons;
-    }
-
+ 
     
     
     
@@ -103,20 +85,10 @@ public class Serie extends Media {
     
     
     
-   //douaa 
     
    
-        private String urlImageCover; // Doit correspondre au nom utilisé dans le DAO
-
-        // CETTE MÉTHODE EST CELLE APPELÉE PAR LE CONTROLLER
-        public String getImageUrl() {
-            return urlImageCover; 
-        }
-
-        // CETTE MÉTHODE EST CELLE APPELÉE PAR LE DAO
-        public void setUrlImageCover(String urlImageCover) {
-            this.urlImageCover = urlImageCover;
-        }
+   
+      
         
         
         
