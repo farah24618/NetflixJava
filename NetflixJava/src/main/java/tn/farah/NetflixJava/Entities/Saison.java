@@ -1,5 +1,6 @@
 package tn.farah.NetflixJava.Entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,21 +8,79 @@ public class Saison {
 	private int id;
     private int idSerie;
     private int numeroSaison;
+    private String nom;
+    private LocalDateTime dateSortie;
+    private List<Episode> episodes = new ArrayList<>();
     public Saison() {
     }
 
-    public Saison(int idSerie, int numeroSaison) {
+   
+
+
+
+	
+
+
+
+
+	
+    
+
+
+
+
+
+	public Saison(int idSerie, int numeroSaison, String nom, LocalDateTime dateSortie) {
+		
 		this.idSerie = idSerie;
 		this.numeroSaison = numeroSaison;
-
+		this.nom = nom;
+		this.dateSortie = dateSortie;
+		
 	}
-    public Saison(int id, int idSerie, int numeroSaison) {
-        this.id = id;
-        this.idSerie = idSerie;
-        this.numeroSaison = numeroSaison;
 
-    }
-    public int getId() { return id; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public Saison(int id, int idSerie, int numeroSaison, String nom, LocalDateTime dateSortie ) {
+		this.id = id;
+		this.idSerie = idSerie;
+		this.numeroSaison = numeroSaison;
+		this.nom = nom;
+		this.dateSortie = dateSortie;
+		
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
 
@@ -39,19 +98,89 @@ public class Saison {
 
 
 
-    @Override
-    public String toString() {
-        return "Saison " + numeroSaison + " (ID: " + id + ")";
-    }
 
-    private List<Episode> episodes = new ArrayList<>();
 
- // La méthode doit retourner une List<Episode> et non <Serie>
- public List<Episode> getEpisodes() {
-     return episodes;
- }
+	public String getNom() {
+		return nom;
+	}
 
- public void setEpisodes(List<Episode> episodes) {
-     this.episodes = episodes;
- }
+
+
+
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+
+
+
+
+	public LocalDateTime getDateSortie() {
+		return dateSortie;
+	}
+
+
+
+
+
+	public void setDateSortie(LocalDateTime dateSortie) {
+		this.dateSortie = dateSortie;
+	}
+
+
+
+
+
+	
+
+
+
+
+	public List<Episode> getEpisodes() {
+		return episodes;
+	}
+
+
+
+
+
+	public void setEpisodes(List<Episode> episodes) {
+		this.episodes = episodes;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "Saison [id=" + id + ", idSerie=" + idSerie + ", numeroSaison=" + numeroSaison + ", nom=" + nom
+				+ ", dateSortie=" + dateSortie + ", episodes=" + episodes + "]";
+	}
+
+
+
+
+
+	
+
+
+
+	
+
+   
+
 }

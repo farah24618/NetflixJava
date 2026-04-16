@@ -316,7 +316,7 @@ public class SearchResultsController implements Initializable {
     }
 
     @FXML
-    private void goHome() {
+    private void handleRetour() {
         ScreenManager.getInstance().navigateTo(Screen.home);
     }
 }

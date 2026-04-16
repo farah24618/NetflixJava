@@ -1,7 +1,5 @@
 package tn.farah.NetflixJava;
-
 import javafx.application.Application;
-
 import javafx.stage.Stage;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -88,6 +86,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
         nav.register(Screen.addEpisode, "/tn/farah/NetflixJava/addEpisode.fxml");
         nav.register(Screen.addSerie, "/tn/farah/NetflixJava/addSerie.fxml");
         nav.register(Screen.Player, "/tn/farah/NetflixJava/UniversalPlayer.fxml");
+        nav.register(Screen.addSaison, "/tn/farah/NetflixJava/addSaisonn.fxml");
         
 
 
@@ -117,18 +116,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
      // nav.navigateTo(Screen.admin_main);
 
 
-       //nav.navigateTo(Screen.admin_main);
-
        nav.navigateTo(Screen.mainView);
-        //nav.navigateTo(Screen.video);
-
-
-
-       // nav.navigateTo(Screen.login);
-
-
-       // nav.navigateTo(Screen.notificationAdmin);
-
 
 
    

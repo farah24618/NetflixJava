@@ -15,10 +15,11 @@ public class NotificationDAO {
 
     // ─────────────────────────────────────────────
     // Récupérer toutes les notifications d'un user
+    // (inclut les notifs globales UPDATE et NEW)
     // ─────────────────────────────────────────────
     public List<Notification> getUserNotifications(int userId) {
         List<Notification> list = new ArrayList<>();
-        String sql = "SELECT * FROM notifications WHERE user_id = ? ORDER BY date DESC";
+        String sql = "SELECT * FROM notifications WHERE user_id = ? OR type IN ('MISE_A_JOUR', 'NOUVEAUTE') ORDER BY date DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -61,7 +62,6 @@ public class NotificationDAO {
     // ─────────────────────────────────────────────
     // Notifications non lues
     // ─────────────────────────────────────────────
-  
     public List<Notification> getUnreadNotifications(int userId) {
         List<Notification> list = new ArrayList<>();
         String sql = "SELECT * FROM notifications WHERE type = 'SIGNALEMENT' AND is_read = 0 ORDER BY date DESC";
@@ -71,9 +71,9 @@ public class NotificationDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
+
     // ─────────────────────────────────────────────
     // Notifications "envoyées" (type = SENT ou is_sent = 1)
-    // Adaptez selon votre schéma DB
     // ─────────────────────────────────────────────
     public List<Notification> getSentNotifications() {
         List<Notification> list = new ArrayList<>();
@@ -107,10 +107,12 @@ public class NotificationDAO {
     // ─────────────────────────────────────────────
     // Compter les non lues
     // ─────────────────────────────────────────────
-  
+    // ✅ FIX: Compter les non lues (user perso + UPDATE + NEW)
     public int countUnread(int userId) {
-        String sql = "SELECT COUNT(*) FROM notifications WHERE type = 'SIGNALEMENT' AND is_read = 0";
+        String sql = "SELECT COUNT(*) FROM notifications " +
+                     "WHERE is_read = 0 AND (user_id = ? OR type IN ('MISE_A_JOUR', 'NEW'))";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) { e.printStackTrace(); }
@@ -129,8 +131,11 @@ public class NotificationDAO {
             e.printStackTrace();
         }
     }
+
+    // ✅ FIX: Marquer TOUTES comme lues (user perso + UPDATE + NEW)
     public void markAllAsRead(int userId) {
-        String sql = "UPDATE notifications SET is_read = true WHERE user_id = ? AND is_read = false";
+        String sql = "UPDATE notifications SET is_read = 1 " +
+                     "WHERE is_read = 0 AND (user_id = ? OR type IN ('MISE_A_JOUR', 'NOUVEAUTE'))";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.executeUpdate();
@@ -193,6 +198,7 @@ public class NotificationDAO {
             rs.getBoolean("is_read")
         );
     }
+
     public boolean userExists(int userId) {
         String sql = "SELECT COUNT(*) FROM users WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -206,7 +212,8 @@ public class NotificationDAO {
         }
         return false;
     }
- // ✅ Compter TOUTES les notifications (admin voit tout)
+
+    // ✅ Compter TOUTES les notifications (admin voit tout)
     public int countAllAdmin() {
         String sql = "SELECT COUNT(*) FROM notifications WHERE type = 'SIGNALEMENT'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -215,16 +222,11 @@ public class NotificationDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
-    
 
- // Dans NotificationService
     public List<Notification> getSentByAdmin(int adminId) {
         String sql = "SELECT * FROM notifications WHERE type = 'INFO' ORDER BY date DESC";
-        // OU si vous avez sent_by :
-        // String sql = "SELECT * FROM notifications WHERE sent_by = ? ORDER BY date DESC";
         List<Notification> list = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            // ps.setInt(1, adminId); // si sent_by
             ResultSet rs = ps.executeQuery();
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) { e.printStackTrace(); }
@@ -239,6 +241,7 @@ public class NotificationDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
+
     public void deleteNotification(int id) {
         String sql = "DELETE FROM notifications WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

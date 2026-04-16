@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.farah.NetflixJava.Entities.Episode;
 import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.Entities.Serie;
 import javafx.scene.image.Image;
 
@@ -39,7 +40,7 @@ public class ScreenManager {
     private final Stack<HistoryNode> history = new Stack<>();
     private Screen current;
     private Episode editingEpisode = null;
-
+    private Saison editingSaison = null;
     
     // ★ Film being edited — null means "Add new film" mode
     private Film editingFilm = null;
@@ -78,7 +79,8 @@ public class ScreenManager {
     }
     public Episode getEditingEpisode() { return editingEpisode; }
     public void setEditingEpisode(Episode episode) { this.editingEpisode = episode; }
-    //*******
+    public Saison getEditingSaison() { return editingSaison; }
+    public void setEditingSaison(Saison s) { this.editingSaison = s; }
     private ScreenManager() {
     }
 
