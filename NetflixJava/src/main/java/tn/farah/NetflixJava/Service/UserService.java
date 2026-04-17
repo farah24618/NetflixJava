@@ -32,8 +32,7 @@ public class UserService {
         
         return userDao.addUser(user);
     }
-
-    
+  
     
      // 1️⃣ INSCRIPTION
     public boolean registerUser2(User user) {
@@ -120,6 +119,11 @@ public class UserService {
 
     }
 
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+
 	public void addAuditLog(int i, String string) {
 		userDao.addAuditLog(i, string);
 		
@@ -129,4 +133,5 @@ public class UserService {
 		
 		return userDao.getAdminLogs(id);
 	}
+
 }

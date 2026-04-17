@@ -16,7 +16,6 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="900.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.MainViewController">
-  
 
     <!-- ===== MainViewController ===== -->
     <top>
@@ -25,12 +24,12 @@
             <Label text="RAKCHANET" textFill="#e50914">
                 <font><Font name="System Bold" size="32.0" /></font>
             </Label>
-            <!-- Nav links -->
+            <!-- Liens de navigation -->
             <HBox alignment="CENTER_LEFT" spacing="18" style="-fx-padding: 0 0 0 30;" />
             <Region HBox.hgrow="ALWAYS" />
-            <!-- Right side actions -->
+            <!-- Actions côté droit -->
             <HBox alignment="CENTER" spacing="20">
-                <Button fx:id="signInButton" mnemonicParsing="false" onAction="#handleSignIn" prefHeight="35" prefWidth="141.0" style="-fx-background-color: #e50914; -fx-background-radius: 4;" text="s'inscrire" textFill="WHITE">
+                <Button fx:id="signInButton" mnemonicParsing="false" onAction="#handleSignIn" prefHeight="35" prefWidth="141.0" style="-fx-background-color: #e50914; -fx-background-radius: 4;" text="S'inscrire" textFill="WHITE">
                     <font><Font name="System Bold" size="14.0" /></font>
                     <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
@@ -38,15 +37,24 @@
         </HBox>
     </top>
 
-    <!-- ===== MAIN SCROLL CONTENT ===== -->
+    <!-- ===== CONTENU PRINCIPAL SCROLLABLE ===== -->
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: black; -fx-background-color: black; -fx-border-color: black;" vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
             <content>
                 <VBox style="-fx-background-color: black;">
 
-                    <!-- ===== HERO SECTION ===== -->
-                    <StackPane prefHeight="680.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom, #141414 0%, #0a0a0a 100%);                                       -fx-border-color: #222; -fx-border-width: 0 0 8 0;">
-					<VBox alignment="CENTER" spacing="24" style="-fx-padding: 80 100 80 100;" styleClass="hero-section" stylesheets="@mainView.css">                          <Label alignment="CENTER" text="Films, séries télévisées et bien plus encore" textFill="WHITE" wrapText="true">
+                    <!-- ===== SECTION HÉRO AVEC BACKGROUND IMAGE STYLE NETFLIX ===== -->
+                    <StackPane prefHeight="680.0" prefWidth="1280.0">
+
+                        <!-- Couche 1 : Background image via CSS style inline (dégradé cinématique Netflix) -->
+                        <Region fx:id="heroBackground" style="-fx-background-image: url('/ImagesNet/images.jpeg'); -fx-background-size: cover; -fx-background-position: center center; -fx-background-repeat: no-repeat;" styleClass="my-custom-region" stylesheets="@mainView.css" />
+
+                        <!-- Couche 2 : Superposition dégradé sombre style Netflix (haut + bas + global) -->
+                        <Region style="-fx-background-color: linear-gradient(                                            from 0% 0% to 0% 100%,                                            rgba(0,0,0,0.6) 0%,                                            rgba(0,0,0,0.1) 40%,                                            rgba(0,0,0,0.1) 60%,                                            rgba(0,0,0,0.8) 100%                                        );" />
+
+                        <!-- Couche 3 : Contenu texte par-dessus -->
+                        <VBox alignment="CENTER" spacing="24" style="-fx-padding: 80 100 80 100;" styleClass="hero-section" stylesheets="@mainView.css">
+                            <Label alignment="CENTER" text="Films, séries télévisées et bien plus encore" textFill="WHITE" wrapText="true">
                                 <font><Font name="System Bold" size="52.0" /></font>
                             </Label>
                             <Label alignment="CENTER" text="Regardez où vous voulez. Annulez à tout moment." textFill="WHITE">
@@ -56,7 +64,7 @@
                                 <font><Font size="19.0" /></font>
                             </Label>
                             <HBox alignment="CENTER" spacing="10">
-                                <TextField fx:id="heroEmailField" prefHeight="60" prefWidth="430" promptText="Adresse email" style="-fx-background-color: rgba(22,22,22,0.9);                                                   -fx-text-fill: white;                                                   -fx-prompt-text-fill: #aaa;                                                   -fx-border-color: #808080;                                                   -fx-border-width: 1;                                                   -fx-font-size: 16;                                                   -fx-padding: 10 14 10 14;" />
+                                <TextField fx:id="heroEmailField" prefHeight="60" prefWidth="430" promptText="Adresse e-mail" style="-fx-background-color: rgba(22,22,22,0.9);                                                   -fx-text-fill: white;                                                   -fx-prompt-text-fill: #aaa;                                                   -fx-border-color: #808080;                                                   -fx-border-width: 1;                                                   -fx-font-size: 16;                                                   -fx-padding: 10 14 10 14;" />
                                 <Button fx:id="heroGetStartedButton" onAction="#handleHeroGetStarted" prefHeight="60" prefWidth="200" style="-fx-background-color: #e50914; -fx-background-radius: 4; -fx-font-size: 22;" text="Commencer ›" textFill="WHITE">
                                     <font><Font name="System Bold" size="22.0" /></font>
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -65,45 +73,45 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- ===== FEATURE 1: ENJOY ON TV ===== -->
+                    <!-- ===== FONCTIONNALITÉ 1 : REGARDER SUR LA TV ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
                         <VBox alignment="CENTER_LEFT" prefWidth="560" spacing="24">
-                            <Label text="Enjoy on your TV." textFill="WHITE" wrapText="true">
+                            <Label text="Profitez sur votre TV." textFill="WHITE" wrapText="true">
                                 <font><Font name="System Bold" size="50.0" /></font>
                             </Label>
-                            <Label text="Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more." textFill="WHITE" wrapText="true">
+                            <Label text="Regardez sur les Smart TV, PlayStation, Xbox, Chromecast, Apple TV, lecteurs Blu-ray et bien plus encore." textFill="WHITE" wrapText="true">
                                 <font><Font size="22.0" /></font>
                             </Label>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
-                        <!-- TV Image placeholder (replace with actual ImageView with image URL) -->
+                        <!-- Emplacement image TV -->
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #1a1a2e; -fx-background-radius: 8;">
                             <Label style="-fx-font-size: 120; -fx-opacity: 0.6;" text="📺" />
                         </StackPane>
                     </HBox>
 
-                    <!-- ===== FEATURE 2: DOWNLOAD ===== -->
+                    <!-- ===== FONCTIONNALITÉ 2 : TÉLÉCHARGEMENT ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
-                        <!-- Download Image placeholder -->
+                        <!-- Emplacement image téléchargement -->
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #1a1a2e; -fx-background-radius: 8;">
                             <Label style="-fx-font-size: 120; -fx-opacity: 0.6;" text="📱" />
                         </StackPane>
                         <Region HBox.hgrow="ALWAYS" />
                         <VBox alignment="CENTER_LEFT" prefWidth="560" spacing="24">
-                            <Label text="Download your shows to watch offline." textFill="WHITE" wrapText="true">
+                            <Label text="Téléchargez vos séries pour regarder hors ligne." textFill="WHITE" wrapText="true">
                                 <font><Font name="System Bold" size="50.0" /></font>
                             </Label>
-                            <Label text="Save your favourites easily and always have something to watch." textFill="WHITE" wrapText="true">
+                            <Label text="Enregistrez facilement vos favoris et ayez toujours quelque chose à regarder." textFill="WHITE" wrapText="true">
                                 <font><Font size="22.0" /></font>
                             </Label>
-                            <!-- Download animation card -->
+                            <!-- Carte animation téléchargement -->
                             <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-background-color: black;                                          -fx-border-color: #e50914;                                          -fx-border-width: 2;                                          -fx-border-radius: 12;                                          -fx-background-radius: 12;                                          -fx-padding: 12 20 12 16;">
                                 <Label style="-fx-font-size: 42;" text="🎬" />
                                 <VBox spacing="3">
                                     <Label text="Stranger Things" textFill="WHITE">
                                         <font><Font name="System Bold" size="15.0" /></font>
                                     </Label>
-                                    <Label text="Downloading..." textFill="#0071eb">
+                                    <Label text="Téléchargement en cours..." textFill="#0071eb">
                                         <font><Font size="13.0" /></font>
                                     </Label>
                                 </VBox>
@@ -113,18 +121,18 @@
                         </VBox>
                     </HBox>
 
-                    <!-- ===== FEATURE 3: WATCH EVERYWHERE ===== -->
+                    <!-- ===== FONCTIONNALITÉ 3 : REGARDER PARTOUT ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
                         <VBox alignment="CENTER_LEFT" prefWidth="560" spacing="24">
-                            <Label text="Watch everywhere." textFill="WHITE" wrapText="true">
+                            <Label text="Regardez partout." textFill="WHITE" wrapText="true">
                                 <font><Font name="System Bold" size="50.0" /></font>
                             </Label>
-                            <Label text="Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV." textFill="WHITE" wrapText="true">
+                            <Label text="Diffusez des films et séries illimités sur votre téléphone, tablette, ordinateur portable et télévision." textFill="WHITE" wrapText="true">
                                 <font><Font size="22.0" /></font>
                             </Label>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
-                        <!-- Devices illustration placeholder -->
+                        <!-- Illustration appareils -->
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #0d1117; -fx-background-radius: 8;">
                             <HBox alignment="CENTER" spacing="10">
                                 <Label style="-fx-font-size: 80; -fx-opacity: 0.7;" text="💻" />
@@ -134,37 +142,37 @@
                         </StackPane>
                     </HBox>
 
-                    <!-- ===== FEATURE 4: KIDS ===== -->
+                    <!-- ===== FONCTIONNALITÉ 4 : ENFANTS ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
-                        <!-- Kids image placeholder -->
+                        <!-- Emplacement image enfants -->
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #1a0030; -fx-background-radius: 8;">
                             <Label style="-fx-font-size: 100; -fx-opacity: 0.7;" text="👶🎈" />
                         </StackPane>
                         <Region HBox.hgrow="ALWAYS" />
                         <VBox alignment="CENTER_LEFT" prefWidth="560" spacing="24">
-                            <Label text="Create profiles for kids." textFill="WHITE" wrapText="true">
+                            <Label text="Créez des profils pour les enfants." textFill="WHITE" wrapText="true">
                                 <font><Font name="System Bold" size="50.0" /></font>
                             </Label>
-                            <Label text="Send kids on adventures with their favourite characters in a space made just for them — free with your membership." textFill="WHITE" wrapText="true">
+                            <Label text="Emmenez les enfants en aventure avec leurs personnages préférés dans un espace conçu juste pour eux — inclus dans votre abonnement." textFill="WHITE" wrapText="true">
                                 <font><Font size="22.0" /></font>
                             </Label>
                         </VBox>
                     </HBox>
 
-                    <!-- ===== FAQ SECTION ===== -->
+                    <!-- ===== SECTION FAQ ===== -->
                     <VBox spacing="0" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 70 200 70 200;">
-                        <Label text="Frequently Asked Questions" textFill="WHITE">
+                        <Label text="Questions fréquemment posées" textFill="WHITE">
                             <font><Font name="System Bold" size="50.0" /></font>
                             <VBox.margin><Insets bottom="20" /></VBox.margin>
                         </Label>
 
                         <!-- FAQ 1 -->
-                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="What is RAKCHANET?">
+                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Qu'est-ce que RAKCHANET ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <content>
                                 <AnchorPane style="-fx-background-color: #303030; -fx-padding: 30 25 30 25;">
-                                    <Label text="RAKCHANET is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.&#10;&#10;You can watch as much as you want, whenever you want without a single commercial – all for one low monthly price. There's always something new to discover and new TV shows and movies are added every week!" textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                                    <Label text="RAKCHANET est un service de streaming qui propose une large variété de séries télévisées primées, de films, d'anime, de documentaires et bien plus encore sur des milliers d'appareils connectés à Internet.&#10;&#10;Vous pouvez regarder autant que vous le souhaitez, quand vous le souhaitez, sans aucune publicité — le tout pour un prix mensuel abordable. Il y a toujours quelque chose de nouveau à découvrir et de nouvelles séries et films sont ajoutés chaque semaine !" textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                                         <font><Font size="22.0" /></font>
                                     </Label>
                                 </AnchorPane>
@@ -173,12 +181,12 @@
                         <Region prefHeight="3" />
 
                         <!-- FAQ 2 -->
-                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="How much does RAKCHANET cost?">
+                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Combien coûte RAKCHANET ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <content>
                                 <AnchorPane style="-fx-background-color: #303030; -fx-padding: 30 25 30 25;">
-                                    <Label text="Watch RAKCHANET on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plans range from €4.99 to €17.99 a month. No extra costs, no contracts." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                                    <Label text="Regardez RAKCHANET sur votre smartphone, tablette, Smart TV, ordinateur portable ou appareil de streaming, le tout pour un abonnement mensuel fixe. Les forfaits vont de 4,99 € à 17,99 € par mois. Aucun frais supplémentaire, aucun engagement." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                                         <font><Font size="22.0" /></font>
                                     </Label>
                                 </AnchorPane>
@@ -187,12 +195,12 @@
                         <Region prefHeight="3" />
 
                         <!-- FAQ 3 -->
-                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Where can I watch?">
+                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Où puis-je regarder ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <content>
                                 <AnchorPane style="-fx-background-color: #303030; -fx-padding: 30 25 30 25;">
-                                    <Label text="Watch anywhere, anytime. Sign in with your RAKCHANET account to watch instantly on the web at rakchanet.com from your personal computer or on any internet-connected device that offers the RAKCHANET app, including smart TVs, smartphones, tablets, streaming media players and game consoles.&#10;&#10;You can also download your favourite shows with the iOS, Android, or Windows 10 app." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                                    <Label text="Regardez où vous voulez, quand vous voulez. Connectez-vous avec votre compte RAKCHANET pour regarder instantanément sur le web depuis rakchanet.com ou sur n'importe quel appareil connecté à Internet disposant de l'application RAKCHANET, y compris les Smart TV, smartphones, tablettes, lecteurs multimédias et consoles de jeux.&#10;&#10;Vous pouvez également télécharger vos séries préférées avec l'application iOS, Android ou Windows 10." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                                         <font><Font size="22.0" /></font>
                                     </Label>
                                 </AnchorPane>
@@ -201,12 +209,12 @@
                         <Region prefHeight="3" />
 
                         <!-- FAQ 4 -->
-                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="How do I cancel?">
+                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Comment résilier mon abonnement ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <content>
                                 <AnchorPane style="-fx-background-color: #303030; -fx-padding: 30 25 30 25;">
-                                    <Label text="RAKCHANET is flexible. There are no pesky contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees – start or stop your account anytime." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                                    <Label text="RAKCHANET est flexible. Pas de contrats contraignants, pas d'engagements. Vous pouvez facilement résilier votre compte en ligne en deux clics. Aucuns frais de résiliation — commencez ou arrêtez votre abonnement à tout moment." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                                         <font><Font size="22.0" /></font>
                                     </Label>
                                 </AnchorPane>
@@ -215,12 +223,12 @@
                         <Region prefHeight="3" />
 
                         <!-- FAQ 5 -->
-                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="What can I watch on RAKCHANET?">
+                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Que puis-je regarder sur RAKCHANET ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <content>
                                 <AnchorPane style="-fx-background-color: #303030; -fx-padding: 30 25 30 25;">
-                                    <Label text="RAKCHANET has an extensive library of feature films, documentaries, TV shows, anime, award-winning RAKCHANET originals, and more. Watch as much as you want, anytime you want." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                                    <Label text="RAKCHANET possède une vaste bibliothèque de longs métrages, documentaires, séries télévisées, anime, productions originales RAKCHANET primées et bien plus encore. Regardez autant que vous le souhaitez, quand vous le souhaitez." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                                         <font><Font size="22.0" /></font>
                                     </Label>
                                 </AnchorPane>
@@ -229,26 +237,26 @@
                         <Region prefHeight="3" />
 
                         <!-- FAQ 6 -->
-                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Is RAKCHANET good for kids?">
+                        <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="RAKCHANET est-il adapté aux enfants ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <content>
                                 <AnchorPane style="-fx-background-color: #303030; -fx-padding: 30 25 30 25;">
-                                    <Label text="The RAKCHANET Kids experience is included in your membership to give parents control while kids enjoy family-friendly TV shows and movies in their own space.&#10;&#10;Kids profiles come with PIN-protected parental controls that let you restrict the maturity rating of content kids can watch and block specific titles you don't want kids to see." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                                    <Label text="L'expérience RAKCHANET Enfants est incluse dans votre abonnement pour donner aux parents le contrôle, tandis que les enfants profitent de séries et films adaptés à la famille dans leur propre espace.&#10;&#10;Les profils enfants sont dotés de contrôles parentaux protégés par un code PIN qui permettent de restreindre le niveau de maturité des contenus que les enfants peuvent regarder et de bloquer des titres spécifiques que vous ne souhaitez pas qu'ils voient." textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                                         <font><Font size="22.0" /></font>
                                     </Label>
                                 </AnchorPane>
                             </content>
                         </TitledPane>
 
-                        <!-- CTA below FAQ -->
+                        <!-- CTA sous la FAQ -->
                         <VBox alignment="CENTER" spacing="16" style="-fx-padding: 50 0 10 0;">
-                            <Label alignment="CENTER" text="Ready to watch? Enter your email to create or restart your membership." textFill="WHITE" wrapText="true">
+                            <Label alignment="CENTER" text="Prêt à regarder ? Saisissez votre adresse e-mail pour créer ou réactiver votre abonnement." textFill="WHITE" wrapText="true">
                                 <font><Font size="19.0" /></font>
                             </Label>
                             <HBox alignment="CENTER" spacing="10">
-                                <TextField fx:id="faqEmailField" prefHeight="60" prefWidth="430" promptText="Email address" style="-fx-background-color: rgba(22,22,22,0.9);                                                   -fx-text-fill: white;                                                   -fx-prompt-text-fill: #aaa;                                                   -fx-border-color: #808080;                                                   -fx-border-width: 1;                                                   -fx-font-size: 16;                                                   -fx-padding: 10 14 10 14;" />
-                                <Button fx:id="faqGetStartedButton" onAction="#handleFaqGetStarted" prefHeight="60" prefWidth="200" style="-fx-background-color: #e50914; -fx-background-radius: 4;" text="Get Started ›" textFill="WHITE">
+                                <TextField fx:id="faqEmailField" prefHeight="60" prefWidth="430" promptText="Adresse e-mail" style="-fx-background-color: rgba(22,22,22,0.9);                                                   -fx-text-fill: white;                                                   -fx-prompt-text-fill: #aaa;                                                   -fx-border-color: #808080;                                                   -fx-border-width: 1;                                                   -fx-font-size: 16;                                                   -fx-padding: 10 14 10 14;" />
+                                <Button fx:id="faqGetStartedButton" onAction="#handleFaqGetStarted" prefHeight="60" prefWidth="200" style="-fx-background-color: #e50914; -fx-background-radius: 4;" text="Commencer ›" textFill="WHITE">
                                     <font><Font name="System Bold" size="22.0" /></font>
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
@@ -256,80 +264,80 @@
                         </VBox>
                     </VBox>
 
-                    <!-- ===== FOOTER ===== -->
+                    <!-- ===== PIED DE PAGE ===== -->
                     <VBox spacing="30" style="-fx-background-color: black; -fx-padding: 60 200 40 200;">
-                        <Label text="Questions? Call 0800-100-0990" textFill="#808080">
+                        <Label text="Des questions ? Appelez le 0800-100-0990" textFill="#808080">
                             <font><Font size="16.0" /></font>
                         </Label>
 
-                        <!-- Footer Links Grid -->
+                        <!-- Grille de liens du pied de page -->
                         <HBox prefWidth="880" spacing="0">
-                            <!-- Column 1 -->
+                            <!-- Colonne 1 -->
                             <VBox prefWidth="220" spacing="14">
                                 <Label style="-fx-cursor: hand; -fx-underline: true;" text="FAQ" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Investor Relations" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Relations investisseurs" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Privacy" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Confidentialité" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Speed Test" textFill="#808080">
-                                    <font><Font size="13.0" /></font>
-                                </Label>
-                            </VBox>
-                            <!-- Column 2 -->
-                            <VBox prefWidth="220" spacing="14">
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Help Centre" textFill="#808080">
-                                    <font><Font size="13.0" /></font>
-                                </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Jobs" textFill="#808080">
-                                    <font><Font size="13.0" /></font>
-                                </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Cookie Preferences" textFill="#808080">
-                                    <font><Font size="13.0" /></font>
-                                </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Corporate Information" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Test de vitesse" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
                             </VBox>
-                            <!-- Column 3 -->
+                            <!-- Colonne 2 -->
                             <VBox prefWidth="220" spacing="14">
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Account" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Centre d'aide" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Ways to Watch" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Emplois" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Terms of Use" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Préférences cookies" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Contact Us" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Informations légales" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
                             </VBox>
-                            <!-- Column 4 -->
+                            <!-- Colonne 3 -->
                             <VBox prefWidth="220" spacing="14">
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Media Centre" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Mon compte" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Terms of Use" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Façons de regarder" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
-                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Legal Notices" textFill="#808080">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Conditions d'utilisation" textFill="#808080">
+                                    <font><Font size="13.0" /></font>
+                                </Label>
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Contactez-nous" textFill="#808080">
+                                    <font><Font size="13.0" /></font>
+                                </Label>
+                            </VBox>
+                            <!-- Colonne 4 -->
+                            <VBox prefWidth="220" spacing="14">
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Espace presse" textFill="#808080">
+                                    <font><Font size="13.0" /></font>
+                                </Label>
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Conditions d'utilisation" textFill="#808080">
+                                    <font><Font size="13.0" /></font>
+                                </Label>
+                                <Label style="-fx-cursor: hand; -fx-underline: true;" text="Mentions légales" textFill="#808080">
                                     <font><Font size="13.0" /></font>
                                 </Label>
                             </VBox>
                         </HBox>
 
-                        <!-- Language selector -->
-                        <Button prefHeight="35" prefWidth="130" style="-fx-background-color: transparent; -fx-border-color: #808080; -fx-border-width: 1; -fx-border-radius: 3;" text="🌐  English ▾" textFill="#808080">
+                        <!-- Sélecteur de langue -->
+                        <Button prefHeight="35" prefWidth="130" style="-fx-background-color: transparent; -fx-border-color: #808080; -fx-border-width: 1; -fx-border-radius: 3;" text="🌐  Français ▾" textFill="#808080">
                             <font><Font size="13.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                         </Button>
 
-                        <Label text="RAKCHANET Tunisia" textFill="#808080">
+                        <Label text="RAKCHANET Tunisie" textFill="#808080">
                             <font><Font size="13.0" /></font>
                         </Label>
                     </VBox>

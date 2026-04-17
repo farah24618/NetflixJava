@@ -21,7 +21,7 @@ public class Film extends Media{
                 Set<Category> genres, Set<Warning> warnings,
                 String urlVedio, int duree, int nbreVue) {
 
-        // appelle le constructeur complet de Media
+        
         super(id, titre, synopsis, casting, dateSortie, urlImageCover,
               urlImageBanner, urlTeaser, ratingMoyen, ageRating,
               type, dateAjout, genres, warnings);
@@ -36,23 +36,17 @@ public class Film extends Media{
 
 
 
-	public Film(int id, String titre, String synopsis, String casting, LocalDate dateSortie, String urlImageCover,
-			String urlImageBanner, String urlTeaser, Double ratingMoyen, AgeRating ageRating, TypeMedia type,
-			LocalDateTime dateAjout, Set<Category> genres, Set<Warning> warnings) {
-		super(id, titre, synopsis, casting, dateSortie, urlImageCover, urlImageBanner, urlTeaser, ratingMoyen, ageRating, type,
-				dateAjout, genres, warnings);
-		// TODO Auto-generated constructor stub
-	}
+	
 
 
 
 	
 
 
-	public Film(int id2, String titre2, String synopsis2) {
+	/*public Film(int id2, String titre2, String synopsis2) {
 		super(id2, titre2, synopsis2);
 		// TODO Auto-generated constructor stub
-	}
+	}*/
 	
 
 	public Film () {

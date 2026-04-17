@@ -16,15 +16,20 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import tn.farah.NetflixJava.Entities.Episode;
+import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Entities.Saison;
+import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Subtitle;
 import tn.farah.NetflixJava.Service.EpisodeService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SaisonService;
+import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.Service.SubtitleService;
 import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.io.File;
 import java.net.URL;
@@ -39,6 +44,7 @@ public class AddEpisodeController implements Initializable {
     private EpisodeService  episodeService;
     private SaisonService   saisonService;
     private SubtitleService subtitleService;
+    private NotificationService notificationService;
 
     // ─── Fichiers sélectionnés ────────────────────────────────────────────────
     private File fileMiniature;
@@ -122,6 +128,7 @@ public class AddEpisodeController implements Initializable {
         episodeService  = new EpisodeService(connection);
         saisonService   = new SaisonService(connection);
         subtitleService = new SubtitleService(connection);
+        notificationService=new NotificationService(connection);
 
         loadSaisons();
 
@@ -193,22 +200,58 @@ public class AddEpisodeController implements Initializable {
     // ═════════════════════════════════════════════════════════════════════════
     //  SAVE LOGIC
     // ═════════════════════════════════════════════════════════════════════════
+    
     @FXML
     private void handleSave() {
         if (!validateForm()) return;
         try {
             Episode episode = buildEpisodeFromForm();
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
+
+            // ── Récupérer le titre de la série ──
+            SerieService serieService = new SerieService(ConxDB.getInstance());
+            int serieId = saisonService.getSerieIdBySaison(episode.getSaisonId());
+            Serie serie = serieService.findById(serieId);
+            String serieTitle = (serie != null) ? serie.getTitre() : "Inconnue";
 
             if (editingEpisodeId > 0) {
                 // ── MODE ÉDITION ──
                 episode.setId(editingEpisodeId);
+                episode.setNbreVue(episodeService.findById(editingEpisodeId).getNbreVue());
                 episodeService.update(episode);
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Épisode modifié",
+                    "L'épisode \"" + episode.getTitre() + "\" de la série \"" + serieTitle + "\" a été mis à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
                 showSuccess("✓ Épisode « " + episode.getTitre() + " » modifié !");
+
             } else {
                 // ── MODE CRÉATION ──
                 int episodeId = episodeService.save(episode);
                 if (episodeId > 0) {
                     saveSubtitles(episodeId);
+
+                    Notification n = new Notification(
+                        0,
+                        userId,
+                        "NOUVEAUTE",
+                        "Nouvel épisode ajouté",
+                        "Un nouvel épisode \"" + episode.getTitre() + "\" a été ajouté à la série \"" + serieTitle + "\".",
+                        java.time.LocalDate.now().toString(),
+                        false,
+                        false
+                    );
+                    notificationService.addNotification(n);
+
                     showSuccess("✓ Épisode « " + episode.getTitre() + " » enregistré !");
                 } else {
                     showError("Erreur lors de l'enregistrement.");
@@ -216,7 +259,6 @@ public class AddEpisodeController implements Initializable {
                 }
             }
 
-            // Réinitialiser après sauvegarde
             ScreenManager.getInstance().setEditingEpisode(null);
             editingEpisodeId = -1;
             clearForm();
@@ -226,7 +268,6 @@ public class AddEpisodeController implements Initializable {
             e.printStackTrace();
         }
     }
-
     private void saveSubtitles(int episodeId) {
         for (SubtitleRow sr : subtitleRows) {
             // Plus besoin du if — validateForm() garantit que tout est rempli
@@ -248,7 +289,8 @@ public class AddEpisodeController implements Initializable {
             parseIntSafe(txtDuree.getText()),
             txtResume.getText().trim(),
             fileMiniature != null ? fileMiniature.getAbsolutePath() : "",
-            parseIntSafe(txtDureeIntro.getText())
+            parseIntSafe(txtDureeIntro.getText()),
+            0
         );
     }
 

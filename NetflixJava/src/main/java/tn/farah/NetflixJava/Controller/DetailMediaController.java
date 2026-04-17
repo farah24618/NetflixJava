@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -214,7 +214,6 @@ public class DetailMediaController implements Initializable {
     //  HELPERS
     // ═══════════════════════════════════════════════════════════════
 
-    /** Null-safe setText */
     private void setText(Label label, String value) {
         if (label != null) label.setText(value);
     }
@@ -257,4 +256,4 @@ public class DetailMediaController implements Initializable {
     @FXML private void onMovies() { ScreenManager.getInstance().navigateTo(Screen.films); }
     @FXML private void onSeries() { ScreenManager.getInstance().navigateTo(Screen.series); }
     @FXML private void onMyList() { }
-}
+}*/

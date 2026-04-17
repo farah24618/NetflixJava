@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.DAO;
 
 import tn.farah.NetflixJava.Entities.User;
+
 import tn.farah.NetflixJava.Entities.UserRole;
 import java.sql.*;
 import java.time.LocalDateTime;

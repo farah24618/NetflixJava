@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.collections.FXCollections;
 
@@ -186,4 +186,4 @@ public class EpisodeCommentsController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-}
+}*/

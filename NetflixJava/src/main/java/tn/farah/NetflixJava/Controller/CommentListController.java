@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -97,5 +97,5 @@ public class CommentListController {
     }
 
     @FXML private void handleClose() { ScreenManager.getInstance().goBack(); }
-    @FXML private void handlePostComment() { /* Ton code save ici */ }
-}
+    @FXML private void handlePostComment() { /* Ton code save ici  }
+}*/

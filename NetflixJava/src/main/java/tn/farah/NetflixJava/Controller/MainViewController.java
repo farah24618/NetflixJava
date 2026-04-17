@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
@@ -26,7 +27,8 @@ public class MainViewController implements Initializable {
 
     @FXML private TextField faqEmailField;       // FAQ section email input (bottom CTA)
 
-    @FXML private Button faqGetStartedButton;    // FAQ section "Get Started ›"
+    @FXML private Button faqGetStartedButton; 
+    @FXML private Region heroBackground;// FAQ section "Get Started ›"
 
     // ── Initializable ─────────────────────────────────────────────────────────
 
@@ -35,6 +37,18 @@ public class MainViewController implements Initializable {
         signInButton.setOnAction(e -> handleSignIn());
         heroGetStartedButton.setOnAction(e -> handleGetStarted(heroEmailField));
         faqGetStartedButton.setOnAction(e -> handleGetStarted(faqEmailField));
+     // Check if the file actually exists in the classpath
+        String imagePath = "/tn/farah/NetflixJava/ImagesNet/hero.jpeg";
+        URL res = getClass().getResource(imagePath);
+
+        if (res != null) {
+            String style = "-fx-background-image: url('" + res.toExternalForm() + "'); " +
+                           "-fx-background-size: cover; " +
+                           "-fx-background-position: center;";
+            
+            heroBackground.setStyle(style);
+           ;
+        }
     }
 
     // ── Handlers ──────────────────────────────────────────────────────────────

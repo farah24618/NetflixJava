@@ -36,7 +36,8 @@ public class ScreenManager {
 
     private Stage primaryStage;
     private final Map<Screen, String> routes = new HashMap<>();
-    private final Stack<Screen> history = new Stack<>();
+ 
+    private final Stack<HistoryNode> history = new Stack<>();
     private Screen current;
     private Episode editingEpisode = null;
     private Saison editingSaison = null;
@@ -105,33 +106,45 @@ public class ScreenManager {
     }
 
     /**
-     * Aller vers une page et garder l’ancienne dans l’historique
+     * Aller vers une page et garder l'ancienne DANS SON ÉTAT EXACT dans l'historique
      */
     public void navigateTo(Screen screen) {
-        if (current != null) {
-            history.push(current);
+        if (current != null && primaryStage.getScene() != null && primaryStage.getScene().getRoot() != null) {
+            history.push(new HistoryNode(current, primaryStage.getScene().getRoot()));
         }
         load(screen);
     }
 
     /**
-     * Aller vers une page sans garder l’historique
+     * Naviguer et récupérer le contrôleur (Utilisé quand vous cliquez sur un épisode)
+     */
+    public <T> T navigateAndGetController(Screen screen) {
+        if (current != null && primaryStage.getScene() != null && primaryStage.getScene().getRoot() != null) {
+            history.push(new HistoryNode(current, primaryStage.getScene().getRoot()));
+        }
+        return loadAndGetController(screen);
+    }
+
+    /**
+     * Aller vers une page sans garder l'historique
      */
     public void navigateAndReplace(Screen screen) {
         history.clear();
         load(screen);
     }
-
     /**
-     * Retour arrière
+     * Retour arrière parfait
      */
     public void goBack() {
         if (history.isEmpty()) {
             return;
         }
-        load(history.pop());
+        HistoryNode prev = history.pop();
+        current = prev.screen;
+        
+        // On NE fait PLUS load(), on réapplique directement la racine JavaFX mise en cache !
+        applyScene(prev.root); 
     }
-
     /**
      * Vérifier s’il y a une page précédente
      */
@@ -146,15 +159,7 @@ public class ScreenManager {
         return current;
     }
 
-    /**
-     * Naviguer et récupérer le contrôleur de la nouvelle page
-     */
-    public <T> T navigateAndGetController(Screen screen) {
-        if (current != null) {
-            history.push(current);
-        }
-        return loadAndGetController(screen);
-    }
+   
 
     /**
      * Chargement simple
@@ -230,10 +235,10 @@ public class ScreenManager {
         ParallelTransition transition = new ParallelTransition(fade, scale);
         transition.play();
     }
-    public void navigateWithSplash(Screen screen) {
+   /* public void navigateWithSplash(Screen screen) {
         if (current != null) history.push(current);
 
-        // 1. Splash instantané
+       
        Image logoImg = new Image(
         	    ScreenManager.class.getResource("/tn/farah/NetflixJava/ImagesNet/rakchanetLogo.png").toExternalForm()
         	);
@@ -281,6 +286,18 @@ public class ScreenManager {
 
         loadThread.setDaemon(true); // ← le thread s'arrête quand l'app se ferme
         loadThread.start();
+    }*/
+ // Ajoutez cette classe interne
+    private static class HistoryNode {
+        Screen screen;
+        Parent root; // Contient toute l'interface (scroll, champs de texte, résultats, etc.)
+
+        public HistoryNode(Screen screen, Parent root) {
+            this.screen = screen;
+            this.root = root;
+        }
     }
+
+    
 }
 

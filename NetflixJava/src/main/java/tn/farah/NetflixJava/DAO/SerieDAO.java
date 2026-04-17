@@ -43,16 +43,15 @@ public class SerieDAO {
         "s.est_complet, m.rating_moyen, " +
         "ac.label AS age_category_name, " +
         "c.id AS category_id, c.nom AS category_nom, " +
-        "w.id AS warning_id, w.label AS warning_desc, cs.nom AS serie_category " +
+        "w.id AS warning_id, w.label AS warning_desc " +
         "FROM `media` m " +
         "JOIN serie s ON m.id = s.id " +
         "LEFT JOIN age_rating ac ON m.age_rating_id = ac.id " +
         "LEFT JOIN media_category fc ON m.id = fc.media_id " +
         "LEFT JOIN category c ON fc.category_id = c.id " +
         "LEFT JOIN media_warning mw ON m.id = mw.media_id " +
-        "LEFT JOIN content_warning w ON mw.warning_id = w.id " +
-        "LEFT JOIN liaison_serie_category sc ON m.id = sc.id_serie " +
-        "LEFT JOIN category_serie cs ON cs.id = sc.id_category ";
+        "LEFT JOIN content_warning w ON mw.warning_id = w.id " 
+       ;
 
     
 

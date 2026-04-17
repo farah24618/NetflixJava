@@ -10,6 +10,7 @@ public class Episode {
     private String miniatureUrl;
     private int durreeIntro;
     private Serie serie;
+    private int nbreVue;
 
     public Serie getSerie() {
 		return serie;
@@ -33,7 +34,7 @@ public class Episode {
 
 
     public Episode(int saisonId, String titre, int numeroEpisode, String videoUrl, int duree, String resume,
-			String miniatureUrl, int durreIntro) {
+			String miniatureUrl, int durreIntro,int nbreVue) {
 		this.saisonId = saisonId;
 		this.titre = titre;
 		this.numeroEpisode = numeroEpisode;
@@ -42,9 +43,10 @@ public class Episode {
 		this.resume = resume;
 		this.miniatureUrl = miniatureUrl;
 		this.durreeIntro = durreIntro;
+		this.nbreVue=nbreVue;
 	}
 	public Episode(int id, int saisonId, String titre, int numeroEpisode, String videoUrl, int duree, String resume,
-			String miniatureUrl, int durreeIntro) {
+			String miniatureUrl, int durreeIntro,int nbreVue) {
 
 		this.id = id;
 		this.saisonId = saisonId;
@@ -55,6 +57,21 @@ public class Episode {
 		this.resume = resume;
 		this.miniatureUrl = miniatureUrl;
 		this.durreeIntro = durreeIntro;
+		this.nbreVue=nbreVue;
+	}
+
+
+
+
+	public int getNbreVue() {
+		return nbreVue;
+	}
+
+
+
+
+	public void setNbreVue(int nbreVue) {
+		this.nbreVue = nbreVue;
 	}
 
 

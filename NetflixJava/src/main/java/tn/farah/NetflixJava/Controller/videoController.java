@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import java.sql.Connection;
 
@@ -589,4 +589,4 @@ public class videoController {
         if (mediaPlayer == null || seconds <= 0) return;
         mediaPlayer.setOnReady(() -> mediaPlayer.seek(Duration.seconds(seconds)));
     }
-}
+}*/

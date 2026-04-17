@@ -235,8 +235,10 @@ public class UniversalPlayerController {
         this.currentEpisode = episodeService.findById(episodeId);
         if (currentEpisode == null) {
             System.err.println("Épisode introuvable : " + episodeId);
-            return;
-        }
+            
+            return;}
+            episodeService.incrementerVues(episodeId);
+        
         Platform.runLater(() -> {
             titleLabel.setText(
                 "Saison " + saisonService.findById(currentEpisode.getSaisonId()).getNumeroSaison()

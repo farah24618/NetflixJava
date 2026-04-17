@@ -38,7 +38,7 @@ public class NotificationController {
     	this.currentUserId = SessionManager.getInstance().getCurrentUserId();
     	this.conx=ConxDB.getInstance();
     	this.service=new NotificationService(conx);
-        // Appliquer le design Netflix à la ListView
+        
         setupListViewDesign();
         
         loadNotifications();

@@ -125,6 +125,7 @@ public class AddSaisonnController implements Initializable {
                 // ── MODE ÉDITION ──
                 Saison updated = new Saison(editingSaisonId, serieId, numSaison, nom, dateSortie);
                 saisonService.update(updated);
+                
                 showSuccess("✓ Saison " + numSaison + " modifiée !");
             } else {
                 // ── MODE CRÉATION ──

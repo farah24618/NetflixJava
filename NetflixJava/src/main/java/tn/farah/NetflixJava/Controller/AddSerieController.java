@@ -16,11 +16,13 @@ import javafx.util.Duration;
 
 import tn.farah.NetflixJava.Entities.*;
 import tn.farah.NetflixJava.Service.CategoryService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.Service.WarningService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.io.File;
 import java.net.URL;
@@ -352,23 +354,55 @@ public class AddSerieController implements Initializable {
     // ═════════════════════════════════════════════════════════════════════════
     //  SAVE
     // ═════════════════════════════════════════════════════════════════════════
-    @FXML private void handleSave() {
+    @FXML
+    private void handleSave() {
         if (!validateForm()) return;
         try {
+            NotificationService notificationService = new NotificationService(ConxDB.getInstance());
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
+
             if (serieToEdit == null) {
-                // MODE AJOUT
+                // ── MODE CRÉATION ──
                 Serie serie = buildSerieFromForm(0);
                 serieService.enregistrerSerie(serie);
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "NOUVEAUTE",
+                    "Nouvelle série ajoutée",
+                    "La série \"" + serie.getTitre() + "\" vient d'être ajoutée à la plateforme.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
                 showSuccess("✓ Série « " + serie.getTitre() + " » enregistrée !");
                 clearForm();
+
             } else {
-                // MODE MODIFICATION
+                // ── MODE MODIFICATION ──
                 Serie serie = buildSerieFromForm(serieToEdit.getId());
                 serieService.updateSerie(serie);
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Série mise à jour",
+                    "La série \"" + serie.getTitre() + "\" a été mise à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
                 showSuccess("✓ Série « " + serie.getTitre() + " » mise à jour !");
                 serieToEdit = null;
                 clearForm();
             }
+
         } catch (Exception e) {
             showError("Erreur : " + e.getMessage());
             e.printStackTrace();
@@ -398,7 +432,7 @@ public class AddSerieController implements Initializable {
                 LocalDateTime.now(),
                 new HashSet<>(selectedCategories),
                 new HashSet<>(selectedWarnings),
-                "",
+                
                 cbTerminee.isSelected()
         );
         serie.setProducteur(txtProducteur.getText().trim());
@@ -425,7 +459,7 @@ public class AddSerieController implements Initializable {
                 LocalDateTime.now(),
                 new HashSet<>(selectedCategories),
                 new HashSet<>(selectedWarnings),
-                "",           // genre field (legacy) — categories cover this
+                
                 cbTerminee.isSelected()
         );
         serie.setProducteur(txtProducteur.getText().trim());

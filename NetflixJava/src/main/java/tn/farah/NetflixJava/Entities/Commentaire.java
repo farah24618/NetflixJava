@@ -17,7 +17,7 @@ public class Commentaire {
     public Commentaire() {
     }
 
-    public Commentaire(int id, int mediaId, boolean signale, int userId, String username,
+  /*  public Commentaire(int id, int mediaId, boolean signale, int userId, String username,
                        String contenu, int likes, boolean spoiler, LocalDateTime dateCommentaire) {
         this.id = id;
         this.mediaId = mediaId;
@@ -28,7 +28,7 @@ public class Commentaire {
         this.likes = likes;
         this.spoiler = spoiler;
         this.dateCommentaire = dateCommentaire;
-    }
+    }*/
 
     public boolean isSignale() {
 		return signale;
@@ -50,10 +50,10 @@ public class Commentaire {
         this.dateCommentaire = LocalDateTime.now();
     }
 
-    public Commentaire(int userId2,int mediaid ,int i, String texte, boolean isSpoiler) {
-   this.userId=userId2;
+    public Commentaire(int userId,int mediaid ,int likes, String texte, boolean isSpoiler) {
+   this.userId=userId;
    this.mediaId=mediaid;
-   this.likes=i;
+   this.likes=likes;
    this.contenu=texte;
    this.spoiler=isSpoiler;
     }

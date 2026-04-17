@@ -20,11 +20,13 @@ import tn.farah.NetflixJava.DAO.SubtitleDAO;
 import tn.farah.NetflixJava.Entities.*;
 import tn.farah.NetflixJava.Service.CategoryService;
 import tn.farah.NetflixJava.Service.FilmService;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SubtitleService;
 import tn.farah.NetflixJava.Service.WarningService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.io.File;
 import java.net.URL;
@@ -119,7 +121,7 @@ public class AddFilmController implements Initializable {
         filmService     = new FilmService(connection);
         categoryService = new CategoryService(connection);
         warningService  = new WarningService(connection);
-        //subtitleService = new SubtitleService(new SubtitleDAO(connection));
+        
         subtitleService = new SubtitleService(connection);
 
         cbAgeRating.getItems().addAll(AgeRating.values());
@@ -415,25 +417,58 @@ public class AddFilmController implements Initializable {
     private void handleSave() {
         if (!validateForm()) return;
         try {
+            NotificationService notificationService = new NotificationService(ConxDB.getInstance());
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
+
             if (filmToEdit == null) {
+                // ── MODE CRÉATION ──
                 Film film = buildFilmFromForm(0);
                 filmService.enregistrerFilm(film);
                 saveSubtitles(film.getId());
-                showSuccess("✓ Film enregistré !");
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "NOUVEAUTE",
+                    "Nouveau film ajouté",
+                    "Le film \"" + film.getTitre() + "\" vient d'être ajouté à la plateforme.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Film « " + film.getTitre() + " » enregistré !");
+
             } else {
+                // ── MODE ÉDITION ──
                 Film film = buildFilmFromForm(filmToEdit.getId());
                 filmService.updateFilm(film);
                 saveSubtitles(filmToEdit.getId());
-                showSuccess("✓ Film mis à jour !");
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Film mis à jour",
+                    "Le film \"" + film.getTitre() + "\" a été mis à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
+                showSuccess("✓ Film « " + film.getTitre() + " » mis à jour !");
                 filmToEdit = null;
             }
+
             clearForm();
+
         } catch (Exception e) {
             showError("Erreur : " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     private Film buildFilmFromForm(int id) {
         int duree = 0;
         try { duree = Integer.parseInt(txtDuree.getText().trim()); } catch (NumberFormatException ignored) {}

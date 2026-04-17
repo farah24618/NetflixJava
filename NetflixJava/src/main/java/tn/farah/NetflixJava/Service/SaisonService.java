@@ -124,4 +124,9 @@ public class SaisonService {
 		
 		return saisonDAO.findBySerieId(id);
 	}
+
+	public int getSerieIdBySaison(int saisonId) {
+		
+		return saisonDAO.getSerieIdBySaison(saisonId);
+	}
 }

@@ -111,6 +111,7 @@ public class EpisodeViewController implements Initializable {
     @FXML private VBox tabBandes;
     @FXML private VBox tabCommentaires;
     @FXML private VBox tabSimilaires;
+    @FXML private ComboBox<String> saisonComboBox;
 
     // =============================================
     // INJECTION FXML -- PANNEAUX CONTENU
@@ -209,6 +210,29 @@ public class EpisodeViewController implements Initializable {
 
         List<Saison> saisons = saisonService.findBySerie(this.serieId);
         if (saisons != null && !saisons.isEmpty()) {
+            // Remplir le ComboBox
+            saisonComboBox.getItems().clear();
+         // Forcer le texte blanc dans le ComboBox
+            saisonComboBox.setCellFactory(lv -> new javafx.scene.control.ListCell<String>() {
+                @Override protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item);
+                    setStyle("-fx-text-fill: white; -fx-background-color: #2a2a2a;");
+                }
+            });
+            saisonComboBox.setButtonCell(new javafx.scene.control.ListCell<String>() {
+                @Override protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item);
+                    setStyle("-fx-text-fill: white; -fx-background-color: #2a2a2a;");
+                }
+            });
+            for (Saison s : saisons) {
+                saisonComboBox.getItems().add("Saison " + s.getNumeroSaison());
+            }
+            saisonComboBox.setValue("Saison " + saisons.get(0).getNumeroSaison());
+
+            // Charger la première saison
             this.currentSaisonId = saisons.get(0).getId();
             this.episodesDB = serieService.findEpisodeBySaison(this.currentSaisonId);
             chargerListeEpisodes();
@@ -219,6 +243,24 @@ public class EpisodeViewController implements Initializable {
 
             if (episodesDB != null && !episodesDB.isEmpty())
                 mettreAJourInfosEpisode(episodesDB.get(0));
+
+            // Listener changement de saison
+            saisonComboBox.setOnAction(e -> {
+                int index = saisonComboBox.getSelectionModel().getSelectedIndex();
+                if (index >= 0) {
+                    Saison saisonChoisie = saisons.get(index);
+                    this.currentSaisonId = saisonChoisie.getId();
+                    this.episodesDB = serieService.findEpisodeBySaison(this.currentSaisonId);
+                    chargerListeEpisodes();
+
+                    int nb2 = episodesDB != null ? episodesDB.size() : 0;
+                    if (labelNbEpisodes != null)
+                        labelNbEpisodes.setText(nb2 + " episode" + (nb2 > 1 ? "s" : ""));
+
+                    if (episodesDB != null && !episodesDB.isEmpty())
+                        mettreAJourInfosEpisode(episodesDB.get(0));
+                }
+            });
         }
 
         // ✅ FIX : mettre à jour le bouton favoris dès le chargement de la série
@@ -269,8 +311,18 @@ public class EpisodeViewController implements Initializable {
         if (labelTitreSerie != null) labelTitreSerie.setText(serieAct.getTitre());
         if (labelSynopsis   != null) labelSynopsis.setText(
                 serieAct.getSynopsis() != null ? serieAct.getSynopsis() : "");
-        if (labelGenre      != null) labelGenre.setText(
-                serieAct.getGenre() != null ? serieAct.getGenre() : "Inconnu");
+
+        String genreText = "-";
+        if (serieAct.getGenres() != null && !serieAct.getGenres().isEmpty()) {
+            genreText = serieAct.getGenres().stream()
+                    .map(Category::getName).limit(3)
+                    .reduce((a, b) -> a + " - " + b).orElse("-");
+        }
+        if (categories != null) {
+            categories.setText(genreText);
+            categories.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");
+        }
+        if (labelGenre != null) labelGenre.setText(genreText);
         if (labelAnnee      != null) labelAnnee.setText(
                 String.valueOf(serieAct.getDateSortie().getYear()));
         if (labelProducteur != null) labelProducteur.setText(
@@ -301,12 +353,7 @@ public class EpisodeViewController implements Initializable {
             castings.setWrapText(true);
         }
 
-        String genreText = "-";
-        if (serieAct.getGenres() != null && !serieAct.getGenres().isEmpty()) {
-            genreText = serieAct.getGenres().stream()
-                    .map(Category::getName).limit(2)
-                    .reduce((a, b) -> a + " - " + b).orElse("-");
-        }
+       
         if (categories != null) {
             categories.setText(genreText);
             categories.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");
@@ -916,32 +963,8 @@ public class EpisodeViewController implements Initializable {
     }
 
     // =============================================
-    // HANDLERS BOUTONS
-    // =============================================
-    @FXML private void onLike() {
-        likeCount++;
-        btnLike.setText("J'aime (" + likeCount + ")");
-        btnLike.setStyle("-fx-background-color: #E50914; -fx-text-fill: white;" +
-                "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
-    }
-
-    @FXML private void onDislike() {
-        btnDislike.setStyle("-fx-background-color: #555555; -fx-text-fill: white;" +
-                "-fx-padding: 8 18 8 18; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 13px;");
-    }
-
-    @FXML private void onShare() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Partager");
-        alert.setHeaderText(null);
-        alert.setContentText("Lien copie dans le presse-papiers !");
-        alert.showAndWait();
-    }
-
-    @FXML private void onDownload() {
-        btnDownload.setText("Telechargement...");
-        btnDownload.setDisable(true);
-    }
+ 
+   
 
     // =============================================
     // HANDLERS ONGLETS
@@ -1057,6 +1080,8 @@ public class EpisodeViewController implements Initializable {
 
             if (ok) {
                 double moyenne = ratingService.getFilmAverage(serieId);
+                serieActuelle.setRatingMoyen(moyenne);
+                serieService.updateSerie(serieActuelle);
                 btnNoter.setText("⭐ " + moyenne + "/5");
                 btnNoter.setDisable(true);
             }
@@ -1141,6 +1166,12 @@ public class EpisodeViewController implements Initializable {
         });
 
         panelBandes.getChildren().addAll(titre, carte);
+    }
+    @FXML
+    private void onRetour() {
+    	System.out.println("goback");
+      ScreenManager.getInstance().goBack();
+          
     }
     // =============================================
     // NAVIGATION

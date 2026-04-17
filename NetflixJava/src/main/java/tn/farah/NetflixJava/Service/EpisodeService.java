@@ -163,8 +163,13 @@ public class EpisodeService {
         return total;
     }
 
+    public void incrementerVues (int idEpisode) {
+    	episodeDAO.incrementerVues(idEpisode);
+    }
+
 	public List<Episode> findBySaisonId(int id) {
 	
 		return episodeDAO.findBySaisonId(id);
 	}
+
 }

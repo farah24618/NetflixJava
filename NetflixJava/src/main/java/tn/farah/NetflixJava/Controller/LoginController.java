@@ -32,7 +32,7 @@ public class LoginController implements Initializable{
     @FXML private Button        forgotPasswordButton;
     @FXML private Button        signUpButton;
     @FXML private Hyperlink     learnMoreLink;
-    private Connection  connection;
+    
     private UserService userservice ;
 
 
