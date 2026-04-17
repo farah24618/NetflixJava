@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: #141414;" stylesheets="@../css/style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="tn.farah.NetflixJava.Controller.MyListController">
+<BorderPane style="-fx-background-color: #141414;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.MyListController">
 
     <!-- ===== TOP BAR ===== -->
     <top>
@@ -18,8 +18,8 @@
             <Label style="-fx-text-fill: #e50914; -fx-font-size: 28px; -fx-font-weight: bold;" text="RAKCHANET" />
             <HBox alignment="CENTER_LEFT" spacing="18">
                 <Label onMouseClicked="#goHome" style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;" text="Accueil" />
-                <Label style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;" text="Séries" />
-                <Label style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;" text="Films" />
+                <Label onMouseClicked="#onSeries" style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;" text="Séries" />
+                <Label onMouseClicked="#onMovies" style="-fx-text-fill: #e5e5e5; -fx-font-size: 14px; -fx-cursor: hand;" text="Films" />
                 <Label style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;" text="Ma Liste" />
             </HBox>
             <Region HBox.hgrow="ALWAYS" />

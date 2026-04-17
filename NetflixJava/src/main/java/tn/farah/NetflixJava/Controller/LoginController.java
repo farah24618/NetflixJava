@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 import java.net.URL;
 
+
 import java.sql.Connection;
 import java.util.ResourceBundle;
 
@@ -19,7 +20,7 @@ import tn.farah.NetflixJava.Entities.User;
 import tn.farah.NetflixJava.Entities.UserRole;
 import tn.farah.NetflixJava.Service.UserService;
 import tn.farah.NetflixJava.utils.ConxDB;
-import tn.farah.NetflixJava.utils.PreferencesStore;
+
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionManager;
@@ -32,6 +33,10 @@ public class LoginController implements Initializable{
     @FXML private Button        forgotPasswordButton;
     @FXML private Button        signUpButton;
     @FXML private Hyperlink     learnMoreLink;
+    @FXML private TextField     passwordVisible;
+    @FXML private Button        togglePasswordBtn;
+    
+    private boolean             passwordShown = false;
     
     private UserService userservice ;
 
@@ -45,25 +50,15 @@ public class LoginController implements Initializable{
 		emailField.setOnKeyPressed(this::handleEnterKey);
         passwordField.setOnKeyPressed(this::handleEnterKey);
 
-        // Restore "Remember me" email if previously saved
-        String savedEmail = PreferencesStore.getSavedEmail();
-        if (savedEmail != null && !savedEmail.isEmpty()) {
-            emailField.setText(savedEmail);
-            rememberMeCheckBox.setSelected(true);
-        }
+       
 	}
-	@FXML
-	private void handleRememberMe(ActionEvent event) {
-	    /*if (rememberMeCheckBox.isSelected()) {
-	        PreferencesStore.saveEmail(emailField.getText().trim());
-	    } else {
-	        PreferencesStore.clearEmail();
-	    }*/
-	}
+	
 	@FXML
 	private void handleSignIn(ActionEvent event) {
 	    String email = emailField.getText().trim();
-	    String passwordRaw = passwordField.getText();
+	    String passwordRaw = passwordShown 
+	    	    ? passwordVisible.getText() 
+	    	    : passwordField.getText();
 
 	    if (email.isEmpty() || passwordRaw.isEmpty()) {
 	        showAlert(Alert.AlertType.WARNING,
@@ -78,6 +73,13 @@ public class LoginController implements Initializable{
 	                  "Veuillez entrer une adresse email valide.");
 	        return;
 	    }
+	    if (!userservice.isBlocked(email)) {
+	    	showAlert(Alert.AlertType.ERROR,
+	                  "Compte Bloqué",
+	                  "Votre compte a été bloquer par un Admin");
+	        return;
+	    	
+	    }
 
 	    String passwordHashed = hashSHA256(passwordRaw);
 	    User authenticated = userservice.loginUser(email, passwordHashed);
@@ -85,7 +87,7 @@ public class LoginController implements Initializable{
 	    if (authenticated != null) {
 	        SessionManager.getInstance().login(authenticated);
 
-	        // ✅ Vérification du rôle pour la navigation
+	        
 	        if (authenticated.getRole() == UserRole.ADMIN) {
 	            ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
 	        } else {
@@ -126,7 +128,7 @@ public class LoginController implements Initializable{
 			}
 	    }
 	    private boolean isValidEmail(String input) {
-	        // Accepts e-mail format or a numeric phone number (7–15 digits)
+	        
 	        return input.matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")
 	            || input.matches("^\\+?[0-9]{7,15}$");
 	    }
@@ -155,6 +157,25 @@ public class LoginController implements Initializable{
 		        return sb.toString();
 		    } catch (Exception e) { 
 		        return data; 
+		    }
+		}
+		@FXML
+		private void handleTogglePassword(ActionEvent event) {
+		    passwordShown = !passwordShown;
+		    if (passwordShown) {
+		        passwordVisible.setText(passwordField.getText());
+		        passwordVisible.setManaged(true);
+		        passwordVisible.setVisible(true);
+		        passwordField.setManaged(false);
+		        passwordField.setVisible(false);
+		        togglePasswordBtn.setText( "◉" );
+		    } else {
+		        passwordField.setText(passwordVisible.getText());
+		        passwordField.setManaged(true);
+		        passwordField.setVisible(true);
+		        passwordVisible.setManaged(false);
+		        passwordVisible.setVisible(false);
+		        togglePasswordBtn.setText( "◎");
 		    }
 		}
 

@@ -600,19 +600,19 @@ public class MyListController implements Initializable {
        
         	Film film = filmService.findById(mediaId);
         	if (film != null) {
-        	    FilmViewController ctrl = ScreenManager.getInstance()
-        	        .navigateAndGetController(Screen.detailFilm);
+        	    MediaViewController ctrl = ScreenManager.getInstance()
+        	        .navigateAndGetController(Screen.MediaView);
         	    if (ctrl != null) ctrl.setFilm(film);
         	    return;
         	}
         	Serie serie = serieService.findById(mediaId);
         	if (serie != null) {
-        	    EpisodeViewController ctrl = ScreenManager.getInstance()
-        	        .navigateAndGetController(Screen.detail);  // ← ou Screen.episodeView selon ton enum
+        	    MediaViewController ctrl = ScreenManager.getInstance()
+        	        .navigateAndGetController(Screen.MediaView);  // ← ou Screen.episodeView selon ton enum
         	    if (ctrl != null) {
         	        ctrl.setSerie(serie);
         	        int saisonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
-        	        ctrl.setSaisonId(saisonId);
+        	        
         	    }
         	}
         }

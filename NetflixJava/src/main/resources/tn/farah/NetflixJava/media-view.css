@@ -1,0 +1,683 @@
+/* ============================================================
+   media-view.css  —  styles extraits de FilmViewController
+                       et EpisodeViewController
+   ============================================================ */
+
+/* ── ROOT / FOND ─────────────────────────────────────────── */
+.root {
+    -fx-background-color: #141414;
+}
+
+/* ── NAVBAR ──────────────────────────────────────────────── */
+.navbar {
+    -fx-background-color: #141414;
+    -fx-padding: 15 30 15 30;
+}
+
+.navbar-logo {
+    -fx-text-fill: #E50914;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.navbar-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #faf6f6;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.profil-box {
+    -fx-cursor: hand;
+    -fx-padding: 4 10 4 10;
+    -fx-background-color: #1f1f1f;
+    -fx-background-radius: 8;
+}
+
+.profil-label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.btn-retour {
+    -fx-background-color: grey;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-opacity: 0.7;
+}
+
+/* ── SCROLL PANE ─────────────────────────────────────────── */
+.main-scroll {
+    -fx-background: #141414;
+    -fx-background-color: #141414;
+    -fx-border-color: transparent;
+}
+
+/* ── POSTER / VIDEO PANE ─────────────────────────────────── */
+.video-pane {
+    -fx-background-color: #000000;
+}
+
+.poster-gradient {
+    -fx-background-color: linear-gradient(to bottom, transparent 30%, #141414 100%);
+}
+
+.poster-overlay {
+    -fx-padding: 0 0 48 48;
+}
+
+.poster-title {
+    -fx-text-fill: white;
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, black, 10, 0.6, 0, 2);
+}
+
+.poster-categories {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+.poster-desc {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, black, 6, 0.5, 0, 1);
+}
+
+/* ── BOUTONS POSTER ──────────────────────────────────────── */
+.btn-lire {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 11 28 11 28;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-favoris {
+    -fx-background-color: rgba(60,60,60,0.85);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 11 28 11 28;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.btn-favoris-added {
+    -fx-background-color: #46d369;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 11 28 11 28;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-noter {
+    -fx-background-color: #E50914;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 11 28 11 28;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+/* ── INFOS SECTION ───────────────────────────────────────── */
+.infos-section {
+    -fx-padding: 24 30 10 30;
+}
+
+.media-main-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.meta-separator {
+    -fx-text-fill: #555555;
+}
+
+.meta-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+.media-desc {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 14px;
+}
+
+/* ── DISTRIBUTION BOX ────────────────────────────────────── */
+.distribution-box {
+    -fx-background-color: #1f1f1f;
+    -fx-padding: 16;
+    -fx-background-radius: 6;
+}
+
+.distribution-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.castings-label {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+}
+
+.warnings-label {
+    -fx-text-fill: #d12f2f;
+    -fx-font-size: 13px;
+}
+
+/* ── BREADCRUMB (séries) ─────────────────────────────────── */
+.breadcrumb-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.breadcrumb-separator {
+    -fx-text-fill: #555555;
+    -fx-font-size: 13px;
+}
+
+.breadcrumb-current {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* ── ONGLETS ─────────────────────────────────────────────── */
+.tabs-bar {
+    -fx-background-color: #141414;
+    -fx-border-color: transparent transparent #333333 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 30 0 30;
+}
+
+.tab-item {
+    -fx-padding: 14 20 0 20;
+    -fx-cursor: hand;
+}
+
+.tab-label-active {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.tab-label-inactive {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 14px;
+}
+
+.tab-indicator-active {
+    -fx-background-color: #E50914;
+    -fx-background-radius: 2 2 0 0;
+    -fx-padding: 10 0 0 0;
+}
+
+.tab-indicator-inactive {
+    -fx-background-color: transparent;
+    -fx-padding: 10 0 0 0;
+}
+
+/* ── ONGLET CONTENU ──────────────────────────────────────── */
+.content-zone {
+    -fx-padding: 20 30 30 30;
+}
+
+/* ── ONGLET À PROPOS ─────────────────────────────────────── */
+.apropos-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.synopsis-label {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 14px;
+}
+
+.meta-section-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+}
+
+.meta-section-value {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.warnings-apropos-label {
+    -fx-text-fill: #E50914;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* ── ONGLET ÉPISODES ─────────────────────────────────────── */
+.nb-episodes-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+.saison-combo {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: white;
+    -fx-border-color: #444444;
+    -fx-border-radius: 4;
+}
+
+/* Carte épisode */
+.episode-card {
+    -fx-background-color: #1a1a1a;
+    -fx-background-radius: 6;
+    -fx-padding: 14;
+    -fx-cursor: hand;
+}
+
+.episode-card-active {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 6;
+    -fx-padding: 14;
+    -fx-cursor: hand;
+    -fx-border-color: #E50914;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+}
+
+.episode-card:hover {
+    -fx-background-color: #252525;
+}
+
+.episode-num-label {
+    -fx-text-fill: #555555;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.episode-num-label-active {
+    -fx-text-fill: #E50914;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.episode-title-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.episode-title-label-active {
+    -fx-text-fill: #E50914;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.episode-duration-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+}
+
+.episode-desc-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+.episode-badge-encours {
+    -fx-text-fill: #E50914;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.btn-lire-episode {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-lire-episode-active {
+    -fx-background-color: #E50914;
+}
+
+.btn-lire-episode-inactive {
+    -fx-background-color: #333333;
+}
+
+/* ── SIMILAIRES ──────────────────────────────────────────── */
+.similaires-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.similaire-card {
+    -fx-background-color: #1a1a1a;
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+    -fx-cursor: hand;
+}
+
+.similaire-card:hover {
+    -fx-background-color: #252525;
+}
+
+.similaire-title {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.similaire-genre {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+}
+
+.similaire-meta {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+}
+
+.similaire-statut-encours {
+    -fx-text-fill: #46d369;
+    -fx-font-size: 12px;
+}
+
+.similaire-statut-termine {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+}
+
+/* ── BANDES-ANNONCES ─────────────────────────────────────── */
+.bandes-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.teaser-card {
+    -fx-background-color: #1a1a1a;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.teaser-card:hover {
+    -fx-background-color: #2a2a2a;
+    -fx-effect: dropshadow(gaussian, rgba(229,9,20,0.4), 12, 0, 0, 0);
+}
+
+.teaser-label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 12;
+}
+
+/* ── COMMENTAIRES ────────────────────────────────────────── */
+.commentaires-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.comment-form {
+    -fx-background-color: #1f1f1f;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+    -fx-border-color: #333333;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.comment-form-title {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.comment-input {
+    -fx-control-inner-background: #2a2a2a;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666666;
+    -fx-background-radius: 6;
+    -fx-border-color: #444444;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-font-size: 13px;
+}
+
+.spoiler-check {
+    -fx-text-fill: #ffcc00;
+    -fx-font-size: 13px;
+}
+
+.btn-annuler {
+    -fx-background-color: transparent;
+    -fx-text-fill: #aaaaaa;
+    -fx-border-color: #555555;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-padding: 7 18 7 18;
+    -fx-cursor: hand;
+}
+
+.btn-publier {
+    -fx-background-color: #E50914;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 7 22 7 22;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+/* Carte commentaire */
+.comment-card {
+    -fx-background-color: #1a1a1a;
+    -fx-background-radius: 8;
+    -fx-padding: 14;
+    -fx-border-color: #2a2a2a;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.comment-avatar {
+    -fx-background-color: #E50914;
+    -fx-background-radius: 17;
+}
+
+.comment-avatar-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.comment-username {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.comment-date {
+    -fx-text-fill: #555555;
+    -fx-font-size: 11px;
+}
+
+.spoiler-badge {
+    -fx-background-color: #ffcc0022;
+    -fx-text-fill: #ffcc00;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-padding: 2 8 2 8;
+    -fx-border-color: #ffcc0055;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+.comment-text {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+}
+
+.comment-text-hidden {
+    -fx-text-fill: #555555;
+    -fx-font-size: 13px;
+}
+
+.btn-reveal {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: #ffcc00;
+    -fx-font-size: 12px;
+    -fx-padding: 5 12 5 12;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-like-comment {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-like-comment-active {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: #E50914;
+    -fx-font-size: 12px;
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-report {
+    -fx-background-color: transparent;
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-report-done {
+    -fx-background-color: transparent;
+    -fx-text-fill: #555555;
+    -fx-font-size: 12px;
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+/* ── BOUTON SUPPRIMER COMMENTAIRE ────────────────────────── */
+.btn-delete-comment {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d12f2f;
+    -fx-font-size: 12px;
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-border-color: #d12f2f;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.btn-delete-comment:hover {
+    -fx-background-color: #d12f2f;
+    -fx-text-fill: white;
+}
+
+/* ── POPUP NOTATION ──────────────────────────────────────── */
+.rating-popup {
+    -fx-background-color: #1a1a1a;
+    -fx-background-radius: 10;
+    -fx-border-color: #333333;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.rating-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.rating-subtitle {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+}
+
+.star-label {
+    -fx-font-size: 36px;
+    -fx-cursor: hand;
+}
+
+.star-active {
+    -fx-text-fill: #FFD700;
+}
+
+.star-inactive {
+    -fx-text-fill: #555555;
+}
+
+.rating-score-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+.rating-score-label-selected {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 13px;
+}
+
+.rating-score-label-error {
+    -fx-text-fill: #E50914;
+    -fx-font-size: 13px;
+}
+
+.btn-confirmer {
+    -fx-background-color: #E50914;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 9 24 9 24;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-annuler-popup {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+    -fx-padding: 9 24 9 24;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-border-color: #555555;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+/* ── VIDE / PLACEHOLDER ──────────────────────────────────── */
+.empty-label {
+    -fx-text-fill: #555555;
+    -fx-font-size: 13px;
+}
+
+.empty-label-lg {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 14px;
+}

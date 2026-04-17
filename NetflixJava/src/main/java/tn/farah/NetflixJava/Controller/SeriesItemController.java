@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -51,7 +51,7 @@ public class SeriesItemController {
 
         // 3. Rating & Genre
         viewsLabel.setText(serie.getRatingMoyen() != null ? String.format("%.1f/5 ⭐", serie.getRatingMoyen()) : "N/A ⭐");
-        commentsLabel.setText(serie.getGenre() != null ? serie.getGenre() : "Action");
+        //commentsLabel.setText(serie.getGenre() != null ? serie.getGenre() : "Action");
 
         // 4. CHARGEMENT DE L'IMAGE (PHOTO)
         // On utilise l'URL venant de la colonne url_image_cover de la BDD
@@ -132,4 +132,4 @@ public class SeriesItemController {
         sm.setEditingSerie(currentSerie);
         sm.navigateTo(Screen.addSerie);
     }
-}
+}*/

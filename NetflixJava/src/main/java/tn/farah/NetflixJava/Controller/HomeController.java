@@ -333,8 +333,8 @@ public class HomeController implements Initializable {
 
     private Consumer<Film> goToFilmDetail() {
         return film -> {
-            final FilmViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detailFilm);
+            final MediaViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.MediaView);
             if (ctrl != null) ctrl.setFilm(film);
         };
     }
@@ -345,13 +345,13 @@ public class HomeController implements Initializable {
             int firstSeasonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
 
             // 2. Navigation
-            final EpisodeViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
+            final MediaViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.MediaView);
 
             if (ctrl != null) {
                 ctrl.setSerie(serie);
                 System.out.println("saison:"+firstSeasonId);
-                ctrl.setSaisonId(firstSeasonId); // Nouvelle méthode dans votre EpisodeViewController
+               // ctrl.se(firstSeasonId); // Nouvelle méthode dans votre EpisodeViewController
             }
         };
     }
@@ -398,8 +398,8 @@ public class HomeController implements Initializable {
         final Film film = heroFilms.get(heroIndex);
         
         // 3. Naviguer
-        FilmViewController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.detailFilm);
+        MediaViewController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.MediaView);
             
         if (ctrl != null) {
             ctrl.setFilm(film);

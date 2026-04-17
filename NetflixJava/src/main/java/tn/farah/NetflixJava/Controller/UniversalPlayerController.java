@@ -554,8 +554,8 @@ public class UniversalPlayerController {
         shutdown();
         switch (mode) {
             case FILM -> {
-                FilmViewController ctrl = ScreenManager.getInstance()
-                    .navigateAndGetController(Screen.detailFilm);
+                MediaViewController ctrl = ScreenManager.getInstance()
+                    .navigateAndGetController(Screen.MediaView);
                 if (ctrl != null && filmActuel != null) ctrl.setFilm(filmActuel);
             }
             case EPISODE -> retournerALaSerie();
@@ -569,10 +569,10 @@ public class UniversalPlayerController {
     private void retournerALaSerie() {
         if (currentEpisode == null) { ScreenManager.getInstance().navigateTo(Screen.series); return; }
         Serie serie = serieService != null ? serieService.findByEpisodeId(currentEpisode.getId()) : null;
-        EpisodeViewController ctrl = ScreenManager.getInstance()
-            .navigateAndGetController(Screen.detail);
+        MediaViewController ctrl = ScreenManager.getInstance()
+            .navigateAndGetController(Screen.MediaView);
         if (ctrl != null && serie != null) ctrl.setSerie(serie);
-        else ScreenManager.getInstance().navigateTo(Screen.detail);
+        else ScreenManager.getInstance().navigateTo(Screen.MediaView);
     }
 
     // ──────────────────────────────────────────────

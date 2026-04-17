@@ -133,5 +133,8 @@ public class UserService {
 		
 		return userDao.getAdminLogs(id);
 	}
+	public boolean isBlocked(String email) {
+		return userDao.findByEmail(email).isActive();
+	}
 
 }
