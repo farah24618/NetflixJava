@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Entities;
 
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class Saison {
     private int numeroSaison;
     private String nom;
     private LocalDateTime dateSortie;
-    private List<Episode> episodes = new ArrayList<>();
+    
     public Saison() {
     }
 
@@ -132,27 +133,6 @@ public class Saison {
 
 
 
-	
-
-
-
-
-	public List<Episode> getEpisodes() {
-		return episodes;
-	}
-
-
-
-
-
-	public void setEpisodes(List<Episode> episodes) {
-		this.episodes = episodes;
-	}
-
-
-
-
-
 
 
 
@@ -168,10 +148,34 @@ public class Saison {
 	@Override
 	public String toString() {
 		return "Saison [id=" + id + ", idSerie=" + idSerie + ", numeroSaison=" + numeroSaison + ", nom=" + nom
-				+ ", dateSortie=" + dateSortie + ", episodes=" + episodes + "]";
+				+ ", dateSortie=" + dateSortie + "]";
 	}
 
 
+
+
+
+	
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 
 
