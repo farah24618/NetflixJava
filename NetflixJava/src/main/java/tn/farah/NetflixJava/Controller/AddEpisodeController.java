@@ -50,6 +50,8 @@ public class AddEpisodeController implements Initializable {
     // ─── Fichiers sélectionnés ────────────────────────────────────────────────
     private File fileMiniature;
     private File fileVideo;
+ // Après private File fileVideo;
+    private long videoDurationSeconds = -1;
 
     // ─── Sous-titres (lignes dynamiques) ─────────────────────────────────────
     private final List<SubtitleRow> subtitleRows = new ArrayList<>();
@@ -319,27 +321,94 @@ public class AddEpisodeController implements Initializable {
             lblVideoPlaceholder.setText("✅");
             activateDropZone(dropVideo);
             simulateProgress(pbVideo, "Vidéo sélectionnée");
+
+            // Extraction de la durée via JavaFX Media
+            try {
+                javafx.scene.media.Media media = new javafx.scene.media.Media(file.toURI().toString());
+                javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
+                mp.setOnReady(() -> {
+                    videoDurationSeconds = (long) media.getDuration().toSeconds();
+                    int minutes = (int) (videoDurationSeconds / 60);
+                    txtDuree.setText(String.valueOf(minutes));
+                    mp.dispose();
+                    showSuccess("Durée détectée : " + minutes + " min");
+                });
+                mp.setOnError(() -> {
+                    showError("Impossible de lire la durée de la vidéo.");
+                    mp.dispose();
+                });
+            } catch (Exception e) {
+                showError("Erreur lecture vidéo : " + e.getMessage());
+            }
         }
     }
 
     private boolean validateForm() {
-        if (txtTitre.getText().isEmpty() || cbSaison.getValue() == null || fileVideo == null) {
-            showError("Veuillez remplir les champs obligatoires (Titre, Saison, Vidéo).");
+        StringBuilder errors = new StringBuilder();
+
+        if (txtTitre.getText().trim().isEmpty())
+            errors.append("• Titre obligatoire.\n");
+
+        if (cbSaison.getValue() == null)
+            errors.append("• Saison obligatoire.\n");
+
+        if (txtNumeroEpisode.getText().trim().isEmpty()) {
+            errors.append("• Numéro d'épisode obligatoire.\n");
+        } else {
+            try {
+                int num = Integer.parseInt(txtNumeroEpisode.getText().trim());
+                if (num <= 0) errors.append("• Le numéro d'épisode doit être supérieur à 0.\n");
+            } catch (NumberFormatException e) {
+                errors.append("• Le numéro d'épisode doit être un entier.\n");
+            }
+        }
+
+        // Validation durée : obligatoire + doit correspondre à la vidéo
+        if (txtDuree.getText().trim().isEmpty()) {
+            errors.append("• Durée obligatoire.\n");
+        } else {
+            try {
+                int dureeSaisie = Integer.parseInt(txtDuree.getText().trim());
+                if (dureeSaisie <= 0) {
+                    errors.append("• La durée doit être supérieure à 0.\n");
+                } else if (videoDurationSeconds > 0) {
+                    long dureeVideoMin = videoDurationSeconds / 60;
+                    if (dureeSaisie != dureeVideoMin) {
+                        errors.append("• La durée saisie (").append(dureeSaisie)
+                              .append(" min) ne correspond pas à la durée réelle de la vidéo (")
+                              .append(dureeVideoMin).append(" min).\n");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                errors.append("• La durée doit être un nombre entier (en minutes).\n");
+            }
+        }
+
+        if (fileVideo == null && editingEpisodeId <= 0)
+            errors.append("• Vidéo obligatoire.\n");
+
+        // Validation des sous-titres
+        for (int i = 0; i < subtitleRows.size(); i++) {
+            SubtitleRow sr = subtitleRows.get(i);
+            boolean hasLang = sr.langage != null && !sr.langage.isEmpty();
+            boolean hasFile = sr.filePath != null && !sr.filePath.isEmpty();
+
+            if (!hasLang && !hasFile) {
+                errors.append("• Sous-titre #").append(i + 1)
+                      .append(" : veuillez sélectionner une langue et un fichier.\n");
+            } else if (!hasLang) {
+                errors.append("• Sous-titre #").append(i + 1)
+                      .append(" : veuillez sélectionner une langue.\n");
+            } else if (!hasFile) {
+                errors.append("• Sous-titre #").append(i + 1)
+                      .append(" : veuillez choisir un fichier (.srt / .vtt).\n");
+            }
+        }
+
+        if (errors.length() > 0) {
+            showError(errors.toString().trim());
             return false;
         }
-
-        // ✅ Validation des sous-titres
-        for (SubtitleRow sr : subtitleRows) {
-            if (sr.langage == null || sr.langage.isEmpty()) {
-                showError("⚠️ Veuillez sélectionner une langue pour chaque sous-titre.");
-                return false;
-            }
-            if (sr.filePath == null || sr.filePath.isEmpty()) {
-                showError("⚠️ Veuillez choisir un fichier pour chaque sous-titre.");
-                return false;
-            }
-        }
-
         return true;
     }
 

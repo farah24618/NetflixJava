@@ -38,6 +38,16 @@ public class CategoryService {
 	        return categoryDao.findAll().stream()
 	                .anyMatch(c -> c.getName().equalsIgnoreCase(name));
 	    }
-	}
+	    public void updateCategory(Category cat) throws Exception {
+	        categoryDao.update(cat);
+	    }
+	    public void deleteCategory(int id) throws Exception {
+	        categoryDao.delete(id);
+	    }	    
+	
+
+
+
+}
 
 

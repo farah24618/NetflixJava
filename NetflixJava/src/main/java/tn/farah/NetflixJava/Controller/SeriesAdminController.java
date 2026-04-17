@@ -582,6 +582,7 @@ public class SeriesAdminController implements Initializable {
 }
         
         
+
         
         
         
@@ -609,6 +610,6 @@ public class SeriesAdminController implements Initializable {
         
         
         
-        
-        
+    
+
     

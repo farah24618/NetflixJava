@@ -1,5 +1,6 @@
 package tn.farah.NetflixJava;
 import javafx.application.Application;
+
 import javafx.stage.Stage;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
@@ -18,7 +19,7 @@ public class Main extends Application {
 
             // 2. Authentification et Profils
           
-            nav.register(Screen.logup,           "/tn/farah/NetflixJava/logup.fxml");
+           
             nav.register(Screen.oublie,          "/tn/farah/NetflixJava/oublie.fxml");
             nav.register(Screen.ResetPassword,   "/tn/farah/NetflixJava/ResetPassword.fxml");
             nav.register(Screen.pofiles,         "/tn/farah/NetflixJava/profiles.fxml");
@@ -81,12 +82,16 @@ public class Main extends Application {
         nav.register(Screen.addSerie, "/tn/farah/NetflixJava/addSerie.fxml");
         nav.register(Screen.Player, "/tn/farah/NetflixJava/UniversalPlayer.fxml");
         nav.register(Screen.addSaison, "/tn/farah/NetflixJava/addSaisonn.fxml");
+
         nav.register(Screen.MediaView, "/tn/farah/NetflixJava/MediaView.fxml");
+
+        nav.register(Screen.ajouterAdmin, "/tn/farah/NetflixJava/ajouterAdmin.fxml");
+
         
 
 
 
-
+//
 
         primaryStage.setTitle("RakchaNet");
      
@@ -111,7 +116,7 @@ public class Main extends Application {
      // nav.navigateTo(Screen.admin_main);
 
 
-       nav.navigateTo(Screen.mainView);
+       nav.navigateTo(Screen.addSerie);
 
 
    

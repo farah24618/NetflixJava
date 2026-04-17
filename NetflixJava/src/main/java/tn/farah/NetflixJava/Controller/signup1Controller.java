@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import java.net.URL;
+
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
@@ -19,7 +20,7 @@ import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionData;
 import tn.farah.NetflixJava.utils.ConxDB;
-//..
+
 public class signup1Controller implements Initializable {
 
     @FXML private TextField firstNameField;

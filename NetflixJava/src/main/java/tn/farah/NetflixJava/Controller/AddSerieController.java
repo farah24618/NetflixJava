@@ -1,6 +1,9 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.animation.KeyFrame;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,6 +56,7 @@ public class AddSerieController implements Initializable {
     @FXML private DatePicker dpDateSortie;
     @FXML private ComboBox<AgeRating> cbAgeRating;
     @FXML private CheckBox   cbTerminee;
+    
 
     // ─── Categories ──────────────────────────────────────────────────────────
     @FXML private FlowPane  categoriesPane;
@@ -186,14 +190,75 @@ public class AddSerieController implements Initializable {
     }
 
     private Button buildCategoryChip(Category cat) {
+        boolean isSelected = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
         Button chip = new Button(cat.getName());
-        applyChipStyle(chip, selectedCategories.contains(cat));
+        applyChipStyle(chip, isSelected);
+
+        // Clic gauche : sélectionner/désélectionner
         chip.setOnAction(e -> {
-            boolean selected = selectedCategories.contains(cat);
-            if (selected) selectedCategories.remove(cat);
-            else          selectedCategories.add(cat);
-            applyChipStyle(chip, !selected);
+            boolean sel = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
+            if (sel) selectedCategories.removeIf(c -> c.getId() == cat.getId());
+            else     selectedCategories.add(cat);
+            applyChipStyle(chip, !sel);
         });
+
+        // Clic droit : menu contextuel Modifier / Supprimer
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-background-color: #1a1a1a; -fx-border-color: #333;");
+
+        MenuItem itemModifier = new MenuItem("✏ Modifier");
+        itemModifier.setStyle("-fx-text-fill: white; -fx-background-color: #1a1a1a;");
+        itemModifier.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog(cat.getName());
+            dialog.setTitle("Modifier la catégorie");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Nouveau nom :");
+            dialog.getDialogPane().setStyle("-fx-background-color: #111;");
+            dialog.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+            dialog.showAndWait().ifPresent(newName -> {
+                if (!newName.trim().isEmpty()) {
+                    try {
+                        cat.setName(newName.trim());
+                        categoryService.updateCategory(cat);
+                        loadCategoryChips();
+                        showSuccess("Catégorie renommée en « " + newName.trim() + " »");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        MenuItem itemSupprimer = new MenuItem("🗑 Supprimer");
+        itemSupprimer.setStyle("-fx-text-fill: #e50914; -fx-background-color: #1a1a1a;");
+        itemSupprimer.setOnAction(e -> {
+            boolean estSelectionnee = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
+            
+            String message = estSelectionnee
+                ? "La catégorie « " + cat.getName() + " » est actuellement sélectionnée.\nElle sera désélectionnée ET supprimée définitivement. Confirmer ?"
+                : "Supprimer « " + cat.getName() + " » définitivement ?";
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Supprimer la catégorie");
+            confirm.setHeaderText(estSelectionnee ? "⚠ Catégorie active !" : null);
+            confirm.setContentText(message);
+            confirm.showAndWait().ifPresent(resp -> {
+                if (resp == ButtonType.OK) {
+                    try {
+                        selectedCategories.removeIf(c -> c.getId() == cat.getId());
+                        categoryService.deleteCategory(cat.getId());
+                        loadCategoryChips();
+                        showSuccess("Catégorie « " + cat.getName() + " » supprimée.");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+        contextMenu.getItems().addAll(itemModifier, itemSupprimer);
+        chip.setOnContextMenuRequested(e ->
+            contextMenu.show(chip, e.getScreenX(), e.getScreenY()));
+
         return chip;
     }
 
@@ -244,14 +309,75 @@ public class AddSerieController implements Initializable {
     }
 
     private Button buildWarningChip(Warning w) {
+        boolean isSelected = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
         Button chip = new Button(w.getNom());
-        applyChipStyle(chip, selectedWarnings.contains(w));
+        applyChipStyle(chip, isSelected);
+
         chip.setOnAction(e -> {
-            boolean selected = selectedWarnings.contains(w);
-            if (selected) selectedWarnings.remove(w);
-            else          selectedWarnings.add(w);
-            applyChipStyle(chip, !selected);
+            boolean sel = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
+            if (sel) selectedWarnings.removeIf(sw -> sw.getId() == w.getId());
+            else     selectedWarnings.add(w);
+            applyChipStyle(chip, !sel);
         });
+
+        // Clic droit : Modifier / Supprimer
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-background-color: #1a1a1a; -fx-border-color: #333;");
+
+        MenuItem itemModifier = new MenuItem("✏ Modifier");
+        itemModifier.setStyle("-fx-text-fill: white; -fx-background-color: #1a1a1a;");
+        itemModifier.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog(w.getNom());
+            dialog.setTitle("Modifier le warning");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Nouveau nom :");
+            dialog.getDialogPane().setStyle("-fx-background-color: #111;");
+            dialog.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+            dialog.showAndWait().ifPresent(newName -> {
+                if (!newName.trim().isEmpty()) {
+                    try {
+                        w.setNom(newName.trim());
+                        warningService.updateWarning(w);
+                        loadWarningChips();
+                        showSuccess("Warning renommé en « " + newName.trim() + " »");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        MenuItem itemSupprimer = new MenuItem("🗑 Supprimer");
+        itemSupprimer.setStyle("-fx-text-fill: #e50914; -fx-background-color: #1a1a1a;");
+        itemSupprimer.setOnAction(e -> {
+            boolean estSelectionne = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
+
+            String message = estSelectionne
+                ? "Le warning « " + w.getNom() + " » est actuellement sélectionné.\nIl sera désélectionné ET supprimé définitivement. Confirmer ?"
+                : "Supprimer « " + w.getNom() + " » définitivement ?";
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Supprimer le warning");
+            confirm.setHeaderText(estSelectionne ? "⚠ Warning actif !" : null);
+            confirm.setContentText(message);
+            confirm.showAndWait().ifPresent(resp -> {
+                if (resp == ButtonType.OK) {
+                    try {
+                        selectedWarnings.removeIf(sw -> sw.getId() == w.getId());
+                        warningService.deleteWarning(w.getId());
+                        loadWarningChips();
+                        showSuccess("Warning « " + w.getNom() + " » supprimé.");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        contextMenu.getItems().addAll(itemModifier, itemSupprimer);
+        chip.setOnContextMenuRequested(e ->
+            contextMenu.show(chip, e.getScreenX(), e.getScreenY()));
+
         return chip;
     }
 
