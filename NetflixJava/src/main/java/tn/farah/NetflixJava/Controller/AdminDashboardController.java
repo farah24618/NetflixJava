@@ -127,6 +127,16 @@ public class AdminDashboardController implements Initializable {
         System.out.println("Aller aux Paramètres");
         ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
     }
+    @FXML 
+    void goToAddFilm(ActionEvent event) { 
+       
+        ScreenManager.getInstance().navigateTo(Screen.addFilm);
+    }
+    @FXML 
+    void goToAddSeries(ActionEvent event) { 
+       
+        ScreenManager.getInstance().navigateTo(Screen.addSerie);
+    }
     
     
     @FXML
