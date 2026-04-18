@@ -4,13 +4,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Entities.Saison;
 import tn.farah.NetflixJava.Entities.Serie;
+import tn.farah.NetflixJava.Service.NotificationService;
 import tn.farah.NetflixJava.Service.SaisonService;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
+import tn.farah.NetflixJava.utils.SessionManager;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -110,28 +113,55 @@ public class AddSaisonnController implements Initializable {
         try {
             int numSaison = Integer.parseInt(txtNumeroSaison.getText().trim());
             int serieId   = cbSerie.getValue().getId();
+            String serieTitre = cbSerie.getValue().getTitre();
 
-            // ✅ Récupérer nom (auto-généré si vide)
             String nom = (txtNom != null && !txtNom.getText().trim().isEmpty())
                     ? txtNom.getText().trim()
                     : "Saison " + numSaison;
 
-            // ✅ Récupérer date (now si non renseignée)
             LocalDateTime dateSortie = (dpDateSortie != null && dpDateSortie.getValue() != null)
                     ? dpDateSortie.getValue().atStartOfDay()
                     : LocalDateTime.now();
+
+            NotificationService notificationService = new NotificationService(ConxDB.getInstance());
+            int userId = SessionManager.getInstance().getCurrentUser().getId();
 
             if (editingSaisonId > 0) {
                 // ── MODE ÉDITION ──
                 Saison updated = new Saison(editingSaisonId, serieId, numSaison, nom, dateSortie);
                 saisonService.update(updated);
-                
+
+                Notification n = new Notification(
+                    0,
+                    userId,
+                    "MISE_A_JOUR",
+                    "Saison mise à jour",
+                    "La saison " + numSaison + " de la série \"" + serieTitre + "\" a été mise à jour.",
+                    java.time.LocalDate.now().toString(),
+                    false,
+                    false
+                );
+                notificationService.addNotification(n);
+
                 showSuccess("✓ Saison " + numSaison + " modifiée !");
+
             } else {
                 // ── MODE CRÉATION ──
                 Saison newSaison = new Saison(serieId, numSaison, nom, dateSortie);
                 int result = saisonService.save(newSaison);
                 if (result > 0) {
+                    Notification n = new Notification(
+                        0,
+                        userId,
+                        "NOUVEAUTE",
+                        "Nouvelle saison ajoutée",
+                        "La saison " + numSaison + " a été ajoutée à la série \"" + serieTitre + "\".",
+                        java.time.LocalDate.now().toString(),
+                        false,
+                        false
+                    );
+                    notificationService.addNotification(n);
+
                     showSuccess("✓ Saison " + numSaison + " ajoutée !");
                 } else {
                     showError("Cette saison existe déjà ou numéro invalide.");
@@ -147,7 +177,6 @@ public class AddSaisonnController implements Initializable {
             showError("Le numéro de saison doit être un nombre valide.");
         }
     }
-
     @FXML
     void handleCancel(ActionEvent event) {
         ScreenManager.getInstance().setEditingSaison(null);

@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.animation.KeyFrame;
+
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -284,8 +285,7 @@ public class AddEpisodeController implements Initializable {
     private Episode buildEpisodeFromForm() {
         int saisonId = cbSaison.getValue() != null ? cbSaison.getValue().getId() : 0;
         return new Episode(
-            saisonId,
-            txtTitre.getText().trim(),
+            saisonId, txtTitre.getText().trim(),
             parseIntSafe(txtNumeroEpisode.getText()),
             fileVideo != null ? fileVideo.getAbsolutePath() : "",
             parseIntSafe(txtDuree.getText()),

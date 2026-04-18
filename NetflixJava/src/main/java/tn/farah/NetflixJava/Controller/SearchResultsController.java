@@ -198,8 +198,8 @@ public class SearchResultsController implements Initializable {
         films.forEach(f -> {
             StackPane card = CardFactory.buildFilmCard(f, CardFactory.CARD_W, CardFactory.CARD_H, overlayRef,
                 film -> {
-                    FilmViewController ctrl = ScreenManager.getInstance()
-                        .navigateAndGetController(Screen.detailFilm);
+                    MediaViewController ctrl = ScreenManager.getInstance()
+                        .navigateAndGetController(Screen.MediaView);
                     if (ctrl != null) ctrl.setFilm(film);
                 });
 
@@ -225,10 +225,10 @@ public class SearchResultsController implements Initializable {
         		 StackPane card = CardFactory.buildSerieCard(s, CardFactory.CARD_W, CardFactory.CARD_H, overlayRef,
                 serie -> {
                 	int firstSeasonId = saisonService.findFirstSeasonIdBySerie(s.getId());
-                    EpisodeViewController ctrl = ScreenManager.getInstance()
+                    MediaViewController ctrl = ScreenManager.getInstance()
                         .navigateAndGetController(Screen.detail);
                     if (ctrl != null) ctrl.setSerie(serie);
-                    ctrl.setSaisonId(firstSeasonId);});
+                  });
                     Label nameLbl = new Label(s.getTitre());
                     nameLbl.setStyle("-fx-text-fill: white; -fx-font-size: 12px; -fx-max-width: " 
                         + CardFactory.CARD_W + "; -fx-wrap-text: true;");
@@ -314,7 +314,8 @@ public class SearchResultsController implements Initializable {
             applyFilters();
         });
     }
-
+    @FXML
+private void goHome() {}
     @FXML
     private void handleRetour() {
         ScreenManager.getInstance().navigateTo(Screen.home);

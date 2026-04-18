@@ -73,8 +73,8 @@ public class SeriesController implements Initializable {
 
     private Consumer<Serie> goToDetail() {
         return serie -> {
-           EpisodeViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
+         MediaViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.MediaView);
             if (ctrl != null) ctrl.setSerie(serie);
         };
     }
@@ -209,8 +209,8 @@ public class SeriesController implements Initializable {
     }
     private Consumer<Serie> goToSerieDetail() {
         return serie -> {
-            EpisodeViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
+            MediaViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.MediaView);
             if (ctrl != null) {
                 ctrl.setSerie(serie);
                 // setSerie charge déjà le premier épisode automatiquement

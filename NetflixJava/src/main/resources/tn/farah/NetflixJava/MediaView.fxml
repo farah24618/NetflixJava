@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<!--
+    MediaView.fxml
+    Fusionné depuis FilmView.fxml + EpisodeView.fxml
+    Contrôleur : tn.farah.NetflixJava.Controller.MediaViewController
+    Styles     : media-view.css
+-->
+<BorderPane prefHeight="900" prefWidth="1100"
+            styleClass="root"
+            stylesheets="@media-view.css"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.farah.NetflixJava.Controller.MediaViewController">
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- NAVBAR                                                      -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="30" styleClass="navbar">
+
+            <Button fx:id="btnRetour"
+                    mnemonicParsing="false"
+                    onAction="#onRetour"
+                    prefHeight="39" prefWidth="40"
+                    styleClass="btn-retour"
+                    text="&lt;" textFill="WHITE">
+                <cursor><Cursor fx:constant="HAND"/></cursor>
+            </Button>
+
+            <Label styleClass="navbar-logo" text="RAKCHANET"/>
+
+            <HBox spacing="20">
+                <Button fx:id="AcceuilBtn"
+                        mnemonicParsing="false"
+                        onAction="#handleAcceuil"
+                        styleClass="navbar-link"
+                        text="Accueil" textFill="#faf6f6">
+                    <font><Font name="System Bold" size="13.0"/></font>
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+                <Button mnemonicParsing="false"
+                        onAction="#handleFilm"
+                        styleClass="navbar-link"
+                        text="Films" textFill="#faf6f6">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+                <Button mnemonicParsing="false"
+                        onAction="#handleSeries"
+                        styleClass="navbar-link"
+                        text="Séries" textFill="#faf6f6">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+                <Button mnemonicParsing="false"
+                        onAction="#handleMyList"
+                        styleClass="navbar-link"
+                        text="Ma Liste" textFill="#faf6f6">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+            </HBox>
+
+            <HBox HBox.hgrow="ALWAYS"/>
+
+            <!-- Profil -->
+            <HBox fx:id="profilBox"
+                  alignment="CENTER"
+                  onMouseClicked="#onProfilClicked"
+                  spacing="10"
+                  styleClass="profil-box">
+                <Label fx:id="labelUserName" styleClass="profil-label" text="Utilisateur"/>
+                <StackPane fx:id="avatarContainer" prefHeight="38" prefWidth="38">
+                    <ImageView fx:id="avatarImage"
+                               fitHeight="38" fitWidth="38"
+                               preserveRatio="false" smooth="true">
+                        <clip>
+                            <Rectangle arcHeight="8" arcWidth="8" height="38" width="38"/>
+                        </clip>
+                    </ImageView>
+                    <ImageView fitHeight="37" fitWidth="47"
+                               pickOnBounds="true" preserveRatio="true">
+                        <image><Image url="@ImagesNet/log5.jpg"/></image>
+                    </ImageView>
+                </StackPane>
+            </HBox>
+
+        </HBox>
+    </top>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- CONTENU PRINCIPAL                                           -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-scroll">
+            <content>
+                <VBox spacing="0">
+
+                    <!-- ════════════════════════════════════════════ -->
+                    <!-- POSTER                                        -->
+                    <!-- ════════════════════════════════════════════ -->
+                    <StackPane fx:id="videoPane" prefHeight="520" styleClass="video-pane">
+
+                        <ImageView fx:id="posterImage"
+                                   fitHeight="520" fitWidth="1100"
+                                   opacity="0.55"
+                                   preserveRatio="false" smooth="true"/>
+
+                        <Pane mouseTransparent="true" styleClass="poster-gradient"/>
+
+                        <VBox alignment="BOTTOM_LEFT" spacing="16"
+                              styleClass="poster-overlay"
+                              StackPane.alignment="BOTTOM_LEFT">
+
+                            <!-- Titre affiché sur le poster -->
+                            <Label fx:id="mediaTitleVideo"
+                                   maxWidth="700"
+                                   styleClass="poster-title"
+                                   text="Titre du média" wrapText="true"/>
+
+                            <Label fx:id="categories"
+                                   styleClass="poster-categories" text=""/>
+
+                            <Label fx:id="posterDesc"
+                                   maxWidth="600"
+                                   styleClass="poster-desc"
+                                   text="" wrapText="true"/>
+
+                            <HBox spacing="14" style="-fx-padding: 8 0 0 0;">
+                                <Button fx:id="btnLire"
+                                        onAction="#onLire"
+                                        styleClass="btn-lire"
+                                        text="▶  Lire"/>
+
+                                <Button fx:id="btnFavoris"
+                                        onAction="#onFavoris"
+                                        styleClass="btn-favoris"
+                                        text="＋  Ajouter aux favoris"/>
+
+                                <Button fx:id="btnNoter"
+                                        mnemonicParsing="false"
+                                        onAction="#onNoter"
+                                        styleClass="btn-noter"
+                                        text="Noter"/>
+                            </HBox>
+
+                        </VBox>
+                    </StackPane>
+
+                    <!-- ════════════════════════════════════════════ -->
+                    <!-- INFOS MÉDIA + DISTRIBUTION                   -->
+                    <!-- ════════════════════════════════════════════ -->
+                    <HBox spacing="30" styleClass="infos-section">
+
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                            <!--
+                                BREADCRUMB — visible uniquement en mode série
+                                (géré en Java : setVisible / setManaged)
+                            -->
+                            <HBox fx:id="breadcrumbBox"
+                                  alignment="CENTER_LEFT"
+                                  managed="false" visible="false"
+                                  spacing="12">
+                                <Label fx:id="labelTitreSerie"
+                                       styleClass="breadcrumb-label"
+                                       text="TitreSerie"/>
+                                <Label styleClass="breadcrumb-separator" text="›"/>
+                                <Label styleClass="breadcrumb-label" text="Saison"/>
+                                <Label fx:id="labelNumeroSaison"
+                                       styleClass="breadcrumb-label" text="1"/>
+                                <Label styleClass="breadcrumb-separator" text="›"/>
+                                <Label styleClass="breadcrumb-current" text="Épisode"/>
+                                <Label fx:id="labelNumeroEpisode"
+                                       styleClass="breadcrumb-current" text="1"/>
+                            </HBox>
+
+                            <!-- Titre principal -->
+                            <Label fx:id="mediaTitle"
+                                   styleClass="media-main-title"
+                                   text="Titre du média"/>
+
+                            <!-- Méta : durée + date -->
+                            <HBox alignment="CENTER_LEFT" spacing="12">
+                                <Label styleClass="meta-separator" text="|"/>
+                                <Label fx:id="labelDuree"
+                                       styleClass="meta-label" text="— min"/>
+                                <Label styleClass="meta-separator" text="|"/>
+                                <Label fx:id="labelDateSortie"
+                                       styleClass="meta-label" text=""/>
+                            </HBox>
+
+                            <!-- Synopsis / description -->
+                            <Label fx:id="mediaDesc"
+                                   maxWidth="620"
+                                   styleClass="media-desc"
+                                   text="" wrapText="true"/>
+
+                            <!-- (réservé à l'épisode) description épisode -->
+                            <Label fx:id="episodeDesc"
+                                   managed="false" visible="false"
+                                   maxWidth="620"
+                                   styleClass="media-desc"
+                                   text="" wrapText="true"/>
+
+                            <HBox spacing="12" style="-fx-padding: 8 0 0 0;"/>
+                        </VBox>
+
+                        <!-- Distribution -->
+                        <VBox prefWidth="260" spacing="10" styleClass="distribution-box">
+                            <Label styleClass="distribution-title" text="Distribution"/>
+                            <Label fx:id="castings"
+                                   styleClass="castings-label"
+                                   text="" wrapText="true">
+                                <font><Font size="13.0"/></font>
+                            </Label>
+                            <Label fx:id="labelWarnings"
+                                   styleClass="warnings-label" text="">
+                                <font><Font size="13.0"/></font>
+                            </Label>
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- ════════════════════════════════════════════ -->
+                    <!-- BARRE ONGLETS                                 -->
+                    <!-- ════════════════════════════════════════════ -->
+                    <HBox alignment="CENTER_LEFT" spacing="0" styleClass="tabs-bar">
+
+                        <!-- À propos -->
+                        <VBox fx:id="tabApropos"
+                              alignment="CENTER"
+                              onMouseClicked="#onTabApropos"
+                              styleClass="tab-item">
+                            <Label styleClass="tab-label-inactive" text="À propos"/>
+                            <HBox prefHeight="3" prefWidth="0"
+                                  styleClass="tab-indicator-inactive"/>
+                        </VBox>
+
+                        <!--
+                            Onglet Épisodes — visible uniquement en mode série
+                            (géré en Java : setVisible / setManaged)
+                        -->
+                        <VBox fx:id="tabEpisodes"
+                              alignment="CENTER"
+                              managed="false" visible="false"
+                              onMouseClicked="#onTabEpisodes"
+                              styleClass="tab-item">
+                            <Label styleClass="tab-label-active" text="Épisodes"/>
+                            <HBox prefHeight="3"
+                                  styleClass="tab-indicator-active"
+                                  HBox.hgrow="ALWAYS"/>
+                        </VBox>
+
+                        <!-- Bandes-annonces -->
+                        <VBox fx:id="tabBandes"
+                              alignment="CENTER"
+                              onMouseClicked="#onTabBandes"
+                              styleClass="tab-item">
+                            <Label styleClass="tab-label-inactive" text="Bandes-annonces"/>
+                            <HBox prefHeight="3" prefWidth="0"
+                                  styleClass="tab-indicator-inactive"/>
+                        </VBox>
+
+                        <!-- Commentaires -->
+                        <VBox fx:id="tabCommentaires"
+                              alignment="CENTER"
+                              onMouseClicked="#onTabCommentaires"
+                              styleClass="tab-item">
+                            <Label styleClass="tab-label-inactive" text="Commentaires"/>
+                            <HBox prefHeight="3" prefWidth="0"
+                                  styleClass="tab-indicator-inactive"/>
+                        </VBox>
+
+                        <!-- Similaires -->
+                        <VBox fx:id="tabSimilaires"
+                              alignment="CENTER"
+                              onMouseClicked="#onTabSimilaires"
+                              styleClass="tab-item">
+                            <Label styleClass="tab-label-inactive" text="Similaires"/>
+                            <HBox prefHeight="3" prefWidth="0"
+                                  styleClass="tab-indicator-inactive"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- ════════════════════════════════════════════ -->
+                    <!-- ZONE CONTENU ONGLETS                          -->
+                    <!-- ════════════════════════════════════════════ -->
+                    <VBox fx:id="contenuOnglet" spacing="0" styleClass="content-zone">
+
+                        <!-- ── À PROPOS (film : actif par défaut) ── -->
+                        <VBox fx:id="panelApropos"
+                              managed="true" spacing="14" visible="true">
+
+                            <Label fx:id="aproposPanelTitle"
+                                   styleClass="apropos-title"
+                                   text="À propos du média"/>
+
+                            <Label fx:id="labelSynopsis"
+                                   styleClass="synopsis-label"
+                                   text="" wrapText="true"/>
+
+                            <HBox spacing="30" style="-fx-padding: 10 0 0 0;">
+                                <VBox spacing="6">
+                                    <!-- Libellé adapté en Java : RÉALISATEUR / CRÉATEUR -->
+                                    <Label fx:id="labelCreateurTitle"
+                                           styleClass="meta-section-label"
+                                           text="RÉALISATEUR"/>
+                                    <Label fx:id="labelProducteur"
+                                           styleClass="meta-section-value" text=""/>
+                                </VBox>
+                                <VBox spacing="6">
+                                    <Label styleClass="meta-section-label" text="GENRE"/>
+                                    <Label fx:id="labelGenre"
+                                           styleClass="meta-section-value" text=""/>
+                                </VBox>
+                                <VBox spacing="6">
+                                    <Label styleClass="meta-section-label" text="ANNÉE"/>
+                                    <Label fx:id="labelAnnee"
+                                           styleClass="meta-section-value" text=""/>
+                                </VBox>
+                            </HBox>
+
+                            <VBox spacing="6" style="-fx-padding: 10 0 0 0;">
+                                <Label styleClass="meta-section-label" text="AVERTISSEMENTS"/>
+                                <Label fx:id="labelWarningsApropos"
+                                       styleClass="warnings-apropos-label"
+                                       text="" wrapText="true"/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- ── ÉPISODES (mode série seulement) ────── -->
+                        <VBox fx:id="panelEpisodes"
+                              managed="false" spacing="16" visible="false">
+
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <ComboBox fx:id="saisonComboBox"
+                                          styleClass="saison-combo"/>
+                                <Label fx:id="labelNbEpisodes"
+                                       styleClass="nb-episodes-label"
+                                       text="0 épisodes"/>
+                            </HBox>
+
+                            <VBox fx:id="listeEpisodes" spacing="12"/>
+                        </VBox>
+
+                        <!-- ── BANDES-ANNONCES ────────────────────── -->
+                        <VBox fx:id="panelBandes"
+                              managed="false" spacing="14" visible="false"/>
+
+                        <!-- ── COMMENTAIRES (construit en Java) ────── -->
+                        <VBox fx:id="panelCommentaires"
+                              managed="false" spacing="0" visible="false"/>
+
+                        <!-- ── SIMILAIRES (construit en Java) ────── -->
+                        <VBox fx:id="panelSimilaires"
+                              managed="false" spacing="14" visible="false">
+                            <HBox fx:id="listeSimilaires" spacing="16"/>
+                        </VBox>
+
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

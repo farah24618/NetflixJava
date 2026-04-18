@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -132,4 +132,4 @@ public class SeriesItemController {
         sm.setEditingSerie(currentSerie);
         sm.navigateTo(Screen.addSerie);
     }
-}
+}*/

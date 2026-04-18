@@ -75,8 +75,8 @@ public class FilmsController implements Initializable {
 
     private Consumer<Film> goToDetail() {
         return film -> {
-            FilmViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detail);
+            MediaViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.MediaView);
             if (ctrl != null) ctrl.setFilm(film);
         };
     }
@@ -210,8 +210,8 @@ public class FilmsController implements Initializable {
     }
     private Consumer<Film> goToFilmDetail() {
         return film -> {
-            final FilmViewController ctrl = ScreenManager.getInstance()
-                .navigateAndGetController(Screen.detailFilm);
+            final MediaViewController ctrl = ScreenManager.getInstance()
+                .navigateAndGetController(Screen.MediaView);
             if (ctrl != null) ctrl.setFilm(film);
         };
     }

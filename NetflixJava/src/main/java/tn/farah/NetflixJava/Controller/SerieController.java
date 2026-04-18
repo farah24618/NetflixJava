@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
 
@@ -93,5 +93,5 @@ public class SerieController {
     
     @FXML private void handleNavUsers() { ScreenManager.getInstance().navigateTo(Screen.manageUsers); }
     @FXML private void handleNavNotifications() { /* Implémenter */ }
-    @FXML private void handleNavComments() { ScreenManager.getInstance().navigateTo(Screen.episodeComments); }
+    @FXML private void handleNavComments() { ScreenManager.getInstance().navigateTo(Screen.episodeComments); }*/
 }

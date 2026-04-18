@@ -53,14 +53,26 @@
                   <Cursor fx:constant="TEXT" />
                </cursor>
             </TextField>
-            <PasswordField fx:id="passwordField" prefHeight="38.0" prefWidth="206.0" promptText="Mot de passe" style="-fx-background-color: transparent; -fx-border-color: white; ; -fx-text-fill: white;">
-               <font>
-                  <Font size="13.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="TEXT" />
-               </cursor>
-            </PasswordField>
+           
+<HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="290.0" spacing="0"
+      style="-fx-border-color: white; -fx-background-color: transparent;">
+   <TextField fx:id="passwordVisible" prefHeight="38.0"
+              promptText="Mot de passe" managed="false" visible="false"
+              style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: white;"
+              HBox.hgrow="ALWAYS">
+   </TextField>
+   <PasswordField fx:id="passwordField" prefHeight="38.0"
+                 promptText="Mot de passe"
+                 style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: white;"
+                 HBox.hgrow="ALWAYS">
+   </PasswordField>
+   <Button fx:id="togglePasswordBtn" mnemonicParsing="false" onAction="#handleTogglePassword"
+           prefHeight="38.0" prefWidth="38.0" text="◎"
+           style="-fx-background-color: transparent; -fx-border-color: transparent;
+                  -fx-text-fill: #aaaaaa; -fx-font-size: 16px; -fx-padding: 0;">
+      <cursor><Cursor fx:constant="HAND" /></cursor>
+   </Button>
+</HBox>
             <Button fx:id="signInButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSignIn" prefHeight="38.0" prefWidth="403.0" style="-fx-background-color: red;" text="se connecter" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
