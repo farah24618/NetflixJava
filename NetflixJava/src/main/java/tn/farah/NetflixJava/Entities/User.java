@@ -69,8 +69,6 @@ public class User {
 	}
 
 
-
-	// ==================== GETTERS ====================
     
     public int getId() { return id; }
     public String getPrenom() {
@@ -118,9 +116,7 @@ public class User {
 	public void setEstPaye(boolean estPaye) {
 		this.estPaye = estPaye;
 	}
-
-
-
+	
 	public String getEmail() { return email; }
     public String getPasswordHash() { return passwordHash; }
    
@@ -130,8 +126,6 @@ public class User {
     public boolean isActive() { return isActive; }
     public LocalDate getBirthDate() { return birthDate; }
     public String getPhone() { return phone; }
-
-    // ==================== SETTERS ====================
     public void setId(int id) { this.id = id; }
     public void setEmail(String email) { this.email = email; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
@@ -143,7 +137,6 @@ public class User {
     public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    // ==================== MÉTHODES ====================
     public boolean isAdmin() {
         return this.role == UserRole.ADMIN;
     }
@@ -195,15 +188,12 @@ public class User {
     
     
     
-    //zedtha hajti beha fl admin
- // Dans User.java
+   
 
     public String getInitial() {
-        // On vérifie que le prénom n'est pas nul ET pas vide
         if (prenom != null && !prenom.trim().isEmpty()) {
             return prenom.substring(0, 1).toUpperCase();
         }
-        // Si pas de prénom, on essaie l'email
         if (email != null && !email.trim().isEmpty()) {
             return email.substring(0, 1).toUpperCase();
         }
@@ -211,12 +201,11 @@ public class User {
     }
 
     public String getUsername() {
-        // On vérifie que prenom et nom existent et ne sont pas vides
+       
         if (prenom != null && !prenom.trim().isEmpty() && 
             nom != null && !nom.trim().isEmpty()) {
             return prenom + "." + nom.substring(0, 1).toUpperCase();
         }
-        // Sinon, on affiche juste le prénom ou l'email par défaut
         return (prenom != null && !prenom.isEmpty()) ? prenom : email;
     }
     

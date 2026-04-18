@@ -10,7 +10,7 @@ public class AdminDashboardService {
         this.dashboardDAO = new AdminDashboardDAO();
     }
 
-    
+
     public int getTotalFilms() { return dashboardDAO.getCount("film"); }
     public int getTotalSeries() { return dashboardDAO.getCount("serie"); }
     public int getTotalEpisodes() { return dashboardDAO.getCount("episode"); }
@@ -25,7 +25,7 @@ public class AdminDashboardService {
         return dashboardDAO.getCommentsByType();
     }
     public Map<String, Integer> getInscriptionsData() {
-        
+
     	return dashboardDAO.getInscriptionsData(); 
     }
 }

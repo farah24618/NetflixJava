@@ -22,7 +22,7 @@ public class signup2Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Utilisez le nouveau nom de méthode défini dans SessionData
+      
         String currentForfait = SessionData.getForfaitNom(); 
         
         if (currentForfait != null) {
@@ -68,7 +68,6 @@ public class signup2Controller implements Initializable {
 
     @FXML
     private void handleRetour() {
-        // On retourne au signup1, les données seront restaurées par son initialize()
         ScreenManager.getInstance().navigateTo(Screen.signup1);
     }
 

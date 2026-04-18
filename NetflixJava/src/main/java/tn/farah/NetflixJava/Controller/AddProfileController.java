@@ -19,8 +19,7 @@ import java.util.ResourceBundle;
 public class AddProfileController implements Initializable {
 
     @FXML
-    private TextField nameField; // C'est ton champ "pseudo" dans le FXML
-
+    private TextField nameField; 
     @FXML
     private CheckBox kidCheckBox;
 
@@ -29,12 +28,9 @@ public class AddProfileController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userService = new UserService(ConxDB.getInstance());
-
-        // 1. On récupère l'utilisateur qui vient de s'inscrire via la Session
         User currentUser = SessionData.getCurrentUser();
 
         if (currentUser != null && currentUser.getPseudo() != null) {
-            // 2. On pré-remplit le champ avec le pseudo de la BD
             nameField.setText(currentUser.getPseudo());
         }
     }
@@ -49,7 +45,7 @@ public class AddProfileController implements Initializable {
             return;
         }
 
-        // ✅ Vérifier si le pseudo est déjà pris par un autre utilisateur
+    
         if (userService.isPseudoTaken(newPseudo, currentUser.getId())) {
             showAlert("Pseudo déjà utilisé", "Le pseudo \"" + newPseudo + "\" est déjà pris. Veuillez en choisir un autre.");
             return;

@@ -22,7 +22,7 @@ public class ConxDB {
 
     public static Connection getInstance() {
         try {
-            // Reconnecte si la connexion est null, fermée, ou plus valide
+            
             if (connexion == null || connexion.isClosed() || !connexion.isValid(3)) {
                 new ConxDB();
             }

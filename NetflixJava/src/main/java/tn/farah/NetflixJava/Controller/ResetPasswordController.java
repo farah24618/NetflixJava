@@ -26,8 +26,6 @@ public class ResetPasswordController {
     @FXML private Button saveBtn;
     @FXML private ProgressIndicator progressIndicator;
     @FXML private Rectangle strengthBar;
-
-    // Instance du service (doit être initialisée)
     private UserService userService;
     public static String userEmail; 
 
@@ -36,17 +34,14 @@ public class ResetPasswordController {
             Connection conn =ConxDB.getInstance();
             this.userService = new UserService(conn);
        
-        // --- CONFIGURATION UI ---
         statusLabel.setVisible(false);
         progressIndicator.setVisible(false);
         strengthBar.setWidth(0);
 
-        // 1. Analyse de la force du mot de passe (Temps réel)
         newPasswordField.textProperty().addListener((obs, oldVal, newVal) -> {
             updateStrengthMeter(newVal);
         });
 
-        // 2. Validation de la confirmation (Couleur des bordures)
         confirmPasswordField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.isEmpty()) {
                 confirmPasswordField.setStyle("-fx-border-color: #555555; -fx-background-color: #333333; -fx-text-fill: white;");
@@ -113,7 +108,7 @@ public class ResetPasswordController {
 
         PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
         delay.setOnFinished(event -> {
-            // Utilisation du service (ne sera plus null)
+          
             if (userService != null && userService.updatePassword(userEmail, hashSHA256(pass))) {
                 showStatus("✅ Succès ! Redirection...", "#2ecc71");
                 
@@ -143,5 +138,10 @@ public class ResetPasswordController {
         statusLabel.setText(message);
         statusLabel.setTextFill(Color.web(colorCode));
         statusLabel.setVisible(true);
+    }
+    @FXML
+    private void handleRetour() {
+        
+        ScreenManager.getInstance().goBack();
     }
 }

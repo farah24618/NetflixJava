@@ -8,7 +8,7 @@ import tn.farah.NetflixJava.DAO.CategoryDAO;
 import tn.farah.NetflixJava.Entities.Category;
 
 public class CategoryService {
-	//hedhi
+
 	    private CategoryDAO categoryDao;
 
 	    public CategoryService(Connection connection) {
@@ -16,22 +16,21 @@ public class CategoryService {
 	    }
 
 	    public List<Category> getAllCategoriesSorted() throws SQLException {
-	        // Logique métier : on s'assure que c'est toujours trié pour l'utilisateur
+	      
 	        return categoryDao.findAll();
 	    }
 
 	    public void saveCategory(String name) throws Exception {
-	        // Validation métier
+	       
 	        if (name == null || name.trim().isEmpty()) {
 	            throw new Exception("Le nom de la catégorie ne peut pas être vide.");
 	        }
 
-	        // Vérification de doublon (logique qu'on ne met pas dans le DAO)
 	        if (exists(name)) {
 	            throw new Exception("Cette catégorie existe déjà.");
 	        }
 
-	        categoryDao.save(new Category(0, name)); // L'ID sera géré par la DB
+	        categoryDao.save(new Category(0, name)); 
 	    }
 
 	    private boolean exists(String name) throws SQLException {

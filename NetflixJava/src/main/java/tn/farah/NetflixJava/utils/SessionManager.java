@@ -20,7 +20,6 @@ public class SessionManager {
         return instance;
     }
 
-    // ── État de session ────────────────────────────────────────────────────
     private User currentUser;
 
     /** Appelé juste après l'authentification réussie */

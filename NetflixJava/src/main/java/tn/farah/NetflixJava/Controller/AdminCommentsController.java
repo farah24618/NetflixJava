@@ -42,30 +42,15 @@ public class AdminCommentsController implements Initializable {
     @FXML private Button restoreButton;
     @FXML private Button deleteButton;
 
-    // All comments loaded from DB
     private final ObservableList<Commentaire> allComments = FXCollections.observableArrayList();
-    // Currently displayed (after filters)
+  
     private final ObservableList<Commentaire> filteredComments = FXCollections.observableArrayList();
 
     private CommentaireService commentaireService;
-
-    // Bad words list for auto-detection
     private final List<String> badWords = Arrays.asList(
             "idiot", "stupide", "nul", "merde", "sale", "con", "imbécile"
     );
 
-    // ─────────────────────────────────────────────
-    // We track "hidden" comments via a local Set
-    // because the Commentaire entity uses `signale`
-    // for flagged. We reuse spoiler=true as "hidden"
-    // OR we simply manage status purely in memory
-    // and persist via signale / spoiler fields.
-    //
-    // Mapping used here:
-    //   signale == true  → "SIGNALÉ"
-    //   spoiler == true  → "MASQUÉ"  (reused as hidden flag for admin)
-    //   both false       → "NORMAL"
-    // ─────────────────────────────────────────────
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,48 +66,39 @@ public class AdminCommentsController implements Initializable {
         animatePage();
     }
 
-    // ── Filters ──────────────────────────────────
-
     private void initFilters() {
         statusFilterCombo.setItems(FXCollections.observableArrayList(
                 "Tous", "NORMAL", "SIGNALÉ", "MASQUÉ"
         ));
         statusFilterCombo.setValue("Tous");
 
-        // typeFilterCombo kept for future use; Commentaire has no type field yet
         typeFilterCombo.setItems(FXCollections.observableArrayList("Tous"));
         typeFilterCombo.setValue("Tous");
     }
 
-    // ── Load & detect ────────────────────────────
-
+    
     private void loadComments() {
         allComments.clear();
         List<Commentaire> fromDb = commentaireService.findAll();
         allComments.addAll(fromDb);
     }
 
-    /**
-     * Auto-flag comments containing bad words (only in memory for display;
-     * persisted when admin explicitly clicks "Flag").
-     */
+   
     private void detectInappropriateComments() {
         for (Commentaire c : allComments) {
             String lower = c.getContenu() == null ? "" : c.getContenu().toLowerCase();
             boolean hasBadWord = badWords.stream().anyMatch(lower::contains);
-            if (hasBadWord && !c.isSpoiler()) { // not already hidden
+            if (hasBadWord && !c.isSpoiler()) { 
                 c.setSignale(true);
             }
         }
     }
 
-    // ── ListView ─────────────────────────────────
     @FXML
     private void handleDeleteComment() {
         Commentaire selected = commentsListView.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        // Dialog de confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer ce commentaire ?");
@@ -130,7 +106,6 @@ public class AdminCommentsController implements Initializable {
                 + "\nContenu : " + shorten(selected.getContenu(), 80)
                 + "\nStatut : " + resolveStatus(selected));
 
-        // Style sombre pour le dialog
         alert.getDialogPane().setStyle("-fx-background-color: #1a1a1a;");
         alert.getDialogPane().lookup(".content.label")
                 .setStyle("-fx-text-fill: white;");
@@ -220,14 +195,6 @@ public class AdminCommentsController implements Initializable {
         }
     }
 
-    // ── Status helpers ────────────────────────────
-
-    /**
-     * Derives a display status string from the Commentaire entity fields.
-     * spoiler == true  → MASQUÉ (admin hidden)
-     * signale == true  → SIGNALÉ
-     * otherwise        → NORMAL
-     */
     private String resolveStatus(Commentaire c) {
         if (c.isSpoiler()) return "MASQUÉ";
         if (c.isSignale()) return "SIGNALÉ";
@@ -250,7 +217,6 @@ public class AdminCommentsController implements Initializable {
         };
     }
 
-    // ── Detail panel ──────────────────────────────
 
     private void showCommentDetails(Commentaire item) {
         String status = resolveStatus(item);
@@ -285,8 +251,6 @@ public class AdminCommentsController implements Initializable {
         riskLabel.setText("—");
         contentArea.clear();
     }
-
-    // ── Filters ───────────────────────────────────
 
     @FXML private void handleSearch() { applyFilters(); }
     @FXML private void handleFilter() { applyFilters(); }
@@ -335,8 +299,6 @@ public class AdminCommentsController implements Initializable {
                 allComments.stream().filter(Commentaire::isSpoiler).count()
         ));
     }
-
-    // ── Action buttons ────────────────────────────
 
     @FXML
     private void handleFlagComment() {
@@ -400,8 +362,6 @@ public class AdminCommentsController implements Initializable {
     private void handleBackDashboard() {
         ScreenManager.getInstance().navigateTo(Screen.AdminDashboard);
     }
-
-    // ── Helpers ───────────────────────────────────
 
     private void animatePage() {
         FadeTransition fade = new FadeTransition(Duration.millis(700), commentsListView);

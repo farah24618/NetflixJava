@@ -10,10 +10,7 @@ public class Film extends Media{
 	private String urlVedio;
 	private int duree;
 	private int nbreVue;
-	//hedhi
-
-
-    // ─── Constructeur complet ─────────────────────────────────────────────────
+	
     public Film(int id, String titre, String synopsis, String casting,
                 LocalDate dateSortie, String urlImageCover, String urlImageBanner,
                 String urlTeaser, Double ratingMoyen, AgeRating ageRating,

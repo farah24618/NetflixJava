@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.animation.KeyFrame;
+
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
@@ -34,21 +35,19 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class AddSerieController implements Initializable {
-	// ─── Edit-mode state ─────────────────────────────────────────────────────
+
 	private Serie serieToEdit = null;
-    // ─── Services ────────────────────────────────────────────────────────────
+
     private SerieService    serieService;
     private CategoryService categoryService;
     private WarningService  warningService;
 
-    // ─── State ───────────────────────────────────────────────────────────────
     private final Set<Category> selectedCategories = new HashSet<>();
     private final Set<Warning>  selectedWarnings   = new HashSet<>();
     private File filePoster;
     private File fileBanner;
     private File fileTeaser;
 
-    // ─── Form fields ─────────────────────────────────────────────────────────
     @FXML private TextField  txtTitre;
     @FXML private TextArea   txtSynopsis;
     @FXML private TextField  txtCasting;
@@ -57,43 +56,31 @@ public class AddSerieController implements Initializable {
     @FXML private ComboBox<AgeRating> cbAgeRating;
     @FXML private CheckBox   cbTerminee;
     
-
-    // ─── Categories ──────────────────────────────────────────────────────────
     @FXML private FlowPane  categoriesPane;
     @FXML private HBox      addCategoryBox;
     @FXML private TextField txtNewCategory;
 
-    // ─── Warnings ────────────────────────────────────────────────────────────
     @FXML private FlowPane  warningsPane;
     @FXML private HBox      addWarningBox;
     @FXML private TextField txtNewWarning;
-
-    // ─── Upload – Poster ─────────────────────────────────────────────────────
     @FXML private VBox      dropPoster;
     @FXML private ImageView previewPoster;
     @FXML private Label     lblPosterPlaceholder;
     @FXML private Label     lblPosterName;
 
-    // ─── Upload – Banner ─────────────────────────────────────────────────────
     @FXML private VBox      dropBanner;
     @FXML private ImageView previewBanner;
     @FXML private Label     lblBannerPlaceholder;
     @FXML private Label     lblBannerName;
 
-    // ─── Upload – Teaser ─────────────────────────────────────────────────────
     @FXML private VBox        dropTeaser;
     @FXML private Label       lblTeaserPlaceholder;
     @FXML private Label       lblTeaserName;
     @FXML private ProgressBar pbTeaser;
-
-    // ─── Status & actions ────────────────────────────────────────────────────
     @FXML private Label  lblStatus;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  INITIALIZE
-    // ═════════════════════════════════════════════════════════════════════════
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Connection connection = ConxDB.getInstance();
@@ -104,7 +91,7 @@ public class AddSerieController implements Initializable {
         cbAgeRating.getItems().addAll(AgeRating.values());
         cbAgeRating.getSelectionModel().selectFirst();
 
-        // ← Récupérer la série à éditer depuis ScreenManager
+       
         serieToEdit = ScreenManager.getInstance().getEditingSerie();
         ScreenManager.getInstance().clearEditingSerie();
 
@@ -116,11 +103,10 @@ public class AddSerieController implements Initializable {
         }
     }
     private void enterEditMode(Serie serie) {
-        // Changer le titre du formulaire et le bouton
+       
         if (lblStatus != null) lblStatus.setText("Mode modification");
         if (btnSave != null)   btnSave.setText("✓ Enregistrer les modifications");
 
-        // Remplir les champs texte
         txtTitre.setText(serie.getTitre() != null ? serie.getTitre() : "");
         txtSynopsis.setText(serie.getSynopsis() != null ? serie.getSynopsis() : "");
         txtCasting.setText(serie.getCasting() != null ? serie.getCasting() : "");
@@ -131,10 +117,9 @@ public class AddSerieController implements Initializable {
         if (serie.getAgeRating() != null)
             cbAgeRating.getSelectionModel().select(serie.getAgeRating());
 
-        // Pré-sélectionner catégories et warnings
         if (serie.getGenres() != null) {
             selectedCategories.addAll(serie.getGenres());
-            loadCategoryChips(); // recharger pour afficher les chips sélectionnés
+            loadCategoryChips(); 
         }
         if (serie.getWarnings() != null) {
             selectedWarnings.addAll(serie.getWarnings());
@@ -153,7 +138,6 @@ public class AddSerieController implements Initializable {
             } catch (Exception ignored) {}
         }
 
-        // Afficher la bannière actuelle
         String banner = serie.getUrlImageBanner();
         if (banner != null && !banner.isEmpty()) {
             try {
@@ -165,7 +149,6 @@ public class AddSerieController implements Initializable {
             } catch (Exception ignored) {}
         }
 
-        // Afficher teaser actuel
         String teaser = serie.getUrlTeaser();
         if (teaser != null && !teaser.isEmpty()) {
             lblTeaserPlaceholder.setText("✅");
@@ -174,9 +157,6 @@ public class AddSerieController implements Initializable {
         }
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  CATEGORIES
-    // ═════════════════════════════════════════════════════════════════════════
     private void loadCategoryChips() {
         categoriesPane.getChildren().clear();
         try {
@@ -194,7 +174,6 @@ public class AddSerieController implements Initializable {
         Button chip = new Button(cat.getName());
         applyChipStyle(chip, isSelected);
 
-        // Clic gauche : sélectionner/désélectionner
         chip.setOnAction(e -> {
             boolean sel = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
             if (sel) selectedCategories.removeIf(c -> c.getId() == cat.getId());
@@ -202,7 +181,6 @@ public class AddSerieController implements Initializable {
             applyChipStyle(chip, !sel);
         });
 
-        // Clic droit : menu contextuel Modifier / Supprimer
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setStyle("-fx-background-color: #1a1a1a; -fx-border-color: #333;");
 
@@ -293,9 +271,6 @@ public class AddSerieController implements Initializable {
         txtNewCategory.clear();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  WARNINGS
-    // ═════════════════════════════════════════════════════════════════════════
     private void loadWarningChips() {
         warningsPane.getChildren().clear();
         try {
@@ -320,7 +295,6 @@ public class AddSerieController implements Initializable {
             applyChipStyle(chip, !sel);
         });
 
-        // Clic droit : Modifier / Supprimer
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setStyle("-fx-background-color: #1a1a1a; -fx-border-color: #333;");
 
@@ -407,9 +381,6 @@ public class AddSerieController implements Initializable {
         txtNewWarning.clear();
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  FILE UPLOADS
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML private void handlePickPoster() {
         File file = pickImageFile("Sélectionner l'affiche (poster)");
         if (file != null) {
@@ -445,7 +416,6 @@ public class AddSerieController implements Initializable {
         }
     }
 
-    // ─── Helpers ─────────────────────────────────────────────────────────────
     private File pickImageFile(String title) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle(title);
@@ -477,9 +447,6 @@ public class AddSerieController implements Initializable {
         zone.setStyle(zone.getStyle() + "-fx-border-color:#e50914; -fx-background-color:#e509140a;");
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  SAVE
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handleSave() {
         if (!validateForm()) return;
@@ -508,7 +475,7 @@ public class AddSerieController implements Initializable {
                 clearForm();
 
             } else {
-                // ── MODE MODIFICATION ──
+          
                 Serie serie = buildSerieFromForm(serieToEdit.getId());
                 serieService.updateSerie(serie);
 
@@ -544,7 +511,7 @@ public class AddSerieController implements Initializable {
                          : (serieToEdit != null ? nullSafe(serieToEdit.getUrlTeaser()) : "");
 
         Serie serie = new Serie(
-                id,  // ← id passé en paramètre
+                id, 
                 txtTitre.getText().trim(),
                 txtSynopsis.getText().trim(),
                 txtCasting.getText().trim(),
@@ -592,9 +559,6 @@ public class AddSerieController implements Initializable {
         return serie;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  VALIDATION
-    // ═════════════════════════════════════════════════════════════════════════
     private boolean validateForm() {
         StringBuilder errors = new StringBuilder();
         if (txtTitre.getText().trim().isEmpty())      errors.append("• Titre obligatoire.\n");
@@ -605,7 +569,6 @@ public class AddSerieController implements Initializable {
         if (cbAgeRating.getValue() == null)           errors.append("• Age Rating obligatoire.\n");
         if (selectedCategories.isEmpty())             errors.append("• Au moins une catégorie requise.\n");
 
-        // ← En mode édition, accepter l'image existante
         boolean hasPoster = filePoster != null || (serieToEdit != null && !nullSafe(serieToEdit.getUrlImageCover()).isEmpty());
         boolean hasBanner = fileBanner != null || (serieToEdit != null && !nullSafe(serieToEdit.getUrlImageBanner()).isEmpty());
 
@@ -616,9 +579,6 @@ public class AddSerieController implements Initializable {
         return true;
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  CANCEL / RESET
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML private void handleCancel() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Annuler ? Les données non sauvegardées seront perdues.",
@@ -652,9 +612,6 @@ public class AddSerieController implements Initializable {
         lblStatus.setStyle("-fx-font-size:12px; -fx-text-fill:#e50914; -fx-padding:0 4 0 4;");
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  HELPERS
-    // ═════════════════════════════════════════════════════════════════════════
     private void applyChipStyle(Button chip, boolean selected) {
         if (selected) {
             chip.setStyle("-fx-background-color:#e50914; -fx-background-radius:20; " +
@@ -680,6 +637,6 @@ public class AddSerieController implements Initializable {
     }
 
     @FXML private void handleRetour() {
-        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
+        ScreenManager.getInstance().goBack();
     }
 }

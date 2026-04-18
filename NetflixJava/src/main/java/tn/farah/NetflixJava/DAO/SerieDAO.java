@@ -35,8 +35,6 @@ public class SerieDAO {
     public SerieDAO(Connection connection) {
         this.connection = connection;
     }
-
-    // ✅ CORRIGÉ : "m.producteur" supprimé car absent de la DB
     private static final String BASE_SELECT =
         "SELECT m.id AS media_id, m.titre, m.synopsis, m.casting, m.date_sortie, " +
         "m.url_image_cover, m.url_image_banner, m.url_teaser, " +
@@ -106,8 +104,8 @@ public class SerieDAO {
     }
 
     public void update(Serie serie) {
-        // ✅ CORRIGÉ : Retrait de producteur
-        String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=? WHERE id=?";
+    	// ✅ Après — producteur ajouté
+    	String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=?, producteur=? WHERE id=?";
         String updateSerie = "UPDATE serie SET est_complet=? WHERE id=?";
 
         try {
@@ -121,7 +119,8 @@ public class SerieDAO {
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
                 psM.setInt(8, serie.getAgeRating().getId());
-                psM.setInt(9, serie.getId());
+                psM.setString(9, serie.getProducteur());  // ✅ ajouté
+                psM.setInt(10, serie.getId()); 
                 psM.executeUpdate();
             }
             try (PreparedStatement psF = connection.prepareStatement(updateSerie)) {
@@ -239,7 +238,7 @@ public class SerieDAO {
                             newFilm.setUrlImageCover(rs.getString("url_image_cover"));
                             newFilm.setUrlImageBanner(rs.getString("url_image_banner"));
                             newFilm.setUrlTeaser(rs.getString("url_teaser"));
-                            // ✅ CORRIGÉ : Retrait de rs.getString("producteur")
+                        
                             newFilm.setRatingMoyen(rs.getDouble("rating_moyen"));
                             newFilm.setTerminee(rs.getBoolean("est_complet"));
 
@@ -318,7 +317,7 @@ public class SerieDAO {
     }
     public boolean deleteSerie(int id) {
         String query = "DELETE FROM serie WHERE id = ?";
-        // Utilise maintenant 'this.connection'
+        
         try (PreparedStatement ps = this.connection.prepareStatement(query)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;

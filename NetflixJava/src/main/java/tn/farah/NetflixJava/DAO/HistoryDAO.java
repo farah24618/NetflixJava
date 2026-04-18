@@ -29,10 +29,10 @@ public class HistoryDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, h.getIdUser());
-            // film_id nullable
+       
             if (h.getFilmId() != null) ps.setInt(2, h.getFilmId());
             else ps.setNull(2, Types.INTEGER);
-            // episode_id nullable
+            
             if (h.getEpisodeId() != null) ps.setInt(3, h.getEpisodeId());
             else ps.setNull(3, Types.INTEGER);
             ps.setTimestamp(4, Timestamp.valueOf(h.getDateVisionnage()));
@@ -81,7 +81,6 @@ public class HistoryDAO {
         return null;
     }
 
-    // Recherche par film
     public History findByUserAndFilm(int userId, int filmId) {
         String sql = "SELECT * FROM history WHERE user_id = ? AND film_id = ? ORDER BY date_visionnage DESC LIMIT 1";
         try {
@@ -94,7 +93,6 @@ public class HistoryDAO {
         return null;
     }
 
-    // Recherche par épisode
     public History findByUserAndEpisode(int userId, int episodeId) {
         String sql = "SELECT * FROM history WHERE user_id = ? AND episode_id = ? ORDER BY date_visionnage DESC LIMIT 1";
         try {
@@ -137,9 +135,8 @@ public class HistoryDAO {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    // ── Mapper ──────────────────────────────────────────────────────────────
     private History map(ResultSet rs) throws SQLException {
-        // film_id et episode_id peuvent être NULL
+
         int filmId = rs.getInt("film_id");
         Integer filmIdVal = rs.wasNull() ? null : filmId;
 

@@ -226,7 +226,7 @@ public class SearchResultsController implements Initializable {
                 serie -> {
                 	int firstSeasonId = saisonService.findFirstSeasonIdBySerie(s.getId());
                     MediaViewController ctrl = ScreenManager.getInstance()
-                        .navigateAndGetController(Screen.detail);
+                        .navigateAndGetController(Screen.MediaView);
                     if (ctrl != null) ctrl.setSerie(serie);
                   });
                     Label nameLbl = new Label(s.getTitre());

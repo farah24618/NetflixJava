@@ -5,8 +5,7 @@ public class Subtitle {
 	private String langage;
 	private int filmId;
 	private int episodeId;
-	 private String url;       // chemin vers le fichier .srt
-     // ex: "subtitles/film1_fr.srt"
+	 private String url;       
 
 
 

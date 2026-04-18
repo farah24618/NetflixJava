@@ -37,15 +37,11 @@ public class CommentaireDAO {
                 c.setMediaId(rs.getInt("media_id"));
                 c.setUserId(rs.getInt("user_id"));
 
-                // On utilise la colonne username de la table comment
-                //c.setUsername(rs.getString("username")); 
 
                 
                
 
                 c.setContenu(rs.getString("contenu"));
-                
-                // On vérifie les deux colonnes possibles pour le flag signalement
                 boolean isSpoiler = rs.getBoolean("contient_spoils") ;
                 c.setSpoiler(isSpoiler);
                 c.setLikes(rs.getInt("likes"));
@@ -93,7 +89,7 @@ public class CommentaireDAO {
     }
 
 
-   
+
 
     /**
      * Récupérer un commentaire spécifique par son ID

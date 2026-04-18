@@ -168,8 +168,8 @@
 
                                 <HBox spacing="12.0">
                                     <children>
-                                        <Button onAction="#goToFilmsAdmin" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Ajouter film" />
-                                        <Button onAction="#goToSeriesAdmin" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;" text="Ajouter série" />
+                                        <Button onAction="#goToAddFilm" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Ajouter film" />
+                                        <Button onAction="#goToAddSeries" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;" text="Ajouter série" />
                                         <Button onAction="#goToUsersAdmin" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;" text="Utilisateurs" />
                                     </children>
                                 </HBox>

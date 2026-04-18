@@ -23,7 +23,7 @@ public class Category {
 	    public String toString() {
 	        return this.name;
 	    }
-	  //hedhi
+	
 
 
 		public void setId(int id) {

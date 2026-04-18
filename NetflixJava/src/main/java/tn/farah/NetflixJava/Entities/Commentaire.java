@@ -6,7 +6,7 @@ public class Commentaire {
 
     private int id;
     private int mediaId;
-    private boolean signale; // film, serie, episode
+    private boolean signale; 
     private int userId;
     private String username;
     private String contenu;

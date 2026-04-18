@@ -29,31 +29,17 @@ import tn.farah.NetflixJava.Service.SerieService;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * CardFactory — fabrique centralisée pour toutes les cartes, popups et carousels.
- *
- * FIX PRINCIPAL : l'overlayPane est passé via un tableau à 1 élément (Pane[1])
- * ce qui permet de le capturer par référence dans les lambdas.
- * Ainsi même si overlayPane est null au moment de la construction du carousel,
- * il sera disponible au moment du hover (après que la scène soit prête).
- *
- * ADD-TO-LIST FIX : FavoriService est stocké statiquement (setFavoriService)
- * et le bouton + bascule en ✓ selon l'état réel en base.
- */
 public class CardFactory {
 
-    // ── Taille FIXE ───────────────────────────────────────────────
     public static final double CARD_W      = 260.0;
     public static final double CARD_H      = 146.0;
     public static final double GAP         = 12.0;
     public static final double HOVER_SCALE = 1.4;
     public static final double SCROLL_H    = CARD_H + 24.0;
 
-    // ── Pour HomeController (responsive) ─────────────────────────
     public static final double CARDS_VISIBLE = 4.0;
     public static final double ASPECT        = 9.0 / 16.0;
 
-    // ── FavoriService (set once at app startup) ───────────────────
     private static FavoriService favoriService;
     private static NotificationService notificationService;
 
@@ -66,9 +52,6 @@ public class CardFactory {
         return favoriService;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  OVERLAY — appelé une seule fois par controller
-    // ═══════════════════════════════════════════════════════════════
 
     public static Pane createOverlay(javafx.scene.Scene scene, Pane[] overlayRef) {
         if (!(scene.getRoot() instanceof Pane root)) return null;
@@ -92,9 +75,6 @@ public class CardFactory {
         return createOverlay(scene, ref);
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  CAROUSEL FIXE (Films & Series pages)
-    // ═══════════════════════════════════════════════════════════════
 
     public static VBox buildFilmCarousel(String title, List<Film> films,
                                           Pane overlayPane, Consumer<Film> onFilmClick) {
@@ -136,9 +116,6 @@ public class CardFactory {
         return bloc;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  CAROUSEL RESPONSIVE (HomeController)
-    // ═══════════════════════════════════════════════════════════════
 
     public static VBox buildResponsiveFilmCarousel(String title, List<Film> films,
                                                     Pane overlayPane, Consumer<Film> onFilmClick) {
@@ -204,9 +181,6 @@ public class CardFactory {
         return bloc;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  CARTES
-    // ═══════════════════════════════════════════════════════════════
 
     public static StackPane buildFilmCard(Film film, double cardW, double cardH,
                                            Pane overlayPane, Consumer<Film> onClick) {
@@ -266,9 +240,6 @@ public class CardFactory {
         return card;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  POPUPS
-    // ═══════════════════════════════════════════════════════════════
 
     public static VBox buildFilmPopup(Film film, double popupW) {
         return buildFilmPopup(film, popupW, null);
@@ -354,9 +325,6 @@ public class CardFactory {
         return assemblePopup(popupW, thumbH, bigThumb, info);
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  SECTION HEADER
-    // ═══════════════════════════════════════════════════════════════
 
     public static HBox buildSectionHeader(String text) {
         Label label = new Label(text);
@@ -372,9 +340,6 @@ public class CardFactory {
         return header;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  HELPERS PRIVÉS
-    // ═══════════════════════════════════════════════════════════════
 
     private static HBox buildRow() {
         HBox row = new HBox(GAP);
@@ -429,11 +394,7 @@ public class CardFactory {
         return pane;
     }
 
-    /**
-     * Boutons du popup.
-     * ✅ addBtn toggle : lit l'état réel depuis FavoriService à chaque clic.
-     * ✅ userId lu depuis SessionManager au moment du clic (jamais mis en cache).
-     */
+
     private static VBox buildPopupInfo(double popupW, Label titleLbl,
             HBox meta, Label genreLbl,
             Runnable onInfoAction,
@@ -444,7 +405,6 @@ public class CardFactory {
         Button infoBtn = new Button("ℹ"); infoBtn.getStyleClass().add("btn-round-outline");
         Region spacer  = new Region();    HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // ── Add-to-list button ────────────────────────────────────
         int userId = SessionManager.getInstance().getCurrentUserId();
         boolean alreadyFav = favoriService != null && userId > 0
                              && favoriService.estFavori(userId, mediaId);
@@ -482,7 +442,7 @@ public class CardFactory {
             });
             addBtn.setStyle("-fx-cursor: hand;");
         }
-        // ─────────────────────────────────────────────────────────
+
 
         if (onInfoAction != null) {
             infoBtn.setOnAction(e -> onInfoAction.run());
@@ -517,10 +477,6 @@ public class CardFactory {
         return container;
     }
 
-    /**
-     * FIX OVERLAY NULL :
-     * On utilise overlayRef[0] au moment du hover (pas au moment de la construction).
-     */
     private static void attachHoverBehavior(StackPane card, VBox popup,
                                              double cardW, Pane[] overlayRef) {
         double popupW = cardW * HOVER_SCALE;
@@ -574,12 +530,11 @@ public class CardFactory {
     }*/
     private static void lancerPremierEpisode(Serie serie) {
     	int userId = SessionManager.getInstance().getCurrentUserId();
-        // 1. Récupère la connexion et les services
+
         java.sql.Connection conn = ConxDB.getInstance();
         SaisonService saisonService = new SaisonService(conn);
         SerieService serieService = new SerieService(conn);
 
-        // 2. Trouve le premier épisode
         int firstSaisonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
         if (firstSaisonId == -1) return;
 
@@ -589,7 +544,7 @@ public class CardFactory {
 
         int episodeId = episodes.get(0).getId();
 
-        // 3. Navigate vers le lecteur
+       
         UniversalPlayerController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.Player); // adapte au nom de ton Screen
         if (ctrl != null) ctrl.initEpisode(episodeId,userId);

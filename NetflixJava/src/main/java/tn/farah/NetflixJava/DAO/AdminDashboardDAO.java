@@ -17,10 +17,10 @@ public class AdminDashboardDAO {
         cnx = ConxDB.getInstance(); 
     }
 
-    
+
     public int getCount(String tableName) {
         int count = 0;
-        
+
         String query = "SELECT COUNT(*) FROM " + tableName; 
         try (PreparedStatement pst = cnx.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
@@ -33,18 +33,26 @@ public class AdminDashboardDAO {
         return count;
     }
 
-   
     public Map<String, Integer> getContentByYear() {
         Map<String, Integer> data = new HashMap<>();
         
+
        
         String query = "SELECT date_sortie, COUNT(*) as total FROM media GROUP BY release_year ORDER BY release_year ASC LIMIT 10";
+
+
+      
+
         
         try (PreparedStatement pst = cnx.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
+
                 
                 String year = rs.getString("date_sortie") != null ? rs.getString("date_sortie") : "Inconnu";
+
+        
+              
                 data.put(year, rs.getInt("total"));
             }
         } catch (SQLException e) {
@@ -53,8 +61,9 @@ public class AdminDashboardDAO {
         return data;
     }
 
-   
+
     public Map<String, Integer> getCommentsByType() {
+
         Map<String, Integer> data = new LinkedHashMap<>();
         String sql = """
             SELECT 
@@ -74,14 +83,22 @@ public class AdminDashboardDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+       
+
         return data;
     }
 
-   
+
     public Map<String, Integer> getInscriptionsData() {
+
         
         Map<String, Integer> data = new LinkedHashMap<>(); 
       
+
+     
+
+
         String query = "SELECT DATE(created_at) as jour, COUNT(*) as total " +
                        "FROM users GROUP BY DATE(created_at) ORDER BY jour DESC LIMIT 7";
 

@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -28,8 +29,8 @@ public class AddSaisonnController implements Initializable {
     @FXML private Button btnSave;
     @FXML private ComboBox<Serie> cbSerie;
     @FXML private TextField txtNumeroSaison;
-    @FXML private TextField txtNom;          // ← AJOUTER dans le FXML
-    @FXML private DatePicker dpDateSortie;   // ← AJOUTER dans le FXML
+    @FXML private TextField txtNom;          
+    @FXML private DatePicker dpDateSortie;   
     @FXML private Label lblStatus;
 
     private SaisonService saisonService;
@@ -76,17 +77,15 @@ public class AddSaisonnController implements Initializable {
     private void populateForm(Saison saison) {
         txtNumeroSaison.setText(String.valueOf(saison.getNumeroSaison()));
 
-        // ✅ Remplir nom
+    
         if (saison.getNom() != null && !saison.getNom().isEmpty()) {
             txtNom.setText(saison.getNom());
         }
 
-        // ✅ Remplir date
         if (saison.getDateSortie() != null && dpDateSortie != null) {
             dpDateSortie.setValue(saison.getDateSortie().toLocalDate());
         }
 
-        // Sélectionner la série
         for (Serie s : cbSerie.getItems()) {
             if (s.getId() == saison.getIdSerie()) {
                 cbSerie.setValue(s);
@@ -94,12 +93,11 @@ public class AddSaisonnController implements Initializable {
             }
         }
 
-        // Mode édition si ID réel
         if (saison.getId() > 0) {
             editingSaisonId = saison.getId();
             btnSave.setText("💾 Modifier");
             cbSerie.setDisable(true);
-            txtNumeroSaison.setDisable(true); // ✅ bloquer aussi le numéro en édition
+            txtNumeroSaison.setDisable(true); 
         }
     }
 
@@ -127,7 +125,7 @@ public class AddSaisonnController implements Initializable {
             int userId = SessionManager.getInstance().getCurrentUser().getId();
 
             if (editingSaisonId > 0) {
-                // ── MODE ÉDITION ──
+               
                 Saison updated = new Saison(editingSaisonId, serieId, numSaison, nom, dateSortie);
                 saisonService.update(updated);
 
@@ -146,7 +144,7 @@ public class AddSaisonnController implements Initializable {
                 showSuccess("✓ Saison " + numSaison + " modifiée !");
 
             } else {
-                // ── MODE CRÉATION ──
+    
                 Saison newSaison = new Saison(serieId, numSaison, nom, dateSortie);
                 int result = saisonService.save(newSaison);
                 if (result > 0) {

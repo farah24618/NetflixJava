@@ -22,8 +22,8 @@ public class MovieItemController {
     @FXML private ImageView moviePoster;
     @FXML private Label movieTitle;
     @FXML private Label idLabel;
-    @FXML private Label viewsLabel;      // ✅ compteur de vues
-    @FXML private Label commentsLabel;   // ✅ compteur de commentaires
+    @FXML private Label viewsLabel;      
+    @FXML private Label commentsLabel;  
 
     private Film currentFilm;
 
@@ -33,10 +33,8 @@ public class MovieItemController {
         movieTitle.setText(film.getTitre());
         idLabel.setText(film.getId() + " • Movie • " + film.getDateSortie().getYear());
 
-        // ✅ Nombre de vues (déjà dans l'objet Film via nbre_vues en DB)
         viewsLabel.setText(String.valueOf(film.getNbreVue()));
 
-        // ✅ Nombre de commentaires (chargé depuis la DB)
         try {
             CommentaireService commentaireService = new CommentaireService(ConxDB.getInstance());
             int nbComments = commentaireService
@@ -48,7 +46,7 @@ public class MovieItemController {
             System.err.println("Erreur chargement commentaires : " + e.getMessage());
         }
 
-        // ✅ Image de couverture
+   
         if (film.getUrlImageCover() != null && !film.getUrlImageCover().isEmpty()) {
             try {
                 moviePoster.setImage(new Image(film.getUrlImageCover(), true));
@@ -87,6 +85,6 @@ public class MovieItemController {
     @FXML
     private void handleShowComments() {
         System.out.println("💬 Ouverture des commentaires pour : " + currentFilm.getTitre());
-        // Ton code pour ouvrir la vue des commentaires ici
+       
     }
 }

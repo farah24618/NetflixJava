@@ -92,6 +92,11 @@ public class SerieController {
     }
     
     @FXML private void handleNavUsers() { ScreenManager.getInstance().navigateTo(Screen.manageUsers); }
+<<<<<<< HEAD
     @FXML private void handleNavNotifications() { /* Implémenter }
     @FXML private void handleNavComments() { ScreenManager.getInstance().navigateTo(Screen.episodeComments); }*/
+=======
+    @FXML private void handleNavNotifications() {  }
+    @FXML private void handleNavComments() { ScreenManager.getInstance().navigateTo(Screen.episodeComments); }
+>>>>>>> branch 'master' of https://github.com/farah24618/NetflixJava.git
 }*/

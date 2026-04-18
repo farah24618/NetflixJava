@@ -51,19 +51,10 @@ import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 import tn.farah.NetflixJava.utils.SessionManager;
 
-/**
- * MediaViewController
- * ───────────────────
- * Contrôleur unifié pour l'affichage d'un film OU d'une série/épisode.
- * Remplace FilmViewController + EpisodeViewController.
- *
- * Utilisation :
- *   – Pour un film  : controller.setFilm(film)
- *   – Pour une série: controller.setSerie(serie)
- */
+
 public class MediaViewController implements Initializable {
 
-    // ── Services ──────────────────────────────────────────────────
+   
     private FilmService        filmService;
     private SerieService       serieService;
     private SaisonService      saisonService;
@@ -73,61 +64,45 @@ public class MediaViewController implements Initializable {
     private RatingService      ratingService;
     private Connection         cnnx;
 
-    // ── Constantes ────────────────────────────────────────────────
+
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    // ── Mode courant ──────────────────────────────────────────────
-    /** true = série/épisode, false = film */
+    
     private boolean modeSerieActif = false;
-
-    // ═════════════════════════════════════════════════════════════
-    // INJECTION FXML — NAVBAR
-    // ═════════════════════════════════════════════════════════════
     @FXML private HBox      profilBox;
     @FXML private Label     labelUserName;
     @FXML private StackPane avatarContainer;
     @FXML private ImageView avatarImage;
 
-    // ═════════════════════════════════════════════════════════════
-    // INJECTION FXML — POSTER
-    // ═════════════════════════════════════════════════════════════
     @FXML private StackPane videoPane;
     @FXML private ImageView posterImage;
-    @FXML private Label     mediaTitleVideo;   // titre sur le poster
+    @FXML private Label     mediaTitleVideo; 
     @FXML private Label     posterDesc;
     @FXML private Button    btnLire;
     @FXML private Button    btnFavoris;
     @FXML private Button    btnNoter;
     @FXML private Label     categories;
 
-    // ═════════════════════════════════════════════════════════════
-    // INJECTION FXML — INFOS MEDIA
-    // ═════════════════════════════════════════════════════════════
     @FXML private HBox  breadcrumbBox;
     @FXML private Label labelTitreSerie;
     @FXML private Label labelNumeroSaison;
     @FXML private Label labelNumeroEpisode;
-    @FXML private Label mediaTitle;            // titre principal (sous le poster)
+    @FXML private Label mediaTitle;            
     @FXML private Label labelDuree;
     @FXML private Label labelDateSortie;
-    @FXML private Label mediaDesc;             // synopsis film / description épisode
-    @FXML private Label episodeDesc;           // description épisode (panel secondaire)
+    @FXML private Label mediaDesc;            
+    @FXML private Label episodeDesc;          
     @FXML private Label castings;
     @FXML private Label labelWarnings;
 
-    // ═════════════════════════════════════════════════════════════
-    // INJECTION FXML — ONGLETS
-    // ═════════════════════════════════════════════════════════════
     @FXML private VBox tabApropos;
-    @FXML private VBox tabEpisodes;            // visible seulement en mode série
+    @FXML private VBox tabEpisodes;          
     @FXML private VBox tabBandes;
     @FXML private VBox tabCommentaires;
     @FXML private VBox tabSimilaires;
 
-    // ═════════════════════════════════════════════════════════════
-    // INJECTION FXML — PANNEAUX
-    // ═════════════════════════════════════════════════════════════
+    
     @FXML private VBox panelApropos;
     @FXML private VBox panelEpisodes;
     @FXML private VBox panelBandes;
@@ -135,44 +110,35 @@ public class MediaViewController implements Initializable {
     @FXML private VBox panelSimilaires;
     @FXML private HBox listeSimilaires;
 
-    // ── Labels À propos ───────────────────────────────────────────
-    @FXML private Label labelCreateurTitle;    // "RÉALISATEUR" ou "CRÉATEUR"
-    @FXML private Label aproposPanelTitle;     // "À propos du film / de la série"
+   
+    @FXML private Label labelCreateurTitle;    
+    @FXML private Label aproposPanelTitle;    
     @FXML private Label labelSynopsis;
     @FXML private Label labelGenre;
     @FXML private Label labelAnnee;
     @FXML private Label labelProducteur;
     @FXML private Label labelWarningsApropos;
 
-    // ── Épisodes ──────────────────────────────────────────────────
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private Label            labelNbEpisodes;
     @FXML private VBox             listeEpisodes;
 
-    // ═════════════════════════════════════════════════════════════
-    // ÉTAT INTERNE
-    // ═════════════════════════════════════════════════════════════
     private final int userId = SessionManager.getInstance().getCurrentUserId();
 
-    // Film
     private int  filmId     = -1;
     private Film filmActuel = null;
 
-    // Série
     private int           serieId         = -1;
     private Serie         serieActuelle   = null;
     private int           currentSaisonId = -1;
     private List<Episode> episodesDB;
     private Episode       episodeActuel   = null;
 
-    // Commentaires
     private VBox     commentListContainer;
     private TextArea commentInput;
     private CheckBox spoilerCheck;
 
-    // ═════════════════════════════════════════════════════════════
-    // INITIALIZE
-    // ═════════════════════════════════════════════════════════════
+   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cnnx               = ConxDB.getInstance();
@@ -184,33 +150,27 @@ public class MediaViewController implements Initializable {
         userService        = new UserService(cnnx);
         ratingService      = new RatingService(cnnx);
 
-        // Profil
         String pseudo = "Inconnu";
         if (userService.findUserById(userId) != null)
             pseudo = userService.findUserById(userId).getPseudo();
         labelUserName.setText(pseudo);
 
-        // Construire la zone commentaires (vide pour l'instant)
+        
         construireInterfaceCommentaires();
 
-        // Onglet par défaut : À propos (film) — peut être écrasé par setSerie()
+        
         activerOnglet(tabApropos);
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // SETTERS PUBLICS
-    // ═════════════════════════════════════════════════════════════
-
-    /** Configure le contrôleur pour afficher un film. */
+    
     public void setFilm(Film film) {
         modeSerieActif = false;
         this.filmId    = film.getId();
         this.filmActuel = film;
 
-        // Masquer les éléments propres aux séries
+       
         setSerieUIVisible(false);
 
-        // Adapter les libellés "À propos"
         if (aproposPanelTitle  != null) aproposPanelTitle.setText("À propos du film");
         if (labelCreateurTitle != null) labelCreateurTitle.setText("RÉALISATEUR");
 
@@ -221,16 +181,13 @@ public class MediaViewController implements Initializable {
         activerOnglet(tabApropos);
     }
 
-    /** Configure le contrôleur pour afficher une série. */
     public void setSerie(Serie serie) {
         modeSerieActif  = true;
         this.serieActuelle = serie;
         this.serieId       = serie.getId();
 
-        // Afficher les éléments propres aux séries
         setSerieUIVisible(true);
 
-        // Adapter les libellés "À propos"
         if (aproposPanelTitle  != null) aproposPanelTitle.setText("À propos de la série");
         if (labelCreateurTitle != null) labelCreateurTitle.setText("CRÉATEUR");
 
@@ -242,7 +199,6 @@ public class MediaViewController implements Initializable {
         activerOnglet(tabEpisodes);
     }
 
-    // ── Affichage des éléments série / film ───────────────────────
     private void setSerieUIVisible(boolean visible) {
         if (breadcrumbBox != null) {
             breadcrumbBox.setVisible(visible);
@@ -254,9 +210,6 @@ public class MediaViewController implements Initializable {
         }
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // CHARGEMENT INFOS — FILM
-    // ═════════════════════════════════════════════════════════════
     private void chargerInfosFilm(Film film) {
         if (film == null) return;
 
@@ -276,30 +229,23 @@ public class MediaViewController implements Initializable {
             labelDateSortie.setText(String.valueOf(film.getDateSortie().getYear()));
         set(mediaDesc, film.getSynopsis());
 
-        // Genres
         String genreText = genresText(film.getGenres());
         set(categories,  genreText);
         set(labelGenre,  genreText);
 
-        // Warnings
         String warnText = warningsText(film.getWarnings());
         set(labelWarnings,       warnText);
         set(labelWarningsApropos, warnText);
 
-        // Casting
         String cast = film.getCasting();
         set(castings, cast != null && !cast.isBlank() ? cast : "Non renseigné");
 
-        // À propos
         set(labelSynopsis,   film.getSynopsis());
         set(labelProducteur, film.getProducteur() != null ? film.getProducteur() : "N/A");
         if (labelAnnee != null && film.getDateSortie() != null)
             labelAnnee.setText(String.valueOf(film.getDateSortie().getYear()));
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // CHARGEMENT INFOS — SÉRIE
-    // ═════════════════════════════════════════════════════════════
     private void chargerInfosSerie(int sId) {
         if (sId == -1) return;
         Serie s = serieService.findById(sId);
@@ -336,16 +282,12 @@ public class MediaViewController implements Initializable {
         set(labelSynopsis, s.getSynopsis());
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // CHARGEMENT SAISONS / ÉPISODES
-    // ═════════════════════════════════════════════════════════════
     private void chargerSaisonsCombo(Serie serie) {
         List<Saison> saisons = saisonService.findBySerie(serie.getId());
         if (saisons == null || saisons.isEmpty()) return;
 
         saisonComboBox.getItems().clear();
 
-        // Style des cellules
         saisonComboBox.setCellFactory(lv -> new ListCell<String>() {
             @Override protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -373,7 +315,6 @@ public class MediaViewController implements Initializable {
         if (episodesDB != null && !episodesDB.isEmpty())
             mettreAJourInfosEpisode(episodesDB.get(0));
 
-        // Listener changement de saison
         saisonComboBox.setOnAction(e -> {
             int idx = saisonComboBox.getSelectionModel().getSelectedIndex();
             if (idx >= 0) {
@@ -429,9 +370,6 @@ public class MediaViewController implements Initializable {
         }
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // LISTE DES ÉPISODES
-    // ═════════════════════════════════════════════════════════════
     private void chargerListeEpisodes() {
         listeEpisodes.getChildren().clear();
         if (episodesDB == null || episodesDB.isEmpty()) {
@@ -460,7 +398,6 @@ public class MediaViewController implements Initializable {
         HBox carte = new HBox(16);
         carte.getStyleClass().add(estActuel ? "episode-card-active" : "episode-card");
 
-        // Miniature
         StackPane miniature = new StackPane();
         miniature.setPrefSize(180, 100);
         miniature.setMinSize(180, 100);
@@ -554,9 +491,7 @@ public class MediaViewController implements Initializable {
         return carte;
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // BOUTON FAVORIS
-    // ═════════════════════════════════════════════════════════════
+   
     private void mettreAJourBtnFavoris(int mediaId) {
         if (btnFavoris == null || mediaId == -1) return;
         boolean deja = favoriService.exist(userId, mediaId);
@@ -571,10 +506,6 @@ public class MediaViewController implements Initializable {
                 btnFavoris.getStyleClass().add("btn-favoris");
         }
     }
-
-    // ═════════════════════════════════════════════════════════════
-    // BOUTON NOTER
-    // ═════════════════════════════════════════════════════════════
     private void initialiserBtnNoter() {
         if (btnNoter == null || ratingService == null) return;
         int mediaId = modeSerieActif ? serieId : filmId;
@@ -589,9 +520,7 @@ public class MediaViewController implements Initializable {
         }
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // SIMILAIRES
-    // ═════════════════════════════════════════════════════════════
+    
     private void chargerSimilaires() {
         if (panelSimilaires == null) return;
         panelSimilaires.getChildren().clear();
@@ -709,9 +638,7 @@ public class MediaViewController implements Initializable {
         return carte;
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // COMMENTAIRES
-    // ═════════════════════════════════════════════════════════════
+    
     private void construireInterfaceCommentaires() {
         panelCommentaires.getChildren().clear();
         panelCommentaires.setSpacing(20);
@@ -775,7 +702,7 @@ public class MediaViewController implements Initializable {
             if (commentInput  != null) commentInput.clear();
             if (spoilerCheck  != null) spoilerCheck.setSelected(false);
             rafraichirListeCommentaires(mtype);
-            // Notification
+          
             NotificationService ns = new NotificationService(cnnx);
             Notification n = new Notification(0, userId, "COMMENTAIRE",
                     "Commentaire publié", "Votre avis a été publié.",
@@ -807,20 +734,14 @@ public class MediaViewController implements Initializable {
             commentListContainer.getChildren().add(creerCarteCommentaire(c, mediaType));
     }
 
-    /**
-     * Crée la carte d'un commentaire.
-     * Inclut un bouton "Supprimer" visible uniquement si l'utilisateur courant
-     * est l'auteur du commentaire.
-     */
     private VBox creerCarteCommentaire(Commentaire comment, String mediaType) {
         VBox carte = new VBox(8);
         carte.getStyleClass().add("comment-card");
 
-        // ── En-tête ───────────────────────────────────────────────
+       
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // Résolution du pseudo
         if (userService.findUserById(comment.getUserId()) != null)
             comment.setUsername(userService.findUserById(comment.getUserId()).getPseudo());
 
@@ -851,7 +772,6 @@ public class MediaViewController implements Initializable {
             header.getChildren().add(spoilerBadge);
         }
 
-        // ── Texte (spoiler masqué ou visible) ────────────────────
         final boolean[] revealed = {!comment.isSpoiler()};
         Label textLabel = new Label(comment.isSpoiler() && !revealed[0]
                 ? "Cliquez sur Voir le spoiler pour révéler ce commentaire."
@@ -875,12 +795,12 @@ public class MediaViewController implements Initializable {
             carte.getChildren().addAll(header, textLabel);
         }
 
-        // ── Actions ───────────────────────────────────────────────
+
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_LEFT);
         actions.setStyle("-fx-padding: 6 0 0 0;");
 
-        // Bouton J'aime
+    
         final int[] likesCount = {comment.getLikes()};
         Button btnLikeC = new Button("J'aime" + (likesCount[0] > 0 ? " (" + likesCount[0] + ")" : ""));
         btnLikeC.getStyleClass().add("btn-like-comment");
@@ -890,7 +810,7 @@ public class MediaViewController implements Initializable {
             btnLikeC.setText("J'aime (" + likesCount[0] + ")");
             btnLikeC.getStyleClass().setAll("btn-like-comment-active");
             btnLikeC.setDisable(true);
-            // Notification auteur
+
             if (cnnx != null && comment.getUserId() != userId) {
                 String titre = modeSerieActif
                         ? (serieActuelle != null ? serieActuelle.getTitre() : "")
@@ -903,7 +823,6 @@ public class MediaViewController implements Initializable {
             }
         });
 
-        // Bouton Signaler
         Button btnReport = new Button("Signaler");
         btnReport.getStyleClass().add("btn-report");
         btnReport.setOnAction(e -> {
@@ -930,7 +849,6 @@ public class MediaViewController implements Initializable {
 
         actions.getChildren().addAll(btnLikeC, btnReport);
 
-        // ── Bouton Supprimer (uniquement pour l'auteur) ──────────
         if (comment.getUserId() == userId) {
             Button btnSupprimer = new Button("🗑 Supprimer");
             btnSupprimer.getStyleClass().add("btn-delete-comment");
@@ -949,9 +867,7 @@ public class MediaViewController implements Initializable {
         return carte;
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // BANDES-ANNONCES
-    // ═════════════════════════════════════════════════════════════
+  
     private void chargerBandesAnnonces() {
         if (panelBandes == null) return;
         panelBandes.getChildren().clear();
@@ -1002,10 +918,6 @@ public class MediaViewController implements Initializable {
 
         panelBandes.getChildren().addAll(titre, carte);
     }
-
-    // ═════════════════════════════════════════════════════════════
-    // HANDLERS POSTER
-    // ═════════════════════════════════════════════════════════════
     @FXML private void onLire() {
         if (modeSerieActif) {
             if (episodeActuel == null) return;
@@ -1053,7 +965,6 @@ public class MediaViewController implements Initializable {
         final int[] selectedScore = {0};
         Label[] stars = new Label[5];
 
-        // ── Styles inline (la Scene popup est isolée, pas de CSS parent) ──
         final String STAR_ON  = "-fx-font-size: 36px; -fx-text-fill: #FFD700; -fx-cursor: hand;";
         final String STAR_OFF = "-fx-font-size: 36px; -fx-text-fill: #555555; -fx-cursor: hand;";
 
@@ -1155,9 +1066,6 @@ public class MediaViewController implements Initializable {
         popup.showAndWait();
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // HANDLERS ONGLETS
-    // ═════════════════════════════════════════════════════════════
     @FXML private void onTabApropos()      { activerOnglet(tabApropos); }
     @FXML private void onTabEpisodes()     { activerOnglet(tabEpisodes); }
     @FXML private void onTabBandes()       { activerOnglet(tabBandes);  chargerBandesAnnonces(); }
@@ -1165,7 +1073,7 @@ public class MediaViewController implements Initializable {
     @FXML private void onTabSimilaires()   { activerOnglet(tabSimilaires); chargerSimilaires(); }
 
     private void activerOnglet(VBox ongletActif) {
-        // Liste dynamique selon le mode
+
         VBox[] onglets = modeSerieActif
                 ? new VBox[]{tabApropos, tabEpisodes, tabBandes, tabCommentaires, tabSimilaires}
                 : new VBox[]{tabApropos, tabBandes, tabCommentaires, tabSimilaires};
@@ -1185,14 +1093,13 @@ public class MediaViewController implements Initializable {
             }
         }
 
-        // Masquer tous les panneaux
         setPanel(panelApropos,       false);
         setPanel(panelEpisodes,      false);
         setPanel(panelBandes,        false);
         setPanel(panelSimilaires,    false);
         setPanel(panelCommentaires,  false);
 
-        // Afficher le bon
+      
         if      (ongletActif == tabApropos)      setPanel(panelApropos,      true);
         else if (ongletActif == tabEpisodes)     setPanel(panelEpisodes,     true);
         else if (ongletActif == tabBandes)       setPanel(panelBandes,       true);
@@ -1203,9 +1110,7 @@ public class MediaViewController implements Initializable {
         }
     }
 
-    // ═════════════════════════════════════════════════════════════
-    // NAVIGATION
-    // ═════════════════════════════════════════════════════════════
+    
     @FXML private void onRetour()                      { ScreenManager.getInstance().goBack(); }
     @FXML private void onProfilClicked()               { System.out.println("Profil : " + labelUserName.getText()); }
     @FXML private void handleAcceuil(ActionEvent event){ ScreenManager.getInstance().navigateTo(Screen.home); }
@@ -1213,9 +1118,7 @@ public class MediaViewController implements Initializable {
     @FXML private void handleSeries(ActionEvent event) { ScreenManager.getInstance().navigateTo(Screen.series); }
     @FXML private void handleMyList(ActionEvent event) { ScreenManager.getInstance().navigateTo(Screen.myList); }
 
-    // ═════════════════════════════════════════════════════════════
-    // HELPERS PRIVÉS
-    // ═════════════════════════════════════════════════════════════
+    
     private void ouvrirEpisode(Episode ep) {
         UniversalPlayerController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.Player);

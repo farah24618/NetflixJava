@@ -10,7 +10,6 @@ import java.util.List;
 import tn.farah.NetflixJava.Entities.Category;
 
 public class CategoryDAO {
-	//hedhi
 
 
 	    private Connection connection;
@@ -19,7 +18,6 @@ public class CategoryDAO {
 	        this.connection = connection;
 	    }
 
-	    // CREATE : Ajouter une nouvelle catégorie
 	    public void save(Category category) throws SQLException {
 	        String query = "INSERT INTO category ( nom) VALUES ( ?)";
 	        try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -29,7 +27,6 @@ public class CategoryDAO {
 	        }
 	    }
 
-	    // READ : Récupérer une catégorie par son ID
 	    public Category findById(int id) throws SQLException {
 	        String query = "SELECT * FROM category WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -43,7 +40,6 @@ public class CategoryDAO {
 	        return null;
 	    }
 
-	    // READ ALL : Très utile pour remplir tes menus de navigation Netflix
 	    public List<Category> findAll() throws SQLException {
 	        List<Category> categories = new ArrayList<>();
 	        String query = "SELECT * FROM category ORDER BY nom ASC";
@@ -56,7 +52,6 @@ public class CategoryDAO {
 	        return categories;
 	    }
 
-	    // UPDATE : Modifier le nom d'une catégorie
 	    public void update(Category category) throws SQLException {
 	        String query = "UPDATE category SET nom = ? WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -66,7 +61,6 @@ public class CategoryDAO {
 	        }
 	    }
 
-	    // DELETE : Supprimer une catégorie
 	    public void delete(int id) throws SQLException {
 	        String query = "DELETE FROM category WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(query)) {

@@ -23,7 +23,6 @@ public class SubtitleDAO {
         );
     }
 
-    // Retrouver tous les sous-titres
     public List<Subtitle> findAll() {
         List<Subtitle> subtitles = new ArrayList<>();
         String sql = "SELECT * FROM subtitle";
@@ -38,14 +37,12 @@ public class SubtitleDAO {
         return subtitles;
     }
 
-    // Sauvegarder (Insert)
     public int save(Subtitle subtitle) {
         String sql = "INSERT INTO subtitle(langue, url_file, film_id, episode_id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, subtitle.getLangage());
             pstmt.setString(2, subtitle.getUrl());
             
-            // Gestion des IDs qui peuvent être NULL en base de données
             if (subtitle.getFilmId() > 0) pstmt.setInt(3, subtitle.getFilmId()); 
             else pstmt.setNull(3, Types.INTEGER);
             
@@ -75,7 +72,6 @@ public class SubtitleDAO {
         return null;
     }
 
-    // Trouver par Film
     public List<Subtitle> findByFilm(int filmId) {
         List<Subtitle> subtitles = new ArrayList<>();
         String sql = "SELECT * FROM subtitle WHERE film_id = ?";
@@ -92,7 +88,6 @@ public class SubtitleDAO {
         return subtitles;
     }
 
-    // Trouver par Episode
     public List<Subtitle> findByEpisode(int episodeId) {
         List<Subtitle> subtitles = new ArrayList<>();
         String sql = "SELECT * FROM subtitle WHERE episode_id = ?";

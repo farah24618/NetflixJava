@@ -40,7 +40,6 @@ public class WarningDao {
 	            ps.setString(1, warning.getNom());
 	            ps.executeUpdate();
 
-	            // On récupère l'ID généré par la DB pour l'objet Java
 	            try (ResultSet rs = ps.getGeneratedKeys()) {
 	                if (rs.next()) {
 						warning.setId(rs.getInt(1));
@@ -49,7 +48,6 @@ public class WarningDao {
 	        }
 	    }
 
-	    // --- FIND BY ID ---
 	    public Warning findById(int id) throws SQLException {
 	        String sql = "SELECT * FROM content_warning WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -63,7 +61,6 @@ public class WarningDao {
 	        return null;
 	    }
 
-	    // --- UPDATE ---
 	    public void update(Warning warning) throws SQLException {
 	        String sql = "UPDATE content_warning SET label = ? WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -73,7 +70,6 @@ public class WarningDao {
 	        }
 	    }
 
-	    // --- DELETE ---
 	    public void delete(int id) throws SQLException {
 	        String sql = "DELETE FROM content_warning WHERE id = ?";
 	        try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -82,8 +78,6 @@ public class WarningDao {
 	        }
 	    }
 
-
-	    // Récupérer les enums depuis la base
 
 	    /**
 	     * enregistrer dans tableau media_warning

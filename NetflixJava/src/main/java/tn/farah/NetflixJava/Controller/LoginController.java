@@ -46,7 +46,7 @@ public class LoginController implements Initializable{
 		Connection connection = ConxDB.getInstance();
         if (connection == null) return;
         userservice=new UserService(connection);
-		// TODO Auto-generated method stub
+		
 		emailField.setOnKeyPressed(this::handleEnterKey);
         passwordField.setOnKeyPressed(this::handleEnterKey);
 
@@ -104,7 +104,7 @@ public class LoginController implements Initializable{
 	        passwordField.requestFocus();
 	    }
 	}
-	    // ── Forgot Password ──────────────────────────────────────────────────────
+	    
 	    @FXML
 	    private void handleForgotPassword(ActionEvent event) {
 	    	ScreenManager.getInstance().navigateTo(Screen.oublie);
@@ -116,7 +116,7 @@ public class LoginController implements Initializable{
 	    }
 	    @FXML
 	    private void handleLearnMore(ActionEvent event) {
-	        // TODO: Open browser / info dialog about Google reCAPTCHA
+	       
 	        showAlert(Alert.AlertType.INFORMATION,
 	                  "À propos de reCAPTCHA",
 	                  "Google reCAPTCHA protège cette page contre les abus automatisés.");

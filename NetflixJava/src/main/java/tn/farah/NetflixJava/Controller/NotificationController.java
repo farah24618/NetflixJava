@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import java.sql.Connection;
+
 import java.util.List;
 import tn.farah.NetflixJava.Entities.Notification;
 import tn.farah.NetflixJava.Service.NotificationService;
@@ -47,10 +48,9 @@ public class NotificationController {
     }
     @FXML
     private void onBack() {
-        ScreenManager.getInstance().navigateTo(Screen.home); // adapte si ton Screen enum est différent
+        ScreenManager.getInstance().navigateTo(Screen.home); 
     }
 
-    // ✨ DESIGN NETFLIX PRO : Transforme chaque ligne en "Carte"
     private void setupListViewDesign() {
         notificationListView.setCellFactory(param -> new ListCell<Notification>() {
             @Override
@@ -61,16 +61,14 @@ public class NotificationController {
                     setGraphic(null);
                     setStyle("-fx-background-color: transparent;");
                 } else {
-                    // 1. Conteneur principal (La Carte)
+                    
                     VBox card = new VBox(8);
                     card.setPadding(new Insets(15, 20, 15, 20));
                     
-                    // Styles CSS (Fond sombre, bordures discrètes)
                     String defaultStyle = "-fx-background-color: #141414; -fx-border-color: #333333; -fx-border-width: 0 0 1 0;";
                     String hoverStyle = "-fx-background-color: #2b2b2b; -fx-cursor: hand; -fx-border-color: #333333; -fx-border-width: 0 0 1 0;";
                     card.setStyle(defaultStyle);
 
-                    // 2. Entête (Titre + Indicateur de lecture)
                     HBox header = new HBox(10);
                     header.setAlignment(Pos.CENTER_LEFT);
                     
@@ -78,26 +76,22 @@ public class NotificationController {
                     title.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px;");
                     
                     header.getChildren().add(title);
-                    
-                    // Petit point rouge si non lu
+                   
                     if (!item.isRead()) {
                         Label dot = new Label("●");
                         dot.setStyle("-fx-text-fill: #E50914; -fx-font-size: 12px;");
                         header.getChildren().add(dot);
                     }
 
-                    // 3. Message (Gris clair)
                     Label message = new Label(item.getMessage());
                     message.setStyle("-fx-text-fill: #B3B3B3; -fx-font-size: 13px;");
                     message.setWrapText(true);
 
-                    // 4. Date (Gris foncé)
                     Label date = new Label(item.getDate());
                     date.setStyle("-fx-text-fill: #666666; -fx-font-size: 11px;");
 
                     card.getChildren().addAll(header, message, date);
 
-                    // Effets de survol (Hover)
                     card.setOnMouseEntered(e -> card.setStyle(hoverStyle));
                     card.setOnMouseExited(e -> card.setStyle(defaultStyle));
 

@@ -9,16 +9,12 @@ public class NotificationService {
 
     private NotificationDAO dao;
 
-    // ID de l'admin : toutes les notifications système lui sont envoyées
     private static final int ADMIN_USER_ID = 1;
 
     public NotificationService(Connection c) {
         dao = new NotificationDAO(c);
     }
 
-    // ═══════════════════════════════════════════════════
-    //  RÉCUPÉRATION
-    // ═══════════════════════════════════════════════════
 
     public List<Notification> getUserNotifications(int userId) {
         return dao.getUserNotifications(userId);
@@ -43,9 +39,6 @@ public class NotificationService {
         return dao.search(userId, query);
     }
 
-    // ═══════════════════════════════════════════════════
-    //  COMPTEURS
-    // ═══════════════════════════════════════════════════
 
     public int countAll(int userId) {
         return dao.countAll(userId);
@@ -54,10 +47,6 @@ public class NotificationService {
     public int countUnread(int userId) {
         return dao.countUnread(userId);
     }
-
-    // ═══════════════════════════════════════════════════
-    //  ACTIONS
-    // ═══════════════════════════════════════════════════
 
     public void markAsRead(int notificationId) {
         dao.markAsRead(notificationId);
@@ -69,18 +58,6 @@ public class NotificationService {
         dao.addNotification(notification);
     }
 
-    // ═══════════════════════════════════════════════════
-    //  NOTIFICATIONS AUTOMATIQUES — À appeler depuis
-    //  les autres controllers/services
-    // ═══════════════════════════════════════════════════
-
-    /**
-     * Appelé depuis CommentaireController quand un user signale un commentaire.
-     *
-     * @param reporterUsername  pseudo de l'utilisateur qui signale
-     * @param commentPreview    extrait du commentaire signalé (50 chars max)
-     * @param commentId         ID du commentaire en base
-     */
     public void notifyCommentSignale(String reporterUsername, String commentPreview, int commentId) {
         String title   = "⚠️ Commentaire signalé";
         String message = "L'utilisateur \"" + reporterUsername + "\" a signalé le commentaire #"
@@ -91,12 +68,7 @@ public class NotificationService {
         dao.addNotification(n);
     }
 
-    /**
-     * Appelé depuis FilmService / SerieService quand un nouveau contenu est ajouté.
-     *
-     * @param contentType  "film" ou "série"
-     * @param contentTitle titre du contenu
-     */
+    
     public void notifyNewContent(String contentType, String contentTitle) {
         String title   = "🎬 Nouveau " + contentType + " ajouté";
         String message = "\"" + contentTitle + "\" a été ajouté au catalogue et est maintenant visible.";
@@ -106,12 +78,7 @@ public class NotificationService {
         dao.addNotification(n);
     }
 
-    /**
-     * Appelé depuis UserService quand un nouvel utilisateur s'inscrit.
-     *
-     * @param newUsername pseudo du nouvel utilisateur
-     * @param email       email du nouvel utilisateur
-     */
+   
     public void notifyNewUser(String newUsername, String email) {
         String title   = "👤 Nouvel utilisateur inscrit";
         String message = newUsername + " (" + email + ") vient de créer un compte.";
@@ -121,12 +88,6 @@ public class NotificationService {
         dao.addNotification(n);
     }
 
-    /**
-     * Appelé depuis AbonnementService quand un user souscrit ou renouvelle.
-     *
-     * @param username    pseudo de l'abonné
-     * @param planName    nom du plan (ex: "Premium", "Standard")
-     */
     public void notifyNewSubscription(String username, String planName) {
         String title   = "💳 Nouvel abonnement";
         String message = username + " a souscrit au plan \"" + planName + "\".";
@@ -136,12 +97,7 @@ public class NotificationService {
         dao.addNotification(n);
     }
 
-    /**
-     * Appelé quand un utilisateur tente de se connecter plusieurs fois sans succès.
-     *
-     * @param username  pseudo ou email concerné
-     * @param attempts  nombre de tentatives
-     */
+  
     public void notifyLoginFailure(String username, int attempts) {
         String title   = "🔒 Tentatives de connexion suspectes";
         String message = attempts + " tentatives échouées pour le compte : " + username;
@@ -151,9 +107,6 @@ public class NotificationService {
         dao.addNotification(n);
     }
 
-    // ─────────────────────────────────────────────
-    //  Utilitaire
-    // ─────────────────────────────────────────────
     private String truncate(String s, int max) {
         if (s == null) return "";
         return s.length() <= max ? s : s.substring(0, max) + "…";
@@ -161,7 +114,7 @@ public class NotificationService {
     public boolean userExists(int userId) {
     	return dao.userExists(userId);
     }
- // ✅ Compter TOUTES les notifications (admin voit tout)
+
     public int countAllAdmin() {
         return dao.countAllAdmin();
     }

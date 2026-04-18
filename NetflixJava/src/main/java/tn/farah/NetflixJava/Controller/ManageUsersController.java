@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Controller;
 
 import java.io.IOException;
 
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -40,36 +41,30 @@ public class ManageUsersController {
     public void initialize() {
     	userSer = new UserService(ConxDB.getInstance());
         
-        // 1. Charger les données
-        allUsers = userSer.getAllUsers();
         
-        // 2. Initialiser le tri
+        allUsers = userSer.getAllUsers();
+
         if (sortCombo != null) {
             sortCombo.getItems().clear();
             sortCombo.getItems().addAll("Nom (A-Z)", "Nom (Z-A)", "Email");
             sortCombo.setOnAction(e -> handleSort());
         }
-        
-        // 3. Initialiser lignes par page
+     
         if (rowsPerPageCombo != null) {
             rowsPerPageCombo.getItems().addAll(10, 20, 50);
             rowsPerPageCombo.setValue(10);
         }
 
-        // 4. Recherche en temps réel
         if (searchField != null) {
             searchField.textProperty().addListener((obs, oldVal, newVal) -> {
                 filterUsers(newVal);
             });
         }
 
-        // 5. Affichage initial
         renderUsers(allUsers);
         
-        // 6. Mise à jour des textes des onglets
         updateTabCounts();
         
-        // Style par défaut
         handleTabAll();
     }
 
@@ -77,7 +72,6 @@ public class ManageUsersController {
         if (tabAll != null) tabAll.setText("Tous " + allUsers.size());
     }
 
-    // --- NAVIGATION CORRIGÉE (Correspond au FXML) ---
 
     @FXML
     private void handleNavDashboard() {
@@ -120,8 +114,6 @@ public class ManageUsersController {
         System.out.println("🚪 Déconnexion");
         System.exit(0);
     }
-
-    // --- LOGIQUE MÉTIER ---
 
     @FXML
     private void handleSort() {
@@ -216,9 +208,8 @@ public class ManageUsersController {
             actions.getChildren().add(blockBtn);
         }
         else {
-            // Espace réservé pour aligner le 🗑 avec les autres lignes
             javafx.scene.layout.Region placeholder = new javafx.scene.layout.Region();
-            placeholder.setMinWidth(100); // même largeur que blockBtn
+            placeholder.setMinWidth(100); 
             actions.getChildren().add(placeholder);
         }
         
@@ -229,8 +220,7 @@ public class ManageUsersController {
             confirm.setTitle("Confirmer la suppression");
             confirm.setHeaderText("Supprimer l'utilisateur");
             confirm.setContentText("Voulez-vous vraiment supprimer « " + u.getUsername() + " » ?\nCette action est irréversible.");
-            
-            // Style sombre pour correspondre au thème
+          
             confirm.getDialogPane().setStyle("-fx-background-color: #111111;");
             confirm.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
             confirm.getDialogPane().lookup(".header-panel").setStyle("-fx-background-color: #1a1a1a;");
@@ -284,7 +274,6 @@ public class ManageUsersController {
         }
     }
 
-    // --- ONGLETS ---
     @FXML private void handleTabAll() {
         renderUsers(allUsers);
         resetTabStyles();

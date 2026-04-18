@@ -38,40 +38,45 @@ public class signup3Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userService = new UserService(ConxDB.getInstance());
-        
+
         forfaitLabel.setText(SessionData.getForfaitNom());
         prixLabel.setText(SessionData.getForfaitPrix());
+
+        
+        if (SessionData.getCarteNumero() != null)
+            numeroCarteField.setText(SessionData.getCarteNumero());
+        if (SessionData.getCarteExpiration() != null)
+            dateExpirationField.setText(SessionData.getCarteExpiration());
+        if (SessionData.getCarteCvv() != null)
+            cvvField.setText(SessionData.getCarteCvv());
+        if (SessionData.getCarteNom() != null)
+            nomCarteField.setText(SessionData.getCarteNom());
 
         numeroCarteField.setOnKeyPressed(this::handleEnterKey);
         dateExpirationField.setOnKeyPressed(this::handleEnterKey);
         cvvField.setOnKeyPressed(this::handleEnterKey);
         nomCarteField.setOnKeyPressed(this::handleEnterKey);
+
         dateExpirationField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Empêche de taper plus de 5 caractères
             if (newValue.length() > 5) {
                 dateExpirationField.setText(oldValue);
                 return;
             }
-            
-            // Ajoute le "/" automatiquement après les 2 premiers chiffres
             if (oldValue.length() == 1 && newValue.length() == 2) {
                 dateExpirationField.setText(newValue + "/");
             }
         });
+
         numeroCarteField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Supprime tout ce qui n'est pas chiffre ou espace
             String digits = newValue.replaceAll("[^\\d]", "");
-            
-            // Limite à 16 chiffres
             if (digits.length() > 16) digits = digits.substring(0, 16);
-            
-            // Ajoute un espace tous les 4 chiffres
+
             StringBuilder formatted = new StringBuilder();
             for (int i = 0; i < digits.length(); i++) {
                 if (i > 0 && i % 4 == 0) formatted.append(" ");
                 formatted.append(digits.charAt(i));
             }
-            
+
             String result = formatted.toString();
             if (!result.equals(newValue)) {
                 numeroCarteField.setText(result);
@@ -82,6 +87,12 @@ public class signup3Controller implements Initializable {
 
     @FXML
     private void handleRetour(ActionEvent event) {
+        
+        SessionData.setCarteNumero(numeroCarteField.getText().trim());
+        SessionData.setCarteExpiration(dateExpirationField.getText().trim());
+        SessionData.setCarteCvv(cvvField.getText().trim());
+        SessionData.setCarteNom(nomCarteField.getText().trim());
+        
         ScreenManager.getInstance().navigateTo(Screen.signup2);
     }
 
@@ -91,6 +102,11 @@ public class signup3Controller implements Initializable {
         String date     = dateExpirationField.getText().trim();
         String cvv      = cvvField.getText().trim();
         String nomCarte = nomCarteField.getText().trim();
+
+        SessionData.setCarteNumero(numero);
+        SessionData.setCarteExpiration(date);
+        SessionData.setCarteCvv(cvv);
+        SessionData.setCarteNom(nomCarte);
 
         if (numero.isEmpty() || date.isEmpty() || cvv.isEmpty() || nomCarte.isEmpty()) {
             showAlert("Champs manquants", "Veuillez remplir tous les champs de paiement.");
@@ -106,17 +122,16 @@ public class signup3Controller implements Initializable {
             showAlert("CVV invalide", "Le code CVV doit contenir 3 chiffres.");
             return;
         }
+
         if (!date.matches("(0[1-9]|1[0-2])/[0-9]{2}")) {
             showAlert("Date invalide", "Le format doit être MM/YY (ex: 05/28).");
             return;
         }
 
-        // 2. Vérification de la date par rapport à aujourd'hui
         try {
             String[] parts = date.split("/");
             int moisSaisi = Integer.parseInt(parts[0]);
-            int anneeSaisie = Integer.parseInt("20" + parts[1]); // On assume le 21ème siècle
-
+            int anneeSaisie = Integer.parseInt("20" + parts[1]);
             java.time.YearMonth dateExp = java.time.YearMonth.of(anneeSaisie, moisSaisi);
             java.time.YearMonth aujourdhui = java.time.YearMonth.now();
 
@@ -128,19 +143,21 @@ public class signup3Controller implements Initializable {
             showAlert("Erreur", "Date invalide.");
             return;
         }
-        // --- ENREGISTREMENT FINAL EN BASE DE DONNÉES ---
-        User currentUser = SessionData.getCurrentUser(); 
+
+        User currentUser = SessionData.getCurrentUser();
 
         if (currentUser != null) {
-            // On valide le statut de paiement dans l'objet
             currentUser.setEstPaye(true);
-            
-            // On appelle registerUser pour faire l'INSERT en base
             boolean success = userService.registerUser(currentUser);
 
             if (success) {
+              
+                SessionData.setCarteNumero(null);
+                SessionData.setCarteExpiration(null);
+                SessionData.setCarteCvv(null);
+                SessionData.setCarteNom(null);
+
                 showAlert("Abonnement", "Compte créé et paiement effectué avec succès ! Bienvenue.");
-                // Maintenant qu'il est en DB, on peut aller vers les profils
                 ScreenManager.getInstance().navigateTo(Screen.addProfile);
             } else {
                 showAlert("Erreur DB", "Impossible de créer votre compte. L'email est peut-être déjà utilisé.");
@@ -150,7 +167,6 @@ public class signup3Controller implements Initializable {
             ScreenManager.getInstance().navigateTo(Screen.signup1);
         }
     }
-
     @FXML
     private void handleEnterKey(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {

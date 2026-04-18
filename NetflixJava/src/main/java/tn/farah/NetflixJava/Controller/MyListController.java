@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import java.io.File;
+
 import java.net.URL;
 import java.sql.Connection;
 import java.util.List;
@@ -61,12 +62,11 @@ public class MyListController implements Initializable {
     private List<History> allHistory;
     private int           userId;
 
-    // ── Dimensions ───────────────────────────────────────────────────────────
-    private static final double CARD_W       = 160;   // largeur par défaut
-    private static final double CARD_W_HOVER = 320;   // largeur au hover (double)
-    private static final double CARD_H       = 220;   // hauteur image fixe
-    private static final double INFO_H       = 58;    // hauteur zone infos SOUS l'image
-    private static final double BAR_H        = 4;     // hauteur barre de progression
+    private static final double CARD_W       = 160;  
+    private static final double CARD_W_HOVER = 320;   
+    private static final double CARD_H       = 220;   
+    private static final double INFO_H       = 58; 
+    private static final double BAR_H        = 4;     
     private static final double RADIUS       = 6;
     private static final int    ANIM_MS      = 250;
 
@@ -128,9 +128,6 @@ public class MyListController implements Initializable {
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    //  HISTORY ROW
-    // ═══════════════════════════════════════════════════════════════════════
     private void buildHistoryRow(List<History> histories) {
         HBox row = new HBox(10);
         row.setPadding(new Insets(10, 40, 16, 40));
@@ -161,8 +158,7 @@ public class MyListController implements Initializable {
                 subInfo   = formatTimeLeft(h);
                 saisonNbr = saisonService.getSaisonbyEpisodeId(h.getEpisodeId()).getNumeroSaison();
                 episodeNbre = episodeService.findById(h.getEpisodeId()).getNumeroEpisode();
-                
-                // AJOUT : Formatage avec S et E directement à côté du titre
+             
                 titre     = s.getTitre() + " (S " + saisonNbr + " E " + episodeNbre + ")";
             }
 
@@ -176,9 +172,7 @@ public class MyListController implements Initializable {
         pageContainer.getChildren().add(sp);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    //  FAVORIS ROW
-    // ═══════════════════════════════════════════════════════════════════════
+
     private void buildFavorisRow(List<Favori> favoris) {
         HBox row = new HBox(10);
         row.setPadding(new Insets(10, 40, 16, 40));
@@ -202,9 +196,7 @@ public class MyListController implements Initializable {
         pageContainer.getChildren().add(sp);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    //  CARD BUILDER
-    // ═══════════════════════════════════════════════════════════════════════
+ 
     private VBox buildCard(String titre, String posterUrl,
                            double progress,
                            String subInfo,
@@ -213,16 +205,11 @@ public class MyListController implements Initializable {
                            Favori  favori,
                            int mediaId ) {
 
-        // ─────────────────────────────────────────────────────────────────
-        // 1. Clip animé — contrôle la largeur visible de l'image
-        // ─────────────────────────────────────────────────────────────────
+    
         Rectangle clip = new Rectangle(CARD_W, CARD_H);
         clip.setArcWidth(RADIUS * 2);
         clip.setArcHeight(RADIUS * 2);
 
-        // ─────────────────────────────────────────────────────────────────
-        // 2. imagePane — taille max dès le départ, clippé à CARD_W
-        // ─────────────────────────────────────────────────────────────────
         StackPane imagePane = new StackPane();
         imagePane.setPrefSize(CARD_W_HOVER, CARD_H);
         imagePane.setMinSize(CARD_W_HOVER, CARD_H);
@@ -235,7 +222,7 @@ public class MyListController implements Initializable {
 
         ImageView iv = buildImageView(posterUrl, CARD_W_HOVER, CARD_H);
 
-        // Gradient sombre en bas de l'image (caché par défaut)
+
         Region gradient = new Region();
         gradient.setPrefSize(CARD_W_HOVER, CARD_H);
         gradient.setStyle(
@@ -266,9 +253,6 @@ public class MyListController implements Initializable {
             }
         });
 
-        // ─────────────────────────────────────────────────────────────────
-        // 3. Barre de progression rouge (history seulement)
-        // ─────────────────────────────────────────────────────────────────
         AnchorPane barPane    = null;
         Region     trackFillRef = null;
 
@@ -304,9 +288,7 @@ public class MyListController implements Initializable {
             trackFillRef = trackFill;
         }
 
-        // ─────────────────────────────────────────────────────────────────
-        // 4. infoPane — SOUS l'image, fond sombre
-        // ─────────────────────────────────────────────────────────────────
+
         VBox infoPane = new VBox(3);
         infoPane.setPrefHeight(INFO_H);
         infoPane.setMaxHeight(INFO_H);
@@ -325,12 +307,12 @@ public class MyListController implements Initializable {
         Label lblSub = new Label(subInfo != null ? subInfo : "");
         lblSub.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 10px;");
 
-     // Remplacez la ligne du lblBadge par celle-ci :
+
         String badgeText = "";
         if (isHistory && history != null) {
             badgeText = !history.getEstTermine() ? "● En cours" : "Terminé";
         } else {
-            // Si c'est un favori, on affiche juste le subInfo (Film ou Série)
+
             badgeText = (subInfo != null) ? subInfo : "";
         }
 
@@ -339,9 +321,7 @@ public class MyListController implements Initializable {
 
         infoPane.getChildren().addAll(lblTitre, lblSub, lblBadge);
 
-        // ─────────────────────────────────────────────────────────────────
-        // 5. Assemblage VBox card (animée)
-        // ─────────────────────────────────────────────────────────────────
+  
         VBox card = new VBox(0);
         card.setAlignment(Pos.TOP_LEFT);
         card.setCursor(Cursor.HAND);
@@ -355,9 +335,6 @@ public class MyListController implements Initializable {
             card.getChildren().addAll(imagePane, infoPane);
         }
 
-        // ─────────────────────────────────────────────────────────────────
-        // 6. Animation hover — CARD_W → CARD_W_HOVER (smooth 250ms)
-        // ─────────────────────────────────────────────────────────────────
         final double    pctFinal = (progress >= 0) ? Math.min(Math.max(progress, 0.0), 1.0) : 0;
         final Region    fillRef  = trackFillRef;
         final AnchorPane barRef  = barPane;
@@ -426,8 +403,7 @@ public class MyListController implements Initializable {
         return card;
     }
 
-    // ─── Helpers UI ──────────────────────────────────────────────────────────
-
+    
     private ScrollPane transparentScroll(HBox row) {
         ScrollPane sp = new ScrollPane(row);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -529,7 +505,6 @@ public class MyListController implements Initializable {
         } catch (Exception e) { return ""; }
     }
 
-    // ─── Filtres ─────────────────────────────────────────────────────────────
 
     @FXML
    
@@ -636,7 +611,7 @@ public class MyListController implements Initializable {
         if (history == null) return;
 
         if (history.isFilm()) {
-            // ── Film : ouvrir le lecteur film ──────────────────────────────
+      
             Integer filmId = history.getFilmId();
             if (filmId == null) return;
             Film film = filmService.findById(filmId);
@@ -648,7 +623,7 @@ public class MyListController implements Initializable {
                 ctrl.seekToSeconds(history.getTempsArret());
             }
         } else {
-            // ── Épisode / Série : ouvrir le lecteur épisode ───────────────
+
             Integer episodeId = history.getEpisodeId();
             if (episodeId == null) return;
             UniversalPlayerController ctrl = ScreenManager.getInstance()
@@ -661,5 +636,5 @@ public class MyListController implements Initializable {
     }
     @FXML private void onMovies()  { ScreenManager.getInstance().navigateTo(Screen.films); }
     @FXML private void onSeries()  { ScreenManager.getInstance().navigateTo(Screen.series); }
-    @FXML private void onMyList()  { /* déjà ici */ }
+    @FXML private void onMyList()  {  }
 }

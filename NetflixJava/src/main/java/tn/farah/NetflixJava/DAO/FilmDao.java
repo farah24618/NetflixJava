@@ -32,7 +32,6 @@ public class FilmDao {
         }
     }
 
-    // ✅ FIX 1 : On ajoute m.producteur dans le SELECT de base
     private static final String BASE_SELECT =
             "SELECT m.id AS media_id, m.titre, m.synopsis, m.casting, m.date_sortie, " +
             "m.url_image_cover, m.url_image_banner, m.url_teaser, m.producteur, " +
@@ -85,9 +84,6 @@ public class FilmDao {
                 psF.executeUpdate();
             }
 
-          
-
-            // ✅ FIX 2 : Lier les catégories dans media_category
            
             
         } catch (SQLException e) {
@@ -132,7 +128,6 @@ public class FilmDao {
 
             connection.commit();
 
-            // ✅ Mettre à jour les catégories : supprimer les anciennes, réinsérer les nouvelles
             try (PreparedStatement psDel = connection.prepareStatement("DELETE FROM media_category WHERE media_id = ?")) {
                 psDel.setInt(1, film.getId());
                 psDel.executeUpdate();
@@ -144,7 +139,6 @@ public class FilmDao {
                 }
             }
 
-            // ✅ Mettre à jour les warnings : supprimer les anciens, réinsérer les nouveaux
             try (PreparedStatement psDel = connection.prepareStatement("DELETE FROM media_warning WHERE media_id = ?")) {
                 psDel.setInt(1, film.getId());
                 psDel.executeUpdate();
@@ -208,7 +202,6 @@ public class FilmDao {
                             newFilm.setDuree(rs.getInt("duree_minutes"));
                             newFilm.setNbreVue(rs.getInt("nbre_vues"));
 
-                            // ✅ FIX 4 : producteur maintenant lu correctement depuis la DB
                             newFilm.setProducteur(rs.getString("producteur"));
 
                             String ageRatingStr = rs.getString("age_category_name");

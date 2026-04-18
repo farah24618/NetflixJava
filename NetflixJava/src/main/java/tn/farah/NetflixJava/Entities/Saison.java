@@ -144,8 +144,7 @@ public class Saison {
 
 	@Override
 	public String toString() {
-		return "Saison [id=" + id + ", idSerie=" + idSerie + ", numeroSaison=" + numeroSaison + ", nom=" + nom
-				+ ", dateSortie=" + dateSortie + "]";
+		return  nom;
 	}
 
 

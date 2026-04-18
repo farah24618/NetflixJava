@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 
 public class AdminDashboardController implements Initializable {
 
-    // --- Labels ---
     @FXML private Label lblAdminName;
     @FXML private Label lblNbFilms;
     @FXML private Label lblNbSeries;
@@ -24,30 +23,26 @@ public class AdminDashboardController implements Initializable {
     @FXML private Label lblNbComments;
     @FXML private Label lblSummary;
 
-    // --- Charts ---
     @FXML private PieChart contentPieChart;
     @FXML private LineChart<String, Number> inscriptionsChart;
     @FXML private BarChart<String, Number> commentsByTypeChart;
 
-    // Service
     private AdminDashboardService dashboardService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dashboardService = new AdminDashboardService();
-        
-        // Simuler ou récupérer le nom de l'admin connecté (via SessionManager par ex)
+   
         lblAdminName.setText("Bienvenue, Admin");
 
         loadStatistics();
         loadCharts();
         
-        // Appel de notre nouvelle méthode pour le graphique des inscriptions
         chargerGraphiqueInscriptions(); 
     }
 
     private void loadStatistics() {
-        // Remplir les cartes (Cards) en haut
+        
         int films = dashboardService.getTotalFilms();
         int series = dashboardService.getTotalSeries();
         
@@ -61,12 +56,11 @@ public class AdminDashboardController implements Initializable {
     }
 
     private void loadCharts() {
-        // 1. Pie Chart (Répartition Films / Séries)
+        
         PieChart.Data sliceFilms = new PieChart.Data("Films", dashboardService.getTotalFilms());
         PieChart.Data sliceSeries = new PieChart.Data("Séries", dashboardService.getTotalSeries());
         contentPieChart.getData().addAll(sliceFilms, sliceSeries);
 
-        // 2. Bar Chart (Commentaires par type)
         XYChart.Series<String, Number> commentSeries = new XYChart.Series<>();
         commentSeries.setName("Commentaires");
         Map<String, Integer> commentData = dashboardService.getCommentsByTypeData();
@@ -76,13 +70,11 @@ public class AdminDashboardController implements Initializable {
         commentsByTypeChart.getData().add(commentSeries);
     }
 
-    // --- GRAPHIQUE DES INSCRIPTIONS (Utilise le Service) ---
     private void chargerGraphiqueInscriptions() {
         inscriptionsChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Nouveaux inscrits");
 
-        
         Map<String, Integer> inscriptionsData = dashboardService.getInscriptionsData();
 
         for (Map.Entry<String, Integer> entry : inscriptionsData.entrySet()) {
@@ -92,7 +84,6 @@ public class AdminDashboardController implements Initializable {
         inscriptionsChart.getData().add(series);
     }
 
-    
 
     @FXML
     void goToFilmsAdmin(ActionEvent event) {
@@ -124,6 +115,16 @@ public class AdminDashboardController implements Initializable {
     void onSettingsClicked(ActionEvent event) { 
         System.out.println("Aller aux Paramètres");
         ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+    }
+    @FXML 
+    void goToAddFilm(ActionEvent event) { 
+       
+        ScreenManager.getInstance().navigateTo(Screen.addFilm);
+    }
+    @FXML 
+    void goToAddSeries(ActionEvent event) { 
+       
+        ScreenManager.getInstance().navigateTo(Screen.addSerie);
     }
     
     

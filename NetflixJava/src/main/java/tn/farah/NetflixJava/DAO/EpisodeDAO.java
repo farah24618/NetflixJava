@@ -15,9 +15,6 @@ public class EpisodeDAO {
         this.connection = connection;
     }
 
-    // ─────────────────────────────────
-    // FIND ALL
-    // ─────────────────────────────────
     public List<Episode> findAll() {
         List<Episode> episodes = new ArrayList<>();
         String SQL = "SELECT * FROM episode";
@@ -46,9 +43,6 @@ public class EpisodeDAO {
         return episodes;
     }
 
-    // ─────────────────────────────────
-    // SAVE
-    // ─────────────────────────────────
     public int save(Episode episode) {
         int episodeId = 0;
         String sql = "INSERT INTO episode(season_id, titre, numero, duree_minutes, " +
@@ -76,9 +70,6 @@ public class EpisodeDAO {
         return episodeId;
     }
 
-    // ─────────────────────────────────
-    // FIND BY ID
-    // ─────────────────────────────────
     public Episode findById(int id) {
         String sql = "SELECT * FROM episode WHERE id = ?";
 
@@ -108,9 +99,6 @@ public class EpisodeDAO {
         return null;
     }
 
-    // ─────────────────────────────────
-    // FIND BY SAISON
-    // ─────────────────────────────────
     public List<Episode> findBySaison(int saisonId) {
         List<Episode> episodes = new ArrayList<>();
         String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
@@ -141,9 +129,6 @@ public class EpisodeDAO {
         return episodes;
     }
 
-    // ─────────────────────────────────
-    // FIND NEXT EPISODE
-    // ─────────────────────────────────
     public Episode findNextEpisode(int saisonId, int numeroEpisode) {
         String sql = "SELECT * FROM episode WHERE season_id = ? AND numero = ?";
 
@@ -175,9 +160,6 @@ public class EpisodeDAO {
         return null;
     }
 
-    // ─────────────────────────────────
-    // UPDATE
-    // ─────────────────────────────────
     public void update(Episode episode) {
         String sql = "UPDATE episode SET season_id=?, titre=?, numero=?, duree_minutes=?, " +
                      "resume=?, url_video=?, url_image=?, duree_intro_sec=? WHERE id=?";
@@ -201,9 +183,6 @@ public class EpisodeDAO {
         }
     }
 
-    // ─────────────────────────────────
-    // DELETE
-    // ─────────────────────────────────
     public void delete(int id) {
         String sql = "DELETE FROM episode WHERE id = ?";
 
@@ -216,10 +195,6 @@ public class EpisodeDAO {
             e.printStackTrace();
         }
     }
-
-    // ─────────────────────────────────
-    // COUNT
-    // ─────────────────────────────────
     public int countBySaison(int saisonId) {
         String sql = "SELECT COUNT(*) FROM episode WHERE season_id = ?";
 
@@ -253,7 +228,7 @@ public class EpisodeDAO {
     
     public List<Episode> findBySaisonId(int saisonId) {
         List<Episode> list = new ArrayList<>();
-        // ✅ Colonne correcte : "numero" (pas "numero_episode")
+     
         String sql = "SELECT * FROM episode WHERE season_id = ? ORDER BY numero ASC";
 
         try (PreparedStatement pst = connection.prepareStatement(sql)) {
@@ -262,16 +237,16 @@ public class EpisodeDAO {
 
             while (rs.next()) {
                 list.add(new Episode(
-                    rs.getInt(1),       // id
-                    rs.getInt(2),       // season_id
-                    rs.getString(3),    // titre
-                    rs.getInt(4),       // numero
-                    rs.getString(7),    // url_video
-                    rs.getInt(5),       // duree_minutes
-                    rs.getString(6),    // resume
-                    rs.getString(8),    // url_image
+                    rs.getInt(1),      
+                    rs.getInt(2),       
+                    rs.getString(3),   
+                    rs.getInt(4),       
+                    rs.getString(7),    
+                    rs.getInt(5),       
+                    rs.getString(6),    
+                    rs.getString(8),   
                     rs.getInt(9)  ,
-                    rs.getInt(10)// duree_intro_sec
+                    rs.getInt(10)
                 ));
             }
         } catch (SQLException e) {

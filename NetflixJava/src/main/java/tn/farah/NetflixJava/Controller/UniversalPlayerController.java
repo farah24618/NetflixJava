@@ -34,10 +34,11 @@ import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class UniversalPlayerController {
 
-   
+
+
     public enum Mode { FILM, EPISODE, TEASER }
 
-  
+
     @FXML private StackPane  rootPane;
     
     @FXML private MediaView  mediaView;
@@ -60,7 +61,7 @@ public class UniversalPlayerController {
     
     @FXML private Label      subtitleLabel;
 
-    
+
     private Mode           mode;
     private MediaPlayer    mediaPlayer;
     private double         currentRate = 1.0;
@@ -68,11 +69,10 @@ public class UniversalPlayerController {
     private boolean        locked      = false;
     private int            userId;
 
-    
+
     private Film    filmActuel;
     private Episode currentEpisode;
 
-    
     private FilmService     filmService;
     private EpisodeService  episodeService;
     private SerieService    serieService;
@@ -80,7 +80,7 @@ public class UniversalPlayerController {
     private HistoryService  historyService;
     private SubtitleService subtitleService;
 
-    
+
     private ChangeListener<Duration> timeListener;
     private ChangeListener<Boolean>  valueChangingListener;
     private PauseTransition          hideTimer;
@@ -88,7 +88,7 @@ public class UniversalPlayerController {
     private Timeline                 subtitleTimeline;
     private List<SubtitleCue>        subtitleCues = new ArrayList<>();
 
-    
+
     private static class SubtitleCue {
         final double startSeconds, endSeconds;
         final String text;
@@ -97,8 +97,10 @@ public class UniversalPlayerController {
         }
     }
 
+
    
     /** Open a film */
+
     public void initFilm(Film film, int userId) {
         this.mode       = Mode.FILM;
         this.userId     = userId;
@@ -109,7 +111,6 @@ public class UniversalPlayerController {
         chargerFilm(film);
     }
 
-    /** Open a series episode */
     public void initEpisode(int episodeId, int userId) {
         this.mode   = Mode.EPISODE;
         this.userId = userId;
@@ -120,7 +121,7 @@ public class UniversalPlayerController {
         chargerEpisode(episodeId);
     }
 
-    
+
     public void initTeaser(String videoUrl, String titre) {
     	
         this.mode   = Mode.TEASER;
@@ -137,20 +138,24 @@ public class UniversalPlayerController {
         });
     }
 
-   
+
     private void configureToolbar() {
         boolean isEpisode = (mode == Mode.EPISODE);
         boolean isFilmOrTeaser = !isEpisode;
 
+
         
         setButton(skipIntroButton,    false, false); 
+
+       
+
         setButton(episodesButton,     isEpisode, isEpisode);
         setButton(nextEpisodeButton,  isEpisode, isEpisode);
 
-        
+
         setButton(ficheButton, isFilmOrTeaser, isFilmOrTeaser);
 
-        
+
         if (mode == Mode.TEASER) {
             setButton(lockButton, false, false);
         }
@@ -163,7 +168,7 @@ public class UniversalPlayerController {
         btn.setManaged(managed);
     }
 
-    
+
     private void initServices() {
     	
         Connection connection = ConxDB.getInstance();
@@ -181,12 +186,7 @@ public class UniversalPlayerController {
         }
     }
 
-   
-    
-    
-    
-    
-    
+
     private void initialiserHideTimer() {
         controlsPane.setVisible(false);
         hideTimer = new PauseTransition(Duration.seconds(3));
@@ -200,7 +200,7 @@ public class UniversalPlayerController {
         });
     }
 
-    
+
     private void chargerFilm(Film film) {
         if (film == null) { System.err.println("Film null."); return; }
         filmService.incrementVues(film.getId());
@@ -213,7 +213,7 @@ public class UniversalPlayerController {
         });
     }
 
-    
+
     private void chargerEpisode(int episodeId) {
         this.currentEpisode = episodeService.findById(episodeId);
         if (currentEpisode == null) {
@@ -237,7 +237,7 @@ public class UniversalPlayerController {
         });
     }
 
-   
+
     private void lancerVideo(String url) {
     	
         if (mediaPlayer != null) {
@@ -309,7 +309,7 @@ public class UniversalPlayerController {
         mediaPlayer.seek(Duration.seconds(seekTo));
     }
 
-   
+
     private void demarrerAutoSave() {
     	
         if (autoSaveTimeline != null) autoSaveTimeline.stop();
@@ -335,7 +335,7 @@ public class UniversalPlayerController {
         }
     }
 
-    
+
     private List<SubtitleCue> parseSrt(String url) {
         List<SubtitleCue> cues = new ArrayList<>();
         try {
@@ -385,7 +385,7 @@ public class UniversalPlayerController {
              + Double.parseDouble(p[2]);
     }
 
-   
+
     private void startSubtitleTicker(List<SubtitleCue> cues) {
         if (subtitleTimeline != null) { subtitleTimeline.stop(); subtitleTimeline = null; }
         this.subtitleCues = cues;
@@ -412,7 +412,6 @@ public class UniversalPlayerController {
         if (subtitleLabel != null) Platform.runLater(() -> subtitleLabel.setVisible(false));
     }
 
-   
 
     @FXML
     private void handlePlayPause() {
@@ -550,7 +549,7 @@ public class UniversalPlayerController {
         }
     }
 
-   
+
     private void retournerALaSerie() {
         if (currentEpisode == null) { ScreenManager.getInstance().navigateTo(Screen.series); return; }
         Serie serie = serieService != null ? serieService.findByEpisodeId(currentEpisode.getId()) : null;
@@ -560,7 +559,7 @@ public class UniversalPlayerController {
         else ScreenManager.getInstance().navigateTo(Screen.MediaView);
     }
 
-   
+
     private String resoudreUrl(String url) {
         if (url == null || url.isBlank()) return null;
         if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file:")) return url;

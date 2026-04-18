@@ -16,17 +16,14 @@ import java.security.NoSuchAlgorithmException;
 
 public class ParametresController {
 
-    // ==================== FXML FIELDS ====================
     @FXML private TextField nomField;
     @FXML private TextField prenomField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
 
-    // ==================== SERVICES ====================
     private UserService userService;
     private User currentUser;
 
-    // ==================== INITIALISATION ====================
     @FXML
     public void initialize() {
         try {
@@ -36,7 +33,6 @@ public class ParametresController {
             return;
         }
 
-        // ✅ Récupérer l'utilisateur connecté depuis la session
         
         currentUser = SessionManager.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -48,7 +44,7 @@ public class ParametresController {
         }
     }
 
-    // ==================== ENREGISTRER ====================
+   
     @FXML
     private void onSaveSettings(ActionEvent event) {
         if (currentUser == null) {

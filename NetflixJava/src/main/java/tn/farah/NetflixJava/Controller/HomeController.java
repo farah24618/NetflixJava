@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
 
-    // ── FXML ────────────────────────────────────────────────────────────────
     @FXML private StackPane heroSection;
     @FXML private Pane      heroBackdrop;
     @FXML private Label     heroTitle, heroGenreBadge, heroType,
@@ -55,16 +54,12 @@ public class HomeController implements Initializable {
     private Map<String, List<Film>> filmsByCategory  = Collections.emptyMap();
     private Map<String, List<Serie>> seriesByCategory = Collections.emptyMap();
 
-    // ── Hero state ───────────────────────────────────────────────────────────
     private final List<Film> heroFilms  = new ArrayList<>();
     private final Pane[]     overlayRef = new Pane[1];   // lambda-safe ref
     private int              heroIndex  = 0;
     private ScaleTransition  heroZoom;
     private Timeline         heroTimer;
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  INITIALIZE
-    // ════════════════════════════════════════════════════════════════════════
 
     @Override
     public void initialize(final URL url, final ResourceBundle rb) {
@@ -85,16 +80,14 @@ public class HomeController implements Initializable {
 
         if (avatarLabel != null) avatarLabel.setText("U");
 
-        // Overlay must wait for the scene to be ready
+        
         carouselContainer.sceneProperty().addListener((obs, old, scene) -> {
             if (scene == null) return;
             Platform.runLater(() -> CardFactory.createOverlay(scene, overlayRef));
         });
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  DATA LOADING  (called once at startup)
-    // ════════════════════════════════════════════════════════════════════════
+    
 
     private void loadData() {
         try {
@@ -107,9 +100,6 @@ public class HomeController implements Initializable {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  SEARCH  — live filter, rebuilds carousels every keystroke
-    // ════════════════════════════════════════════════════════════════════════
 
     private void initSearch() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -120,12 +110,11 @@ public class HomeController implements Initializable {
 
     private void applySearch(final String query) {
         if (query.isEmpty()) {
-            // Restore full data
+        
             buildCarousels(allFilms, allSeries, filmsByCategory, seriesByCategory);
             return;
         }
 
-        // Filter flat lists
         final List<Film> filteredFilms = allFilms.stream()
             .filter(f -> matchesFilm(f, query))
             .collect(Collectors.toList());
@@ -134,7 +123,6 @@ public class HomeController implements Initializable {
             .filter(s -> matchesSerie(s, query))
             .collect(Collectors.toList());
 
-        // Filter category maps
         final Map<String, List<Film>> filteredFilmCats = new TreeMap<>();
         filmsByCategory.forEach((cat, films) -> {
             final List<Film> sub = films.stream()
@@ -154,7 +142,6 @@ public class HomeController implements Initializable {
         buildCarousels(filteredFilms, filteredSeries, filteredFilmCats, filteredSerieCats);
     }
 
-    /** Match a Film against the search query (title, synopsis, genre names). */
     private boolean matchesFilm(final Film f, final String q) {
         if (f.getTitre()    != null && f.getTitre().toLowerCase().contains(q))    return true;
         if (f.getSynopsis() != null && f.getSynopsis().toLowerCase().contains(q)) return true;
@@ -165,16 +152,12 @@ public class HomeController implements Initializable {
         return false;
     }
 
-    /** Match a Serie against the search query (titre, synopsis). */
+    
     private boolean matchesSerie(final Serie s, final String q) {
         if (s.getTitre()    != null && s.getTitre().toLowerCase().contains(q))    return true;
         if (s.getSynopsis() != null && s.getSynopsis().toLowerCase().contains(q)) return true;
         return false;
     }
-
-    // ════════════════════════════════════════════════════════════════════════
-    //  CAROUSEL BUILDER  — clears and rebuilds the VBox
-    // ════════════════════════════════════════════════════════════════════════
 
     private void buildCarousels(
             final List<Film>              films,
@@ -212,7 +195,6 @@ public class HomeController implements Initializable {
                         overlayRef, goToSerieDetail()));
         });
 
-        // Show "no results" message when everything is empty after a search
         if (films.isEmpty() && series.isEmpty() && filmCats.isEmpty() && serieCats.isEmpty()) {
             final Label empty = new Label("No results found.");
             empty.setStyle("-fx-text-fill: #aaa; -fx-font-size: 16px; -fx-padding: 40;");
@@ -220,10 +202,7 @@ public class HomeController implements Initializable {
         }
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  ADD TO LIST  — saves current hero film to DB
-    // ════════════════════════════════════════════════════════════════════════
-
+    
     @FXML
     private void onAddFeaturedToList() {
         if (heroFilms.isEmpty()) return;
@@ -235,10 +214,7 @@ public class HomeController implements Initializable {
 		showToast(added ? "✔ Added to My List" : "Already in your list");
     }
 
-    /**
-     * Lightweight toast: a Label that fades in/out at the bottom of the hero.
-     * No extra FXML node required — created programmatically each time.
-     */
+    
     private void showToast(final String message) {
         final Label toast = new Label(message);
         toast.setStyle(
@@ -266,10 +242,7 @@ public class HomeController implements Initializable {
         new SequentialTransition(fadeIn, fadeOut).play();
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  HERO
-    // ════════════════════════════════════════════════════════════════════════
-
+    
     private void initHero() {
         if (allFilms.isEmpty()) return;
         allFilms.stream().limit(5).forEach(heroFilms::add);
@@ -327,9 +300,7 @@ public class HomeController implements Initializable {
         fade.play();
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  NAVIGATION HELPERS
-    // ════════════════════════════════════════════════════════════════════════
+  
 
     private Consumer<Film> goToFilmDetail() {
         return film -> {
@@ -341,24 +312,21 @@ public class HomeController implements Initializable {
 
     private Consumer<Serie> goToSerieDetail() {
         return serie -> {
-            // 1. On récupère l'ID de la première saison (via un nouveau DAO ou méthode)
+      
             int firstSeasonId = saisonService.findFirstSeasonIdBySerie(serie.getId());
 
-            // 2. Navigation
             final MediaViewController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.MediaView);
 
             if (ctrl != null) {
                 ctrl.setSerie(serie);
                 System.out.println("saison:"+firstSeasonId);
-               // ctrl.se(firstSeasonId); // Nouvelle méthode dans votre EpisodeViewController
+              
             }
         };
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  FXML HANDLERS
-    // ════════════════════════════════════════════════════════════════════════
+
 
     @FXML private void onMyList()           { ScreenManager.getInstance().navigateTo(Screen.myList); }
     @FXML private void onMovies()           { ScreenManager.getInstance().navigateTo(Screen.films); }
@@ -369,11 +337,9 @@ public class HomeController implements Initializable {
         	System.out.println("hero is empty");
         	return;
         }
-        
-        // 1. Stopper le timer AVANT de naviguer
+
         if (heroTimer != null) heroTimer.stop();
-        
-        // 2. Capturer le film IMMÉDIATEMENT
+       
         final Film film = heroFilms.get(heroIndex);
         
         int userId = SessionManager.getInstance().getCurrentUserId();        // 3. Naviguer
@@ -391,13 +357,11 @@ public class HomeController implements Initializable {
     private void onMoreInfoFeatured() {
         if (heroFilms.isEmpty()) return;
         
-        // 1. Stopper le timer AVANT de naviguer
         if (heroTimer != null) heroTimer.stop();
         
-        // 2. Capturer le film IMMÉDIATEMENT
         final Film film = heroFilms.get(heroIndex);
         
-        // 3. Naviguer
+       
         MediaViewController ctrl = ScreenManager.getInstance()
             .navigateAndGetController(Screen.MediaView);
             
@@ -409,14 +373,14 @@ public class HomeController implements Initializable {
     }
     @FXML
     private void onSearch() {
-        // called by onKeyReleased on the TextField
+   
         applySearch(searchField.getText() == null ? ""
                 : searchField.getText().trim().toLowerCase());
     }
 
     @FXML
     private void onSearchBtn() {
-        // called by the 🔍 button
+      
         applySearch(searchField.getText() == null ? ""
                 : searchField.getText().trim().toLowerCase());
     }
@@ -431,7 +395,7 @@ public class HomeController implements Initializable {
     }
 
     @FXML private void onNotifications() {
-        ScreenManager.getInstance().navigateTo(Screen.notification); // adapte le nom exact
+        ScreenManager.getInstance().navigateTo(Screen.notification); 
     }
     @FXML
     private void onEditProfile() {
