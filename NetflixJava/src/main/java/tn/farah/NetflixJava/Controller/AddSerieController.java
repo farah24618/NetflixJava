@@ -680,6 +680,6 @@ public class AddSerieController implements Initializable {
     }
 
     @FXML private void handleRetour() {
-        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
+        ScreenManager.getInstance().goBack();
     }
 }

@@ -823,6 +823,6 @@ public class AddFilmController implements Initializable {
     private void handleRetour() {
         filmToEdit = null;
         ScreenManager.getInstance().clearEditingFilm();
-        ScreenManager.getInstance().navigateTo(Screen.admin_main);
+        ScreenManager.getInstance().goBack();;
     }
 }

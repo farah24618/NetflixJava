@@ -117,7 +117,7 @@ public class AdminMainController {
 
     @FXML
     private void handleNavComments() {
-        ScreenManager.getInstance().navigateTo(Screen.episodeComments);
+        ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
     }
 
     @FXML
