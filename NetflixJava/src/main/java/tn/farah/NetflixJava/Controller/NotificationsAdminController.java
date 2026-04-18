@@ -23,50 +23,34 @@ import java.util.ResourceBundle;
 
 public class NotificationsAdminController implements Initializable {
 
-    // ── Sidebar badge ──────────────────────────────────────────────────────
-    // Ce label est dans le bouton "Notifications" de la sidebar (fx:id="unreadBadgeLabel")
-    // Il affiche le nombre de notifications non lues en temps réel.
-    // Dans le FXML, remplacez text="n°Noti" par fx:id="unreadBadgeLabel"
+   
     @FXML private Label unreadBadgeLabel;
 
-    // ── Boutons de filtre ──────────────────────────────────────────────────
     @FXML private Button btnAll;
     @FXML private Button btnUnread;
     @FXML private Button btnSent;
 
-    // Labels compteurs dans les boutons
     @FXML private Label allCountLabel;
     @FXML private Label unreadCountLabel;
     @FXML private Label sentCountLabel;
-
-    // ── Recherche ──────────────────────────────────────────────────────────
     @FXML private TextField searchField;
-
-    // ── TableView ─────────────────────────────────────────────────────────
     @FXML private TableView<Notification> notificationsTable;
     @FXML private TableColumn<Notification, String>  messageColumn;
     @FXML private TableColumn<Notification, Integer> userColumn;
     @FXML private TableColumn<Notification, String>  dateColumn;
     @FXML private TableColumn<Notification, Boolean> statusColumn;
     @FXML private CheckBox selectAllCheckbox;
- // Déclarez la colonne en haut de la classe
+ 
     @FXML private TableColumn<Notification, Void> actionsColumn;
 
-    // ── Service & données ──────────────────────────────────────────────────
     private final NotificationService notificationService =
             new NotificationService(ConxDB.getInstance());
 
     private ObservableList<Notification> masterData = FXCollections.observableArrayList();
 
-    // ID admin (à remplacer par votre session courante)
     private int currentUserId = 1;
 
-    // Filtre actif : "ALL", "UNREAD", "SENT"
     private String activeFilter = "ALL";
-
-    // ══════════════════════════════════════════════════════════════════════
-    //  INITIALISATION
-    // ══════════════════════════════════════════════════════════════════════
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -74,7 +58,6 @@ public class NotificationsAdminController implements Initializable {
         refreshData();
         applyFilter("ALL");
 
-        // ✅ Double-clic pour marquer comme lu
         notificationsTable.setRowFactory(tv -> {
             TableRow<Notification> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -91,9 +74,6 @@ public class NotificationsAdminController implements Initializable {
         });
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    //  CONFIGURATION DU TABLEAU
-    // ══════════════════════════════════════════════════════════════════════
     private void setupTableColumns() {
         messageColumn.setCellValueFactory(cellData ->
             new SimpleStringProperty(cellData.getValue().getMessage()));
@@ -123,7 +103,6 @@ public class NotificationsAdminController implements Initializable {
             }
         });
 
-        // ✅ ACTIONS COLUMN
         actionsColumn.setCellFactory(column -> new TableCell<Notification, Void>() {
             private final Button btnRead   = new Button("✓ Lu");
             private final Button btnDelete = new Button("🗑");
@@ -165,28 +144,24 @@ public class NotificationsAdminController implements Initializable {
             }
         });
     }
- 
 
-    // ══════════════════════════════════════════════════════════════════════
-    //  RAFRAÎCHISSEMENT DES DONNÉES ET DES COMPTEURS
-    // ══════════════════════════════════════════════════════════════════════
 
     private void refreshData() {
-        // Recharger depuis la DB selon le filtre actif
+    
         List<Notification> data;
         switch (activeFilter) {
             case "UNREAD":
                 data = notificationService.getUnreadNotifications(currentUserId);
                 break;
             case "SENT":
-                //data = notificationService.getSentNotifications();
+                
             	data = notificationService.getSentByAdmin(currentUserId);
                 break;
-            default: // "ALL"
+            default: 
                 data = notificationService.getUserNotificationsAdmin();
                 break;
         }
-     // ✅ AJOUTEZ CES LOGS
+    
         System.out.println("=== refreshData() ===");
         System.out.println("Filter: " + activeFilter);
         System.out.println("CurrentUserId: " + currentUserId);
@@ -200,30 +175,20 @@ public class NotificationsAdminController implements Initializable {
         masterData.setAll(data);
         notificationsTable.setItems(masterData);
 
-        // Mettre à jour les compteurs
         int total  = notificationService.countAllAdmin();
         int unread = notificationService.countUnread(currentUserId);
 
         if (unreadBadgeLabel != null) unreadBadgeLabel.setText(String.valueOf(unread));
         if (allCountLabel    != null) allCountLabel.setText(String.valueOf(total));
         if (unreadCountLabel != null) unreadCountLabel.setText(String.valueOf(unread));
-        //if (sentCountLabel   != null) sentCountLabel.setText("0"); // Adapté à votre logique
+
         int sent = notificationService.countSentByAdmin();
         if (sentCountLabel != null) sentCountLabel.setText(String.valueOf(sent));
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    //  LOGIQUE DES BOUTONS DE FILTRE (All / Unread / Sent)
-    // ══════════════════════════════════════════════════════════════════════
-
-    /**
-     * Active visuellement un bouton (fond rouge) et désactive les autres (fond gris).
-     * Charge ensuite les données correspondantes.
-     */
     private void applyFilter(String filter) {
         this.activeFilter = filter;
 
-        // Styles des boutons
         String activeStyle   = "-fx-background-color: #E50914; -fx-text-fill: white; "
                              + "-fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20;";
         String inactiveStyle = "-fx-background-color: #1e1e1e; -fx-text-fill: #888888; "
@@ -233,7 +198,6 @@ public class NotificationsAdminController implements Initializable {
         if (btnUnread != null) btnUnread.setStyle("UNREAD".equals(filter) ? activeStyle : inactiveStyle);
         if (btnSent   != null) btnSent.setStyle(  "SENT".equals(filter)   ? activeStyle : inactiveStyle);
 
-        // Recharger les données
         refreshData();
     }
 
@@ -252,27 +216,21 @@ public class NotificationsAdminController implements Initializable {
         applyFilter("SENT");
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    //  RECHERCHE EN TEMPS RÉEL
-    // ══════════════════════════════════════════════════════════════════════
 
     @FXML
     void onSearch(KeyEvent event) {
         String query = searchField.getText().trim();
 
         if (query.isEmpty()) {
-            // Remettre la liste complète du filtre actif
+          
             refreshData();
         } else {
-            // Recherche en base (title + message)
+           
             List<Notification> results = notificationService.search(currentUserId, query);
             notificationsTable.setItems(FXCollections.observableArrayList(results));
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    //  BOUTON "NEW NOTIFICATION" — Exemple de création manuelle
-    // ══════════════════════════════════════════════════════════════════════
 
    
     @FXML
@@ -287,7 +245,6 @@ public class NotificationsAdminController implements Initializable {
         TextField userIdField = new TextField();
         userIdField.setPromptText("User ID");
 
-        // Label d'erreur
         Label errorLabel = new Label();
         errorLabel.setStyle("-fx-text-fill: #E50914; -fx-font-size: 12px;");
 
@@ -295,16 +252,14 @@ public class NotificationsAdminController implements Initializable {
             new Label("Titre:"), titleField,
             new Label("Message:"), messageField,
             new Label("User ID:"), userIdField,
-            errorLabel  // ← affiche l'erreur sous les champs
+            errorLabel  
         );
         content.setStyle("-fx-padding: 10;");
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // ✅ Désactiver le bouton OK par défaut
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
 
-        // ✅ Validation en temps réel sur le champ userId
         userIdField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.isEmpty()) {
                 errorLabel.setText("");
@@ -348,19 +303,14 @@ public class NotificationsAdminController implements Initializable {
             System.out.println("✅ Notification envoyée à userId=" + notif.getUserId());
         });
     }
-    // ══════════════════════════════════════════════════════════════════════
-    //  SELECT ALL
-    // ══════════════════════════════════════════════════════════════════════
+  
 
     @FXML
     void onSelectAll(ActionEvent event) {
-        // Logique de sélection (à implémenter selon votre besoin)
+        
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    //  NAVIGATION
-    // ══════════════════════════════════════════════════════════════════════
-
+   
     @FXML void onDashboardClicked(ActionEvent e) { ScreenManager.getInstance().navigateTo(Screen.AdminDashboard); }
     @FXML void onFilmsClicked(ActionEvent e)     { ScreenManager.getInstance().navigateTo(Screen.admin_main); }
     @FXML void onSeriesClicked(ActionEvent e)    { 

@@ -5,13 +5,12 @@ import java.time.LocalDateTime;
 public class History {
     private int id;
     private int idUser;
-    private Integer filmId;      // NULL si c'est un épisode
-    private Integer episodeId;   // NULL si c'est un film
+    private Integer filmId;     
+    private Integer episodeId;  
     private LocalDateTime dateVisionnage;
     private int tempsArret;
     private boolean estTermine;
 
-    // Constructeur sans id (pour INSERT)
     public History(int idUser, Integer filmId, Integer episodeId,
                    LocalDateTime dateVisionnage, int tempsArret, boolean estTermine) {
         this.idUser = idUser;
@@ -22,7 +21,6 @@ public class History {
         this.estTermine = estTermine;
     }
 
-    // Constructeur avec id (pour SELECT)
     public History(int id, int idUser, Integer filmId, Integer episodeId,
                    LocalDateTime dateVisionnage, int tempsArret, boolean estTermine) {
         this.id = id;
@@ -34,7 +32,7 @@ public class History {
         this.estTermine = estTermine;
     }
 
-    // ── Getters & Setters ────────────────────────────────────────────────────
+   
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -57,7 +55,6 @@ public class History {
     public boolean getEstTermine() { return estTermine; }
     public void setEstTermine(boolean estTermine) { this.estTermine = estTermine; }
 
-    // ── Utilitaires ──────────────────────────────────────────────────────────
 
     public boolean isFilm() { return filmId != null; }
     public boolean isEpisode() { return episodeId != null; }

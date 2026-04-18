@@ -17,7 +17,7 @@ public class Main extends Application {
             primaryStage.setWidth(1280);
             primaryStage.setHeight(720);
 
-            // 2. Authentification et Profils
+         
           
            
             nav.register(Screen.oublie,          "/tn/farah/NetflixJava/oublie.fxml");

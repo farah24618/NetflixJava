@@ -35,21 +35,14 @@ public class FilmService {
 
 
 	    }
-
-	    /**
-	     * Enregistre un film complet avec ses catégories et warnings.
-	     * Transactionnel : Tout passe ou tout échoue.
-	     */
 	    public void enregistrerFilm(Film film) throws Exception {
 	        boolean previousAutoCommit = connection.getAutoCommit();
 	        try {
 	            connection.setAutoCommit(false);
 
-	            // 1. Save the Film (and Media via the generated ID)
 	            filmDao.create(film);
 	            int idGenere = film.getId();
 
-	            // 2. Link genres
 	            if (film.getGenres() != null) {
 	                for (Category cat : film.getGenres()) {
 	                    categoryDao.lierMedia(idGenere, cat.getId());
@@ -57,7 +50,6 @@ public class FilmService {
 	                }
 	            }
 
-	            // 3. Link warnings
 	            if (film.getWarnings() != null) {
 	                for (Warning warn : film.getWarnings()) {
 	                    warningDao.lierMedia(idGenere, warn.getId());
@@ -68,33 +60,24 @@ public class FilmService {
 	            connection.commit();
 
 	        } catch (SQLException e) {
-	            // Only rollback if autoCommit was actually disabled
 	            if (!connection.getAutoCommit()) {
 	                connection.rollback();
 	            }
 	            throw e;
 	        } finally {
-	            // Always restore the original autoCommit state
+	       
 	            connection.setAutoCommit(previousAutoCommit);
 	        }
 	    }
-	    /**
-	     * Récupère tous les films triés par date
-	     */
+	    
 	    public List<Film> getAllFilmsSorted() throws SQLException {
 	        return filmDao.findAll(); // Assure-toi d'avoir mis ORDER BY dans le DAO
 	    }
 
-	    /**
-	     * Recherche par titre
-	     */
 	    public List<Film> searchByTitle(String title) throws SQLException {
 	        return filmDao.findByTitle(title);
 	    }
 
-	    /**
-	     * Filtrage par plusieurs catégories
-	     */
 	    public List<Film> filterByCategories(List<Category> selectedCategories) throws SQLException {
 	        if (selectedCategories == null || selectedCategories.isEmpty()) {
 	            return getAllFilmsSorted();
@@ -105,7 +88,6 @@ public class FilmService {
 	        return filmDao.findByManyCategories(ids);
 	    }
 
-	    // --- Méthodes privées pour les tables de jointure ---
 
 	    private void lierFilmACategorie(int filmId, int catId) throws SQLException {
 	        String sql = "INSERT INTO film_categories (film_id, category_id) VALUES (?, ?)";

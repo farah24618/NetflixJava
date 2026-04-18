@@ -12,13 +12,9 @@ public class WarningService {
 
     public WarningService(Connection connection) {
         this.warningDao = new WarningDao(connection);
-      //hedhi
+     
     }
 
-    /**
-     * Met à jour les warnings d'un film (remplace les anciens par les nouveaux)
-     * @throws SQLException 
-     */
    
     public List<Warning> getAllWarnings() throws SQLException {
         return warningDao.findAll();

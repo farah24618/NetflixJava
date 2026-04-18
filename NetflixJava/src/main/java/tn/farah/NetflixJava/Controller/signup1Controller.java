@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Controller;
 
 import java.net.URL;
 
+
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
@@ -39,13 +40,11 @@ public class signup1Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         userService = new UserService(ConxDB.getInstance());
 
-        // Configuration des ComboBox
         dayComboBox.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(1, 31).boxed().toList()));
         monthComboBox.setItems(FXCollections.observableArrayList("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"));
         int currentYear = LocalDate.now().getYear();
         yearComboBox.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(currentYear - 100, currentYear).boxed().sorted((a, b) -> b - a).toList()));
 
-        // --- RÉCUPÉRATION DES DONNÉES SI RETOUR ---
         User existingUser = SessionData.getCurrentUser();
         if (existingUser != null) {
             firstNameField.setText(existingUser.getPrenom());
@@ -58,10 +57,9 @@ public class signup1Controller implements Initializable {
                 monthComboBox.setValue(numberToMonth(existingUser.getBirthDate().getMonthValue()));
                 yearComboBox.setValue(existingUser.getBirthDate().getYear());
             }
-            // Note: Le mot de passe reste vide par sécurité pour éviter de modifier le hash existant par erreur
+            
         }
 
-        // Handlers
         firstNameField.setOnKeyPressed(this::handleEnterKey);
         lastNameField.setOnKeyPressed(this::handleEnterKey);
         emailField.setOnKeyPressed(this::handleEnterKey);
@@ -77,24 +75,22 @@ public class signup1Controller implements Initializable {
         String passwordRaw = passwordField.getText();
         String phone     = phoneField.getText().trim();
 
-        // 1. Vérification des champs vides
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() || 
             dayComboBox.getValue() == null || monthComboBox.getValue() == null || yearComboBox.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Champs manquants", "Veuillez remplir tous les champs.");
             return;
         }
 
-        // 2. Validation du Prénom et Nom (min 3 caractères)
         if (firstName.length() < 3 || lastName.length() < 3) {
             showAlert(Alert.AlertType.WARNING, "Format Nom/Prénom", "Le nom et le prénom doivent contenir au moins 3 caractères.");
             return;
         }
 
-     // Validation de l'Email (min 3 car. avant @ + domaine + extension)
         if (!email.matches("^[\\w.]{3,}@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
             showAlert(Alert.AlertType.WARNING, "Email invalide", "L'email doit contenir au moins 3 caractères avant l'arobase et avoir un domaine valide (ex: yahoo.fr).");
             return;
         }
+
         User existingUserWithEmail = userService.findByEmail(email);
         if (existingUserWithEmail != null) {
             showAlert(Alert.AlertType.WARNING, "Email déjà utilisé", 
@@ -102,26 +98,41 @@ public class signup1Controller implements Initializable {
             return;
         }
 
-        // 4. Validation du Téléphone (Exactement 8 chiffres)
         if (!phone.matches("^\\d{8}$")) {
             showAlert(Alert.AlertType.WARNING, "Téléphone invalide", "Le numéro de téléphone doit contenir exactement 8 chiffres.");
             return;
         }
 
-        // 5. Validation du Password (min 6 caractères)
         if (!passwordRaw.isEmpty() && passwordRaw.length() < 8) {
             showAlert(Alert.AlertType.WARNING, "Sécurité faible", "Le mot de passe doit contenir au moins 8 caractères.");
             return;
         }
 
-        // --- SI TOUT EST VALIDE : TRAITEMENT ---
+        LocalDate birthDate = LocalDate.of(
+            yearComboBox.getValue(),
+            monthToNumber(monthComboBox.getValue()),
+            dayComboBox.getValue()
+        );
+
+        if (birthDate.isAfter(LocalDate.now())) {
+            showAlert(Alert.AlertType.WARNING, "Date invalide",
+                      "La date de naissance ne peut pas être dans le futur.");
+            return;
+        }
+
+        if (birthDate.isAfter(LocalDate.now().minusYears(13))) {
+            showAlert(Alert.AlertType.WARNING, "Âge insuffisant",
+                      "Vous devez avoir au moins 13 ans pour créer un compte.");
+            return;
+        }
+
         User user = (SessionData.getCurrentUser() != null) ? SessionData.getCurrentUser() : new User();
-        
+
         user.setPrenom(firstName);
         user.setNom(lastName);
         user.setEmail(email);
         user.setPhone(phone);
-        user.setBirthDate(LocalDate.of(yearComboBox.getValue(), monthToNumber(monthComboBox.getValue()), dayComboBox.getValue()));
+        user.setBirthDate(birthDate); 
         user.setRole(UserRole.USER);
         user.setActive(true);
         user.setEstPaye(false);

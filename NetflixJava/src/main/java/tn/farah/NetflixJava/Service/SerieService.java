@@ -57,13 +57,13 @@ public class SerieService {
         connection.commit();
 
         } catch (SQLException e) {
-            // Only rollback if autoCommit was actually disabled
+            
             if (!connection.getAutoCommit()) {
                 connection.rollback();
             }
             throw e;
         } finally {
-            // Always restore the original autoCommit state
+            
             connection.setAutoCommit(previousAutoCommit);
         }
     }
@@ -110,15 +110,11 @@ public class SerieService {
         return serieDao.findByYear(year);
     }
 
-    /**
-     * Retourne le nombre d'épisodes dans une saison donnée.
-     */
     public int countEpisodesBySaison(int saisonId) {
         return serieDao.countEpisodesBySaison(saisonId);
     }
     public List<Episode> findEpisodeBySaison(int saisonId) {
-        // Vous pouvez ajouter de la logique métier ici si nécessaire avant d'appeler le DAO
-        // Par exemple : vérifier que saisonId est > 0
+        
         if (saisonId <= 0) {
             throw new IllegalArgumentException("L'ID de la saison doit être supérieur à 0");
         }

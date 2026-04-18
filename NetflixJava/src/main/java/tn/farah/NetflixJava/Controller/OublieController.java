@@ -18,7 +18,7 @@ import java.sql.*;
 
 public class OublieController {
 
-    // ── FXML Nodes ─────────────────────────────────────────────────────────
+   
     @FXML private VBox  mainContainer, emailSection, codeContainer;
     @FXML private HBox  captchaBox;
     @FXML private TextField emailField, code1, code2, code3, code4;
@@ -26,10 +26,9 @@ public class OublieController {
     @FXML private Button confirmBtn;
     @FXML private CheckBox robotCheckBox;
 
-    // ── State ───────────────────────────────────────────────────────────────
+   
     private String generatedCode;
 
-    // ── Styles constants ────────────────────────────────────────────────────
     private static final String BASE_FIELD =
         "-fx-background-color: #2a2a2a; -fx-text-fill: white; " +
         "-fx-prompt-text-fill: #777777; -fx-font-size: 14px; " +
@@ -53,7 +52,6 @@ public class OublieController {
     @FXML
     public void initialize() {
 
-        // ── Validation email en temps réel ──────────────────────────────
         emailField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.isEmpty()) {
                 applyEmailStyle(FIELD_DEFAULT, "", "#aaaaaa", false);
@@ -68,19 +66,16 @@ public class OublieController {
             }
         });
 
-        // ── Focus border sur les champs code ─────────────────────────────
         setupCodeBorder(code1);
         setupCodeBorder(code2);
         setupCodeBorder(code3);
         setupCodeBorder(code4);
 
-        // ── Auto-focus suivant dans les cases PIN ─────────────────────────
         setupCodeAutoFocus(code1, code2);
         setupCodeAutoFocus(code2, code3);
         setupCodeAutoFocus(code3, code4);
         setupCodeAutoFocus(code4, null);
 
-        // ── Hover sur le bouton ───────────────────────────────────────────
         confirmBtn.setOnMouseEntered(e ->
             confirmBtn.setStyle(confirmBtn.getStyle()
                 .replace("#E50914", "#c40812")));
@@ -89,14 +84,11 @@ public class OublieController {
                 .replace("#c40812", "#E50914")));
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ACTION PRINCIPALE
-    // ═══════════════════════════════════════════════════════════════════════
+    
     @FXML
     private void handleConfirm() {
         String email = emailField.getText().trim();
 
-        // 1. Vérification captcha
         if (!robotCheckBox.isSelected()) {
             triggerVibration(captchaBox);
             showFeedback(instructionLabel,
@@ -105,14 +97,13 @@ public class OublieController {
             return;
         }
 
-        // 2. Vérification format email
         if (!isValidEmail(email)) {
             triggerVibration(emailField);
             return;
         }
 
         if (generatedCode == null) {
-            // 3. Vérification en base
+
             if (!checkEmailExistsInDB(email)) {
                 applyEmailStyle(FIELD_ERROR,
                     "Aucun compte trouvé avec cet email.",
@@ -121,37 +112,32 @@ public class OublieController {
                 return;
             }
 
-            // 4. Génération du code et passage à l'étape 2
             generatedCode = String.valueOf((int)(Math.random() * 9000) + 1000);
             System.out.println("[DEV] Code Netflix : " + generatedCode);
             switchToCodeStep();
 
         } else {
-            // 5. Vérification du code PIN entré
+
             verifyPinCode(email);
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // LOGIQUE ÉTAPES
-    // ═══════════════════════════════════════════════════════════════════════
     private void switchToCodeStep() {
-        // Cacher étape 1
+   
         emailSection.setManaged(false);
         emailSection.setVisible(false);
         captchaBox.setManaged(false);
         captchaBox.setVisible(false);
 
-        // Afficher étape 2
         codeContainer.setManaged(true);
         codeContainer.setVisible(true);
 
-        // Màj textes
+        
         instructionLabel.setText("Entrez le code à 4 chiffres envoyé à votre email.");
         instructionLabel.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-padding: 0 0 24 0;");
         confirmBtn.setText("VÉRIFIER LE CODE");
 
-        // Focus sur le 1er champ
+      
         code1.requestFocus();
     }
 
@@ -166,15 +152,15 @@ public class OublieController {
         }
 
         if (entered.equals(generatedCode)) {
-            // Succès : colorer les cases en vert
+         
             highlightCodeFields("#2ecc71");
             ResetPasswordController.userEmail = email;
-            // Petit délai visuel avant navigation
+      
             Timeline delay = new Timeline(new KeyFrame(Duration.millis(400),
                 e -> ScreenManager.getInstance().navigateTo(Screen.ResetPassword)));
             delay.play();
         } else {
-            // Erreur : secouer + border rouge
+           
             highlightCodeFields("#E50914");
             triggerVibration(codeContainer);
             clearCodeFields();
@@ -202,11 +188,6 @@ public class OublieController {
             mainContainer.getScene().getWindow().hide();
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // HELPERS UI
-    // ═══════════════════════════════════════════════════════════════════════
-
-    /** Applique le style + feedback + icône check sur le champ email */
     private void applyEmailStyle(String fieldStyle, String feedbackText,
                                   String feedbackColor, boolean showCheck) {
         emailField.setStyle(fieldStyle);
@@ -215,13 +196,12 @@ public class OublieController {
         emailValidIcon.setVisible(showCheck);
     }
 
-    /** Feedback sur n'importe quel Label */
+
     private void showFeedback(Label label, String text, String color) {
         label.setText(text);
         label.setStyle("-fx-text-fill: " + color + "; -fx-font-size: 13px; -fx-padding: 0 0 24 0;");
     }
 
-    /** Highlight les 4 cases de code avec une couleur de bordure */
     private void highlightCodeFields(String color) {
         String style = BASE_CODE_FIELD + "-fx-border-color: " + color + ";";
         code1.setStyle(style); code2.setStyle(style);
@@ -235,7 +215,6 @@ public class OublieController {
         code3.setStyle(def); code4.setStyle(def);
     }
 
-    /** Border rouge au focus sur champs code */
     private void setupCodeBorder(TextField field) {
         field.focusedProperty().addListener((obs, wasFocused, isFocused) -> {
             if (isFocused) {
@@ -245,11 +224,9 @@ public class OublieController {
             }
         });
     }
-
-    /** Passe le focus au champ suivant après 1 chiffre */
     private void setupCodeAutoFocus(TextField current, TextField next) {
         current.textProperty().addListener((obs, oldV, newV) -> {
-            // Autoriser uniquement les chiffres
+    
             if (!newV.matches("[0-9]*")) {
                 current.setText(oldV);
                 return;
@@ -264,7 +241,6 @@ public class OublieController {
         });
     }
 
-    /** Animation de vibration sur un Node */
     private void triggerVibration(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(55), node);
         tt.setFromX(0); tt.setToX(8);
@@ -272,9 +248,6 @@ public class OublieController {
         tt.play();
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // BASE DE DONNÉES
-    // ═══════════════════════════════════════════════════════════════════════
     private boolean checkEmailExistsInDB(String email) {
         String url = "jdbc:mysql://localhost:3306/netflix";
         try (Connection conn = DriverManager.getConnection(url, "root", "");
@@ -289,7 +262,6 @@ public class OublieController {
         }
     }
 
-    /** Vérifie le format email avec regex */
     private boolean isValidEmail(String email) {
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }

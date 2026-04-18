@@ -40,7 +40,6 @@ public class AjouterAdminController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         userService = new UserService(ConxDB.getInstance());
 
-        // Configuration des ComboBox
         dayComboBox.setItems(FXCollections.observableArrayList(
                 IntStream.rangeClosed(1, 31).boxed().toList()));
         monthComboBox.setItems(FXCollections.observableArrayList(
@@ -52,8 +51,6 @@ public class AjouterAdminController implements Initializable {
                          .boxed()
                          .sorted((a, b) -> b - a)
                          .toList()));
-
-        // Handlers touches
         firstNameField.setOnKeyPressed(e -> { if (e.getCode().toString().equals("ENTER")) handleContinuer(null); });
         lastNameField.setOnKeyPressed(e  -> { if (e.getCode().toString().equals("ENTER")) handleContinuer(null); });
         emailField.setOnKeyPressed(e     -> { if (e.getCode().toString().equals("ENTER")) handleContinuer(null); });
@@ -69,7 +66,6 @@ public class AjouterAdminController implements Initializable {
         String passwordRaw = passwordField.getText();
         String phone       = phoneField.getText().trim();
 
-        // 1. Champs vides
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()
                 || dayComboBox.getValue() == null
                 || monthComboBox.getValue() == null
@@ -78,14 +74,12 @@ public class AjouterAdminController implements Initializable {
             return;
         }
 
-        // 2. Prénom / Nom (min 3 caractères)
         if (firstName.length() < 3 || lastName.length() < 3) {
             showAlert(Alert.AlertType.WARNING, "Format Nom/Prénom",
                     "Le nom et le prénom doivent contenir au moins 3 caractères.");
             return;
         }
 
-        // 3. Email
         if (!email.matches("^[\\w.]{3,}@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
             showAlert(Alert.AlertType.WARNING, "Email invalide",
                     "L'email doit contenir au moins 3 caractères avant l'arobase et avoir un domaine valide.");
@@ -97,14 +91,13 @@ public class AjouterAdminController implements Initializable {
             return;
         }
 
-        // 4. Téléphone (exactement 8 chiffres)
         if (!phone.matches("^\\d{8}$")) {
             showAlert(Alert.AlertType.WARNING, "Téléphone invalide",
                     "Le numéro de téléphone doit contenir exactement 8 chiffres.");
             return;
         }
 
-        // 5. Mot de passe (min 8 caractères, obligatoire)
+
         if (passwordRaw.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Mot de passe manquant",
                     "Veuillez saisir un mot de passe.");
@@ -116,7 +109,7 @@ public class AjouterAdminController implements Initializable {
             return;
         }
 
-        // --- Construction de l'objet Admin ---
+    
         User admin = new User();
         admin.setPrenom(firstName);
         admin.setNom(lastName);
@@ -127,26 +120,24 @@ public class AjouterAdminController implements Initializable {
                 monthToNumber(monthComboBox.getValue()),
                 dayComboBox.getValue()));
 
-        // ✅ Rôle forcé à ADMIN
         admin.setRole(UserRole.ADMIN);
 
-        // ✅ estPaye forcé à false (0 en base)
+
         admin.setEstPaye(false);
 
         admin.setActive(true);
         admin.setPasswordHash(hashSHA256(passwordRaw));
 
-        // Génération d'un pseudo unique
+
         admin.setPseudo(firstName.toLowerCase() + (int)(Math.random() * 1000));
 
-        // Sauvegarde en base
+       
         boolean success = userService.registerUser(admin);
 
         if (success) {
             showAlert(Alert.AlertType.INFORMATION, "Succès",
                     "Le compte administrateur a été créé avec succès.");
-            // Optionnel : log d'audit
-            // userService.addAuditLog(SessionData.getCurrentUser().getId(), "Création admin : " + email);
+           
             ScreenManager.getInstance().navigateTo(Screen.mainView);
         } else {
             showAlert(Alert.AlertType.ERROR, "Erreur",
@@ -154,7 +145,6 @@ public class AjouterAdminController implements Initializable {
         }
     }
 
-    // ==================== UTILITAIRES ====================
 
     private int monthToNumber(String month) {
         return switch (month) {

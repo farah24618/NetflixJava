@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
 
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -24,7 +25,7 @@ public class AdminMainController {
 
     @FXML private VBox movieListContainer;
     @FXML private TextField searchField;
-    @FXML private Label titleCountLabel; // ✅ lié au fx:id dans le FXML
+    @FXML private Label titleCountLabel; 
 
     private FilmService filmSer;
 
@@ -59,7 +60,6 @@ public class AdminMainController {
                 films = filmSer.findByTitle(query);
             }
 
-            // ✅ Mise à jour dynamique du nombre de films
             if (titleCountLabel != null) {
                 titleCountLabel.setText("My Titles (" + films.size() + ")");
             }
@@ -93,7 +93,6 @@ public class AdminMainController {
         }
     }
 
-    // --- NAVIGATION ---
 
     @FXML
     private void handleNavDashboard() {

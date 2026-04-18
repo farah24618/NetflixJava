@@ -2,6 +2,7 @@ package tn.farah.NetflixJava.Controller;
 
 import javafx.animation.KeyFrame;
 
+
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,68 +42,46 @@ import java.util.ResourceBundle;
 
 public class AddEpisodeController implements Initializable {
 
-    // ─── Services ─────────────────────────────────────────────────────────────
+    
     private EpisodeService  episodeService;
     private SaisonService   saisonService;
     private SubtitleService subtitleService;
     private NotificationService notificationService;
 
-    // ─── Fichiers sélectionnés ────────────────────────────────────────────────
+    
     private File fileMiniature;
     private File fileVideo;
- // Après private File fileVideo;
     private long videoDurationSeconds = -1;
-
-    // ─── Sous-titres (lignes dynamiques) ─────────────────────────────────────
     private final List<SubtitleRow> subtitleRows = new ArrayList<>();
-
-    // ─── Champs formulaire ────────────────────────────────────────────────────
     @FXML private TextField        txtTitre;
     @FXML private TextArea         txtResume;
     @FXML private ComboBox<Saison> cbSaison;
     @FXML private TextField        txtNumeroEpisode;
     @FXML private TextField        txtDuree;
     @FXML private TextField        txtDureeIntro;
-
-    // ─── Upload – Miniature ───────────────────────────────────────────────────
     @FXML private VBox      dropMiniature;
     @FXML private ImageView previewMiniature;
     @FXML private Label     lblMiniaturePlaceholder;
     @FXML private Label     lblMiniatureName;
-
-    // ─── Upload – Vidéo ──────────────────────────────────────────────────────
     @FXML private VBox        dropVideo;
     @FXML private Label       lblVideoPlaceholder;
     @FXML private Label       lblVideoName;
     @FXML private ProgressBar pbVideo;
-
-    // ─── Sous-titres container ────────────────────────────────────────────────
     @FXML private VBox subtitlesContainer;
-
-    // ─── Status & actions ────────────────────────────────────────────────────
     @FXML private Label  lblStatus;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
     private int editingEpisodeId = -1;
-    // ═════════════════════════════════════════════════════════════════════════
-    //  CLASSE INTERNE — une ligne sous-titre
-    // ═════════════════════════════════════════════════════════════════════════
     private static class SubtitleRow {
         String langage  = "";
         String filePath = "";
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  INITIALIZE
-    // ═════════════════════════════════════════════════════════════════════════
     private void populateForm(Episode ep) {
         txtTitre.setText(ep.getTitre());
         txtResume.setText(ep.getResume());
         txtNumeroEpisode.setText(String.valueOf(ep.getNumeroEpisode()));
         txtDuree.setText(String.valueOf(ep.getDuree()));
         txtDureeIntro.setText(String.valueOf(ep.getDurreeIntro()));
-
-        // Sélectionner la bonne saison dans le ComboBox
         for (Saison s : cbSaison.getItems()) {
             if (s.getId() == ep.getSaisonId()) {
                 cbSaison.setValue(s);
@@ -121,11 +100,9 @@ public class AddEpisodeController implements Initializable {
                 lblMiniatureName.setText("Image existante");
             } catch (Exception ignored) {}
         }
-
-        // Mémoriser l'ID pour le update
         this.editingEpisodeId = ep.getId();
     }
-    @Override
+  /*  @Override
     public void initialize(URL location, ResourceBundle resources) {
         Connection connection = ConxDB.getInstance();
         episodeService  = new EpisodeService(connection);
@@ -135,11 +112,39 @@ public class AddEpisodeController implements Initializable {
 
         loadSaisons();
 
-        // ✅ Détecter mode édition
         Episode ep = ScreenManager.getInstance().getEditingEpisode();
         if (ep != null) {
             populateForm(ep);
             btnSave.setText("💾 Modifier");
+        }
+    }*/
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Connection connection = ConxDB.getInstance();
+        episodeService      = new EpisodeService(connection);
+        saisonService       = new SaisonService(connection);
+        subtitleService     = new SubtitleService(connection);
+        notificationService = new NotificationService(connection);
+
+        loadSaisons();
+
+        int saisonId = ScreenManager.getInstance().getSelectedSaisonId();
+        if (saisonId != -1) {
+            for (Saison s : cbSaison.getItems()) {
+                if (s.getId() == saisonId) {
+                    cbSaison.setValue(s);
+                    break;
+                }
+            }
+            cbSaison.setDisable(true); // ✅ saison fixe, non modifiable
+        }
+
+        Episode ep = ScreenManager.getInstance().getEditingEpisode();
+        if (ep != null) {
+            populateForm(ep);
+            btnSave.setText("💾 Modifier");
+            cbSaison.setDisable(false); // ✅ en mode edit, on peut changer la saison
         }
     }
 
@@ -152,10 +157,6 @@ public class AddEpisodeController implements Initializable {
             showError("Impossible de charger les saisons.");
         }
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  SOUS-TITRES — Gestion Dynamique
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handleAddSubtitle() {
         SubtitleRow sRow = new SubtitleRow();
@@ -199,10 +200,6 @@ public class AddEpisodeController implements Initializable {
 
         subtitlesContainer.getChildren().add(row);
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    //  SAVE LOGIC
-    // ═════════════════════════════════════════════════════════════════════════
     
     @FXML
     private void handleSave() {
@@ -210,15 +207,13 @@ public class AddEpisodeController implements Initializable {
         try {
             Episode episode = buildEpisodeFromForm();
             int userId = SessionManager.getInstance().getCurrentUser().getId();
-
-            // ── Récupérer le titre de la série ──
             SerieService serieService = new SerieService(ConxDB.getInstance());
             int serieId = saisonService.getSerieIdBySaison(episode.getSaisonId());
             Serie serie = serieService.findById(serieId);
             String serieTitle = (serie != null) ? serie.getTitre() : "Inconnue";
 
             if (editingEpisodeId > 0) {
-                // ── MODE ÉDITION ──
+               
                 episode.setId(editingEpisodeId);
                 episode.setNbreVue(episodeService.findById(editingEpisodeId).getNbreVue());
                 episodeService.update(episode);
@@ -238,7 +233,7 @@ public class AddEpisodeController implements Initializable {
                 showSuccess("✓ Épisode « " + episode.getTitre() + " » modifié !");
 
             } else {
-                // ── MODE CRÉATION ──
+      
                 int episodeId = episodeService.save(episode);
                 if (episodeId > 0) {
                     saveSubtitles(episodeId);
@@ -273,7 +268,7 @@ public class AddEpisodeController implements Initializable {
     }
     private void saveSubtitles(int episodeId) {
         for (SubtitleRow sr : subtitleRows) {
-            // Plus besoin du if — validateForm() garantit que tout est rempli
+            
             Subtitle sub = new Subtitle(sr.langage, 0, episodeId, sr.filePath);
             int result = subtitleService.addSubtitle(sub);
             if (result == 0) {
@@ -296,9 +291,6 @@ public class AddEpisodeController implements Initializable {
         );
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    //  UI HANDLERS & HELPERS
-    // ═════════════════════════════════════════════════════════════════════════
     @FXML
     private void handlePickMiniature() {
         File file = pickImageFile("Miniature de l'épisode");
@@ -322,7 +314,7 @@ public class AddEpisodeController implements Initializable {
             activateDropZone(dropVideo);
             simulateProgress(pbVideo, "Vidéo sélectionnée");
 
-            // Extraction de la durée via JavaFX Media
+           
             try {
                 javafx.scene.media.Media media = new javafx.scene.media.Media(file.toURI().toString());
                 javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
@@ -363,7 +355,7 @@ public class AddEpisodeController implements Initializable {
             }
         }
 
-        // Validation durée : obligatoire + doit correspondre à la vidéo
+       
         if (txtDuree.getText().trim().isEmpty()) {
             errors.append("• Durée obligatoire.\n");
         } else {
@@ -387,7 +379,7 @@ public class AddEpisodeController implements Initializable {
         if (fileVideo == null && editingEpisodeId <= 0)
             errors.append("• Vidéo obligatoire.\n");
 
-        // Validation des sous-titres
+        
         for (int i = 0; i < subtitleRows.size(); i++) {
             SubtitleRow sr = subtitleRows.get(i);
             boolean hasLang = sr.langage != null && !sr.langage.isEmpty();
@@ -412,16 +404,30 @@ public class AddEpisodeController implements Initializable {
         return true;
     }
 
-    @FXML
+    /*@FXML
     private void handleCancel() {
         ScreenManager.getInstance().setEditingEpisode(null);
         editingEpisodeId = -1;
         clearForm();
+    }*/
+    @FXML
+    private void handleCancel() {
+        ScreenManager.getInstance().setEditingEpisode(null);
+        ScreenManager.getInstance().setSelectedSaisonId(-1); // ✅ reset
+        editingEpisodeId = -1;
+        clearForm();
     }
 
+    /*@FXML
+    private void handleRetour() {
+        ScreenManager.getInstance().setEditingEpisode(null);
+        editingEpisodeId = -1;
+        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
+    }*/
     @FXML
     private void handleRetour() {
         ScreenManager.getInstance().setEditingEpisode(null);
+        ScreenManager.getInstance().setSelectedSaisonId(-1); // ✅ reset
         editingEpisodeId = -1;
         ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
     }

@@ -14,7 +14,7 @@ public class SubtitleService {
     }
 
     public int addSubtitle(Subtitle subtitle) {
-        // Validation de base
+     
         if (subtitle.getLangage() == null || subtitle.getUrl() == null) {
             System.err.println("Données manquantes");
             return 0;
@@ -42,7 +42,6 @@ public class SubtitleService {
         return subtitleDAO.findAll();
     }
 
-    // Méthode utilitaire pour récupérer l'URL selon le type de média
     public String getUrlByCriteria(Integer filmId, Integer episodeId, String langage) {
         List<Subtitle> list;
         if (filmId != null && filmId > 0) {

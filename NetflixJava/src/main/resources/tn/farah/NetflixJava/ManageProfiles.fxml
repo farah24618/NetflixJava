@@ -67,7 +67,7 @@
                                 <!-- Pseudo field -->
                                 <TextField fx:id="pseudoField" prefWidth="420.0" promptText="Pseudo du profil" style="-fx-background-color: #666666;                                                   -fx-text-fill: white;                                                   -fx-prompt-text-fill: #cccccc;                                                   -fx-font-size: 22px;" />
 
-                                <!-- Validation message -->
+                             
                                 <Label fx:id="pseudoErrorLabel" managed="false" style="-fx-text-fill: #e50914;                                               -fx-font-size: 13px;" text="" visible="false" />
 
                                 <VBox spacing="8.0">
@@ -95,11 +95,11 @@
                         <Button onAction="#onCancel" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="retour" />
 
                         <Button onAction="#onDeleteProfile" prefHeight="42.0" prefWidth="180.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="Supprimer Profile" />
-
+                  		<Button onAction="#ModifierMotDePasse" prefHeight="42.0" prefWidth="227.0" style="-fx-background-color: transparent;                                        -fx-border-color: #666666;                                        -fx-text-fill: #B3B3B3;                                        -fx-font-size: 18px;                                        -fx-cursor: hand;" text="Modifier Mot de passe" />
                     </children>
                 </HBox>
 
-                <!-- Status toast label (reused for save feedback) -->
+               
                 <Label fx:id="statusLabel" managed="false" style="-fx-text-fill: #46d369;                               -fx-font-size: 14px;" text="" visible="false" />
 
             </children>

@@ -19,7 +19,6 @@ public class HistoryService {
         return historyDAO.findByUser(userId);
     }
 
-    // ── Film ────────────────────────────────────────────────────────────────
 
     public History findByUserAndFilm(int userId, int filmId) {
         return historyDAO.findByUserAndFilm(userId, filmId);
@@ -47,8 +46,6 @@ public class HistoryService {
         return h != null && h.getEstTermine();
     }
 
-    // ── Episode ─────────────────────────────────────────────────────────────
-
     public History findByUserAndEpisode(int userId, int episodeId) {
         return historyDAO.findByUserAndEpisode(userId, episodeId);
     }
@@ -75,8 +72,6 @@ public class HistoryService {
         return h != null && h.getEstTermine();
     }
 
-    // ── Commun ──────────────────────────────────────────────────────────────
-
     public List<History> getTop5MostWatched(int userId) {
         return historyDAO.findTop5MostWatched(userId);
     }
@@ -84,38 +79,15 @@ public class HistoryService {
     public void delete(int historyId) {
         historyDAO.delete(historyId);
     }
-   /* public int getRemainingSecondsFilm(int historyid) {
-        return Math.max(0, historyDAO.findTempsTotalFilmByUserAndFilm(historyDAO.findById(historyid).getIdUser(),historyDAO.findById(historyid).getFilmId()) -(historyDAO.findById(historyid).getTempsArret()/60));
-    }
-    public int getRemainingSecondsSerie(int historyid) {
-        return Math.max(0, historyDAO.findTempsTotaEpisodeByUserAndEpisode(historyDAO.findById(historyid).getIdUser(),historyDAO.findById(historyid).getEpisodeId()) -(historyDAO.findById(historyid).getTempsArret()/60));
-    }
-    public double getProgressPercentFilm(int historyId) {
-    	int dureeTotaleSec=historyDAO.findTempsTotalFilmByUserAndFilm(historyDAO.findById(historyId).getIdUser(),historyDAO.findById(historyId).getFilmId());
-System.out.println(dureeTotaleSec);
-    	if ( dureeTotaleSec<= 0) return 0.0;
-        double prc=historyDAO.findById(historyId).getTempsArret() / (60*dureeTotaleSec);
-        System.out.println(prc);
-        return Math.min(1.0,  prc);
-        
-        
-    }
-    public double getProgressPercentEpisode(int historyId) {
-    	int dureeTotaleSec=historyDAO.findTempsTotaEpisodeByUserAndEpisode(historyDAO.findById(historyId).getIdUser(),historyDAO.findById(historyId).getEpisodeId());
-        if ( dureeTotaleSec<= 0) return 0.0;
-        double prc=historyDAO.findById(historyId).getTempsArret() / (60*dureeTotaleSec);
-        System.out.println(prc);
-        return Math.min(1.0,  prc);
-    }*/
+
+
     public int getRemainingSecondsFilm(int historyid) {
         var history = historyDAO.findById(historyid);
         if (history == null) return 0;
         
-        // Récupération de la durée en minutes, puis conversion en secondes
         int totalMinutes = historyDAO.findTempsTotalFilmByUserAndFilm(history.getIdUser(), history.getFilmId());
         int totalSeconds = totalMinutes * 60;
         
-        // Secondes totales - Secondes visionnées
         return Math.max(0, totalSeconds - history.getTempsArret());
     }
 
@@ -123,11 +95,9 @@ System.out.println(dureeTotaleSec);
         var history = historyDAO.findById(historyid);
         if (history == null) return 0;
         
-        // Récupération de la durée en minutes, puis conversion en secondes
         int totalMinutes = historyDAO.findTempsTotaEpisodeByUserAndEpisode(history.getIdUser(), history.getEpisodeId());
         int totalSeconds = totalMinutes * 60;
         
-        // Secondes totales - Secondes visionnées
         return Math.max(0, totalSeconds - history.getTempsArret());
     }
 
@@ -142,7 +112,6 @@ System.out.println(dureeTotaleSec);
         
         int totalSeconds = totalMinutes * 60;
         
-        // IMPORTANT : Le cast (double) empêche Java d'arrondir le résultat à 0
         double prc = (double) history.getTempsArret() / totalSeconds;
         System.out.println("Pourcentage calculé : " + prc);
         
@@ -158,7 +127,6 @@ System.out.println(dureeTotaleSec);
         
         int totalSeconds = totalMinutes * 60;
         
-        // IMPORTANT : Le cast (double) empêche Java d'arrondir le résultat à 0
         double prc = (double) history.getTempsArret() / totalSeconds;
         System.out.println("Pourcentage calculé : " + prc);
         

@@ -3,8 +3,24 @@ package tn.farah.NetflixJava.utils;
 import tn.farah.NetflixJava.Entities.User;
 
 public class SessionData {
+	
+	private static String carteNumero;
+	private static String carteExpiration;
+	private static String carteCvv;
+	private static String carteNom;
 
-    // Variable statique pour garder l'utilisateur en mémoire
+	public static String getCarteNumero() { return carteNumero; }
+	public static void setCarteNumero(String v) { carteNumero = v; }
+
+	public static String getCarteExpiration() { return carteExpiration; }
+	public static void setCarteExpiration(String v) { carteExpiration = v; }
+
+	public static String getCarteCvv() { return carteCvv; }
+	public static void setCarteCvv(String v) { carteCvv = v; }
+
+	public static String getCarteNom() { return carteNom; }
+	public static void setCarteNom(String v) { carteNom = v; }
+   
     private static User currentUser;
     
     private static String forfaitNom = "Standard";

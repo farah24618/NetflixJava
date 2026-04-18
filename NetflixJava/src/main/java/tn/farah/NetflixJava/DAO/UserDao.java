@@ -16,7 +16,6 @@ public class UserDao {
         this.connection = connection;
     }
 
-    // --- CRÉATION ---
     public boolean addUser(User user) {
         String sql = "INSERT INTO users (prenom, nom, email, password_hash, role, created_at, last_login, is_active, birth_date, phone, pseudo, estPaye) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
@@ -27,7 +26,6 @@ public class UserDao {
             pstmt.setString(4, user.getPasswordHash());
             pstmt.setString(5, user.getRole().name());
             
-            // Gestion des dates avec vérification de nullité
             pstmt.setTimestamp(6, user.getCreatedAt() != null ? Timestamp.valueOf(user.getCreatedAt()) : Timestamp.valueOf(LocalDateTime.now()));
             
             if (user.getLastLogin() != null) pstmt.setTimestamp(7, Timestamp.valueOf(user.getLastLogin()));
@@ -58,7 +56,6 @@ public class UserDao {
         }
     }
 
-    // --- LECTURE ---
     public User getUserById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -127,7 +124,6 @@ public class UserDao {
         return null;
     }
 
-    // --- MISE À JOUR ---
     public boolean updateUser(User user) {
         String sql = "UPDATE users SET prenom = ?, nom = ?, email = ?, role = ?, is_active = ?, birth_date = ?, phone = ?, pseudo = ?, estPaye = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -170,7 +166,6 @@ public class UserDao {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    // --- SUPPRESSION ---
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -179,7 +174,6 @@ public class UserDao {
         } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
-    // --- AUTHENTIFICATION ---
     public User login(String email, String passwordHash) {
         String sql = "SELECT * FROM users WHERE email = ? AND password_hash = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -204,7 +198,6 @@ public class UserDao {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    // --- AUDIT LOGS ---
     public boolean addAuditLog(int adminId, String description) {
         String sql = "INSERT INTO audit_logs (admin_id, action_description, action_date) VALUES (?, ?, CURRENT_TIMESTAMP)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -230,7 +223,6 @@ public class UserDao {
         return logs;
     }
 
-    // --- MAPPER PRIVÉ ---
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getInt("id"));

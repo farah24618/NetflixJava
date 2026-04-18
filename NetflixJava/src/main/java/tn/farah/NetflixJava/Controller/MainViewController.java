@@ -17,27 +17,23 @@ import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class MainViewController implements Initializable {
 
-    // ── FXML Injections ───────────────────────────────────────────────────────
-
+    
     @FXML private Button signInButton;
 
-    @FXML private TextField heroEmailField;      // Hero section email input
+    @FXML private TextField heroEmailField;      
 
-    @FXML private Button heroGetStartedButton;   // Hero section "Get Started ›"
+    @FXML private Button heroGetStartedButton;   
 
-    @FXML private TextField faqEmailField;       // FAQ section email input (bottom CTA)
+    @FXML private TextField faqEmailField;       
 
     @FXML private Button faqGetStartedButton; 
-    @FXML private Region heroBackground;// FAQ section "Get Started ›"
-
-    // ── Initializable ─────────────────────────────────────────────────────────
-
+    @FXML private Region heroBackground;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         signInButton.setOnAction(e -> handleSignIn());
         heroGetStartedButton.setOnAction(e -> handleGetStarted(heroEmailField));
         faqGetStartedButton.setOnAction(e -> handleGetStarted(faqEmailField));
-     // Check if the file actually exists in the classpath
+  
         String imagePath = "/tn/farah/NetflixJava/ImagesNet/hero.jpeg";
         URL res = getClass().getResource(imagePath);
 
@@ -51,21 +47,13 @@ public class MainViewController implements Initializable {
         }
     }
 
-    // ── Handlers ──────────────────────────────────────────────────────────────
-
-    /**
-     * "Sign In" button — goes to Login screen.
-     * navigateAndReplace so the landing page is NOT kept in the back-stack.
-     */
+   
     @FXML
     private void handleSignIn() {
         ScreenManager.getInstance().navigateAndReplace(Screen.signup1);
     }
 
-    /**
-     * "Get Started ›" — validates email format then navigates to Register,
-     * passing the typed email to pre-fill the form.
-     */
+   
     @FXML
     private void handleHeroGetStarted() {
         handleGetStarted(heroEmailField);
@@ -98,12 +86,7 @@ public class MainViewController implements Initializable {
         }
     }
 
-    // ── Nav link handlers (optional — wire via fx:onMouseClicked in FXML) ─────
-
-
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
+    
     private boolean isValidEmail(String email) {
         return email.matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$");
     }

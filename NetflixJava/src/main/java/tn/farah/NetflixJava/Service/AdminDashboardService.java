@@ -10,7 +10,6 @@ public class AdminDashboardService {
         this.dashboardDAO = new AdminDashboardDAO();
     }
 
-    // On utilise les VRAIS noms de vos tables : "film", "serie", "episode", "user", "comment"
     public int getTotalFilms() { return dashboardDAO.getCount("film"); }
     public int getTotalSeries() { return dashboardDAO.getCount("serie"); }
     public int getTotalEpisodes() { return dashboardDAO.getCount("episode"); }
@@ -25,7 +24,7 @@ public class AdminDashboardService {
         return dashboardDAO.getCommentsByType();
     }
     public Map<String, Integer> getInscriptionsData() {
-        // adminDashboardDAO est votre instance de AdminDashboardDAO
+       
     	return dashboardDAO.getInscriptionsData(); 
     }
 }

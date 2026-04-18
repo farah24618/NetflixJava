@@ -32,16 +32,12 @@ public class FilmsController implements Initializable {
     private FilmService filmService;
     private FavoriService favoriService;
 
-    // ✅ FIX : tableau à 1 élément — capturé par référence dans les lambdas
     private final Pane[] overlayRef = new Pane[1];
 
     private List<Film>              allFilms        = new ArrayList<>();
     private Map<String, List<Film>> filmsByCategory = new LinkedHashMap<>();
     private final Set<String>       activeFilters   = new LinkedHashSet<>();
 
-    // ═══════════════════════════════════════════════════════════════
-    //  INIT
-    // ═══════════════════════════════════════════════════════════════
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -69,9 +65,6 @@ public class FilmsController implements Initializable {
         });
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  NAVIGATION HELPER
-    // ═══════════════════════════════════════════════════════════════
 
     private Consumer<Film> goToDetail() {
         return film -> {
@@ -80,10 +73,6 @@ public class FilmsController implements Initializable {
             if (ctrl != null) ctrl.setFilm(film);
         };
     }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  FILTRES
-    // ═══════════════════════════════════════════════════════════════
 
     private void buildFilterBar() {
         ToggleButton allBtn = new ToggleButton("Tous");
@@ -123,9 +112,6 @@ public class FilmsController implements Initializable {
         });
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  3 SECTIONS
-    // ═══════════════════════════════════════════════════════════════
 
     private void renderSections(List<Film> source) {
         carouselContainer.getChildren().clear();
@@ -137,7 +123,7 @@ public class FilmsController implements Initializable {
             return;
         }
 
-        // 1. Récemment ajoutés
+
         List<Film> recent = source.stream()
             .filter(f -> f.getDateSortie() != null)
             .sorted(Comparator.comparing(Film::getDateSortie).reversed())
@@ -146,7 +132,6 @@ public class FilmsController implements Initializable {
             carouselContainer.getChildren().add(
             		CardFactory.buildFilmCarousel("🆕  Récemment ajoutés", recent, overlayRef, goToFilmDetail()));
 
-        // 2. Top Rated
         List<Film> topRated = source.stream()
             .filter(f -> f.getRatingMoyen() > 0)
             .sorted(Comparator.comparingDouble(Film::getRatingMoyen).reversed())
@@ -171,9 +156,7 @@ public class FilmsController implements Initializable {
         });
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  SEARCH
-    // ═══════════════════════════════════════════════════════════════
+
 
     private void applySearch(String query) {
         if (query == null || query.isBlank()) { renderSections(allFilms); return; }
@@ -194,9 +177,7 @@ public class FilmsController implements Initializable {
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //  HANDLERS FXML
-    // ═══════════════════════════════════════════════════════════════
+
 
     @FXML private void onHome()      { ScreenManager.getInstance().navigateTo(Screen.home); }
     @FXML private void onMovies()    { /* déjà ici */ }

@@ -93,7 +93,7 @@ public abstract class  Media {
 
 	public Set<Warning> getWarnings() {
 		return warnings;
-		//hedhi
+		
 	}
 
 	public void setWarnings(Set<Warning> warnings) {

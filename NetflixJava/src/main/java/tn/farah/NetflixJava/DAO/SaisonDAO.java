@@ -16,9 +16,6 @@ public class SaisonDAO {
         this.connection = connection;
     }
 
-    // ─────────────────────────────────
-    // FIND ALL
-    // ─────────────────────────────────
     public List<Saison> findAll() {
         List<Saison> saisons = new ArrayList<>();
         String SQL = "SELECT id, serie_id, numero, nom, date_sortie FROM season";
@@ -35,9 +32,6 @@ public class SaisonDAO {
         return saisons;
     }
 
-    // ─────────────────────────────────
-    // SAVE (INSERT)
-    // ─────────────────────────────────
     public int save(Saison saison) {
         int saisonId = 0;
         String sql = "INSERT INTO season(serie_id, numero, nom, date_sortie) VALUES (?, ?, ?, ?)";
@@ -61,9 +55,6 @@ public class SaisonDAO {
         return saisonId;
     }
 
-    // ─────────────────────────────────
-    // FIND BY ID
-    // ─────────────────────────────────
     public Saison findById(int id) {
         String sql = "SELECT id, serie_id, numero, nom, date_sortie FROM season WHERE id = ?";
 
@@ -80,9 +71,6 @@ public class SaisonDAO {
         return null;
     }
     
-    // ─────────────────────────────────
-    // UPDATE
-    // ─────────────────────────────────
     public void update(Saison saison) {
         String sql = "UPDATE season SET serie_id = ?, numero = ?, nom = ?, date_sortie = ? WHERE id = ?";
 
@@ -98,9 +86,6 @@ public class SaisonDAO {
         }
     }
 
-    // ─────────────────────────────────
-    // DELETE
-    // ─────────────────────────────────
     public void delete(int id) {
         String sql = "DELETE FROM season WHERE id = ?";
         try (PreparedStatement pstml = connection.prepareStatement(sql)) {
@@ -111,9 +96,6 @@ public class SaisonDAO {
         }
     }
 
-    // ─────────────────────────────────
-    // FIND BY SERIE
-    // ─────────────────────────────────
     public List<Saison> findBySerieId(int idSerie) {
         List<Saison> saisons = new ArrayList<>();
         String sql = "SELECT id, serie_id, numero, nom, date_sortie FROM season WHERE serie_id = ? ORDER BY numero ASC";
@@ -131,9 +113,6 @@ public class SaisonDAO {
         return saisons;
     }
    
-    // ─────────────────────────────────
-    // METHODES UTILITAIRES / COMPLEMENTAIRES
-    // ─────────────────────────────────
 
     private Saison mapResultSetToSaison(ResultSet rs) throws SQLException {
         Timestamp ts = rs.getTimestamp("date_sortie");
@@ -212,8 +191,7 @@ public class SaisonDAO {
         
         return firstSeasonId;
     }
-   
-    // Pour le compteur
+ 
     public int countBySerieId(int serieId) {
         String sql = "SELECT COUNT(*) FROM saison WHERE serie_id = ?";
         try (PreparedStatement pst = connection.prepareStatement(sql)) {
