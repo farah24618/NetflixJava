@@ -234,6 +234,24 @@
           StackPane.alignment="BOTTOM_CENTER"
           translateY="-60"
           visible="false"/>
+          <Label
+          fx:id="nextEpisodeOverlay"
+          alignment="CENTER_LEFT"
+          wrapText="true"
+          textFill="WHITE"
+          style="-fx-font-size: 15px; -fx-font-weight: bold;
+                 -fx-background-color: rgba(0,0,0,0.78);
+                 -fx-padding: 14 24 14 24;
+                 -fx-background-radius: 8;
+                 -fx-border-color: rgba(255,255,255,0.25);
+                 -fx-border-radius: 8;
+                 -fx-border-width: 1;"
+          StackPane.alignment="BOTTOM_RIGHT"
+          translateX="-40"
+          translateY="-120"
+          visible="false"
+          managed="false"/>
+          
 
    </children>
 </StackPane>
