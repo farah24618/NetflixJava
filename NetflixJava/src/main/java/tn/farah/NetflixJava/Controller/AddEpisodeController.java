@@ -104,23 +104,7 @@ public class AddEpisodeController implements Initializable {
         txtDuree.setEditable(false);
         txtDuree.setStyle("-fx-background-color:#1a1a22; -fx-text-fill:#888888;");
     }
-  /*  @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        Connection connection = ConxDB.getInstance();
-        episodeService  = new EpisodeService(connection);
-        saisonService   = new SaisonService(connection);
-        subtitleService = new SubtitleService(connection);
-        notificationService=new NotificationService(connection);
 
-        loadSaisons();
-
-        Episode ep = ScreenManager.getInstance().getEditingEpisode();
-        if (ep != null) {
-            populateForm(ep);
-            btnSave.setText("💾 Modifier");
-        }
-    }*/
-    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Connection connection = ConxDB.getInstance();
@@ -306,7 +290,6 @@ public class AddEpisodeController implements Initializable {
             activateDropZone(dropMiniature);
         }
     }
-
     @FXML
     private void handlePickVideo() {
         File file = pickVideoFile("Vidéo de l'épisode");
@@ -317,24 +300,43 @@ public class AddEpisodeController implements Initializable {
             activateDropZone(dropVideo);
             simulateProgress(pbVideo, "Vidéo sélectionnée");
 
-           
-            try {
-                javafx.scene.media.Media media = new javafx.scene.media.Media(file.toURI().toString());
-                javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
-                mp.setOnReady(() -> {
-                    videoDurationSeconds = (long) media.getDuration().toSeconds();
-                    int minutes = (int) (videoDurationSeconds / 60);
-                    txtDuree.setText(String.valueOf(minutes));
+            // ✅ Thread séparé — même solution que AddFilmController
+            new Thread(() -> {
+                try {
+                    String uri = file.toURI().toString();
+                    javafx.scene.media.Media media = new javafx.scene.media.Media(uri);
+                    javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
+
+                    // Attendre max 10 secondes que la durée soit disponible
+                    long timeout = System.currentTimeMillis() + 10000;
+                    while (System.currentTimeMillis() < timeout) {
+                        javafx.util.Duration d = media.getDuration();
+                        if (d != null && !d.isUnknown() && !d.isIndefinite()
+                                && d.greaterThan(javafx.util.Duration.ZERO)) {
+                            mp.dispose();
+                            long durationSeconds = (long) d.toSeconds();
+                            int minutes = (int) (durationSeconds / 60);
+
+                            javafx.application.Platform.runLater(() -> {
+                                videoDurationSeconds = durationSeconds;
+                                txtDuree.setText(String.valueOf(minutes));
+                                showSuccess("✅ Durée détectée : " + minutes + " min");
+                            });
+                            return;
+                        }
+                        Thread.sleep(100);
+                    }
+
+                    // Timeout — durée non détectée
                     mp.dispose();
-                    showSuccess("Durée détectée : " + minutes + " min");
-                });
-                mp.setOnError(() -> {
-                    showError("Impossible de lire la durée de la vidéo.");
-                    mp.dispose();
-                });
-            } catch (Exception e) {
-                showError("Erreur lecture vidéo : " + e.getMessage());
-            }
+                    javafx.application.Platform.runLater(() ->
+                        showError("⚠ Durée non détectée, entrez-la manuellement."));
+
+                } catch (Exception e) {
+                    javafx.application.Platform.runLater(() ->
+                        showError("Erreur durée : " + e.getMessage()));
+                }
+            }).start();
         }
     }
 
