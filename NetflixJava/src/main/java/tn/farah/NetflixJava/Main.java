@@ -93,7 +93,7 @@ nav.register(Screen.notification,  "/tn/farah/NetflixJava/notification.fxml");
 
 
 
-
+//
 
         primaryStage.setTitle("RakchaNet");
      
