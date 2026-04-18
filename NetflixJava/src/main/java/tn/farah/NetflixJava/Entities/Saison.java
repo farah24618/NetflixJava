@@ -2,9 +2,6 @@ package tn.farah.NetflixJava.Entities;
 
 import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Saison {
 	private int id;
     private int idSerie;

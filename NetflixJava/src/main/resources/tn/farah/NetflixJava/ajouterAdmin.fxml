@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="700.0" prefWidth="480.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.AjouterAdminController">
+   <center>
+      <VBox alignment="TOP_CENTER" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" style="-fx-background-color: #000000; -fx-border-color: #222222; -fx-border-width: 0 0 1 0;">
+               <padding>
+                  <Insets bottom="20.0" left="32.0" right="20.0" top="20.0" />
+               </padding>
+               <children>
+                  <ImageView fitHeight="97.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@ImagesNet/RAKCHANET.jpg" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="-30.0" top="-20.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <Region HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+
+            <VBox alignment="CENTER" spacing="16.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+               <children>
+                  <VBox maxWidth="420.0" spacing="14.0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-radius: 8; -fx-background-radius: 8;">
+                     <padding>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="36.0" />
+                     </padding>
+                     <children>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Créer nouveau compte Admin" />
+                        
+                        <HBox spacing="10.0">
+                           <children>
+                              <TextField fx:id="firstNameField" promptText="Prénom" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="lastNameField" promptText="Nom de famille" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+
+                        <TextField fx:id="emailField" promptText="Adresse e-mail" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        
+                        <PasswordField fx:id="passwordField" promptText="Mot de passe" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        
+                        <TextField fx:id="phoneField" promptText="+216 Numéro de téléphone" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-pref-height: 42;" />
+                        
+                        <HBox spacing="8.0">
+                           <children>
+                              <ComboBox fx:id="dayComboBox" maxWidth="1.7976931348623157E308" promptText="Jour" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="monthComboBox" maxWidth="1.7976931348623157E308" promptText="Mois" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="yearComboBox" maxWidth="1.7976931348623157E308" promptText="Année" style="-fx-background-color: #1a1a1a; -fx-border-color: #444444; -fx-border-radius: 4; -fx-background-radius: 4; -fx-pref-height: 42;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <Button fx:id="continueButton" maxWidth="420.0" mnemonicParsing="false" onAction="#handleContinuer" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-pref-height: 46; -fx-background-radius: 4;" text="Se connecter" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

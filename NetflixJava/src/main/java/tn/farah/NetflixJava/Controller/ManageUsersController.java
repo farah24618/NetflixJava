@@ -203,63 +203,66 @@ public class ManageUsersController {
         actions.setAlignment(Pos.CENTER);
         actions.setMinWidth(240);
         
-        if (isAdmin) {
-            Button logsBtn = new Button("Historique");
-            logsBtn.setStyle("-fx-background-color: #1a1a1a; -fx-text-fill: #888; -fx-border-color: #333; -fx-background-radius: 5; -fx-cursor: hand;");
-            logsBtn.setOnAction(e -> handleViewLogs(u));
-            actions.getChildren().add(logsBtn);
-        } else {
+        if (!isAdmin) {
             Button blockBtn = new Button();
             updateBlockButtonStyle(blockBtn, u.isActive());
             blockBtn.setOnAction(event -> {
                 u.setActive(!u.isActive());
                 if (userSer.updateUser(u)) {
-                	userSer.addAuditLog(1, (u.isActive() ? "Déblocage" : "Blocage") + " de : " + u.getUsername());
+                    userSer.addAuditLog(1, (u.isActive() ? "Déblocage" : "Blocage") + " de : " + u.getUsername());
                     renderUsers(allUsers);
                 }
             });
             actions.getChildren().add(blockBtn);
         }
+        else {
+            // Espace réservé pour aligner le 🗑 avec les autres lignes
+            javafx.scene.layout.Region placeholder = new javafx.scene.layout.Region();
+            placeholder.setMinWidth(100); // même largeur que blockBtn
+            actions.getChildren().add(placeholder);
+        }
         
         Button deleteBtn = new Button("🗑");
         deleteBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #555; -fx-cursor: hand; -fx-font-size: 14px;");
         deleteBtn.setOnAction(e -> {
-            if (userSer.deleteUser(u.getId())) {
-                allUsers.remove(u);
-                renderUsers(allUsers);
-                updateTabCounts();
-            }
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmer la suppression");
+            confirm.setHeaderText("Supprimer l'utilisateur");
+            confirm.setContentText("Voulez-vous vraiment supprimer « " + u.getUsername() + " » ?\nCette action est irréversible.");
+            
+            // Style sombre pour correspondre au thème
+            confirm.getDialogPane().setStyle("-fx-background-color: #111111;");
+            confirm.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+            confirm.getDialogPane().lookup(".header-panel").setStyle("-fx-background-color: #1a1a1a;");
+            confirm.getDialogPane().lookup(".header-panel .label").setStyle("-fx-text-fill: white;");
+
+            ButtonType btnOui = new ButtonType("Supprimer", ButtonBar.ButtonData.OK_DONE);
+            ButtonType btnNon = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            confirm.getButtonTypes().setAll(btnOui, btnNon);
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == btnOui) {
+                    if (userSer.deleteUser(u.getId())) {
+                        allUsers.remove(u);
+                        renderUsers(allUsers);
+                        updateTabCounts();
+                    } else {
+                        Alert error = new Alert(Alert.AlertType.ERROR);
+                        error.setTitle("Erreur");
+                        error.setHeaderText(null);
+                        error.setContentText("Impossible de supprimer l'utilisateur.");
+                        error.showAndWait();
+                    }
+                }
+            });
         });
 
         actions.getChildren().addAll(deleteBtn);
         row.getChildren().addAll(cb, userBox, emailLabel, statusBadge, actions);
         return row;
     }
+    
 
-    private void handleViewLogs(User u) {
-        Stage logStage = new Stage();
-        logStage.setTitle("Historique - " + u.getUsername());
-        VBox root = new VBox(15);
-        root.setStyle("-fx-background-color: #0a0a0c; -fx-padding: 25;");
-        
-        Label title = new Label("Activité : " + u.getUsername());
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
-
-        TextArea logArea = new TextArea();
-        logArea.setEditable(false);
-        logArea.setStyle("-fx-control-inner-background: #111; -fx-text-fill: #888;");
-        
-        List<String> logs = userSer.getAdminLogs(u.getId());
-        logArea.setText(logs.isEmpty() ? "Aucune activité." : String.join("\n", logs));
-
-        Button closeBtn = new Button("Fermer");
-        closeBtn.setStyle("-fx-background-color: #e50914; -fx-text-fill: white;");
-        closeBtn.setOnAction(e -> logStage.close());
-
-        root.getChildren().addAll(title, logArea, closeBtn);
-        logStage.setScene(new Scene(root, 400, 300));
-        logStage.show();
-    }
 
     private void updateBlockButtonStyle(Button btn, boolean isActive) {
         btn.setText(isActive ? "Bloquer" : "Débloquer");
@@ -307,5 +310,9 @@ public class ManageUsersController {
         if(tabAll != null) tabAll.setStyle(idle); 
         if(tabAdmins != null) tabAdmins.setStyle(idle); 
         if(tabBlocked != null) tabBlocked.setStyle(idle);
+    }
+    @FXML
+    private void handleAjouterAdmin() {
+    	 ScreenManager.getInstance().navigateTo(Screen.ajouterAdmin);
     }
 }

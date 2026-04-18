@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.animation.KeyFrame;
+
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +34,12 @@ import java.net.URL;
 import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.*;
-
+//new
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 public class AddFilmController implements Initializable {
 
     // ─── Services ────────────────────────────────────────────────────────────
@@ -67,6 +73,8 @@ public class AddFilmController implements Initializable {
     @FXML private DatePicker dpDateSortie;
     @FXML private TextField  txtDuree;
     @FXML private ComboBox<AgeRating> cbAgeRating;
+ // Ajouter après les autres attributs File
+    private long videoDurationSeconds = -1;
 
     // ─── Categories ──────────────────────────────────────────────────────────
     @FXML private FlowPane  categoriesPane;
@@ -207,12 +215,73 @@ public class AddFilmController implements Initializable {
         boolean isSelected = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
         Button chip = new Button(cat.getName());
         applyChipStyle(chip, isSelected);
+
+        // Clic gauche : sélectionner/désélectionner
         chip.setOnAction(e -> {
             boolean sel = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
             if (sel) selectedCategories.removeIf(c -> c.getId() == cat.getId());
             else     selectedCategories.add(cat);
             applyChipStyle(chip, !sel);
         });
+
+        // Clic droit : menu contextuel Modifier / Supprimer
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-background-color: #1a1a1a; -fx-border-color: #333;");
+
+        MenuItem itemModifier = new MenuItem("✏ Modifier");
+        itemModifier.setStyle("-fx-text-fill: white; -fx-background-color: #1a1a1a;");
+        itemModifier.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog(cat.getName());
+            dialog.setTitle("Modifier la catégorie");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Nouveau nom :");
+            dialog.getDialogPane().setStyle("-fx-background-color: #111;");
+            dialog.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+            dialog.showAndWait().ifPresent(newName -> {
+                if (!newName.trim().isEmpty()) {
+                    try {
+                        cat.setName(newName.trim());
+                        categoryService.updateCategory(cat);
+                        loadCategoryChips();
+                        showSuccess("Catégorie renommée en « " + newName.trim() + " »");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        MenuItem itemSupprimer = new MenuItem("🗑 Supprimer");
+        itemSupprimer.setStyle("-fx-text-fill: #e50914; -fx-background-color: #1a1a1a;");
+        itemSupprimer.setOnAction(e -> {
+            boolean estSelectionnee = selectedCategories.stream().anyMatch(c -> c.getId() == cat.getId());
+            
+            String message = estSelectionnee
+                ? "La catégorie « " + cat.getName() + " » est actuellement sélectionnée.\nElle sera désélectionnée ET supprimée définitivement. Confirmer ?"
+                : "Supprimer « " + cat.getName() + " » définitivement ?";
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Supprimer la catégorie");
+            confirm.setHeaderText(estSelectionnee ? "⚠ Catégorie active !" : null);
+            confirm.setContentText(message);
+            confirm.showAndWait().ifPresent(resp -> {
+                if (resp == ButtonType.OK) {
+                    try {
+                        selectedCategories.removeIf(c -> c.getId() == cat.getId());
+                        categoryService.deleteCategory(cat.getId());
+                        loadCategoryChips();
+                        showSuccess("Catégorie « " + cat.getName() + " » supprimée.");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        contextMenu.getItems().addAll(itemModifier, itemSupprimer);
+        chip.setOnContextMenuRequested(e ->
+            contextMenu.show(chip, e.getScreenX(), e.getScreenY()));
+
         return chip;
     }
 
@@ -259,12 +328,72 @@ public class AddFilmController implements Initializable {
         boolean isSelected = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
         Button chip = new Button(w.getNom());
         applyChipStyle(chip, isSelected);
+
         chip.setOnAction(e -> {
             boolean sel = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
             if (sel) selectedWarnings.removeIf(sw -> sw.getId() == w.getId());
             else     selectedWarnings.add(w);
             applyChipStyle(chip, !sel);
         });
+
+        // Clic droit : Modifier / Supprimer
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setStyle("-fx-background-color: #1a1a1a; -fx-border-color: #333;");
+
+        MenuItem itemModifier = new MenuItem("✏ Modifier");
+        itemModifier.setStyle("-fx-text-fill: white; -fx-background-color: #1a1a1a;");
+        itemModifier.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog(w.getNom());
+            dialog.setTitle("Modifier le warning");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Nouveau nom :");
+            dialog.getDialogPane().setStyle("-fx-background-color: #111;");
+            dialog.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+            dialog.showAndWait().ifPresent(newName -> {
+                if (!newName.trim().isEmpty()) {
+                    try {
+                        w.setNom(newName.trim());
+                        warningService.updateWarning(w);
+                        loadWarningChips();
+                        showSuccess("Warning renommé en « " + newName.trim() + " »");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        MenuItem itemSupprimer = new MenuItem("🗑 Supprimer");
+        itemSupprimer.setStyle("-fx-text-fill: #e50914; -fx-background-color: #1a1a1a;");
+        itemSupprimer.setOnAction(e -> {
+            boolean estSelectionne = selectedWarnings.stream().anyMatch(sw -> sw.getId() == w.getId());
+
+            String message = estSelectionne
+                ? "Le warning « " + w.getNom() + " » est actuellement sélectionné.\nIl sera désélectionné ET supprimé définitivement. Confirmer ?"
+                : "Supprimer « " + w.getNom() + " » définitivement ?";
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Supprimer le warning");
+            confirm.setHeaderText(estSelectionne ? "⚠ Warning actif !" : null);
+            confirm.setContentText(message);
+            confirm.showAndWait().ifPresent(resp -> {
+                if (resp == ButtonType.OK) {
+                    try {
+                        selectedWarnings.removeIf(sw -> sw.getId() == w.getId());
+                        warningService.deleteWarning(w.getId());
+                        loadWarningChips();
+                        showSuccess("Warning « " + w.getNom() + " » supprimé.");
+                    } catch (Exception ex) {
+                        showError("Erreur : " + ex.getMessage());
+                    }
+                }
+            });
+        });
+
+        contextMenu.getItems().addAll(itemModifier, itemSupprimer);
+        chip.setOnContextMenuRequested(e ->
+            contextMenu.show(chip, e.getScreenX(), e.getScreenY()));
+
         return chip;
     }
 
@@ -407,6 +536,25 @@ public class AddFilmController implements Initializable {
             lblVideoPlaceholder.setText("✅");
             activateDropZone(dropVideo);
             simulateProgress(pbVideo, "Vidéo prête : " + file.getName());
+
+            // Extraction de la durée via JavaFX Media
+            try {
+                javafx.scene.media.Media media = new javafx.scene.media.Media(file.toURI().toString());
+                javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
+                mp.setOnReady(() -> {
+                    videoDurationSeconds = (long) media.getDuration().toSeconds();
+                    int minutes = (int) (videoDurationSeconds / 60);
+                    txtDuree.setText(String.valueOf(minutes));
+                    mp.dispose();
+                    showSuccess("Durée détectée : " + minutes + " min");
+                });
+                mp.setOnError(() -> {
+                    showError("Impossible de lire la durée de la vidéo.");
+                    mp.dispose();
+                });
+            } catch (Exception e) {
+                showError("Erreur lecture vidéo : " + e.getMessage());
+            }
         }
     }
 
@@ -512,10 +660,30 @@ public class AddFilmController implements Initializable {
         if (txtSynopsis.getText().trim().isEmpty())   errors.append("• Synopsis obligatoire.\n");
         if (txtCasting.getText().trim().isEmpty())    errors.append("• Casting obligatoire.\n");
         if (txtProducteur.getText().trim().isEmpty()) errors.append("• Producteur obligatoire.\n");
-        if (txtDuree.getText().trim().isEmpty())      errors.append("• Durée obligatoire.\n");
         if (dpDateSortie.getValue() == null)          errors.append("• Date de sortie obligatoire.\n");
         if (cbAgeRating.getValue() == null)           errors.append("• Age Rating obligatoire.\n");
         if (selectedCategories.isEmpty())             errors.append("• Au moins une catégorie requise.\n");
+
+        // Validation durée : obligatoire + doit correspondre à la vidéo
+        if (txtDuree.getText().trim().isEmpty()) {
+            errors.append("• Durée obligatoire.\n");
+        } else {
+            try {
+                int dureeSaisie = Integer.parseInt(txtDuree.getText().trim());
+                if (dureeSaisie <= 0) {
+                    errors.append("• La durée doit être supérieure à 0.\n");
+                } else if (videoDurationSeconds > 0) {
+                    long dureeVideoMin = videoDurationSeconds / 60;
+                    if (dureeSaisie != dureeVideoMin) {
+                        errors.append("• La durée saisie (").append(dureeSaisie)
+                              .append(" min) ne correspond pas à la durée réelle de la vidéo (")
+                              .append(dureeVideoMin).append(" min).\n");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                errors.append("• La durée doit être un nombre entier (en minutes).\n");
+            }
+        }
 
         boolean hasPoster = filePoster != null || (filmToEdit != null && notEmpty(filmToEdit.getUrlImageCover()));
         boolean hasBanner = fileBanner != null || (filmToEdit != null && notEmpty(filmToEdit.getUrlImageBanner()));
@@ -525,7 +693,7 @@ public class AddFilmController implements Initializable {
         if (!hasBanner) errors.append("• Bannière obligatoire.\n");
         if (!hasVideo)  errors.append("• Vidéo principale obligatoire.\n");
 
-        // ✅ Validation des sous-titres : langue ET fichier obligatoires ensemble
+        // Validation des sous-titres : langue ET fichier obligatoires ensemble
         for (int i = 0; i < subtitleRows.size(); i++) {
             SubtitleRow sr = subtitleRows.get(i);
             boolean hasLang = sr.langage != null && !sr.langage.isEmpty();

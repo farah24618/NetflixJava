@@ -83,5 +83,9 @@ public class CategoryDAO {
 	            ps.setInt(2, categoryId);
 	            ps.executeUpdate();
 	}
-	    }}
+	    }
+	 
+
+
+}
 

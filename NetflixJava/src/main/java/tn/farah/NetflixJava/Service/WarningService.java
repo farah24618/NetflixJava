@@ -26,6 +26,12 @@ public class WarningService {
     public void save(Warning w) throws SQLException {
     	warningDao.save(w);
     }
+    public void updateWarning(Warning w) throws SQLException {
+        warningDao.update(w);
+    }
+    public void deleteWarning(int id) throws SQLException {
+        warningDao.delete(id);
+    }
 
     
    

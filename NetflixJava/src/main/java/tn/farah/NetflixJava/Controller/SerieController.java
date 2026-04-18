@@ -1,6 +1,7 @@
 package tn.farah.NetflixJava.Controller;
 
 import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -10,7 +11,7 @@ import tn.farah.NetflixJava.DAO.SerieDAO;
 import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Service.SerieService;
 import tn.farah.NetflixJava.utils.ConxDB;
-import tn.farah.NetflixJava.utils.DatabaseConnection;
+
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
