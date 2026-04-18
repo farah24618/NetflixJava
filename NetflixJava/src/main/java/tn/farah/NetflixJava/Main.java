@@ -85,9 +85,6 @@ public class Main extends Application {
 
 
         primaryStage.setTitle("RakchaNet");
-     
-        
-
 
        nav.navigateTo(Screen.mainView);
 
