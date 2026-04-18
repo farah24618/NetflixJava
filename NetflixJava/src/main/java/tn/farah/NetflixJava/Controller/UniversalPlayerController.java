@@ -34,7 +34,7 @@ import tn.farah.NetflixJava.utils.ScreenManager;
 
 public class UniversalPlayerController {
 
-
+	private int seekOnReadySeconds = 0;
 
     public enum Mode { FILM, EPISODE, TEASER }
 
@@ -60,6 +60,8 @@ public class UniversalPlayerController {
     @FXML private Label      titleLabel;
     
     @FXML private Label      subtitleLabel;
+    @FXML private Label nextEpisodeOverlay;
+    private Timeline nextEpisodeCountdown;
 
 
     private Mode           mode;
@@ -100,8 +102,15 @@ public class UniversalPlayerController {
 
    
     /** Open a film */
-
     public void initFilm(Film film, int userId) {
+        initFilm(film, userId, 0);
+    }
+
+    public void initEpisode(int episodeId, int userId) {
+        initEpisode(episodeId, userId, 0);
+    }
+    public void initFilm(Film film, int userId,int resumeSeconds) {
+    	 this.seekOnReadySeconds = resumeSeconds;
         this.mode       = Mode.FILM;
         this.userId     = userId;
         this.filmActuel = film;
@@ -111,7 +120,8 @@ public class UniversalPlayerController {
         chargerFilm(film);
     }
 
-    public void initEpisode(int episodeId, int userId) {
+    public void initEpisode(int episodeId, int userId,int resumeSeconds) {
+    	 this.seekOnReadySeconds = resumeSeconds;
         this.mode   = Mode.EPISODE;
         this.userId = userId;
         initServices();
@@ -290,6 +300,11 @@ public class UniversalPlayerController {
 
             mediaPlayer.setRate(currentRate);
             mediaPlayer.play();
+            if (seekOnReadySeconds > 0) {
+                final int t = seekOnReadySeconds;
+                seekOnReadySeconds = 0;
+                mediaPlayer.setOnReady(() -> mediaPlayer.seek(Duration.seconds(t)));
+            }
             playButton.setText("⏸");
             
             if (mode == Mode.EPISODE) {
@@ -446,16 +461,48 @@ public class UniversalPlayerController {
     private void handleNextEpisode() {
         if (currentEpisode == null) return;
         sauvegarderProgression(true);
+
         Episode next = episodeService.getNextEpisode(
             currentEpisode.getSaisonId(), currentEpisode.getNumeroEpisode());
-        if (next != null) {
-            stopSubtitleTicker();
-            chargerEpisode(next.getId());
-        } else {
+
+        if (next == null) {
             new Alert(Alert.AlertType.INFORMATION,
                 "Vous avez terminé tous les épisodes de cette saison !")
                 .showAndWait();
+            return;
         }
+
+        // Annuler un countdown déjà en cours
+        if (nextEpisodeCountdown != null) nextEpisodeCountdown.stop();
+
+        final int[] remaining = {5};
+
+        Platform.runLater(() -> {
+            nextEpisodeOverlay.setVisible(true);
+            nextEpisodeOverlay.setManaged(true);
+            nextEpisodeOverlay.setText(
+                "▶  Épisode suivant dans " + remaining[0] + "s\n"
+                + "Ép. " + next.getNumeroEpisode() + " — " + next.getTitre());
+        });
+
+        nextEpisodeCountdown = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            remaining[0]--;
+            if (remaining[0] > 0) {
+                Platform.runLater(() ->
+                    nextEpisodeOverlay.setText(
+                        "▶  Épisode suivant dans " + remaining[0] + "s\n"
+                        + "Ép. " + next.getNumeroEpisode() + " — " + next.getTitre()));
+            } else {
+                Platform.runLater(() -> {
+                    nextEpisodeOverlay.setVisible(false);
+                    nextEpisodeOverlay.setManaged(false);
+                });
+                stopSubtitleTicker();
+                chargerEpisode(next.getId());
+            }
+        }));
+        nextEpisodeCountdown.setCycleCount(5);
+        nextEpisodeCountdown.play();
     }
 
     @FXML
@@ -533,21 +580,11 @@ public class UniversalPlayerController {
         stage.setFullScreen(!fs);
         fullscreenButton.setText(fs ? "⛶ Plein écran" : "⊡ Fenêtré");
     }
-
     @FXML
     private void handleRetour() {
-        sauvegarderProgression(true);
-        shutdown();
-        switch (mode) {
-            case FILM -> {
-                MediaViewController ctrl = ScreenManager.getInstance()
-                    .navigateAndGetController(Screen.MediaView);
-                if (ctrl != null && filmActuel != null) ctrl.setFilm(filmActuel);
-            }
-            case EPISODE -> retournerALaSerie();
-            case TEASER  -> ScreenManager.getInstance().navigateTo(Screen.home);
-        }
+        ScreenManager.getInstance().goBack();
     }
+  
 
 
     private void retournerALaSerie() {
@@ -579,6 +616,7 @@ public class UniversalPlayerController {
     }
 
     public void shutdown() {
+    	if (nextEpisodeCountdown != null) nextEpisodeCountdown.stop();
         if (autoSaveTimeline != null) autoSaveTimeline.stop();
         stopSubtitleTicker();
         if (mediaPlayer != null) { mediaPlayer.stop(); mediaPlayer.dispose(); }
