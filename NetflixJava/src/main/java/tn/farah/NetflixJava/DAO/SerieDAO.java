@@ -104,8 +104,8 @@ public class SerieDAO {
     }
 
     public void update(Serie serie) {
-       
-        String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=? WHERE id=?";
+    	// ✅ Après — producteur ajouté
+    	String updateMedia = "UPDATE `media` SET titre=?, synopsis=?, casting=?, date_sortie=?, url_image_cover=?, url_image_banner=?, url_teaser=?, age_rating_id=?, producteur=? WHERE id=?";
         String updateSerie = "UPDATE serie SET est_complet=? WHERE id=?";
 
         try {
@@ -119,7 +119,8 @@ public class SerieDAO {
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
                 psM.setInt(8, serie.getAgeRating().getId());
-                psM.setInt(9, serie.getId());
+                psM.setString(9, serie.getProducteur());  // ✅ ajouté
+                psM.setInt(10, serie.getId()); 
                 psM.executeUpdate();
             }
             try (PreparedStatement psF = connection.prepareStatement(updateSerie)) {

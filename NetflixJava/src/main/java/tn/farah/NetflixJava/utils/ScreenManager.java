@@ -200,58 +200,7 @@ public class ScreenManager {
         ParallelTransition transition = new ParallelTransition(fade, scale);
         transition.play();
     }
-   /* public void navigateWithSplash(Screen screen) {
-        if (current != null) history.push(current);
-
-       
-       Image logoImg = new Image(
-        	    ScreenManager.class.getResource("/tn/farah/NetflixJava/ImagesNet/rakchanetLogo.png").toExternalForm()
-        	);
-        	javafx.scene.image.ImageView logo = new ImageView(logoImg);
-        	logo.setFitWidth(700);
-        	logo.setPreserveRatio(true);
-
-        ProgressIndicator spinner = new ProgressIndicator();
-        spinner.setStyle("-fx-progress-color: #E50914;");
-        spinner.setPrefSize(50, 50);
-
-        Label loading = new Label("Chargement...");
-        loading.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 14px;");
-
-        VBox splashRoot = new VBox(30, logo, spinner, loading);
-        splashRoot.setAlignment(javafx.geometry.Pos.CENTER);
-        splashRoot.setStyle("-fx-background-color: #141414;");
-        splashRoot.setPrefSize(1280, 720);
-
-        // 2. Afficher le splash IMMÉDIATEMENT sur le JavaFX thread
-        if (primaryStage.getScene() == null) {
-            primaryStage.setScene(new Scene(splashRoot, 1280, 720));
-        } else {
-            primaryStage.getScene().setRoot(splashRoot);
-        }
-        primaryStage.show();
-
-        // 3. Charger le FXML dans un thread séparé (ne bloque plus l'UI)
-        String path = routes.get(screen);
-        Thread loadThread = new Thread(() -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-                Parent root = loader.load(); // ← chargement lourd ici, hors JavaFX thread
-
-                // 4. Une fois prêt, revenir sur le JavaFX thread pour afficher
-                javafx.application.Platform.runLater(() -> {
-                    current = screen;
-                    applyScene(root);
-                });
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        loadThread.setDaemon(true); // ← le thread s'arrête quand l'app se ferme
-        loadThread.start();
-    }*/
+  
 
     private static class HistoryNode {
         Screen screen;

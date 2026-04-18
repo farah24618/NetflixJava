@@ -17,6 +17,7 @@ public class AdminDashboardDAO {
         cnx = ConxDB.getInstance(); 
     }
 
+
     public int getCount(String tableName) {
         int count = 0;
 
@@ -31,17 +32,27 @@ public class AdminDashboardDAO {
         }
         return count;
     }
+
     public Map<String, Integer> getContentByYear() {
         Map<String, Integer> data = new HashMap<>();
         
 
-        String query = "SELECT release_year, COUNT(*) as total FROM film GROUP BY release_year ORDER BY release_year ASC LIMIT 10";
+       
+        String query = "SELECT date_sortie, COUNT(*) as total FROM media GROUP BY release_year ORDER BY release_year ASC LIMIT 10";
+
+
+      
+
         
         try (PreparedStatement pst = cnx.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
+
+                
+                String year = rs.getString("date_sortie") != null ? rs.getString("date_sortie") : "Inconnu";
+
         
-                String year = rs.getString("release_year") != null ? rs.getString("release_year") : "Inconnu";
+              
                 data.put(year, rs.getInt("total"));
             }
         } catch (SQLException e) {
@@ -52,20 +63,44 @@ public class AdminDashboardDAO {
 
 
     public Map<String, Integer> getCommentsByType() {
-        Map<String, Integer> data = new HashMap<>();
-     
-        data.put("Sur les Films", getCount("comment")); 
-        data.put("Sur les Séries", 0); 
-        
+
+        Map<String, Integer> data = new LinkedHashMap<>();
+        String sql = """
+            SELECT 
+                CASE 
+                    WHEN contient_spoils = 1 THEN 'Spoiler'
+                    WHEN est_signale = 1 THEN 'Signalé'
+                    ELSE 'Normal'
+                END AS type_commentaire,
+                COUNT(*) AS total
+            FROM comment
+            GROUP BY type_commentaire
+        """;
+        try (PreparedStatement ps = cnx.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next())
+                data.put(rs.getString("type_commentaire"), rs.getInt("total"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+       
+
         return data;
     }
 
+
     public Map<String, Integer> getInscriptionsData() {
-   
+
+        
         Map<String, Integer> data = new LinkedHashMap<>(); 
+      
+
+     
+
 
         String query = "SELECT DATE(created_at) as jour, COUNT(*) as total " +
-                       "FROM users GROUP BY DATE(created_at) ORDER BY jour ASC LIMIT 7";
+                       "FROM users GROUP BY DATE(created_at) ORDER BY jour DESC LIMIT 7";
 
         try (PreparedStatement pst = cnx.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {

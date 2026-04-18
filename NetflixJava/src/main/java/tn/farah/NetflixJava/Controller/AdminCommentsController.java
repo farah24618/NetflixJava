@@ -223,7 +223,7 @@ public class AdminCommentsController implements Initializable {
         String risk   = resolveRisk(item);
 
         authorLabel.setText(item.getUsername() != null ? item.getUsername() : "Utilisateur #" + item.getUserId());
-        mediaLabel.setText("Média #" + item.getMediaId());
+        mediaLabel.setText(commentaireService.getTitreMedia(item.getId()));
         typeLabel.setText("—");   // no type field in Commentaire
         dateLabel.setText(item.getDateCommentaire() != null
                 ? item.getDateCommentaire().toLocalDate().toString() : "—");

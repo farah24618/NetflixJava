@@ -90,7 +90,15 @@ public class WarningDao {
 	            ps.setInt(2, warnId);
 	            ps.executeUpdate();
 
-		}
+		}}
+	        public void supprimerLiaison(int mediaId ,int categoryId) throws SQLException {
+		    	 String sql = "DELETE FROM media_warning WHERE media_id = ? AND warning_id = ?";
+			        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			            ps.setInt(1, mediaId);
+			            ps.setInt(2, categoryId);
+			            ps.executeUpdate();
+		    }
+		 
 
 
 }

@@ -78,8 +78,15 @@ public class CategoryDAO {
 	            ps.executeUpdate();
 	}
 	    }
+	    public void supprimerLiaison(int mediaId ,int categoryId) throws SQLException {
+	    	 String sql = "DELETE  FROM media_category WHERE media_id = ? AND category_id = ?";
+		        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+		            ps.setInt(1, mediaId);
+		            ps.setInt(2, categoryId);
+		            ps.executeUpdate();
+	    }
 	 
 
 
-}
+}}
 

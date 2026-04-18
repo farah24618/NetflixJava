@@ -1024,7 +1024,12 @@ public class MediaViewController implements Initializable {
                 btnNoter.setDisable(true);
                 if (modeSerieActif && serieActuelle != null) {
                     serieActuelle.setRatingMoyen(moy);
-                    serieService.updateSerie(serieActuelle);
+                    try {
+						serieService.updateSerie(serieActuelle);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 } else if (filmActuel != null) {
                     filmActuel.setRatingMoyen(moy);
                     try { filmService.update(filmActuel); }

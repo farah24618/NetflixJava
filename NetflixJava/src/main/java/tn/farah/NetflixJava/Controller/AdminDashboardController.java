@@ -74,6 +74,7 @@ public class AdminDashboardController implements Initializable {
         inscriptionsChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Nouveaux inscrits");
+
         Map<String, Integer> inscriptionsData = dashboardService.getInscriptionsData();
 
         for (Map.Entry<String, Integer> entry : inscriptionsData.entrySet()) {

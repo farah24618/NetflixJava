@@ -55,4 +55,10 @@ public class CommentaireService {
     public List<Commentaire> findAll () {
     	return commentaireDAO.findAll();
     }
+
+public String getTitreMedia(int id) {
+	return commentaireDAO.getNomMedia(id);
+}
+
+
 }
