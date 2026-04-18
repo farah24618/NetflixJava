@@ -474,7 +474,7 @@ public class AddFilmController implements Initializable {
             simulateProgress(pbTeaser, "Teaser prêt : " + file.getName());
         }
     }
-
+/*
     @FXML
     private void handlePickVideo() {
         File file = pickVideoFile("Sélectionner la vidéo principale du film");
@@ -484,24 +484,92 @@ public class AddFilmController implements Initializable {
             lblVideoPlaceholder.setText("✅");
             activateDropZone(dropVideo);
             simulateProgress(pbVideo, "Vidéo prête : " + file.getName());
+
             try {
-                javafx.scene.media.Media media = new javafx.scene.media.Media(file.toURI().toString());
-                javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
-                mp.setOnReady(() -> {
-                    videoDurationSeconds = (long) media.getDuration().toSeconds();
-                    int minutes = (int) (videoDurationSeconds / 60);
-                    txtDuree.setText(String.valueOf(minutes));
-                    mp.dispose();
-                    showSuccess("Durée détectée : " + minutes + " min");
+                String uri = file.toURI().toString();
+                Media media = new Media(uri);
+                MediaPlayer mp = new MediaPlayer(media);
+
+                // ✅ Utilise onReady ET un listener sur duration pour plus de fiabilité
+                media.durationProperty().addListener((obs, oldVal, newVal) -> {
+                    if (newVal != null && newVal.greaterThan(Duration.ZERO)) {
+                        javafx.application.Platform.runLater(() -> {
+                            videoDurationSeconds = (long) newVal.toSeconds();
+                            int minutes = (int) (videoDurationSeconds / 60);
+                            txtDuree.setText(String.valueOf(minutes));
+                            mp.dispose();
+                            showSuccess("Durée détectée : " + minutes + " min");
+                        });
+                    }
                 });
+
                 mp.setOnError(() -> {
-                    showError("Impossible de lire la durée de la vidéo.");
-                    mp.dispose();
+                    javafx.application.Platform.runLater(() -> {
+                        showError("Impossible de lire la durée : " + mp.getError().getMessage());
+                        mp.dispose();
+                    });
                 });
+
             } catch (Exception e) {
                 showError("Erreur lecture vidéo : " + e.getMessage());
             }
         }
+    }*/
+    @FXML
+    private void handlePickVideo() {
+        File file = pickVideoFile("Sélectionner la vidéo principale du film");
+        if (file != null) {
+            fileVideo = file;
+            lblVideoName.setText(file.getName());
+            lblVideoPlaceholder.setText("✅");
+            activateDropZone(dropVideo);
+            simulateProgress(pbVideo, "Vidéo prête : " + file.getName());
+
+            // Lance dans un thread séparé pour ne pas bloquer l'UI
+            new Thread(() -> {
+                try {
+                    long durationSeconds = getVideoDurationWithMedia(file);
+                    
+                    javafx.application.Platform.runLater(() -> {
+                        if (durationSeconds > 0) {
+                            videoDurationSeconds = durationSeconds;
+                            int minutes = (int) (durationSeconds / 60);
+                            txtDuree.setText(String.valueOf(minutes));
+                            showSuccess("✅ Durée détectée : " + minutes + " min");
+                        } else {
+                            showError("⚠ Durée non détectée, entrez-la manuellement.");
+                        }
+                    });
+                } catch (Exception e) {
+                    javafx.application.Platform.runLater(() ->
+                        showError("Erreur durée : " + e.getMessage()));
+                }
+            }).start();
+        }
+    }
+
+    private long getVideoDurationWithMedia(File file) {
+        try {
+            // Méthode 1 : JavaFX Media avec attente bloquante
+            String uri = file.toURI().toString();
+            javafx.scene.media.Media media = new javafx.scene.media.Media(uri);
+            javafx.scene.media.MediaPlayer mp = new javafx.scene.media.MediaPlayer(media);
+
+            // Attendre max 10 secondes
+            long timeout = System.currentTimeMillis() + 10000;
+            while (System.currentTimeMillis() < timeout) {
+                javafx.util.Duration d = media.getDuration();
+                if (d != null && !d.isUnknown() && !d.isIndefinite() && d.greaterThan(javafx.util.Duration.ZERO)) {
+                    mp.dispose();
+                    return (long) d.toSeconds();
+                }
+                Thread.sleep(100); // attendre 100ms et réessayer
+            }
+            mp.dispose();
+        } catch (Exception e) {
+            System.err.println("Media method failed: " + e.getMessage());
+        }
+        return -1;
     }
     @FXML
     private void handleSave() {
