@@ -31,58 +31,48 @@ import tn.farah.NetflixJava.utils.ConxDB;
 import tn.farah.NetflixJava.utils.Screen;
 import tn.farah.NetflixJava.utils.ScreenManager;
 
-/**
- * UniversalPlayerController
- * ══════════════════════════════════════════════════════════════════════════
- * Single controller for ALL playback contexts:
- *   • Film        – initFilm(Film, int userId)
- *   • Episode     – initEpisode(int episodeId, int userId)
- *   • Teaser      – initTeaser(String videoUrl, String titre)
- *
- * Context-specific toolbar buttons (skipIntro, nextEpisode, episodes list,
- * ficheButton) are shown / hidden automatically based on the play mode.
- * ══════════════════════════════════════════════════════════════════════════
- */
+
 public class UniversalPlayerController {
 
-    // ─────────────────────────────────────────────
-    // PLAY MODE
-    // ─────────────────────────────────────────────
+   
     public enum Mode { FILM, EPISODE, TEASER }
 
-    // ─────────────────────────────────────────────
-    // FXML INJECTION
-    // ─────────────────────────────────────────────
+  
     @FXML private StackPane  rootPane;
+    
     @FXML private MediaView  mediaView;
     @FXML private BorderPane controlsPane;
     @FXML private Button     playButton;
+    
     @FXML private Button     vitesseButton;
     @FXML private Button     lockButton;
+    
     @FXML private Button     fullscreenButton;
-    @FXML private Button     skipIntroButton;     // episode only
-    @FXML private Button     episodesButton;      // episode only
-    @FXML private Button     nextEpisodeButton;   // episode only
-    @FXML private Button     ficheButton;         // film / teaser only
+    
+    @FXML private Button     skipIntroButton;     
+    @FXML private Button     episodesButton;      
+    @FXML private Button     nextEpisodeButton;   
+    @FXML private Button     ficheButton;   
+    
     @FXML private Slider     progressBar;
     @FXML private Label      timeLabel;
     @FXML private Label      titleLabel;
+    
     @FXML private Label      subtitleLabel;
 
-    // ─────────────────────────────────────────────
-    // INTERNAL STATE
-    // ─────────────────────────────────────────────
+    
     private Mode           mode;
     private MediaPlayer    mediaPlayer;
     private double         currentRate = 1.0;
+    
     private boolean        locked      = false;
     private int            userId;
 
-    // Entities (only the relevant one is non-null)
+    
     private Film    filmActuel;
     private Episode currentEpisode;
 
-    // Services (lazily initialised in init* methods)
+    
     private FilmService     filmService;
     private EpisodeService  episodeService;
     private SerieService    serieService;
@@ -90,7 +80,7 @@ public class UniversalPlayerController {
     private HistoryService  historyService;
     private SubtitleService subtitleService;
 
-    // Listeners & timers
+    
     private ChangeListener<Duration> timeListener;
     private ChangeListener<Boolean>  valueChangingListener;
     private PauseTransition          hideTimer;
@@ -98,9 +88,7 @@ public class UniversalPlayerController {
     private Timeline                 subtitleTimeline;
     private List<SubtitleCue>        subtitleCues = new ArrayList<>();
 
-    // ─────────────────────────────────────────────
-    // SUBTITLE CUE
-    // ─────────────────────────────────────────────
+    
     private static class SubtitleCue {
         final double startSeconds, endSeconds;
         final String text;
@@ -109,10 +97,7 @@ public class UniversalPlayerController {
         }
     }
 
-    // ══════════════════════════════════════════════
-    // PUBLIC ENTRY POINTS
-    // ══════════════════════════════════════════════
-
+   
     /** Open a film */
     public void initFilm(Film film, int userId) {
         this.mode       = Mode.FILM;
@@ -129,19 +114,18 @@ public class UniversalPlayerController {
         this.mode   = Mode.EPISODE;
         this.userId = userId;
         initServices();
+        
         configureToolbar();
         initialiserHideTimer();
         chargerEpisode(episodeId);
     }
 
-    /**
-     * Open a teaser (no history, no subtitles, no lock needed).
-     * @param videoUrl  direct URL / file path of the video
-     * @param titre     label shown in the top bar
-     */
+    
     public void initTeaser(String videoUrl, String titre) {
+    	
         this.mode   = Mode.TEASER;
         this.userId = -1;
+        
         initServices();
         configureToolbar();
         initialiserHideTimer();
@@ -153,22 +137,20 @@ public class UniversalPlayerController {
         });
     }
 
-    // ──────────────────────────────────────────────
-    // TOOLBAR CONFIGURATION (per mode)
-    // ──────────────────────────────────────────────
+   
     private void configureToolbar() {
         boolean isEpisode = (mode == Mode.EPISODE);
         boolean isFilmOrTeaser = !isEpisode;
 
-        // Episode-only buttons
-        setButton(skipIntroButton,    false, false); // shown later by time listener
+        
+        setButton(skipIntroButton,    false, false); 
         setButton(episodesButton,     isEpisode, isEpisode);
         setButton(nextEpisodeButton,  isEpisode, isEpisode);
 
-        // Film/Teaser button
+        
         setButton(ficheButton, isFilmOrTeaser, isFilmOrTeaser);
 
-        // Teaser: no lock needed (lightweight mode)
+        
         if (mode == Mode.TEASER) {
             setButton(lockButton, false, false);
         }
@@ -176,15 +158,16 @@ public class UniversalPlayerController {
 
     private void setButton(Button btn, boolean visible, boolean managed) {
         if (btn == null) return;
+        
         btn.setVisible(visible);
         btn.setManaged(managed);
     }
 
-    // ──────────────────────────────────────────────
-    // SERVICE INITIALISATION
-    // ──────────────────────────────────────────────
+    
     private void initServices() {
+    	
         Connection connection = ConxDB.getInstance();
+        
         historyService  = new HistoryService(connection);
         subtitleService = new SubtitleService(connection);
 
@@ -198,9 +181,12 @@ public class UniversalPlayerController {
         }
     }
 
-    // ──────────────────────────────────────────────
-    // AUTO-HIDE CONTROLS
-    // ──────────────────────────────────────────────
+   
+    
+    
+    
+    
+    
     private void initialiserHideTimer() {
         controlsPane.setVisible(false);
         hideTimer = new PauseTransition(Duration.seconds(3));
@@ -214,27 +200,26 @@ public class UniversalPlayerController {
         });
     }
 
-    // ──────────────────────────────────────────────
-    // LOAD : FILM
-    // ──────────────────────────────────────────────
+    
     private void chargerFilm(Film film) {
         if (film == null) { System.err.println("Film null."); return; }
         filmService.incrementVues(film.getId());
         Platform.runLater(() -> {
             titleLabel.setText(film.getTitre());
+            
             String url = resoudreUrl(film.getUrlVedio());
             if (url != null) lancerVideo(url);
             else System.err.println("URL film invalide : " + film.getTitre());
         });
     }
 
-    // ──────────────────────────────────────────────
-    // LOAD : EPISODE
-    // ──────────────────────────────────────────────
+    
     private void chargerEpisode(int episodeId) {
         this.currentEpisode = episodeService.findById(episodeId);
         if (currentEpisode == null) {
             System.err.println("Épisode introuvable : " + episodeId);
+            
+            
             
             return;}
             episodeService.incrementerVues(episodeId);
@@ -245,23 +230,26 @@ public class UniversalPlayerController {
                 + " – Ép " + currentEpisode.getNumeroEpisode()
                 + " : " + currentEpisode.getTitre());
             String url = resoudreUrl(currentEpisode.getVideoUrl());
+            
             if (url != null) lancerVideo(url);
+            
             else System.err.println("URL épisode invalide : " + currentEpisode.getId());
         });
     }
 
-    // ──────────────────────────────────────────────
-    // VIDEO PLAYER
-    // ──────────────────────────────────────────────
+   
     private void lancerVideo(String url) {
+    	
         if (mediaPlayer != null) {
             if (timeListener != null)
                 mediaPlayer.currentTimeProperty().removeListener(timeListener);
+            
             if (valueChangingListener != null)
                 progressBar.valueChangingProperty().removeListener(valueChangingListener);
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
+        
         try {
             mediaPlayer = new MediaPlayer(new Media(url));
             mediaView.setMediaPlayer(mediaPlayer);
@@ -277,16 +265,17 @@ public class UniversalPlayerController {
             timeListener = (obs, oldTime, newTime) -> {
                 double cur = newTime.toSeconds();
                 double tot = mediaPlayer.getTotalDuration().toSeconds();
+                
                 Platform.runLater(() -> {
                     if (!progressBar.isValueChanging())
                         progressBar.setValue(tot > 0 ? (cur / tot) * 100 : 0);
                     timeLabel.setText(formatTime(cur) + " / " + formatTime(tot));
 
-                    // Skip-intro button (episode only)
                     if (mode == Mode.EPISODE && currentEpisode != null) {
                         boolean dansIntro = cur >= 0
                             && cur < currentEpisode.getDurreeIntro()
                             && currentEpisode.getDurreeIntro() > 0;
+                            
                         boolean show = dansIntro && !locked;
                         skipIntroButton.setVisible(show);
                         skipIntroButton.setManaged(show);
@@ -302,7 +291,10 @@ public class UniversalPlayerController {
             mediaPlayer.setRate(currentRate);
             mediaPlayer.play();
             playButton.setText("⏸");
-
+            
+            if (mode == Mode.EPISODE) {
+                mediaPlayer.setOnEndOfMedia(() -> Platform.runLater(this::handleNextEpisode));
+            }
             if (mode != Mode.TEASER) demarrerAutoSave();
 
         } catch (Exception e) {
@@ -317,12 +309,12 @@ public class UniversalPlayerController {
         mediaPlayer.seek(Duration.seconds(seekTo));
     }
 
-    // ──────────────────────────────────────────────
-    // AUTO-SAVE
-    // ──────────────────────────────────────────────
+   
     private void demarrerAutoSave() {
+    	
         if (autoSaveTimeline != null) autoSaveTimeline.stop();
         autoSaveTimeline = new Timeline(
+        		
             new KeyFrame(Duration.seconds(10), e -> sauvegarderProgression(false)));
         autoSaveTimeline.setCycleCount(Animation.INDEFINITE);
         autoSaveTimeline.play();
@@ -343,14 +335,13 @@ public class UniversalPlayerController {
         }
     }
 
-    // ──────────────────────────────────────────────
-    // SUBTITLES – SRT PARSER
-    // ──────────────────────────────────────────────
+    
     private List<SubtitleCue> parseSrt(String url) {
         List<SubtitleCue> cues = new ArrayList<>();
         try {
             java.io.InputStream is;
             if (url.startsWith("http")) {
+            	
                 is = new java.net.URL(url).openStream();
             } else {
                 String path = url.replaceFirst("^file:/+", "/").replace("%20", " ");
@@ -394,9 +385,7 @@ public class UniversalPlayerController {
              + Double.parseDouble(p[2]);
     }
 
-    // ──────────────────────────────────────────────
-    // SUBTITLES – TICKER
-    // ──────────────────────────────────────────────
+   
     private void startSubtitleTicker(List<SubtitleCue> cues) {
         if (subtitleTimeline != null) { subtitleTimeline.stop(); subtitleTimeline = null; }
         this.subtitleCues = cues;
@@ -423,9 +412,7 @@ public class UniversalPlayerController {
         if (subtitleLabel != null) Platform.runLater(() -> subtitleLabel.setVisible(false));
     }
 
-    // ══════════════════════════════════════════════
-    // FXML ACTIONS
-    // ══════════════════════════════════════════════
+   
 
     @FXML
     private void handlePlayPause() {
@@ -563,9 +550,7 @@ public class UniversalPlayerController {
         }
     }
 
-    // ──────────────────────────────────────────────
-    // NAVIGATION HELPERS
-    // ──────────────────────────────────────────────
+   
     private void retournerALaSerie() {
         if (currentEpisode == null) { ScreenManager.getInstance().navigateTo(Screen.series); return; }
         Serie serie = serieService != null ? serieService.findByEpisodeId(currentEpisode.getId()) : null;
@@ -575,9 +560,7 @@ public class UniversalPlayerController {
         else ScreenManager.getInstance().navigateTo(Screen.MediaView);
     }
 
-    // ──────────────────────────────────────────────
-    // UTILITIES
-    // ──────────────────────────────────────────────
+   
     private String resoudreUrl(String url) {
         if (url == null || url.isBlank()) return null;
         if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file:")) return url;

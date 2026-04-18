@@ -82,7 +82,7 @@ public class AdminDashboardController implements Initializable {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Nouveaux inscrits");
 
-        // Appel propre au Service ! Plus de SQL ici.
+        
         Map<String, Integer> inscriptionsData = dashboardService.getInscriptionsData();
 
         for (Map.Entry<String, Integer> entry : inscriptionsData.entrySet()) {
@@ -92,9 +92,7 @@ public class AdminDashboardController implements Initializable {
         inscriptionsChart.getData().add(series);
     }
 
-    // ==========================================
-    // =          NAVIGATION METHODS            =
-    // ==========================================
+    
 
     @FXML
     void goToFilmsAdmin(ActionEvent event) {

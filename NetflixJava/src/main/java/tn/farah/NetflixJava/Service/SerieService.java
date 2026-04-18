@@ -68,8 +68,41 @@ public class SerieService {
         }
     }
 
-    public void updateSerie(Serie serie) {
+    public void updateSerie(Serie serie) throws SQLException {
+    	Serie Oldserie =serieDao.findById(serie.getId());
+    	 if (Oldserie.getGenres() != null) {
+             for (Category cat : Oldserie.getGenres()) {
+                 
+ 					categoryDao.supprimerLiaison(Oldserie.getId(),cat.getId());
+ 				
+             }
+         }
+
+         if (Oldserie.getWarnings() != null) {
+             for (Warning warn : Oldserie.getWarnings()) {
+                 
+ 					warningDao.supprimerLiaison(Oldserie.getId(),warn.getId());
+ 				
+             }
+         }
         serieDao.update(serie);
+        
+        if (serie.getGenres() != null) {
+            for (Category cat : serie.getGenres()) {
+                
+					categoryDao.lierMedia(serie.getId(), cat.getId());
+				
+            }
+        }
+
+        if (serie.getWarnings() != null) {
+            for (Warning warn : serie.getWarnings()) {
+                
+					warningDao.lierMedia(serie.getId(), warn.getId());
+				
+            }
+        }
+        
     }
 
     /*public void deleteSerie(int id) {

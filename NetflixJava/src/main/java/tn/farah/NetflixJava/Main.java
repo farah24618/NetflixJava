@@ -86,6 +86,7 @@ public class Main extends Application {
         nav.register(Screen.MediaView, "/tn/farah/NetflixJava/MediaView.fxml");
 
         nav.register(Screen.ajouterAdmin, "/tn/farah/NetflixJava/ajouterAdmin.fxml");
+        nav.register(Screen.login, "/tn/farah/NetflixJava/login.fxml");
 
         
 
@@ -116,8 +117,7 @@ public class Main extends Application {
      // nav.navigateTo(Screen.admin_main);
 
 
-       nav.navigateTo(Screen.addSerie);
-
+       nav.navigateTo(Screen.login);
 
    
 

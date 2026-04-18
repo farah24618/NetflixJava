@@ -17,6 +17,7 @@ import tn.farah.NetflixJava.DAO.FilmDao;
 import tn.farah.NetflixJava.DAO.WarningDao;
 import tn.farah.NetflixJava.Entities.Category;
 import tn.farah.NetflixJava.Entities.Film;
+import tn.farah.NetflixJava.Entities.Serie;
 import tn.farah.NetflixJava.Entities.Warning;
 public class FilmService {
 
@@ -145,7 +146,38 @@ public class FilmService {
 	    	filmDao.delete(id);
 	    }
 	    public void updateFilm(Film film) throws SQLException {
+	    	Film Oldfilm =filmDao.findById(film.getId());
+	    	 if (Oldfilm.getGenres() != null) {
+	             for (Category cat : Oldfilm.getGenres()) {
+	                 
+	 					categoryDao.supprimerLiaison(Oldfilm.getId(),cat.getId());
+	 				
+	             }
+	         }
+
+	         if (Oldfilm.getWarnings() != null) {
+	             for (Warning warn : Oldfilm.getWarnings()) {
+	                 
+	 					warningDao.supprimerLiaison(Oldfilm.getId(),warn.getId());
+	 				
+	             }
+	         }
 	    	filmDao.update(film);
+	    	 if (film.getGenres() != null) {
+	             for (Category cat : film.getGenres()) {
+	                 
+	 					categoryDao.lierMedia(film.getId(), cat.getId());
+	 				
+	             }
+	         }
+
+	         if (film.getWarnings() != null) {
+	             for (Warning warn : film.getWarnings()) {
+	                 
+	 					warningDao.lierMedia(film.getId(), warn.getId());
+	 				
+	             }
+	         }
 	    }
 
 

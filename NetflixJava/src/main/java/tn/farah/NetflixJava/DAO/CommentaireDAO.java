@@ -93,16 +93,7 @@ public class CommentaireDAO {
     }
 
 
-    /**
-     * Supprime un commentaire (Action Admin)
-     */
-  
-
-    
-
- // ==========================================
-    // MÉTHODES CRUD SUPPLÉMENTAIRES
-    // ==========================================
+   
 
     /**
      * Récupérer un commentaire spécifique par son ID
@@ -228,5 +219,27 @@ public class CommentaireDAO {
             e.printStackTrace();
         }
     }
+    public String getNomMedia(int commentId) {
+    	String n = null;
+        String sql = "SELECT  m.titre " +
+                     "FROM comment c " + 
+                     "JOIN media m ON m.id = c.media_id " + 
+                     "WHERE c.id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1,commentId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+               
+                n=(rs.getString("titre"));}
+        
+    	
+    } catch (SQLException e) {
+		
+		e.printStackTrace();
+	} 
+        return n;
     
-}
+}}
