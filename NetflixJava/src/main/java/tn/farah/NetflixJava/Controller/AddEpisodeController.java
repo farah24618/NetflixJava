@@ -148,12 +148,7 @@ public class AddEpisodeController implements Initializable {
             btnSave.setText("💾 Modifier");
             cbSaison.setDisable(false); // ✅ en mode edit, on peut changer la saison
         }
-        cbSaison.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && editingEpisodeId <= 0) {
-                int nextNum = episodeService.getNextNumeroEpisode(newVal.getId());
-                txtNumeroEpisode.setText(String.valueOf(nextNum));
-            }
-        });
+        
     }
 
     private void loadSaisons() {
