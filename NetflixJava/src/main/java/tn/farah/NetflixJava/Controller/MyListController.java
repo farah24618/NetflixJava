@@ -619,8 +619,8 @@ public class MyListController implements Initializable {
             UniversalPlayerController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.Player);
             if (ctrl != null) {
-                ctrl.initFilm(film,userId);
-                ctrl.seekToSeconds(history.getTempsArret());
+            	ctrl.initFilm(film, userId, history.getTempsArret());
+              
             }
         } else {
 
@@ -629,8 +629,7 @@ public class MyListController implements Initializable {
             UniversalPlayerController ctrl = ScreenManager.getInstance()
                 .navigateAndGetController(Screen.Player);
             if (ctrl != null) {
-                ctrl.initEpisode(episodeId,userId);
-                ctrl.seekToSeconds(history.getTempsArret());
+            	ctrl.initEpisode(episodeId, userId, history.getTempsArret());
             }
         }
     }

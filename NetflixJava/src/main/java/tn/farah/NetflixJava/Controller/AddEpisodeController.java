@@ -101,6 +101,8 @@ public class AddEpisodeController implements Initializable {
             } catch (Exception ignored) {}
         }
         this.editingEpisodeId = ep.getId();
+        txtDuree.setEditable(false);
+        txtDuree.setStyle("-fx-background-color:#1a1a22; -fx-text-fill:#888888;");
     }
   /*  @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -146,6 +148,12 @@ public class AddEpisodeController implements Initializable {
             btnSave.setText("💾 Modifier");
             cbSaison.setDisable(false); // ✅ en mode edit, on peut changer la saison
         }
+        cbSaison.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && editingEpisodeId <= 0) {
+                int nextNum = episodeService.getNextNumeroEpisode(newVal.getId());
+                txtNumeroEpisode.setText(String.valueOf(nextNum));
+            }
+        });
     }
 
     private void loadSaisons() {

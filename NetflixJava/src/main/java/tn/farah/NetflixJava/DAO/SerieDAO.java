@@ -119,8 +119,9 @@ public class SerieDAO {
                 psM.setString(6, serie.getUrlImageBanner());
                 psM.setString(7, serie.getUrlTeaser());
                 psM.setInt(8, serie.getAgeRating().getId());
-                psM.setString(9, serie.getProducteur());  // ✅ ajouté
-                psM.setInt(10, serie.getId()); 
+                psM.setString(9, serie.getProducteur()); 
+                psM.setBoolean(10,serie.isTerminee());// ✅ ajouté
+                psM.setInt(11, serie.getId()); 
                 psM.executeUpdate();
             }
             try (PreparedStatement psF = connection.prepareStatement(updateSerie)) {
@@ -326,4 +327,5 @@ public class SerieDAO {
             return false;
         }
     }
+    
 }

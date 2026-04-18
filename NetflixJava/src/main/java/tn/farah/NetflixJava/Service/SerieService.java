@@ -171,6 +171,7 @@ public class SerieService {
 		
 		return serieDao.findByTitle(query);
 	}
+	
 }
     
     
