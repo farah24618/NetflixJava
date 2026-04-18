@@ -39,8 +39,6 @@
 
       <HBox alignment="CENTER" spacing="30.0">
          <children>
-
-            <!-- Nombre de vues -->
             <VBox alignment="CENTER" spacing="5.0">
                <Label style="-fx-font-size: 16px;" text="▶" textFill="#b3b3b3" />
                <Label fx:id="viewsLabel" style="-fx-font-size: 11px;" text="0" textFill="#b3b3b3" />
@@ -48,7 +46,6 @@
 
             <VBox alignment="CENTER" spacing="5.0" />
 
-            <!-- Nombre de commentaires -->
             <VBox alignment="CENTER" spacing="5.0">
                <Label onMouseClicked="#handleShowComments" style="-fx-font-size: 16px;" text="💬" textFill="#b3b3b3">
                   <cursor>

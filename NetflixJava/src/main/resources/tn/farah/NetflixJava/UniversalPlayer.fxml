@@ -12,17 +12,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<!--
-    UniversalPlayer.fxml
-    ════════════════════
-    Single player for : Film · Episode (série) · Teaser
-    Controller : tn.farah.NetflixJava.Controller.UniversalPlayerController
 
-    The controller shows/hides context-specific buttons at runtime :
-      • skipIntroButton  → episodes only
-      • nextEpisodeButton / episodesButton → episodes only
-      • (films and teasers hide those automatically)
--->
 <StackPane
     fx:id="rootPane"
     prefHeight="450.0"
@@ -34,20 +24,12 @@
 
    <children>
 
-      <!-- ══════════════════════════════════════ -->
-      <!-- VIDEO                                  -->
-      <!-- ══════════════════════════════════════ -->
       <MediaView fx:id="mediaView" />
-
-      <!-- ══════════════════════════════════════ -->
-      <!-- CONTROLS OVERLAY (auto-hide on idle)   -->
-      <!-- ══════════════════════════════════════ -->
       <BorderPane
           fx:id="controlsPane"
           visible="false"
           style="-fx-background-color: rgba(0,0,0,0.0);">
 
-         <!-- ── TOP : back button + title ──────── -->
          <top>
             <HBox
                 alignment="CENTER_LEFT"
@@ -64,8 +46,6 @@
                       textFill="WHITE">
                      <font><Font name="System Bold" size="15.0" /></font>
                   </Button>
-
-                  <!-- Updated dynamically: film title / "Saison X – Ép Y : titre" / "Teaser – titre" -->
                   <Label fx:id="titleLabel" text="" textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
@@ -74,7 +54,6 @@
             </HBox>
          </top>
 
-         <!-- ── CENTER : ↺  ▶/⏸  ↻ ──────────── -->
          <center>
             <HBox alignment="CENTER" spacing="60.0" BorderPane.alignment="CENTER">
                <children>
@@ -109,7 +88,6 @@
             </HBox>
          </center>
 
-         <!-- ── BOTTOM : skip intro + progress + toolbar ── -->
          <bottom>
             <VBox
                 alignment="BOTTOM_CENTER"
@@ -154,23 +132,7 @@
                      <padding><Insets left="20.0" right="20.0" /></padding>
                   </HBox>
 
-                  <!--
-                      TOOLBAR
-                      ═══════════════════════════════════════════════════════
-                      Visible for ALL modes
-                        ⚡ Vitesse        – cycle 0.5x / 1x / 1.25x / 1.5x / 2x
-                        🔓 Verrouiller   – lock/unlock controls
-                        🎧 Audio/UT      – subtitle context-menu
-                        ⛶ Plein écran   – toggle fullscreen
-
-                      Visible for EPISODE mode only (managed=false otherwise)
-                        📋 Épisodes      – back to series episode list
-                        ⏭ Épisode suiv  – load next episode
-
-                      Visible for FILM / TEASER mode only
-                        🎬 Fiche         – back to film / teaser detail page
-                      ═══════════════════════════════════════════════════════
-                  -->
+                 
                   <HBox alignment="CENTER" prefHeight="70.0" spacing="25.0">
                      <children>
 
@@ -213,7 +175,6 @@
                            <font><Font size="14.0" /></font>
                         </Button>
 
-                        <!-- EPISODE ONLY: episode list -->
                         <Button
                             fx:id="episodesButton"
                             mnemonicParsing="false"
@@ -226,7 +187,6 @@
                            <font><Font size="14.0" /></font>
                         </Button>
 
-                        <!-- EPISODE ONLY: next episode -->
                         <Button
                             fx:id="nextEpisodeButton"
                             mnemonicParsing="false"
@@ -239,7 +199,6 @@
                            <font><Font name="System Bold" size="14.0" /></font>
                         </Button>
 
-                        <!-- FILM / TEASER ONLY: back to detail page -->
                         <Button
                             fx:id="ficheButton"
                             mnemonicParsing="false"

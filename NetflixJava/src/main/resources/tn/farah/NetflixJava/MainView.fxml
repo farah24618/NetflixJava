@@ -17,7 +17,6 @@
 
 <BorderPane prefHeight="900.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.MainViewController">
 
-    <!-- ===== MainViewController ===== -->
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="68.0" style="-fx-background-color: rgba(0,0,0,0.9); -fx-padding: 0 40 0 40;">
             <!-- Logo -->
@@ -37,7 +36,6 @@
         </HBox>
     </top>
 
-    <!-- ===== CONTENU PRINCIPAL SCROLLABLE ===== -->
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: black; -fx-background-color: black; -fx-border-color: black;" vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
             <content>
@@ -73,7 +71,6 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- ===== FONCTIONNALITÉ 1 : REGARDER SUR LA TV ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
                         <VBox alignment="CENTER_LEFT" prefWidth="560" spacing="24">
                             <Label text="Profitez sur votre TV." textFill="WHITE" wrapText="true">
@@ -84,15 +81,13 @@
                             </Label>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
-                        <!-- Emplacement image TV -->
+                        
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #1a1a2e; -fx-background-radius: 8;">
                             <Label style="-fx-font-size: 120; -fx-opacity: 0.6;" text="📺" />
                         </StackPane>
                     </HBox>
-
-                    <!-- ===== FONCTIONNALITÉ 2 : TÉLÉCHARGEMENT ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
-                        <!-- Emplacement image téléchargement -->
+                        
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #1a1a2e; -fx-background-radius: 8;">
                             <Label style="-fx-font-size: 120; -fx-opacity: 0.6;" text="📱" />
                         </StackPane>
@@ -104,7 +99,7 @@
                             <Label text="Enregistrez facilement vos favoris et ayez toujours quelque chose à regarder." textFill="WHITE" wrapText="true">
                                 <font><Font size="22.0" /></font>
                             </Label>
-                            <!-- Carte animation téléchargement -->
+                            
                             <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-background-color: black;                                          -fx-border-color: #e50914;                                          -fx-border-width: 2;                                          -fx-border-radius: 12;                                          -fx-background-radius: 12;                                          -fx-padding: 12 20 12 16;">
                                 <Label style="-fx-font-size: 42;" text="🎬" />
                                 <VBox spacing="3">
@@ -121,7 +116,6 @@
                         </VBox>
                     </HBox>
 
-                    <!-- ===== FONCTIONNALITÉ 3 : REGARDER PARTOUT ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
                         <VBox alignment="CENTER_LEFT" prefWidth="560" spacing="24">
                             <Label text="Regardez partout." textFill="WHITE" wrapText="true">
@@ -132,7 +126,7 @@
                             </Label>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
-                        <!-- Illustration appareils -->
+                        
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #0d1117; -fx-background-radius: 8;">
                             <HBox alignment="CENTER" spacing="10">
                                 <Label style="-fx-font-size: 80; -fx-opacity: 0.7;" text="💻" />
@@ -142,9 +136,8 @@
                         </StackPane>
                     </HBox>
 
-                    <!-- ===== FONCTIONNALITÉ 4 : ENFANTS ===== -->
                     <HBox alignment="CENTER" prefHeight="500" prefWidth="1280" spacing="40" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 60 80 60 80;">
-                        <!-- Emplacement image enfants -->
+                        
                         <StackPane prefHeight="380" prefWidth="500" style="-fx-background-color: #1a0030; -fx-background-radius: 8;">
                             <Label style="-fx-font-size: 100; -fx-opacity: 0.7;" text="👶🎈" />
                         </StackPane>
@@ -159,7 +152,6 @@
                         </VBox>
                     </HBox>
 
-                    <!-- ===== SECTION FAQ ===== -->
                     <VBox spacing="0" style="-fx-background-color: black; -fx-border-color: #222; -fx-border-width: 0 0 8 0; -fx-padding: 70 200 70 200;">
                         <Label text="Questions fréquemment posées" textFill="WHITE">
                             <font><Font name="System Bold" size="50.0" /></font>
@@ -180,7 +172,6 @@
                         </TitledPane>
                         <Region prefHeight="3" />
 
-                        <!-- FAQ 2 -->
                         <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Combien coûte RAKCHANET ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -194,7 +185,6 @@
                         </TitledPane>
                         <Region prefHeight="3" />
 
-                        <!-- FAQ 3 -->
                         <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Où puis-je regarder ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -208,7 +198,7 @@
                         </TitledPane>
                         <Region prefHeight="3" />
 
-                        <!-- FAQ 4 -->
+                        
                         <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Comment résilier mon abonnement ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -222,7 +212,7 @@
                         </TitledPane>
                         <Region prefHeight="3" />
 
-                        <!-- FAQ 5 -->
+                        
                         <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="Que puis-je regarder sur RAKCHANET ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -236,7 +226,6 @@
                         </TitledPane>
                         <Region prefHeight="3" />
 
-                        <!-- FAQ 6 -->
                         <TitledPane animated="false" expanded="false" style="-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: #555; -fx-border-width: 0 0 2 0;" stylesheets="@Style.css" text="RAKCHANET est-il adapté aux enfants ?">
                             <font><Font name="System Bold" size="22.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
@@ -249,7 +238,6 @@
                             </content>
                         </TitledPane>
 
-                        <!-- CTA sous la FAQ -->
                         <VBox alignment="CENTER" spacing="16" style="-fx-padding: 50 0 10 0;">
                             <Label alignment="CENTER" text="Prêt à regarder ? Saisissez votre adresse e-mail pour créer ou réactiver votre abonnement." textFill="WHITE" wrapText="true">
                                 <font><Font size="19.0" /></font>
@@ -264,15 +252,14 @@
                         </VBox>
                     </VBox>
 
-                    <!-- ===== PIED DE PAGE ===== -->
                     <VBox spacing="30" style="-fx-background-color: black; -fx-padding: 60 200 40 200;">
                         <Label text="Des questions ? Appelez le 0800-100-0990" textFill="#808080">
                             <font><Font size="16.0" /></font>
                         </Label>
 
-                        <!-- Grille de liens du pied de page -->
+                    
                         <HBox prefWidth="880" spacing="0">
-                            <!-- Colonne 1 -->
+                           
                             <VBox prefWidth="220" spacing="14">
                                 <Label style="-fx-cursor: hand; -fx-underline: true;" text="FAQ" textFill="#808080">
                                     <font><Font size="13.0" /></font>
@@ -287,7 +274,7 @@
                                     <font><Font size="13.0" /></font>
                                 </Label>
                             </VBox>
-                            <!-- Colonne 2 -->
+                            
                             <VBox prefWidth="220" spacing="14">
                                 <Label style="-fx-cursor: hand; -fx-underline: true;" text="Centre d'aide" textFill="#808080">
                                     <font><Font size="13.0" /></font>
@@ -302,7 +289,7 @@
                                     <font><Font size="13.0" /></font>
                                 </Label>
                             </VBox>
-                            <!-- Colonne 3 -->
+                            
                             <VBox prefWidth="220" spacing="14">
                                 <Label style="-fx-cursor: hand; -fx-underline: true;" text="Mon compte" textFill="#808080">
                                     <font><Font size="13.0" /></font>
@@ -317,7 +304,7 @@
                                     <font><Font size="13.0" /></font>
                                 </Label>
                             </VBox>
-                            <!-- Colonne 4 -->
+                            
                             <VBox prefWidth="220" spacing="14">
                                 <Label style="-fx-cursor: hand; -fx-underline: true;" text="Espace presse" textFill="#808080">
                                     <font><Font size="13.0" /></font>
@@ -331,7 +318,6 @@
                             </VBox>
                         </HBox>
 
-                        <!-- Sélecteur de langue -->
                         <Button prefHeight="35" prefWidth="130" style="-fx-background-color: transparent; -fx-border-color: #808080; -fx-border-width: 1; -fx-border-radius: 3;" text="🌐  Français ▾" textFill="#808080">
                             <font><Font size="13.0" /></font>
                             <cursor><Cursor fx:constant="HAND" /></cursor>

@@ -19,7 +19,6 @@
       <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="20.0" style="-fx-padding: 0 25 0 25;">
          <children>
 
-            <!-- ✅ fx:id ajouté ici -->
             <Label fx:id="titleCountLabel"
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"
                    text="My Titles (0)"

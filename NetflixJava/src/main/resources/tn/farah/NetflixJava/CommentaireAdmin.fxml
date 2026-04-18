@@ -44,7 +44,6 @@
         <HBox spacing="18.0" style="-fx-padding: 22;">
             <children>
 
-                <!-- ══════════════ LEFT SIDE ══════════════ -->
                 <VBox prefWidth="860.0" spacing="16.0" HBox.hgrow="ALWAYS">
 
                     <!-- Filters -->
@@ -73,7 +72,6 @@
                         </children>
                     </HBox>
 
-                    <!-- Summary Stats -->
                     <HBox spacing="14.0">
                         <children>
                             <VBox prefWidth="200.0"
@@ -119,7 +117,6 @@
                         </children>
                     </HBox>
 
-                    <!-- Comments List -->
                     <VBox spacing="12.0"
                           style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 16; -fx-border-color: #262626; -fx-border-radius: 18;"
                           VBox.vgrow="ALWAYS">
@@ -133,8 +130,6 @@
                         </children>
                     </VBox>
                 </VBox>
-
-                <!-- ══════════════ RIGHT SIDE (scrollable) ══════════════ -->
                 <ScrollPane fitToWidth="true"
                             prefWidth="450.0"
                             hbarPolicy="NEVER"
@@ -192,7 +187,6 @@
                                 </children>
                             </VBox>
 
-                            <!-- Actions administrateur -->
                             <VBox spacing="12.0"
                                   style="-fx-background-color: #141414; -fx-background-radius: 18; -fx-padding: 18; -fx-border-color: #262626; -fx-border-radius: 18;">
                                 <children>
@@ -227,7 +221,6 @@
                                 </children>
                             </VBox>
 
-                            <!-- Suggestions -->
                             <VBox spacing="10.0"
                                   style="-fx-background-color: linear-gradient(to right, #181818, #131313); -fx-background-radius: 18; -fx-padding: 18; -fx-border-color: #262626; -fx-border-radius: 18;">
                                 <children>

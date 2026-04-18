@@ -12,7 +12,7 @@
 
 <BorderPane style="-fx-background-color: #141414;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.MyListController">
 
-    <!-- ===== TOP BAR ===== -->
+   
     <top>
         <HBox alignment="CENTER_LEFT" spacing="24" style="-fx-background-color: linear-gradient(to bottom, #000000cc, transparent);                      -fx-padding: 18 40 18 40;">
             <Label style="-fx-text-fill: #e50914; -fx-font-size: 28px; -fx-font-weight: bold;" text="RAKCHANET" />
@@ -27,11 +27,9 @@
         </HBox>
     </top>
 
-    <!-- ===== CENTRE ===== -->
     <center>
         <VBox spacing="0">
 
-            <!-- En-tête de page -->
             <VBox style="-fx-padding: 60 40 24 40;">
                 <Label style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;" text="Ma Liste" />
                 <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-padding: 12 0 0 0;">
@@ -45,15 +43,12 @@
                 </HBox>
             </VBox>
 
-            <!-- État vide -->
             <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="16" style="-fx-padding: 80 40; -fx-min-height: 340;" visible="false">
                 <Label style="-fx-font-size: 64px; -fx-text-fill: #555;" text="☰" />
                 <Label style="-fx-text-fill: #aaa; -fx-font-size: 22px; -fx-font-weight: bold;" text="Votre liste est vide" />
                 <Label style="-fx-text-fill: #666; -fx-font-size: 14px;" styleClass="empty-message" text="Ajoutez des films et séries en cliquant sur + depuis leur page." />
                 <Button onAction="#goHome" style="-fx-background-color: white; -fx-text-fill: black;                                -fx-font-size: 14px; -fx-font-weight: bold;                                -fx-padding: 10 24; -fx-background-radius: 4;                                -fx-cursor: hand; -fx-pref-width: 220;" text="Parcourir le catalogue" />
             </VBox>
-
-            <!-- pageContainer — carousels injectés ici dynamiquement -->
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #141414; -fx-background-color: #141414;                                -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
                 <VBox fx:id="pageContainer" spacing="0" style="-fx-background-color: #141414; -fx-padding: 0 0 40 0;" />
             </ScrollPane>

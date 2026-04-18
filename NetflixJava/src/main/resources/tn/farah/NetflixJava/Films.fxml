@@ -16,7 +16,7 @@
 
 <BorderPane style="-fx-background-color: #141414;" stylesheets="@home.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.FilmsController">
 
-    <!-- ═══ NAVBAR ═══ -->
+    
     <top>
         <HBox alignment="CENTER_LEFT" spacing="0" styleClass="navbar">
             <Label styleClass="logo" text="RAKCHANET" />
@@ -44,15 +44,12 @@
         </HBox>
     </top>
 
-    <!-- ═══ CONTENU ═══ -->
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="main-scroll" vbarPolicy="AS_NEEDED">
             <VBox spacing="24" style="-fx-padding: 32 40 40 40;">
 
-                <!-- ── Filtres par catégorie ── -->
                 <FlowPane fx:id="filterBar" hgap="10" minHeight="35.0" style="-fx-padding: 12 40;" styleClass="filter-bar" vgap="30.0" />
 
-                <!-- ── Carousels injectés par le contrôleur ── -->
                 <VBox fx:id="carouselContainer" spacing="32" styleClass="carousel-container" />
 
             </VBox>

@@ -16,7 +16,6 @@
 
 <BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.EditProfileController">
 
-    <!-- ── TOP NAV ── -->
     <top>
         <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="15.0" style="-fx-background-color: #141414;">
             <padding>
@@ -29,10 +28,8 @@
                     </image>
                 </ImageView>
 
-                <!-- spacer -->
                 <Region HBox.hgrow="ALWAYS" />
 
-                <!-- Logout button top-right -->
                 <Button fx:id="logoutBtn" onAction="#onLogout" prefHeight="36.0" style="-fx-background-color: red; -fx-cursor: hand; -fx-padding: 6 14 6 14;" text="⏻  Déconnecter" textFill="#fff6f6">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -41,7 +38,6 @@
         </HBox>
     </top>
 
-    <!-- ── CENTER FORM ── -->
     <center>
         <VBox maxWidth="700.0" prefWidth="700.0" spacing="18.0" BorderPane.alignment="CENTER">
             <padding>
@@ -86,7 +82,6 @@
 
                 <Separator style="-fx-background-color: #333333;" />
 
-                <!-- Action buttons -->
                 <HBox alignment="CENTER_LEFT" spacing="18.0">
                     <children>
 

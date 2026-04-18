@@ -19,7 +19,6 @@
 
 <BorderPane prefHeight="720" prefWidth="1280" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.farah.NetflixJava.Controller.SearchResultsController">
 
-    <!-- ══ TOP NAVBAR ══════════════════════════════════════════════════════ -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #000000;                      -fx-padding: 14 40 14 40;                      -fx-border-color: #1f1f1f; -fx-border-width: 0 0 1 0;">
 
@@ -58,23 +57,20 @@
         </HBox>
     </top>
 
-    <!-- ══ MAIN ════════════════════════════════════════════════════════════ -->
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #141414; -fx-background-color: #141414;                            -fx-border-width: 0;" vbarPolicy="AS_NEEDED">
             <VBox spacing="0" style="-fx-background-color: #141414;">
 
-                   <!-- Search header -->
                 <VBox spacing="4" style="-fx-padding: 28 40 8 40;">
                     <Label fx:id="searchQueryLabel" style="-fx-font-size: 22px; -fx-text-fill: white;                                   -fx-font-family: 'Georgia';" text="Résultats pour « … »" />
                     <Label fx:id="resultCountLabel" style="-fx-font-size: 13px; -fx-text-fill: #888888;" text="" />
                 </VBox>
 
-                <!-- ── Filter panel ─────────────────────────────────────── -->
                 <VBox spacing="18" style="-fx-background-color: #1a1a1a; -fx-padding: 20 40 20 40;                              -fx-border-color: #2a2a2a; -fx-border-width: 0 0 1 0;">
 
                     <HBox alignment="CENTER_LEFT" spacing="40">
 
-                        <!-- Date de sortie -->
+                        
                         <VBox spacing="8">
                             <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="DATE DE SORTIE" />
                             <HBox alignment="CENTER_LEFT" spacing="8">
@@ -85,7 +81,7 @@
                             </HBox>
                         </VBox>
 
-                        <!-- Note minimum -->
+                       
                         <VBox spacing="8">
                             <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="NOTE MINIMUM" />
                             <HBox alignment="CENTER_LEFT" spacing="10">
@@ -94,7 +90,7 @@
                             </HBox>
                         </VBox>
 
-                        <!-- Trier par -->
+                      
                         <VBox spacing="8">
                             <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="TRIER PAR" />
                             <ComboBox fx:id="sortCombo" onAction="#applyFilters" prefWidth="180" style="-fx-background-color:#252525; -fx-text-fill:white;                                              -fx-border-color:#3a3a3a; -fx-border-radius:4;                                              -fx-background-radius:4; -fx-font-size:12px;" />
@@ -102,7 +98,6 @@
 
                     </HBox>
 
-                    <!-- Genres multi-select -->
                     <VBox spacing="8">
                         <Label style="-fx-font-size: 10px; -fx-text-fill: #E50914; -fx-font-weight: bold;" text="GENRES  (sélection multiple)" />
                         <FlowPane fx:id="genreChipPane" hgap="8" prefWrapLength="1100" vgap="8" />
@@ -114,14 +109,12 @@
 
                 </VBox>
 
-                <!-- No results -->
                 <VBox fx:id="noResultsPane" alignment="CENTER" managed="false" spacing="12" style="-fx-padding: 80 40;" visible="false">
                     <Label style="-fx-font-size: 46px;" text="🔍" />
                     <Label fx:id="noResultsLabel" style="-fx-font-size: 20px; -fx-text-fill: #888;" text="Aucun résultat" />
                     <Label style="-fx-font-size: 13px; -fx-text-fill: #555;" text="Essayez d'autres mots-clés ou ajustez les filtres" />
                 </VBox>
 
-                <!-- ── Films section ────────────────────────────────────── -->
                 <VBox fx:id="filmsSection" managed="false" spacing="0" style="-fx-padding: 30 0 10 0;" visible="false">
                     <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 6 40;">
                         <Label style="-fx-font-size: 20px; -fx-font-weight: bold;                                       -fx-text-fill: white; -fx-font-family: 'Georgia';" text="🎬  Films" />
@@ -133,7 +126,6 @@
                     </ScrollPane>
                 </VBox>
 
-                <!-- ── Series section ───────────────────────────────────── -->
                 <VBox fx:id="seriesSection" managed="false" spacing="0" style="-fx-padding: 10 0 50 0;" visible="false">
                     <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 6 40;">
                         <Label style="-fx-font-size: 20px; -fx-font-weight: bold;                                       -fx-text-fill: white; -fx-font-family: 'Georgia';" text="📺  Séries" />
