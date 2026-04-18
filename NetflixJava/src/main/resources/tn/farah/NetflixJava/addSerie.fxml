@@ -26,7 +26,6 @@
 
     <VBox spacing="0" style="-fx-background-color:#0f0f13;">
 
-        <!-- ══ HEADER ══ -->
         <HBox alignment="CENTER_LEFT" spacing="12"
               style="-fx-background-color:#1a1a22;
                      -fx-border-color:#e50914; -fx-border-width:0 0 2 0;
@@ -54,20 +53,16 @@
                            -fx-padding:10 24 10 24; -fx-cursor:hand;" text="✓  Enregistrer la série"/>
         </HBox>
 
-        <!-- ══ MAIN CONTENT ══ -->
         <HBox spacing="24" style="-fx-padding:24 24 0 24;" VBox.vgrow="ALWAYS">
 
-            <!-- ─── LEFT COLUMN ─── -->
             <VBox spacing="20" style="-fx-padding:0 0 24 0;" HBox.hgrow="ALWAYS">
 
-                <!-- CARD: Informations générales -->
                 <VBox spacing="16" style="-fx-background-color:#1a1a22; -fx-background-radius:10;
                                           -fx-border-color:#2a2a35; -fx-border-radius:10;
                                           -fx-border-width:1; -fx-padding:20;">
                     <Label style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#ffffff;"
                            text="Informations générales"/>
 
-                    <!-- Titre -->
                     <VBox spacing="6">
                         <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Titre *"/>
                         <TextField fx:id="txtTitre" promptText="Ex : Breaking Bad"
@@ -77,7 +72,6 @@
                                           -fx-padding:9 12 9 12; -fx-font-size:13px;"/>
                     </VBox>
 
-                    <!-- Synopsis -->
                     <VBox spacing="6">
                         <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Synopsis *"/>
                         <TextArea fx:id="txtSynopsis" prefRowCount="4" promptText="Résumé de la série…"
@@ -88,7 +82,6 @@
                                          -fx-padding:4; -fx-font-size:13px;"/>
                     </VBox>
 
-                    <!-- Casting + Producteur -->
                     <HBox spacing="12">
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Casting *"/>
@@ -108,7 +101,6 @@
                         </VBox>
                     </HBox>
 
-                    <!-- Date + Age Rating + Terminée -->
                     <HBox spacing="12">
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label style="-fx-font-size:11px; -fx-text-fill:#888888; -fx-font-weight:bold;" text="Date de sortie *"/>
@@ -133,7 +125,6 @@
                     </HBox>
                 </VBox>
 
-                <!-- CARD: Catégories -->
                 <VBox spacing="14" style="-fx-background-color:#1a1a22; -fx-background-radius:10;
                                           -fx-border-color:#2a2a35; -fx-border-radius:10;
                                           -fx-border-width:1; -fx-padding:20;">
@@ -171,7 +162,6 @@
                     </HBox>
                 </VBox>
 
-                <!-- CARD: Warnings -->
                 <VBox spacing="14" style="-fx-background-color:#1a1a22; -fx-background-radius:10;
                                           -fx-border-color:#2a2a35; -fx-border-radius:10;
                                           -fx-border-width:1; -fx-padding:20;">
@@ -210,9 +200,7 @@
                 </VBox>
 
             </VBox>
-            <!-- END LEFT COLUMN -->
 
-            <!-- ─── RIGHT COLUMN ─── -->
             <VBox minWidth="300" prefWidth="340" spacing="20" style="-fx-padding:0 0 24 0;">
 
                 <!-- CARD: Poster -->
@@ -241,7 +229,6 @@
                                    -fx-padding:8 0 8 0; -fx-cursor:hand;" text="📁  Parcourir…"/>
                 </VBox>
 
-                <!-- CARD: Banner -->
                 <VBox spacing="12" style="-fx-background-color:#1a1a22; -fx-background-radius:10;
                                           -fx-border-color:#2a2a35; -fx-border-radius:10;
                                           -fx-border-width:1; -fx-padding:20;">
@@ -267,7 +254,6 @@
                                    -fx-padding:8 0 8 0; -fx-cursor:hand;" text="📁  Parcourir…"/>
                 </VBox>
 
-                <!-- CARD: Teaser (optionnel) -->
                 <VBox spacing="12" style="-fx-background-color:#1a1a22; -fx-background-radius:10;
                                           -fx-border-color:#f5a623; -fx-border-radius:10;
                                           -fx-border-width:1; -fx-padding:20;">
@@ -300,13 +286,12 @@
                                    -fx-padding:8 0 8 0; -fx-cursor:hand;" text="📁  Parcourir le teaser…"/>
                 </VBox>
 
-                <!-- STATUS -->
                 <Label fx:id="lblStatus"
                        style="-fx-font-size:12px; -fx-text-fill:#e50914; -fx-padding:0 4 0 4;"
                        text="" wrapText="true"/>
 
             </VBox>
-            <!-- END RIGHT COLUMN -->
+        
 
         </HBox>
 

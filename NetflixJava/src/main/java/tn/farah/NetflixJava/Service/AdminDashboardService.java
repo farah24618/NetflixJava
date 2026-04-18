@@ -28,4 +28,11 @@ public class AdminDashboardService {
 
     	return dashboardDAO.getInscriptionsData(); 
     }
+    public Map<String, Integer> getFilmsByCategory() {
+        return dashboardDAO.getFilmsByCategory();
+    }
+
+    public Map<String, Integer> getTop5FilmsVus() {
+        return dashboardDAO.getTop5FilmsVus();
+    }
 }

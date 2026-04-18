@@ -27,10 +27,6 @@
             xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.farah.NetflixJava.Controller.MediaViewController">
-
-    <!-- ══════════════════════════════════════════════════════════ -->
-    <!-- NAVBAR                                                      -->
-    <!-- ══════════════════════════════════════════════════════════ -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="30" styleClass="navbar">
 
@@ -76,7 +72,6 @@
 
             <HBox HBox.hgrow="ALWAYS"/>
 
-            <!-- Profil -->
             <HBox fx:id="profilBox"
                   alignment="CENTER"
                   onMouseClicked="#onProfilClicked"
@@ -101,17 +96,11 @@
         </HBox>
     </top>
 
-    <!-- ══════════════════════════════════════════════════════════ -->
-    <!-- CONTENU PRINCIPAL                                           -->
-    <!-- ══════════════════════════════════════════════════════════ -->
     <center>
         <ScrollPane fitToWidth="true" styleClass="main-scroll">
             <content>
                 <VBox spacing="0">
 
-                    <!-- ════════════════════════════════════════════ -->
-                    <!-- POSTER                                        -->
-                    <!-- ════════════════════════════════════════════ -->
                     <StackPane fx:id="videoPane" prefHeight="520" styleClass="video-pane">
 
                         <ImageView fx:id="posterImage"
@@ -125,7 +114,7 @@
                               styleClass="poster-overlay"
                               StackPane.alignment="BOTTOM_LEFT">
 
-                            <!-- Titre affiché sur le poster -->
+                          
                             <Label fx:id="mediaTitleVideo"
                                    maxWidth="700"
                                    styleClass="poster-title"
@@ -160,17 +149,11 @@
                         </VBox>
                     </StackPane>
 
-                    <!-- ════════════════════════════════════════════ -->
-                    <!-- INFOS MÉDIA + DISTRIBUTION                   -->
-                    <!-- ════════════════════════════════════════════ -->
                     <HBox spacing="30" styleClass="infos-section">
 
                         <VBox spacing="10" HBox.hgrow="ALWAYS">
 
-                            <!--
-                                BREADCRUMB — visible uniquement en mode série
-                                (géré en Java : setVisible / setManaged)
-                            -->
+                            
                             <HBox fx:id="breadcrumbBox"
                                   alignment="CENTER_LEFT"
                                   managed="false" visible="false"
@@ -188,12 +171,11 @@
                                        styleClass="breadcrumb-current" text="1"/>
                             </HBox>
 
-                            <!-- Titre principal -->
                             <Label fx:id="mediaTitle"
                                    styleClass="media-main-title"
                                    text="Titre du média"/>
 
-                            <!-- Méta : durée + date -->
+                         
                             <HBox alignment="CENTER_LEFT" spacing="12">
                                 <Label styleClass="meta-separator" text="|"/>
                                 <Label fx:id="labelDuree"
@@ -203,13 +185,11 @@
                                        styleClass="meta-label" text=""/>
                             </HBox>
 
-                            <!-- Synopsis / description -->
                             <Label fx:id="mediaDesc"
                                    maxWidth="620"
                                    styleClass="media-desc"
                                    text="" wrapText="true"/>
 
-                            <!-- (réservé à l'épisode) description épisode -->
                             <Label fx:id="episodeDesc"
                                    managed="false" visible="false"
                                    maxWidth="620"
@@ -219,7 +199,6 @@
                             <HBox spacing="12" style="-fx-padding: 8 0 0 0;"/>
                         </VBox>
 
-                        <!-- Distribution -->
                         <VBox prefWidth="260" spacing="10" styleClass="distribution-box">
                             <Label styleClass="distribution-title" text="Distribution"/>
                             <Label fx:id="castings"
@@ -235,9 +214,7 @@
 
                     </HBox>
 
-                    <!-- ════════════════════════════════════════════ -->
-                    <!-- BARRE ONGLETS                                 -->
-                    <!-- ════════════════════════════════════════════ -->
+                 
                     <HBox alignment="CENTER_LEFT" spacing="0" styleClass="tabs-bar">
 
                         <!-- À propos -->
@@ -250,10 +227,6 @@
                                   styleClass="tab-indicator-inactive"/>
                         </VBox>
 
-                        <!--
-                            Onglet Épisodes — visible uniquement en mode série
-                            (géré en Java : setVisible / setManaged)
-                        -->
                         <VBox fx:id="tabEpisodes"
                               alignment="CENTER"
                               managed="false" visible="false"
@@ -265,7 +238,6 @@
                                   HBox.hgrow="ALWAYS"/>
                         </VBox>
 
-                        <!-- Bandes-annonces -->
                         <VBox fx:id="tabBandes"
                               alignment="CENTER"
                               onMouseClicked="#onTabBandes"
@@ -275,7 +247,7 @@
                                   styleClass="tab-indicator-inactive"/>
                         </VBox>
 
-                        <!-- Commentaires -->
+                      
                         <VBox fx:id="tabCommentaires"
                               alignment="CENTER"
                               onMouseClicked="#onTabCommentaires"
@@ -285,7 +257,7 @@
                                   styleClass="tab-indicator-inactive"/>
                         </VBox>
 
-                        <!-- Similaires -->
+                        
                         <VBox fx:id="tabSimilaires"
                               alignment="CENTER"
                               onMouseClicked="#onTabSimilaires"
@@ -297,12 +269,9 @@
 
                     </HBox>
 
-                    <!-- ════════════════════════════════════════════ -->
-                    <!-- ZONE CONTENU ONGLETS                          -->
-                    <!-- ════════════════════════════════════════════ -->
                     <VBox fx:id="contenuOnglet" spacing="0" styleClass="content-zone">
 
-                        <!-- ── À PROPOS (film : actif par défaut) ── -->
+                     
                         <VBox fx:id="panelApropos"
                               managed="true" spacing="14" visible="true">
 
@@ -316,7 +285,7 @@
 
                             <HBox spacing="30" style="-fx-padding: 10 0 0 0;">
                                 <VBox spacing="6">
-                                    <!-- Libellé adapté en Java : RÉALISATEUR / CRÉATEUR -->
+                                    
                                     <Label fx:id="labelCreateurTitle"
                                            styleClass="meta-section-label"
                                            text="RÉALISATEUR"/>
@@ -343,7 +312,6 @@
                             </VBox>
                         </VBox>
 
-                        <!-- ── ÉPISODES (mode série seulement) ────── -->
                         <VBox fx:id="panelEpisodes"
                               managed="false" spacing="16" visible="false">
 
@@ -358,15 +326,14 @@
                             <VBox fx:id="listeEpisodes" spacing="12"/>
                         </VBox>
 
-                        <!-- ── BANDES-ANNONCES ────────────────────── -->
+                        
                         <VBox fx:id="panelBandes"
                               managed="false" spacing="14" visible="false"/>
 
-                        <!-- ── COMMENTAIRES (construit en Java) ────── -->
+                        
                         <VBox fx:id="panelCommentaires"
                               managed="false" spacing="0" visible="false"/>
 
-                        <!-- ── SIMILAIRES (construit en Java) ────── -->
                         <VBox fx:id="panelSimilaires"
                               managed="false" spacing="14" visible="false">
                             <HBox fx:id="listeSimilaires" spacing="16"/>

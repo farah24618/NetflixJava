@@ -20,7 +20,6 @@
         <!-- Les styles lourds sont dans home.css désormais -->
     </BorderPane.styleClass>
 
-    <!-- ═══ NAVBAR ═══ -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="0" styleClass="navbar">
 
@@ -57,20 +56,16 @@
         </HBox>
     </top>
 
-    <!-- ═══ CONTENU ═══ -->
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="main-scroll" vbarPolicy="AS_NEEDED">
             <VBox spacing="0">
 
-                <!-- ── HERO ── -->
                 <StackPane fx:id="heroSection" alignment="BOTTOM_LEFT" styleClass="hero-section">
 
                     <Pane fx:id="heroBackdrop" styleClass="hero-backdrop" />
 
-                    <!-- Dégradé statique : purement visuel, il reste dans le FXML -->
                     <Pane mouseTransparent="true" styleClass="hero-gradient" />
 
-                    <!-- Contenu texte -->
 <VBox fx:id="heroContent" alignment="BOTTOM_LEFT" maxWidth="550" minWidth="300" spacing="12" styleClass="hero-content">
                         <Label fx:id="heroTitle" styleClass="hero-title" wrapText="true" />
                         <Label fx:id="heroSynopsis" styleClass="hero-synopsis" wrapText="true" />
@@ -88,7 +83,6 @@
                         </cursor></Button>
                         </HBox>
 
-                        <!-- Méta-données -->
                         <HBox fx:id="heroMeta" alignment="CENTER_LEFT" spacing="14">
                             <Label fx:id="heroRating" styleClass="hero-rating" />
                             <Label fx:id="heroDuration" styleClass="hero-meta-lbl" />
@@ -99,14 +93,13 @@
                         </HBox>
                     </VBox>
 
-                    <!-- Badge âge (top-right) -->
+                   
                     <HBox alignment="CENTER_RIGHT" mouseTransparent="true" styleClass="age-badge-box" StackPane.alignment="CENTER_RIGHT">
     <Label fx:id="heroWarning" styleClass="age-badge" text="19+" />
 </HBox>
 
                 </StackPane>
 
-                <!-- ── CAROUSELS (injectés par le contrôleur) ── -->
                 <VBox fx:id="carouselContainer" spacing="32" styleClass="carousel-container" />
 
             </VBox>
