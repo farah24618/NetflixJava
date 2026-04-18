@@ -8,6 +8,7 @@
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,170 +24,150 @@
             <padding>
                 <Insets bottom="15" left="25" right="25" top="15" />
             </padding>
-
             <children>
                 <Label style="-fx-text-fill: #E50914; -fx-font-size: 28px; -fx-font-weight: bold;" text="RAKSHANET ADMIN" />
-
                 <Region HBox.hgrow="ALWAYS" />
-
                 <Label fx:id="lblAdminName" style="-fx-text-fill: white; -fx-font-size: 15px;" text="Bienvenue Admin" />
-
                 <Button onAction="#handleLogout" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Déconnexion" />
             </children>
         </HBox>
     </top>
 
     <left>
-        <VBox prefWidth="250.0" spacing="5.0" style="-fx-background-color: #000000;"> 
+        <VBox prefWidth="250.0" spacing="5.0" style="-fx-background-color: #000000;">
             <padding>
                 <Insets bottom="30" left="15" right="15" top="30" />
             </padding>
-
             <children>
                 <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 15 10;" text="Navigation" />
-
                 <Button maxWidth="Infinity" prefHeight="45.0" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-background-radius: 8; -fx-cursor: hand;" text="⊞   Dashboard" />
-
                 <Button maxWidth="Infinity" onAction="#goToFilmsAdmin" prefHeight="45.0" style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;" text="🎬   Films" />
-
                 <Button maxWidth="Infinity" onAction="#goToSeriesAdmin" prefHeight="45.0" style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;" text="📺   Séries" />
-
                 <Button maxWidth="Infinity" onAction="#goToUsersAdmin" prefHeight="45.0" style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;" text="👤   Utilisateurs" />
-
                 <Button maxWidth="Infinity" onAction="#onNotificationsClicked" prefHeight="45.0" style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;" text="🔔   Notifications" />
-
                 <Button maxWidth="Infinity" onAction="#goToCommentsAdmin" prefHeight="45.0" style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;" text="💬   Commentaires" />
-
                 <Button maxWidth="Infinity" onAction="#onSettingsClicked" prefHeight="45.0" style="-fx-background-color: transparent; -fx-text-fill: #b3b3b3; -fx-font-size: 15px; -fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 15; -fx-cursor: hand;" text="⚙   Paramètres" />
             </children>
         </VBox>
     </left>
 
     <center>
-        <VBox spacing="20.0" style="-fx-background-color: #141414;">
-            <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
-            </padding>
-
-            <children>
-
-                <Label style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;" text="Tableau de bord" />
-
-                <GridPane hgap="15.0" vgap="15.0">
+        <!-- ✅ ScrollPane ajouté -->
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: #141414; -fx-background: #141414;">
+            <content>
+                <VBox spacing="20.0" style="-fx-background-color: #141414;">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
                     <children>
-                        <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <children>
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Films" />
-                                <Label fx:id="lblNbFilms" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
-                            </children>
-                        </VBox>
 
-                        <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <children>
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Séries" />
-                                <Label fx:id="lblNbSeries" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
-                            </children>
-                        </VBox>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;" text="Tableau de bord" />
 
-                        <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <!-- ── STATISTIQUES ── -->
+                        <GridPane hgap="15.0" vgap="15.0">
+                            <columnConstraints>
+                                <ColumnConstraints /><ColumnConstraints /><ColumnConstraints />
+                                <ColumnConstraints /><ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints><RowConstraints /></rowConstraints>
                             <children>
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Épisodes" />
-                                <Label fx:id="lblNbEpisodes" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
-                            </children>
-                        </VBox>
-
-                        <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                            <children>
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Utilisateurs" />
-                                <Label fx:id="lblNbUsers" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
-                            </children>
-                        </VBox>
-
-                        <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="4" GridPane.rowIndex="0">
-                            <children>
-                                <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Commentaires" />
-                                <Label fx:id="lblNbComments" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
-                            </children>
-                        </VBox>
-                    </children>
-               <columnConstraints>
-                  <ColumnConstraints />
-                  <ColumnConstraints />
-                  <ColumnConstraints />
-                  <ColumnConstraints />
-                  <ColumnConstraints />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints />
-               </rowConstraints>
-                </GridPane>
-
-                <HBox spacing="15.0">
-                    <children>
-                        <VBox prefHeight="320.0" prefWidth="480.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
-                            <children>
-                                <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Répartition du contenu" />
-                                <PieChart fx:id="contentPieChart" labelsVisible="true" legendVisible="true" prefHeight="260.0" />
-                            </children>
-                        </VBox>
-
-                        <VBox prefHeight="320.0" prefWidth="700.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
-                            <children>
-                                <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Évolution des inscriptions" />
-                                <LineChart fx:id="inscriptionsChart" animated="false" prefHeight="260.0">
-                                    <xAxis>
-                                        <CategoryAxis label="Date" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <NumberAxis label="Nouveaux inscrits" />
-                                    </yAxis>
-                                </LineChart>
-                            </children>
-                        </VBox>
-                        </children>
-                </HBox>
-
-                <HBox spacing="15.0">
-                    <children>
-                        <VBox prefHeight="320.0" prefWidth="580.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
-                            <children>
-                                <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Commentaires par type" />
-                                <BarChart fx:id="commentsByTypeChart" animated="false" prefHeight="260.0">
-                                    <xAxis>
-                                        <CategoryAxis label="Type" />
-                                    </xAxis>
-                                    <yAxis>
-                                        <NumberAxis label="Commentaires" />
-                                    </yAxis>
-                                </BarChart>
-                            </children>
-                        </VBox>
-
-                        <VBox prefHeight="320.0" prefWidth="600.0" spacing="15.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
-                            <children>
-                                <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Accès rapide" />
-
-                                <HBox spacing="12.0">
+                                <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     <children>
-                                        <Button onAction="#goToAddFilm" style="-fx-background-color: #E50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Ajouter film" />
-                                        <Button onAction="#goToAddSeries" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;" text="Ajouter série" />
-                                        <Button onAction="#goToUsersAdmin" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-background-radius: 8;" text="Utilisateurs" />
+                                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Films" />
+                                        <Label fx:id="lblNbFilms" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
                                     </children>
-                                </HBox>
-
-                                <VBox spacing="8.0" style="-fx-background-color: #222222; -fx-background-radius: 10; -fx-padding: 12;">
+                                </VBox>
+                                <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                     <children>
-                                        <Label style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="Résumé" />
-                                        <Label fx:id="lblSummary" style="-fx-text-fill: #cccccc; -fx-font-size: 14px;" text="Le dashboard affiche les statistiques principales de la plateforme." wrapText="true" />
+                                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Séries" />
+                                        <Label fx:id="lblNbSeries" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Épisodes" />
+                                        <Label fx:id="lblNbEpisodes" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Utilisateurs" />
+                                        <Label fx:id="lblNbUsers" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="110.0" prefWidth="220.0" spacing="8.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-padding: 18;" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 15px;" text="Commentaires" />
+                                        <Label fx:id="lblNbComments" style="-fx-text-fill: white; -fx-font-size: 34px; -fx-font-weight: bold;" text="0" />
                                     </children>
                                 </VBox>
                             </children>
-                        </VBox>
-                    </children>
-                </HBox>
+                        </GridPane>
 
-            </children>
-        </VBox>
+                        <!-- ── LIGNE 1 : Répartition contenu + Inscriptions ── -->
+                        <HBox spacing="15.0">
+                            <children>
+                                <VBox prefHeight="320.0" prefWidth="480.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                                    <children>
+                                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Répartition du contenu" />
+                                        <PieChart fx:id="contentPieChart" labelsVisible="true" legendVisible="true" prefHeight="260.0" />
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="320.0" prefWidth="700.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                                    <children>
+                                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Évolution des inscriptions" />
+                                        <LineChart fx:id="inscriptionsChart" animated="false" prefHeight="260.0">
+                                            <xAxis><CategoryAxis label="Date" /></xAxis>
+                                            <yAxis><NumberAxis label="Nouveaux inscrits" /></yAxis>
+                                        </LineChart>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- ── LIGNE 2 : Commentaires par type + Films par catégorie ── -->
+                        <HBox spacing="15.0">
+                            <children>
+                                <VBox prefHeight="320.0" prefWidth="580.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                                    <children>
+                                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Commentaires par type" />
+                                        <BarChart fx:id="commentsByTypeChart" animated="false" prefHeight="260.0">
+                                            <xAxis><CategoryAxis label="Type" /></xAxis>
+                                            <yAxis><NumberAxis label="Commentaires" /></yAxis>
+                                        </BarChart>
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="320.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;">
+                                    <children>
+                                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Films par catégorie" />
+                                        <PieChart fx:id="categoryPieChart" labelsVisible="true" legendVisible="true" prefHeight="260.0" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- ── LIGNE 3 : Top 5 films les plus vus ── -->
+                        <HBox spacing="15.0">
+                            <children>
+                                <VBox prefHeight="320.0" prefWidth="1200.0" spacing="10.0" style="-fx-background-color: #1b1b1b; -fx-background-radius: 12; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Top 5 films les plus vus" />
+                                        <BarChart fx:id="top5FilmsChart" animated="false" prefHeight="260.0" VBox.vgrow="ALWAYS">
+                                            <xAxis><CategoryAxis label="Films" /></xAxis>
+                                            <yAxis><NumberAxis label="Nombre de vues" /></yAxis>
+                                        </BarChart>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
     </center>
 
 </BorderPane>

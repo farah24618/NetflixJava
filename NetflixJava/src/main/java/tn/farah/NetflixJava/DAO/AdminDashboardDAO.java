@@ -18,6 +18,41 @@ public class AdminDashboardDAO {
     }
 
 
+    public Map<String, Integer> getFilmsByCategory() {
+        Map<String, Integer> data = new LinkedHashMap<>();
+        String query = "SELECT c.nom, COUNT(mc.media_id) as total " +
+                       "FROM category c " +
+                       "JOIN media_category mc ON c.id = mc.category_id " +
+                       "JOIN film f ON mc.media_id = f.id " +
+                       "GROUP BY c.nom ORDER BY total DESC";
+        try (PreparedStatement pst = cnx.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                data.put(rs.getString("nom"), rs.getInt("total"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur films par catégorie : " + e.getMessage());
+        }
+        return data;
+    }
+
+   
+    public Map<String, Integer> getTop5FilmsVus() {
+        Map<String, Integer> data = new LinkedHashMap<>();
+        String query = "SELECT m.titre, f.nbre_vues " +
+                       "FROM film f " +
+                       "JOIN media m ON f.id = m.id " +
+                       "ORDER BY f.nbre_vues DESC LIMIT 5";
+        try (PreparedStatement pst = cnx.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                data.put(rs.getString("titre"), rs.getInt("nbre_vues"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur top 5 films : " + e.getMessage());
+        }
+        return data;
+    }
     public int getCount(String tableName) {
         int count = 0;
 

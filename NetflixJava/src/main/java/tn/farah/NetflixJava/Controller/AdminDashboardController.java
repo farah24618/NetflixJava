@@ -1,4 +1,4 @@
-package tn.farah.NetflixJava.Controller;
+/*package tn.farah.NetflixJava.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -131,6 +131,156 @@ public class AdminDashboardController implements Initializable {
     @FXML
     void handleLogout(ActionEvent event) {
         System.out.println("Déconnexion en cours...");
+        ScreenManager.getInstance().navigateAndReplace(Screen.login);
+    }
+}*/
+package tn.farah.NetflixJava.Controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.*;
+import javafx.scene.control.Label;
+import tn.farah.NetflixJava.Service.AdminDashboardService;
+import tn.farah.NetflixJava.utils.Screen;
+import tn.farah.NetflixJava.utils.ScreenManager;
+
+import java.net.URL;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+public class AdminDashboardController implements Initializable {
+
+    @FXML private Label lblAdminName;
+    @FXML private Label lblNbFilms;
+    @FXML private Label lblNbSeries;
+    @FXML private Label lblNbEpisodes;
+    @FXML private Label lblNbUsers;
+    @FXML private Label lblNbComments;
+  
+
+    @FXML private PieChart contentPieChart;
+    @FXML private PieChart categoryPieChart;                   // ✅ NOUVEAU
+    @FXML private LineChart<String, Number> inscriptionsChart;
+    @FXML private BarChart<String, Number> commentsByTypeChart;
+    @FXML private BarChart<String, Number> top5FilmsChart;     // ✅ NOUVEAU
+
+    private AdminDashboardService dashboardService;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        dashboardService = new AdminDashboardService();
+        lblAdminName.setText("Bienvenue, Admin");
+        loadStatistics();
+        loadCharts();
+        chargerGraphiqueInscriptions();
+    }
+
+    private void loadStatistics() {
+        int films = dashboardService.getTotalFilms();
+        int series = dashboardService.getTotalSeries();
+        lblNbFilms.setText(String.valueOf(films));
+        lblNbSeries.setText(String.valueOf(series));
+        lblNbEpisodes.setText(String.valueOf(dashboardService.getTotalEpisodes()));
+        lblNbUsers.setText(String.valueOf(dashboardService.getTotalUsers()));
+        lblNbComments.setText(String.valueOf(dashboardService.getTotalComments()));
+        // ✅ lblSummary supprimé
+    }
+
+    private void loadCharts() {
+        // --- Existant : Films vs Séries ---
+        contentPieChart.getData().addAll(
+            new PieChart.Data("Films", dashboardService.getTotalFilms()),
+            new PieChart.Data("Séries", dashboardService.getTotalSeries())
+        );
+
+        // --- Existant : Commentaires par type ---
+        XYChart.Series<String, Number> commentSeries = new XYChart.Series<>();
+        commentSeries.setName("Commentaires");
+        for (Map.Entry<String, Integer> entry : dashboardService.getCommentsByTypeData().entrySet()) {
+            commentSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+        commentsByTypeChart.getData().add(commentSeries);
+
+        // ✅ NOUVEAU — Répartition films par catégorie (PieChart)
+        Map<String, Integer> categoriesData = dashboardService.getFilmsByCategory();
+        if (categoriesData.isEmpty()) {
+            categoryPieChart.getData().add(new PieChart.Data("Aucune donnée", 1));
+        } else {
+            for (Map.Entry<String, Integer> entry : categoriesData.entrySet()) {
+                categoryPieChart.getData().add(
+                    new PieChart.Data(entry.getKey() + " (" + entry.getValue() + ")",
+                                      entry.getValue())
+                );
+            }
+        }
+
+        // ✅ NOUVEAU — Top 5 films les plus vus (BarChart)
+        XYChart.Series<String, Number> top5Series = new XYChart.Series<>();
+        top5Series.setName("Nombre de vues");
+        Map<String, Integer> top5Data = dashboardService.getTop5FilmsVus();
+        if (top5Data.isEmpty()) {
+            top5Series.getData().add(new XYChart.Data<>("Aucun film", 0));
+        } else {
+            for (Map.Entry<String, Integer> entry : top5Data.entrySet()) {
+                top5Series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+            }
+        }
+        top5FilmsChart.getData().add(top5Series);
+    }
+
+    private void chargerGraphiqueInscriptions() {
+        inscriptionsChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Nouveaux inscrits");
+        for (Map.Entry<String, Integer> entry : dashboardService.getInscriptionsData().entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+        inscriptionsChart.getData().add(series);
+    }
+
+    @FXML
+    void goToFilmsAdmin(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.admin_main);
+    }
+
+    @FXML
+    void goToSeriesAdmin(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.ManageSeries);
+    }
+
+    @FXML
+    void goToCommentsAdmin(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.CommentaireAdmin);
+    }
+
+    @FXML
+    void onNotificationsClicked(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.notificationAdmin);
+    }
+
+    @FXML
+    void goToUsersAdmin(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.manageUsers);
+    }
+
+    @FXML
+    void onSettingsClicked(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.parametresAdmin);
+    }
+
+    @FXML
+    void goToAddFilm(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.addFilm);
+    }
+
+    @FXML
+    void goToAddSeries(ActionEvent event) {
+        ScreenManager.getInstance().navigateTo(Screen.addSerie);
+    }
+
+    @FXML
+    void handleLogout(ActionEvent event) {
         ScreenManager.getInstance().navigateAndReplace(Screen.login);
     }
 }
